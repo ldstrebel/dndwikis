@@ -1,2 +1,2 @@
-Dnd wippee! 
+Site here: 
 https://ldstrebel.github.io/dndwikis/
