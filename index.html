@@ -2,14 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My D&D Wiki</title>
-    <style>body { font-family: sans-serif; padding: 20px; }</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>It's a Map!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Medieval+Sharp&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>My D&D Adventures</h1>
-    <ul>
-        <li><a href="meryl2.html">Meryl 2: Smells of Magic and Music</a></li>
-        <!-- <li><a href="filename.html">Campaign #:Title</a></li> -->
-    </ul>
+    <header>
+        <div class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <nav id="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="chapter1.html">Chapter 1: The Whispering Woods</a></li>
+                <li><a href="chapter2.html">Chapter 2: The Obsidian Mines</a></li>
+                <li><a href="characters.html">Characters & Lore</a></li>
+                <li><a href="timeline.html">Campaign Timeline</a></li>
+                </ul>
+        </nav>
+        <h1>Welcome!</h1>
+        <p class="tagline">An interactive guide to our adventures.</p>
+    </header>
+
+    <main class="map-container">
+        <div class="map-overlay"></div>
+
+        <a href="chapter1.html" class="adventure-point adventure-1">
+            <span class="adventure-icon">🌲</span>
+            <span class="merly1.html">Meryl 1 - For the Nectar</span>
+        </a>
+        <a href="chapter2.html" class="adventure-point adventure-2">
+            <span class="adventure-icon">⛏️</span>
+            <span class="adventure-title">Meryl 2 - Smells like Magic and Music</span>
+        </a>
+        <div class="map-legend">
+            <h3>Legend</h3>
+            <ul>
+                <li>🌲 Major Quest Location</li>
+                <li>⛏️ Logging Camp</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; Nerdarlert. All rights reserved. No Electrons or Mana harmed in the making of this wiki.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
