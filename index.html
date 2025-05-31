@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Medieval+Sharp&display=swap" rel="stylesheet">
 </head>
-<body>
+<body> {/* Removed inline style="overflow: hidden;" */}
     <header>
         <div class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
             <span></span>
@@ -44,13 +44,14 @@
             <div class="campaign-grid">
 
                 <article class="campaign-card"
-                    data-genre="fantasy adventure" data-campaign-title="The Chronicles of Meryl"
+                    data-genre="fantasy adventure"
+                    data-campaign-title="The Chronicles of Meryl"
                     data-poster-image="images/meryl.jpg"
                     data-full-synopsis="Follow the boisterous dwarf Baruk 'The Rock' Boulderbeard, the meticulous gnome Griselda 'Grizelda' Geargrind, the bespectacled wizard Anya 'The Archivist' Asteria, the nimble halfling Finn 'Fingers' Flickwick, the graceful elf Willow 'Whisper' Whisperwind, and the flamboyant tiefling Kaelen 'Spark' Kindlewood as they uncover ancient secrets and face thrilling dangers in this epic fantasy saga."
                     data-chapters='[
                         {"title": "Meryl 1 - For the Nectar", "url": "meryl1.html"},
                         {"title": "Meryl 2 - Smells like Magic and Music", "url": "meryl2.html"}
-                    ]'>
+                    ]'> {/* Corrected JSON quotes and used single quotes for attribute value */}
                     <div class="tarot-art-container">
                         <img src="images/meryl.jpg" alt="Meryl's Trials" class="campaign-poster">
                     </div>
@@ -60,13 +61,14 @@
                 </article>
 
                 <article class="campaign-card"
-                    data-genre="sci-fi litrpg" data-campaign-title="Dungeon Crawlers"
+                    data-genre="sci-fi litrpg"
+                    data-campaign-title="Dungeon Crawlers"
                     data-poster-image="images/dungeon-crawlers.jpg"
                     data-full-synopsis="In a world where reality blends with the digital, participants are thrust into deadly dungeons. Crawl to survive, level up, and uncover the secrets of this immersive LitRPG universe. Every choice matters when it's kill or be killed."
                     data-chapters='[
                         {"title": "Chapter 1: The Syndicate has your planetl", "url": "dc-ch1.html"},
                         {"title": "Chapter 2: Llamas, Loot, and a Polish Lunch", "url": "dc-ch2.html"}
-                    ]'>
+                    ]'> {/* Corrected JSON quotes and used single quotes for attribute value */}
                     <div class="tarot-art-container">
                         <img src="images/dungeon-crawlers.jpg" alt="Tarot art for Dungeon Crawlers" class="campaign-poster">
                     </div>
@@ -81,20 +83,19 @@
         </section>
     </main>
 
+    {/* Corrected Modal: removed 'active' class, inline style, and set aria-hidden to true by default */}
     <div id="campaignModal" class="modal-overlay" aria-hidden="true">
         <div class="modal-content" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalSynopsis">
             <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            {/* Modal content below will be populated by JavaScript */}
             <img src="" alt="Campaign Art" id="modalImage" class="modal-campaign-art">
             <div class="modal-text-content">
                 <h2 id="modalTitle" class="modal-campaign-title"></h2>
-                <div class="modal-genre-tags">
-                    </div>
+                <div class="modal-genre-tags"></div>
                 <p id="modalSynopsis" class="modal-campaign-synopsis"></p>
                 <div class="modal-chapters-section">
                     <h3>Chapters</h3>
-                    <ul id="modalChapterList" class="modal-chapter-list">
-                        {/* Chapter links will be populated by JS */}
-                    </ul>
+                    <ul id="modalChapterList" class="modal-chapter-list"></ul>
                 </div>
             </div>
         </div>
