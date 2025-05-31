@@ -1,0 +1,81 @@
+.campaign-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 30px; /* Increased gap for a more stately feel */
+    padding: 20px;
+}
+
+.campaign-card {
+    background-color: #f0e6d2; /* Aged paper/parchment color */
+    border: 3px solid #4a3b31; /* Darker brown border */
+    border-radius: 10px; /* Slightly rounded corners */
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+    overflow: hidden; /* Ensures content fits within rounded corners */
+    display: flex;
+    flex-direction: column; /* Stack art and info vertically */
+    aspect-ratio: 2.75 / 4.75; /* Common tarot card aspect ratio (approx) */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'MedievalSharp', cursive; /* Or Cinzel Decorative for titles */
+}
+
+.campaign-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 8px 8px 20px rgba(0,0,0,0.4);
+}
+
+.tarot-art-container {
+    flex-grow: 1; /* Allows this area to take up most space */
+    padding: 15px; /* Inner "frame" for the art */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e6d5b8; /* Slightly different shade for the art background */
+    border-bottom: 2px solid #4a3b31; /* Separator line */
+}
+
+.campaign-card .campaign-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image covers the area, might crop */
+    border: 1px solid #c8bda8; /* Subtle inner border for the image */
+}
+
+.tarot-info-container {
+    padding: 10px 15px;
+    text-align: center;
+    background-color: #f0e6d2; /* Match card background */
+    min-height: 60px; /* Ensure some space for title */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.campaign-card .campaign-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1.2em; /* Adjust as needed */
+    color: #3a2d25; /* Dark, rich color */
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* You might want to hide the original synopsis and genre tags on the card itself now,
+   as they will be in the modal. Or keep a very brief one. */
+.campaign-card .campaign-synopsis,
+.campaign-card .campaign-genre {
+    display: none; /* Hidden on the card, will show in modal */
+}
+.campaign-card .btn-explore {
+    display: none; /* No longer needed if modal is the primary interaction */
+}
+
+/* Styling for genre tags, if you decide to show them on the card somewhere (e.g., as small icons or text) */
+.genre-tag {
+    background-color: #4a3b31;
+    color: #f0e6d2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7em;
+    margin-right: 5px;
+    font-family: 'MedievalSharp', cursive;
+}
