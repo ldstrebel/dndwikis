@@ -7,20 +7,29 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Medieval+Sharp&display=swap" rel="stylesheet">
 </head>
-<body> {/* Removed inline style="overflow: hidden;" */}
+<body>
     <header>
-        <div class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="header-top">
+            <div class="site-identity">
+                 <h1>The Portals</h1> <!-- Site title as H1 on homepage -->
+            </div>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-nav">
+                <span class="menu-toggle-bar"></span>
+                <span class="menu-toggle-bar"></span>
+                <span class="menu-toggle-bar"></span>
+            </button>
         </div>
-        <nav id="main-nav" aria-label="Main navigation">
+        <nav id="main-nav" aria-label="Main navigation" aria-hidden="true">
+            {/* This nav is initially hidden for mobile; JS will toggle aria-hidden and a class for visibility based on menu-toggle interaction */}
             <ul>
                 <li><a href="index.html">Home (All Campaigns)</a></li>
+                {/* Add other global navigation links here if any, e.g., About, Contact */}
             </ul>
         </nav>
-        <h1>Nothing that’s worthwhile ever has a low Difficulty Class</h1>
-        <p class="tagline">Discover tales of adventure, mystery, and more across diverse campaigns.</p>
+        <div class="header-description">
+            <p class="site-motto">Nothing that’s worthwhile ever has a low Difficulty Class.</p>
+            <p class="tagline">Discover tales of adventure, mystery, and more across diverse campaigns.</p>
+        </div>
     </header>
 
     <main>
@@ -51,12 +60,13 @@
                     data-chapters='[
                         {"title": "Meryl 1 - For the Nectar", "url": "meryl1.html"},
                         {"title": "Meryl 2 - Smells like Magic and Music", "url": "meryl2.html"}
-                    ]'> {/* Corrected JSON quotes and used single quotes for attribute value */}
+                    ]'>
+                    {/* Ensure JavaScript makes these cards focusable (tabindex="0") and announce them as interactive (role="button") if the whole card is clickable */}
                     <div class="tarot-art-container">
-                        <img src="images/meryl.jpg" alt="Meryl's Trials" class="campaign-poster">
+                        <img src="images/meryl.jpg" alt="Artwork for The Chronicles of Meryl campaign" class="campaign-poster">
                     </div>
                     <div class="tarot-info-container">
-                        <h3 class="campaign-title">Meryl's Trials</h3>
+                        <h3 class="campaign-title">The Chronicles of Meryl</h3>
                     </div>
                 </article>
 
@@ -68,9 +78,10 @@
                     data-chapters='[
                         {"title": "Chapter 1: The Syndicate has your planetl", "url": "dc-ch1.html"},
                         {"title": "Chapter 2: Llamas, Loot, and a Polish Lunch", "url": "dc-ch2.html"}
-                    ]'> {/* Corrected JSON quotes and used single quotes for attribute value */}
+                    ]'>
+                    {/* Ensure JavaScript makes these cards focusable (tabindex="0") and announce them as interactive (role="button") if the whole card is clickable */}
                     <div class="tarot-art-container">
-                        <img src="images/dungeon-crawlers.jpg" alt="Tarot art for Dungeon Crawlers" class="campaign-poster">
+                        <img src="images/dungeon-crawlers.jpg" alt="Artwork for Dungeon Crawlers campaign" class="campaign-poster">
                     </div>
                     <div class="tarot-info-container">
                         <h3 class="campaign-title">Dungeon Crawlers</h3>
@@ -83,7 +94,6 @@
         </section>
     </main>
 
-    {/* Corrected Modal: removed 'active' class, inline style, and set aria-hidden to true by default */}
     <div id="campaignModal" class="modal-overlay" aria-hidden="true">
         <div class="modal-content" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalSynopsis">
             <button class="modal-close-btn" aria-label="Close modal">&times;</button>

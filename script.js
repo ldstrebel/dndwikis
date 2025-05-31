@@ -8,16 +8,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalSynopsis = modal.querySelector('#modalSynopsis');
     const modalChapterList = modal.querySelector('#modalChapterList');
     const modalGenreTagsContainer = modal.querySelector('.modal-genre-tags');
-    // const modalFullCampaignLink = modal.querySelector('#modalFullCampaignLink'); // If using this
+
+    // Accessibility: Make cards focusable and act as buttons
+    campaignCards.forEach(card => {
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+    });
+
+    let lastFocusedElement = null;
 
     campaignCards.forEach(card => {
         card.addEventListener('click', () => {
+            lastFocusedElement = document.activeElement;
             // 1. Get data from the clicked card
             const title = card.dataset.campaignTitle;
-            const posterImage = card.dataset.posterImage; // Make sure card has this
+            const posterImage = card.dataset.posterImage;
             const fullSynopsis = card.dataset.fullSynopsis;
-            const chapters = JSON.parse(card.dataset.chapters || '[]'); // Ensure valid JSON
-            const genres = card.dataset.genre.split(' '); // Assuming space-separated genres in data-genre
+            const chapters = JSON.parse(card.dataset.chapters || '[]');
+            const genres = card.dataset.genre.split(' ');
 
             // 2. Populate the modal
             modalImage.src = posterImage;
@@ -26,48 +34,46 @@ document.addEventListener('DOMContentLoaded', () => {
             modalSynopsis.textContent = fullSynopsis;
 
             // Populate genre tags
-            modalGenreTagsContainer.innerHTML = ''; // Clear previous tags
+            modalGenreTagsContainer.innerHTML = '';
             genres.forEach(genreText => {
-                if (genreText) { // Ensure not empty string
+                if (genreText) {
                     const genreTagElement = document.createElement('span');
                     genreTagElement.classList.add('genre-tag');
-                    genreTagElement.textContent = genreText.charAt(0).toUpperCase() + genreText.slice(1); // Capitalize
+                    genreTagElement.textContent = genreText.charAt(0).toUpperCase() + genreText.slice(1);
                     modalGenreTagsContainer.appendChild(genreTagElement);
                 }
             });
 
-            modalChapterList.innerHTML = ''; // Clear previous chapters
+            modalChapterList.innerHTML = '';
             if (chapters.length > 0) {
                 chapters.forEach(chapter => {
                     const listItem = document.createElement('li');
                     const link = document.createElement('a');
                     link.href = chapter.url;
                     link.textContent = chapter.title;
-                    // If your graphic novels open in the same window:
-                    // link.target = "_self";
-                    // If they open in a new tab (often good for external-feeling links):
-                    // link.target = "_blank";
                     listItem.appendChild(link);
                     modalChapterList.appendChild(listItem);
                 });
                 modal.querySelector('.modal-chapters-section').style.display = 'block';
             } else {
-                 modal.querySelector('.modal-chapters-section').style.display = 'none';
+                modal.querySelector('.modal-chapters-section').style.display = 'none';
             }
 
-            // if (card.dataset.fullCampaignUrl) {
-            //    modalFullCampaignLink.href = card.dataset.fullCampaignUrl;
-            //    modalFullCampaignLink.style.display = 'inline-block';
-            // } else {
-            //    modalFullCampaignLink.style.display = 'none';
-            // }
-
-
             // 3. Display the modal
-            modal.style.display = 'flex'; // Or 'block' if you changed it
-            setTimeout(() => modal.classList.add('active'), 10); // For transition
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
             modal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden'; // Prevent background scroll
+            document.body.style.overflow = 'hidden';
+            // Move focus to close button for accessibility
+            modalCloseBtn.focus();
+        });
+
+        // Keyboard accessibility: open modal with Enter or Space
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
         });
     });
 
@@ -77,35 +83,57 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             modal.style.display = 'none';
             modal.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = ''; // Restore background scroll
-        }, 300); // Match transition duration
+            document.body.style.overflow = '';
+            if (lastFocusedElement) lastFocusedElement.focus();
+        }, 300);
     }
 
     modalCloseBtn.addEventListener('click', closeModal);
 
-    // Optional: Close modal if clicking on the overlay
+    // Close modal if clicking on the overlay
     modal.addEventListener('click', (event) => {
         if (event.target === modal) {
             closeModal();
         }
     });
 
-    // Optional: Close modal with Escape key
+    // Close modal with Escape key
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && modal.classList.contains('active')) {
             closeModal();
         }
     });
 
-    // --- FILTER LOGIC from previous step (can be integrated here) ---
+    // Trap focus inside modal when open
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && modal.classList.contains('active')) {
+            const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (focusable.length === 0) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        }
+    });
+
+    // --- FILTER LOGIC ---
     const genreFilter = document.getElementById('genre-filter');
     if (genreFilter) {
         genreFilter.addEventListener('change', function() {
             const selectedGenre = this.value;
             document.querySelectorAll('.campaign-card').forEach(card => {
-                const cardGenres = card.dataset.genre || ""; // Get genres as a string
+                const cardGenres = card.dataset.genre || "";
                 if (selectedGenre === 'all' || cardGenres.includes(selectedGenre)) {
-                    card.style.display = 'flex'; // Or 'block' or whatever its default display is
+                    card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
                 }
