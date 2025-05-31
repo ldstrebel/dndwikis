@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Chronicles of Meryl: Campaign Wiki</title>
-    <link rel="stylesheet" href="style.css">
+    <title>The Portals</title> {/* Or a more thematic title */}
+    <link rel="stylesheet" href="style.css"> {/* Your existing or new stylesheet */}
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Medieval+Sharp&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -16,37 +16,65 @@
         </div>
         <nav id="main-nav" aria-label="Main navigation">
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="meryl1.html">Meryl 1 - For the Nectar</a></li>
-                <li><a href="meryl2.html">Meryl 2 - Smells like Magic and Music</a></li>
-                </ul>
+                <li><a href="index.html">Home (All Campaigns)</a></li>
+                {/* You might list direct links to popular campaigns here later,
+                    or keep it simple. The main showcase will be below. */}
+            </ul>
         </nav>
-        <h1>Welcome to The Chronicles of Meryl</h1>
-        <p class="tagline">An interactive guide to our adventures.</p>
+        <h1>Nothing that’s worthwhile ever has a low Difficulty Class</h1> 
+        <p class="tagline">Discover tales of adventure, mystery, and more across diverse campaigns.</p>
     </header>
 
-    <main class="map-container">
-        <div class="map-overlay"></div>
+    <main>
+        <section class="campaign-filters" aria-labelledby="filter-heading">
+            <h2 id="filter-heading">Filter Campaigns</h2>
+            <div class="filter-group">
+                <label for="genre-filter">Genre:</label>
+                <select id="genre-filter" name="genre">
+                    <option value="all">All Genres</option>
+                    <option value="fantasy">Fantasy</option>
+                    <option value="sci-fi">Sci-Fi</option>
+                    <option value="horror">Horror</option>
+                    {/* Add more genres as needed */}
+                </select>
+            </div>
+            {/* Add more filter options here later, like "Sort by:" */}
+        </section>
 
-        <a href="meryl1.html" class="adventure-point adventure-1">
-            <span class="adventure-icon">🌿</span> <span class="adventure-title">Meryl 1 - For the Nectar</span>
-        </a>
-        <a href="meryl2.html" class="adventure-point adventure-2">
-            <span class="adventure-icon">✨</span> <span class="adventure-title">Meryl 2 - Smells like Magic and Music</span>
-        </a>
-        <div class="map-legend">
-            <h3>Legend</h3>
-            <ul>
-                <li>🌿 First Adventure Arc</li>
-                <li>✨ Second Adventure Arc</li>
-                </ul>
-        </div>
+        <section class="campaign-showcase" aria-labelledby="showcase-heading">
+            <h2 id="showcase-heading" class="visually-hidden">Campaigns</h2> {/* Visually hidden if the design implies it */}
+            <div class="campaign-grid">
+                {/* Example Campaign Card 1 (Meryl) */}
+                <article class="campaign-card" data-genre="fantasy"> {/* Use data-attributes for filtering */}
+                    <img src="images/meryl-poster.jpg" alt="The Chronicles of Meryl campaign poster" class="campaign-poster">
+                    <div class="campaign-info">
+                        <h3 class="campaign-title">The Chronicles of Meryl</h3>
+                        <p class="campaign-genre"><span class="genre-tag">Fantasy</span> <span class="genre-tag">Adventure</span></p>
+                        <p class="campaign-synopsis">Follow the boisterous dwarf Baruk, the meticulous gnome Griselda, and their companions as they uncover ancient secrets and face thrilling dangers in this epic fantasy saga.</p>
+                        <a href="campaigns/meryl/index.html" class="btn-explore">Explore Meryl's Saga</a>
+                    </div>
+                </article>
+
+                {/* Example Campaign Card 2 (New Sci-Fi Campaign) */}
+                <article class="campaign-card" data-genre="sci-fi">
+                    <img src="images/nova-drifters-poster.jpg" alt="Nova Drifters campaign poster" class="campaign-poster">
+                    <div class="campaign-info">
+                        <h3 class="campaign-title">Dungeon Crawlers</h3>
+                        <p class="campaign-genre"><span class="genre-tag">Sci-Fi</span> <span class="genre-tag">LitRPG</span></p>
+                        <p class="campaign-synopsis">Crawl to survive.</p>
+                        <a href="campaigns/nova-drifters/index.html" class="btn-explore">kill! Kill! Kill!</a>
+                    </div>
+                </article>
+
+                {/* Add more campaign cards here as you create them */}
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 The Meryl Chronicles. All rights reserved.</p>
+        <p>&copy; 2025 Your Name/Studio. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js"></script> {/* For menu toggle and future filtering logic */}
 </body>
 </html>
