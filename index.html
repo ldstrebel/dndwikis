@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Portals</title> {/* Or a more thematic title */}
-    <link rel="stylesheet" href="style.css"> {/* Your existing or new stylesheet */}
+    <title>The Portals</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Medieval+Sharp&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -17,11 +17,9 @@
         <nav id="main-nav" aria-label="Main navigation">
             <ul>
                 <li><a href="index.html">Home (All Campaigns)</a></li>
-                {/* You might list direct links to popular campaigns here later,
-                    or keep it simple. The main showcase will be below. */}
             </ul>
         </nav>
-        <h1>Nothing that’s worthwhile ever has a low Difficulty Class</h1> 
+        <h1>Nothing that’s worthwhile ever has a low Difficulty Class</h1>
         <p class="tagline">Discover tales of adventure, mystery, and more across diverse campaigns.</p>
     </header>
 
@@ -35,46 +33,77 @@
                     <option value="fantasy">Fantasy</option>
                     <option value="sci-fi">Sci-Fi</option>
                     <option value="horror">Horror</option>
-                    {/* Add more genres as needed */}
+                    <option value="litrpg">LitRPG</option>
+                    {/* Add more genres as needed, ensure values match data-genre on cards */}
                 </select>
             </div>
-            {/* Add more filter options here later, like "Sort by:" */}
         </section>
 
         <section class="campaign-showcase" aria-labelledby="showcase-heading">
-            <h2 id="showcase-heading" class="visually-hidden">Campaigns</h2> {/* Visually hidden if the design implies it */}
+            <h2 id="showcase-heading" class="visually-hidden">Campaigns</h2>
             <div class="campaign-grid">
-                {/* Example Campaign Card 1 (Meryl) */}
-                <article class="campaign-card" data-genre="fantasy"> {/* Use data-attributes for filtering */}
-                    <img src="images/meryl-poster.jpg" alt="The Chronicles of Meryl campaign poster" class="campaign-poster">
-                    <div class="campaign-info">
+
+                <article class="campaign-card"
+                    data-genre="fantasy adventure" data-campaign-title="The Chronicles of Meryl"
+                    data-poster-image="images/meryl-tarot-art.jpg"
+                    data-full-synopsis="Follow the boisterous dwarf Baruk 'The Rock' Boulderbeard, the meticulous gnome Griselda 'Grizelda' Geargrind, the bespectacled wizard Anya 'The Archivist' Asteria, the nimble halfling Finn 'Fingers' Flickwick, the graceful elf Willow 'Whisper' Whisperwind, and the flamboyant tiefling Kaelen 'Spark' Kindlewood as they uncover ancient secrets and face thrilling dangers in this epic fantasy saga."
+                    data-chapters='[
+                        {"title": "Meryl 1 - For the Nectar", "url": "meryl1.html"},
+                        {"title": "Meryl 2 - Smells like Magic and Music", "url": "meryl2.html"}
+                    ]'>
+                    <div class="tarot-art-container">
+                        <img src="images/meryl-tarot-art.jpg" alt="Tarot art for The Chronicles of Meryl" class="campaign-poster">
+                    </div>
+                    <div class="tarot-info-container">
                         <h3 class="campaign-title">The Chronicles of Meryl</h3>
-                        <p class="campaign-genre"><span class="genre-tag">Fantasy</span> <span class="genre-tag">Adventure</span></p>
-                        <p class="campaign-synopsis">Follow the boisterous dwarf Baruk, the meticulous gnome Griselda, and their companions as they uncover ancient secrets and face thrilling dangers in this epic fantasy saga.</p>
-                        <a href="campaigns/meryl/index.html" class="btn-explore">Explore Meryl's Saga</a>
                     </div>
                 </article>
 
-                {/* Example Campaign Card 2 (New Sci-Fi Campaign) */}
-                <article class="campaign-card" data-genre="sci-fi">
-                    <img src="images/nova-drifters-poster.jpg" alt="Nova Drifters campaign poster" class="campaign-poster">
-                    <div class="campaign-info">
+                <article class="campaign-card"
+                    data-genre="sci-fi litrpg" data-campaign-title="Dungeon Crawlers"
+                    data-poster-image="images/dungeon-crawlers-tarot.jpg"
+                    data-full-synopsis="In a world where reality blends with the digital, participants are thrust into deadly dungeons. Crawl to survive, level up, and uncover the secrets of this immersive LitRPG universe. Every choice matters when it's kill or be killed."
+                    data-chapters='[
+                        {"title": "Chapter 1: The Awakening", "url": "dc-ch1.html"},
+                        {"title": "Chapter 2: First Blood", "url": "dc-ch2.html"}
+                    ]'>
+                    <div class="tarot-art-container">
+                        <img src="images/dungeon-crawlers-tarot.jpg" alt="Tarot art for Dungeon Crawlers" class="campaign-poster">
+                    </div>
+                    <div class="tarot-info-container">
                         <h3 class="campaign-title">Dungeon Crawlers</h3>
-                        <p class="campaign-genre"><span class="genre-tag">Sci-Fi</span> <span class="genre-tag">LitRPG</span></p>
-                        <p class="campaign-synopsis">Crawl to survive.</p>
-                        <a href="campaigns/nova-drifters/index.html" class="btn-explore">kill! Kill! Kill!</a>
                     </div>
                 </article>
 
-                {/* Add more campaign cards here as you create them */}
+                {/* Add more campaign cards here using the same structure and data attributes */}
+
             </div>
         </section>
     </main>
+
+    <div id="campaignModal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalSynopsis">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <img src="" alt="Campaign Art" id="modalImage" class="modal-campaign-art">
+            <div class="modal-text-content">
+                <h2 id="modalTitle" class="modal-campaign-title"></h2>
+                <div class="modal-genre-tags">
+                    </div>
+                <p id="modalSynopsis" class="modal-campaign-synopsis"></p>
+                <div class="modal-chapters-section">
+                    <h3>Chapters</h3>
+                    <ul id="modalChapterList" class="modal-chapter-list">
+                        {/* Chapter links will be populated by JS */}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2025 Your Name/Studio. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script> {/* For menu toggle and future filtering logic */}
+    <script src="script.js"></script>
 </body>
 </html>
