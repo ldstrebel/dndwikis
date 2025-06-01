@@ -1,3 +1,20 @@
+/* style.css - Logo-Inspired Theme */
+
+:root {
+    --logo-teal: #25B8B8;
+    --logo-teal-rgb: 37, 184, 184;
+    --logo-magenta: #B42A8E;
+    --logo-magenta-rgb: 180, 42, 142;
+    --logo-dark-background: #181A1B;
+    --logo-dark-element: #22252A;
+    --logo-light-text: #EAEAEA;
+    --logo-bright-teal: #50D8D8;
+    --logo-bright-magenta: #D850B4;
+
+    --font-primary: 'MedievalSharp', cursive; /* Keeping existing fonts */
+    --font-secondary: 'Cinzel Decorative', cursive; /* Keeping existing fonts */
+}
+
 /* Basic Reset & Global Styles */
 *,
 *::before,
@@ -8,33 +25,33 @@
 }
 
 body {
-    font-family: 'MedievalSharp', cursive;
+    font-family: var(--font-primary);
     line-height: 1.6;
-    color: #3a2d25;
-    background-color: #fdfaf6;
+    color: var(--logo-light-text);
+    background-color: var(--logo-dark-background);
     margin: 0;
     font-size: 16px;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cinzel Decorative', cursive;
-    color: #4a3b31;
+    font-family: var(--font-secondary);
+    color: var(--logo-bright-teal); /* Primary heading color */
     line-height: 1.2;
     margin-bottom: 0.75em;
 }
 
 h1 { font-size: 2.5em; }
-h2 { font-size: 2em; }
-h3 { font-size: 1.5em; }
+h2 { font-size: 2em; } /* Titles like "Filter Campaigns" */
+h3 { font-size: 1.5em; } /* Card titles, Modal section titles */
 
 a {
-    color: #5a4a42;
+    color: var(--logo-magenta); /* Primary link color */
     text-decoration: none;
 }
 
 a:hover, a:focus {
     text-decoration: underline;
-    color: #3a2d25;
+    color: var(--logo-bright-magenta); /* Brighter magenta for hover */
 }
 
 img {
@@ -60,14 +77,16 @@ button {
     white-space: nowrap;
     border: 0;
 }
+
+/* This back button is for chapter pages, not index.html, but keeping its base style if ever used */
 .back-button {
   position: absolute;
   top: 20px;
   left: 20px;
   padding: 5px 15px;
   font-size: 14px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  background-color: rgba(var(--logo-teal-rgb), 0.5); /* Themed background */
+  color: var(--logo-light-text);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -75,15 +94,16 @@ button {
 }
 
 .back-button:hover {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(var(--logo-teal-rgb), 0.7);
 }
 
 /* Header */
 header {
-    background-color: #4a3b31;
-    color: #f0e6d2;
+    background-color: var(--logo-dark-element); /* Darker element background */
+    color: var(--logo-light-text);
     padding: 15px 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 8px rgba(var(--logo-teal-rgb), 0.2); /* Teal shadow */
+    border-bottom: 2px solid var(--logo-teal);
 }
 
 .header-top {
@@ -96,7 +116,7 @@ header {
 .site-identity h1 {
     font-size: 2.2em;
     margin: 0;
-    color: #f0e6d2;
+    color: var(--logo-bright-teal); /* Bright teal for site title */
 }
 
 .menu-toggle {
@@ -110,7 +130,7 @@ header {
     display: block;
     width: 25px;
     height: 3px;
-    background-color: #f0e6d2;
+    background-color: var(--logo-light-text);
     margin: 5px 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -134,18 +154,19 @@ nav#main-nav ul {
 }
 
 nav#main-nav ul li a {
-    color: #f0e6d2;
-    font-family: 'Cinzel Decorative', cursive;
+    color: var(--logo-light-text);
+    font-family: var(--font-secondary);
     font-size: 1.1em;
     padding: 5px 10px;
     border-radius: 4px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 nav#main-nav ul li a:hover,
 nav#main-nav ul li a:focus,
 nav#main-nav ul li a.active {
-    background-color: rgba(240, 230, 210, 0.2);
+    background-color: rgba(var(--logo-magenta-rgb), 0.2); /* Magenta translucent background */
+    color: var(--logo-bright-magenta);
     text-decoration: none;
 }
 
@@ -153,20 +174,20 @@ nav#main-nav ul li a.active {
     text-align: center;
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid rgba(240, 230, 210, 0.3);
+    border-top: 1px solid rgba(var(--logo-light-text-rgb, 0.3)); /* Use light text with alpha */
 }
 
 .site-motto {
-    font-family: 'Cinzel Decorative', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.3em;
     margin-bottom: 5px;
-    color: #f0e6d2;
+    color: var(--logo-light-text);
 }
 
 .tagline {
-    font-family: 'MedievalSharp', cursive;
+    font-family: var(--font-primary);
     font-size: 1em;
-    color: #d3c8b3;
+    color: var(--logo-teal); /* Teal for tagline */
 }
 
 /* Main Content */
@@ -178,12 +199,12 @@ main {
 
 /* Campaign Filters */
 .campaign-filters {
-    background-color: #e6d5b8;
+    background-color: var(--logo-dark-element);
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 40px;
-    border: 2px solid #c8bda8;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 2px solid var(--logo-magenta); /* Magenta border for filters */
+    box-shadow: 0 2px 8px rgba(var(--logo-magenta-rgb), 0.15);
 }
 
 .campaign-filters h2 {
@@ -191,6 +212,7 @@ main {
     margin-bottom: 20px;
     font-size: 1.6em;
     text-align: center;
+    color: var(--logo-bright-magenta); /* Magenta for filter title */
 }
 
 .filter-group {
@@ -201,22 +223,28 @@ main {
 }
 
 .filter-group label {
-    font-family: 'Cinzel Decorative', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.1em;
-    color: #4a3b31;
+    color: var(--logo-light-text);
 }
 
 .filter-group select {
     padding: 8px 12px;
     border-radius: 5px;
-    border: 1px solid #4a3b31;
-    background-color: #f0e6d2;
-    font-family: 'MedievalSharp', cursive;
+    border: 1px solid var(--logo-teal); /* Teal border for select */
+    background-color: var(--logo-dark-background); /* Darker background for select */
+    font-family: var(--font-primary);
     font-size: 1em;
-    color: #3a2d25;
+    color: var(--logo-light-text);
     min-width: 200px;
     cursor: pointer;
 }
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--logo-bright-teal);
+    box-shadow: 0 0 5px rgba(var(--logo-teal-rgb), 0.5);
+}
+
 
 /* Campaign Showcase & Cards */
 .campaign-grid {
@@ -227,22 +255,23 @@ main {
 }
 
 .campaign-card {
-    background-color: #f0e6d2;
-    border: 3px solid #4a3b31;
+    background-color: var(--logo-dark-element);
+    border: 3px solid var(--logo-teal); /* Teal border for cards */
     border-radius: 10px;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 5px 5px 15px rgba(var(--logo-dark-background), 0.5); /* Darker shadow */
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    aspect-ratio: 2.75 / 4.75;
+    aspect-ratio: 2.75 / 4.75; /* Preserving tarot card aspect ratio */
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    font-family: 'MedievalSharp', cursive;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    font-family: var(--font-primary);
 }
 
 .campaign-card:hover {
     transform: translateY(-5px) scale(1.03);
-    box-shadow: 8px 8px 20px rgba(0,0,0,0.4);
+    border-color: var(--logo-bright-teal); /* Brighter teal border on hover */
+    box-shadow: 0px 8px 25px rgba(var(--logo-teal-rgb), 0.3); /* Teal glow on hover */
 }
 
 .tarot-art-container {
@@ -251,21 +280,21 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #e6d5b8;
-    border-bottom: 2px solid #4a3b31;
+    background-color: var(--logo-dark-background); /* Darkest bg for art contrast */
+    border-bottom: 2px solid var(--logo-teal);
 }
 
 .campaign-card .campaign-poster {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border: 1px solid #c8bda8;
+    border: 1px solid var(--logo-dark-element); /* Subtle border around image */
 }
 
 .tarot-info-container {
     padding: 10px 15px;
     text-align: center;
-    background-color: #f0e6d2;
+    background-color: var(--logo-dark-element);
     min-height: 60px;
     display: flex;
     flex-direction: column;
@@ -273,9 +302,9 @@ main {
 }
 
 .campaign-card .campaign-title {
-    font-family: 'Cinzel Decorative', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.2em;
-    color: #3a2d25;
+    color: var(--logo-bright-teal); /* Bright teal for card titles */
     margin: 0;
     line-height: 1.2;
 }
@@ -288,17 +317,23 @@ main {
     display: none;
 }
 
-/* Genre tags (used in modal, and potentially on cards if desired later) */
+/* Genre tags */
 .genre-tag {
-    background-color: #4a3b31;
-    color: #f0e6d2;
-    padding: 2px 6px;
+    background-color: var(--logo-magenta); /* Magenta background for tags */
+    color: var(--logo-light-text);
+    padding: 3px 8px;
     border-radius: 4px;
-    font-size: 0.7em;
+    font-size: 0.75em; /* Slightly larger */
     margin: 0 5px 5px 0;
     display: inline-block;
-    font-family: 'MedievalSharp', cursive;
+    font-family: var(--font-primary);
+    text-transform: uppercase; /* Added for style */
+    letter-spacing: 0.5px;
 }
+.genre-tag:nth-child(odd) { /* Alternate tag colors for visual interest */
+    background-color: var(--logo-teal);
+}
+
 
 /* Modal Styles */
 .modal-overlay {
@@ -307,7 +342,7 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(10, 10, 10, 0.85); /* Darker overlay */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -324,12 +359,12 @@ main {
 }
 
 .modal-content {
-    background-color: #f0e6d2;
-    color: #3a2d25;
+    background-color: var(--logo-dark-element);
+    color: var(--logo-light-text);
     padding: 30px;
     border-radius: 10px;
-    border: 3px solid #4a3b31;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    border: 3px solid var(--logo-magenta); /* Magenta border for modal */
+    box-shadow: 0 5px 25px rgba(var(--logo-magenta-rgb), 0.3); /* Magenta glow */
     width: 90%;
     max-width: 700px;
     max-height: 90vh;
@@ -352,14 +387,15 @@ main {
     background: none;
     border: none;
     font-size: 2.2em;
-    color: #4a3b31;
+    color: var(--logo-light-text);
     cursor: pointer;
     line-height: 1;
     padding: 5px;
+    transition: color 0.2s ease;
 }
 
 .modal-close-btn:hover {
-    color: #c0392b;
+    color: var(--logo-bright-teal); /* Bright teal for close hover */
 }
 
 .modal-campaign-art {
@@ -368,14 +404,14 @@ main {
     object-fit: cover;
     border-radius: 5px;
     margin-bottom: 20px;
-    border: 2px solid #c8bda8;
+    border: 2px solid var(--logo-dark-background); /* Dark border for art */
 }
 
 .modal-campaign-title {
     font-size: 2em;
     margin-top: 0;
     margin-bottom: 10px;
-    color: #3a2d25;
+    color: var(--logo-bright-magenta); /* Bright magenta for modal title */
 }
 
 .modal-genre-tags {
@@ -385,7 +421,7 @@ main {
 }
 
 .modal-campaign-synopsis {
-    font-family: 'MedievalSharp', cursive;
+    font-family: var(--font-primary);
     font-size: 1.1em;
     line-height: 1.7;
     margin-bottom: 25px;
@@ -394,8 +430,9 @@ main {
 .modal-chapters-section h3 {
     font-size: 1.4em;
     margin-bottom: 10px;
-    border-bottom: 1px solid #c8bda8;
+    border-bottom: 1px solid var(--logo-teal); /* Teal underline for section */
     padding-bottom: 5px;
+    color: var(--logo-teal);
 }
 
 .modal-chapter-list {
@@ -408,9 +445,9 @@ main {
 }
 
 .modal-chapter-list li a {
-    font-family: 'MedievalSharp', cursive;
+    font-family: var(--font-primary);
     font-size: 1.1em;
-    color: #5a4a42;
+    color: var(--logo-bright-teal); /* Chapter links in bright teal */
     display: block;
     padding: 8px 10px;
     border-radius: 4px;
@@ -418,8 +455,8 @@ main {
 }
 
 .modal-chapter-list li a:hover {
-    background-color: #e6d5b8;
-    color: #3a2d25;
+    background-color: rgba(var(--logo-teal-rgb), 0.15);
+    color: var(--logo-teal);
     text-decoration: none;
 }
 
@@ -427,27 +464,34 @@ main {
 .dice-roller {
     margin: 40px auto 0 auto;
     text-align: center;
+    background-color: var(--logo-dark-element);
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid var(--logo-teal);
 }
 #rollDiceBtn {
     font-size: 1.2em;
     padding: 10px 24px;
     border-radius: 8px;
-    background: #4a3b31;
-    color: #f0e6d2;
+    background: var(--logo-magenta);
+    color: var(--logo-light-text);
     border: none;
     margin-bottom: 12px;
     transition: background 0.2s;
+    font-family: var(--font-secondary);
 }
 #rollDiceBtn:hover {
-    background: #6b5642;
+    background: var(--logo-bright-magenta);
 }
 .dice-result {
     font-size: 2.5em;
     min-height: 1.5em;
     margin-top: 10px;
     transition: transform 0.2s;
+    color: var(--logo-bright-teal);
+    font-family: var(--font-secondary);
 }
-.dice-rolling {
+.dice-rolling { /* Animation remains the same */
     animation: shake 0.6s;
 }
 @keyframes shake {
@@ -464,17 +508,17 @@ footer {
     text-align: center;
     padding: 25px 20px;
     margin-top: 50px;
-    background-color: #3a2d25;
-    color: #d3c8b3;
+    background-color: var(--logo-dark-element);
+    color: var(--logo-light-text);
     font-size: 0.9em;
-    border-top: 2px solid #4a3b31;
+    border-top: 2px solid var(--logo-magenta); /* Magenta top border for footer */
 }
 
 footer p {
     margin: 0;
 }
 
-/* Responsive Design */
+/* Responsive Design - Structure and layout mostly same, colors adapt from above */
 @media (max-width: 768px) {
     body {
         font-size: 15px;
@@ -483,18 +527,26 @@ footer p {
     .site-identity h1 {
         font-size: 1.8em;
     }
-
-    .menu-toggle {
-        display: block;
+    header {
+        padding: 10px 15px; /* Slightly reduce header padding */
     }
+    nav#main-nav { /* Mobile nav background */
+        background-color: var(--logo-dark-element);
+        border-top: 1px solid rgba(var(--logo-teal-rgb), 0.3);
+    }
+    nav#main-nav ul li a { /* Mobile nav link colors already set */
+         border-bottom: 1px solid rgba(var(--logo-light-text), 0.1);
+    }
+
+    .menu-toggle { display: block; }
+    /* Other structural responsive styles like nav toggling remain */
 
     nav#main-nav {
         position: absolute;
-        top: 100%;
+        top: 100%; /* Position below header */
         left: 0;
         right: 0;
         width: 100%;
-        background-color: #4a3b31;
         z-index: 999;
         flex-direction: column;
         align-items: stretch;
@@ -506,8 +558,7 @@ footer p {
     }
 
     nav#main-nav.nav-open {
-        max-height: 500px;
-        border-top: 1px solid rgba(240, 230, 210, 0.2);
+        max-height: 500px; /* Or enough to show items */
     }
 
     nav#main-nav ul {
@@ -519,40 +570,15 @@ footer p {
     nav#main-nav ul li a {
         display: block;
         padding: 15px 20px;
-        border-bottom: 1px solid rgba(240, 230, 210, 0.1);
     }
     nav#main-nav ul li:last-child a {
         border-bottom: none;
     }
-
-    .header-description {
-        padding-top: 10px;
-        margin-top: 10px;
-    }
-    .site-motto { font-size: 1.1em; }
-    .tagline { font-size: 0.9em; }
-
-    main {
-        padding: 15px;
-        margin-top: 20px;
-    }
-
-    .campaign-filters {
-        padding: 15px;
-        margin-bottom: 30px;
-    }
     .filter-group {
         flex-direction: column;
-        align-items: stretch;
     }
-    .filter-group label {
-        margin-bottom: 8px;
-        text-align: left;
-    }
-    .filter-group select {
-        min-width: auto;
-        width: 100%;
-    }
+    .filter-group label { margin-bottom: 8px; text-align: left; }
+    .filter-group select { min-width: auto; width: 100%; }
 
     .campaign-grid {
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -581,12 +607,12 @@ footer p {
     }
 
     .campaign-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column on very small screens */
         gap: 25px;
     }
 
     .campaign-card {
-        aspect-ratio: unset;
+        aspect-ratio: unset; /* Allow height to be more flexible */
         min-height: 350px;
     }
 
@@ -596,52 +622,47 @@ footer p {
 
     .modal-campaign-art {
         max-height: 200px;
-    }    
-    /* Modal Loading Spinner (not used for overlay, but kept for accessibility) */
-    .modal-loading-spinner {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-        font-size: 1.1em;
-        color: #4a3b31;
-        gap: 12px;
     }
-    
-    /* Global Loading Overlay for Chapter Navigation */
-    .global-loading-overlay {
+    .dice-roller {
+        padding: 15px;
+    }
+}
+
+/* Modal Loading Spinner (D20) - Colors updated */
+.modal-loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: var(--logo-light-text); /* Text color for loading */
+    gap: 12px;
+}
+.d20-spinner svg polygon:nth-child(1) { fill: var(--logo-dark-element); stroke: var(--logo-teal); }
+.d20-spinner svg polygon:nth-child(2) { fill: var(--logo-teal); stroke: var(--logo-bright-teal); }
+.d20-spinner svg polygon:nth-child(3) { fill: var(--logo-magenta); stroke: var(--logo-bright-magenta); }
+.d20-spinner svg text { fill: var(--logo-light-text); }
+
+
+/* Global Loading Overlay for Chapter Navigation */
+.global-loading-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     width: 100vw;
     height: 100vh;
-    background: #000;
+    background: rgba(var(--logo-dark-background), 0.9); /* Themed overlay */
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
     transition: opacity 0.3s;
-    }
-    .global-loading-overlay.visually-hidden {
-        opacity: 0;
-        pointer-events: none;
-    }
-    .global-loading-overlay:not(.visually-hidden) {
-        opacity: 1;
-        pointer-events: all;
-    }
-    /* Dice Roller Animation */
-    .dice-rolling {
-        animation: shake 0.6s;
-    }
-    @keyframes shake {
-        0% { transform: rotate(0deg) scale(1); }
-        20% { transform: rotate(-15deg) scale(1.2);}
-        40% { transform: rotate(15deg) scale(1.1);}
-        60% { transform: rotate(-10deg) scale(1.15);}
-        80% { transform: rotate(10deg) scale(1.05);}
-        100% { transform: rotate(0deg) scale(1);}
-    }
-    
-    /* ...existing styles below... */
-    
 }
+.global-loading-overlay.visually-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.global-loading-overlay:not(.visually-hidden) {
+    opacity: 1;
+    pointer-events: all;
+}
+/* .global-loading-gif - ensure your GIF works well on dark background or update it */
