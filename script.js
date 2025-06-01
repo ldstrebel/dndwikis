@@ -62,12 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         e.preventDefault();
                         if (globalLoadingOverlay) {
                             globalLoadingOverlay.classList.remove('visually-hidden');
-                            // Force paint before navigation
-                            requestAnimationFrame(() => {
-                                setTimeout(() => {
-                                    window.location.href = chapter.url;
-                                }, 80); // Enough time for overlay to render
-                            });
+                            // Force a reflow so the overlay is rendered before navigation
+                            globalLoadingOverlay.offsetHeight;
+                            // Delay navigation to allow the overlay to render
+                            setTimeout(() => {
+                                window.location.href = chapter.url;
+                            }, 150);
                         } else {
                             window.location.href = chapter.url;
                         }
