@@ -592,7 +592,7 @@ footer p {
     }
     
     /* Global Loading Overlay for Chapter Navigation */
-        .global-loading-overlay {
+    .global-loading-overlay {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
         width: 100vw;
@@ -608,7 +608,6 @@ footer p {
         width: 160px;
         height: 160px;
         object-fit: contain;
-        /* Optional: add a glow effect */
         filter: drop-shadow(0 0 32px #39ffe6) drop-shadow(0 0 16px #ff39c0);
     }
     .global-loading-overlay.visually-hidden {
