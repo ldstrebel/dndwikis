@@ -162,36 +162,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- DICE ROLLER ---
-    const rollDiceBtn = document.getElementById('rollDiceBtn');
-    const diceResult = document.getElementById('diceResult');
-    if (rollDiceBtn && diceResult) {
-        rollDiceBtn.addEventListener('click', () => {
-            diceResult.classList.remove('dice-rolling');
-            // Animate
-            setTimeout(() => {
+                // --- DICE ROLLER ---
+        const rollDiceBtn = document.getElementById('rollDiceBtn');
+        const diceResult = document.getElementById('diceResult');
+        if (rollDiceBtn && diceResult) {
+            diceResult.textContent = '🎲';
+        
+            rollDiceBtn.addEventListener('click', () => {
+                let frame = 0;
+                let maxFrames = 24 + Math.floor(Math.random() * 8);
+                let lastNum = 1;
                 diceResult.classList.add('dice-rolling');
-                diceResult.innerHTML = `
-                    <svg viewBox="0 0 64 64" width="38" height="38" fill="none" style="vertical-align:middle;">
-                        <polygon points="32,4 60,54 4,54" fill="#e6d5b8" stroke="#4a3b31" stroke-width="3"/>
-                        <polygon points="32,4 32,54 60,54" fill="#f0e6d2" stroke="#4a3b31" stroke-width="2"/>
-                        <polygon points="32,4 32,54 4,54" fill="#d3c8b3" stroke="#4a3b31" stroke-width="2"/>
-                        <text x="32" y="40" text-anchor="middle" font-size="18" fill="#4a3b31" font-family="Cinzel Decorative, serif" font-weight="bold">20</text>
-                    </svg>
-                `;
-                setTimeout(() => {
-                    const roll = Math.floor(Math.random() * 20) + 1;
-                    diceResult.innerHTML = `
-                        <svg viewBox="0 0 64 64" width="38" height="38" fill="none" style="vertical-align:middle;">
-                            <polygon points="32,4 60,54 4,54" fill="#e6d5b8" stroke="#4a3b31" stroke-width="3"/>
-                            <polygon points="32,4 32,54 60,54" fill="#f0e6d2" stroke="#4a3b31" stroke-width="2"/>
-                            <polygon points="32,4 32,54 4,54" fill="#d3c8b3" stroke="#4a3b31" stroke-width="2"/>
-                            <text x="32" y="40" text-anchor="middle" font-size="18" fill="#4a3b31" font-family="Cinzel Decorative, serif" font-weight="bold">${roll}</text>
-                        </svg>
-                    `;
-                    diceResult.classList.remove('dice-rolling');
-                }, 600);
-            }, 10);
-        });
-    }
+                function animateRoll() {
+                    if (frame < maxFrames) {
+                        let num = Math.floor(Math.random() * 20) + 1;
+                        lastNum = num;
+                        diceResult.textContent = num;
+                        frame++;
+                        let delay = frame < maxFrames - 10 ? 40 : 80 + frame * 2;
+                        setTimeout(animateRoll, delay);
+                    } else {
+                        let roll = Math.floor(Math.random() * 20) + 1;
+                        diceResult.textContent = roll;
+                        diceResult.classList.remove('dice-rolling');
+                    }
+                }
+                animateRoll();
+            });
+        }
 });
