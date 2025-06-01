@@ -643,26 +643,27 @@ footer p {
 .d20-spinner svg polygon:nth-child(3) { fill: var(--logo-magenta); stroke: var(--logo-bright-magenta); }
 .d20-spinner svg text { fill: var(--logo-light-text); }
 
-
-/* Global Loading Overlay for Chapter Navigation */
 .global-loading-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(var(--logo-dark-background), 0.9); /* Themed overlay */
+    /* From your new theme (dark background, 0.9 opacity) */
+    background: rgba(var(--logo-dark-background, 24, 26, 27), 0.9); /* Fallback if CSS var not loaded */
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    transition: opacity 0.3s;
+    opacity: 1; /* Default visible state */
+    transition: opacity 0.5s ease-out; /* Controls fade-out speed */
 }
+
 .global-loading-overlay.visually-hidden {
     opacity: 0;
-    pointer-events: none;
+    pointer-events: none; /* Important to allow interaction with page underneath after hiding */
 }
-.global-loading-overlay:not(.visually-hidden) {
-    opacity: 1;
-    pointer-events: all;
+
+.global-loading-gif { /* If you need to style the GIF itself */
+    max-width: 100px; /* Example size */
+    max-height: 100px;
 }
-/* .global-loading-gif - ensure your GIF works well on dark background or update it */
