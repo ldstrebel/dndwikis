@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter Title</title> <link rel="icon" href="images/d20favicon.webp" type="image/webp">
+<link rel="shortcut icon" href="images/d20favicon.webp" type="image/webp">
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    /* Base font for chapter pages if different from style.css */
+    body { 
+        font-family: 'Inter', sans-serif; 
+    }
+    /* Slide animation for chapter content */
+    .slide { 
+        animation: fadeIn 0.5s ease-in-out; 
+    }
+    @keyframes fadeIn { 
+        from { opacity: 0; } 
+        to { opacity: 1; } 
+    }
+    
+    /* Custom scrollbar for dialogue containers (using Tailwind-like dark theme colors) */
+    .dialogue-container::-webkit-scrollbar { 
+        width: 6px; 
+        height: 6px; 
+    }
+    .dialogue-container::-webkit-scrollbar-track { 
+        background: #1e293b; /* slate-800 */ 
+    }
+    .dialogue-container::-webkit-scrollbar-thumb { 
+        background: #475569; /* slate-600 */ 
+        border-radius: 3px; 
+    }
+    .dialogue-container::-webkit-scrollbar-thumb:hover { 
+        background: #64748b; /* slate-500 */ 
+    }
+
+    /* Home button icon hover effect */
+    .chapter-home-button img {
+        transition: opacity 0.2s ease-in-out;
+    }
+    .chapter-home-button:hover img {
+        opacity: 0.75;
+    }
+</style>
+</head>
+<body class="bg-slate-900 text-slate-100 flex flex-col items-center p-4 md:p-8 min-h-screen">
+
+<div id="globalLoadingOverlayChapter" class="global-loading-overlay">
+    <img src="images/archway-loaded.gif" alt="Loading..." class="global-loading-gif" />
+</div>
+
+<header class="w-full max-w-4xl mb-6 relative flex items-center justify-center py-3 md:py-4">
+    <a href="index.html" title="Go to Homepage" class="chapter-home-button absolute top-1/2 left-2 md:left-4 -translate-y-1/2 p-1 z-10">
+        <img src="images/archway-home.webp" alt="Home" class="h-8 w-8 md:h-10 md:w-10">
+    </a>
+
+    <h1 id="chapterTitle" class="text-3xl md:text-4xl font-bold text-sky-400 text-center flex-grow px-6 md:px-8 mx-auto" style="max-width: calc(100% - 100px); line-height: 1.3;">
+        Meryl #2            </h1>
+</header>
+
+    <main id="slideshow-container" class="w-full relative">
+        <!-- // content goes here  -->
+
+    </main>
+
+    
+    <div class="mt-6 flex items-center justify-center space-x-4 w-full max-w-5xl">
+        <button id="prev-slide" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500">
+            &larr; Previous
+        </button>
+        <div id="slide-counter" class="text-slate-400 text-sm">Slide 1 of 20</div>
+        <button id="next-slide" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500">
+            Next &rarr;
+        </button>
+    </div>
+
+    <script>
+        const slidesElements = document.querySelectorAll('.slide');
+        const prevButton = document.getElementById('prev-slide');
+        const nextButton = document.getElementById('next-slide');
+        const slideCounter = document.getElementById('slide-counter');
+        let currentIndex = 0;
+        const totalSlides = slidesElements.length;
+
+        function showSlide(index) {
+            slidesElements.forEach((slide, i) => {
+                slide.classList.toggle('hidden', i !== index);
+            });
+            if (slideCounter && totalSlides > 0) {
+                slideCounter.textContent = `Slide ${index + 1} of ${totalSlides}`;
+            }
+        }
+
+        if (totalSlides > 0) {
+            showSlide(currentIndex);
+        }
+
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                showSlide(currentIndex);
+            });
+        }
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                showSlide(currentIndex);
+            });
+        }
+        
+        document.addEventListener('keydown', (event) => {
+            if (totalSlides <= 1) return;
+            if (event.key === 'ArrowLeft') {
+                if (prevButton) prevButton.click();
+            } else if (event.key === 'ArrowRight') {
+                if (nextButton) nextButton.click();
+            }
+        });
+    </script>
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chapterOverlay = document.getElementById('globalLoadingOverlayChapter');
+        if (chapterOverlay) {
+            // Optional: slight delay to ensure some paint before fade
+            setTimeout(() => {
+                chapterOverlay.classList.add('visually-hidden');
+            }, 150); // Adjust delay (e.g., 50-250ms) or remove for immediate hide attempt
+        }
+    });
+</script>
+</body>
+</html>
