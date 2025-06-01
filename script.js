@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Always hide the global loading overlay on page load
+    const globalLoadingOverlay = document.getElementById('globalLoadingOverlay');
+    if (globalLoadingOverlay) {
+        globalLoadingOverlay.classList.add('visually-hidden');
+    }
+    
     const campaignCards = document.querySelectorAll('.campaign-card');
     const modal = document.getElementById('campaignModal');
     const modalCloseBtn = modal.querySelector('.modal-close-btn');
@@ -9,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalChapterList = modal.querySelector('#modalChapterList');
     const modalGenreTagsContainer = modal.querySelector('.modal-genre-tags');
     const modalLoadingSpinner = document.getElementById('modalLoadingSpinner');
-    const globalLoadingOverlay = document.getElementById('globalLoadingOverlay');
-
     // Accessibility: Make cards focusable and act as buttons
     campaignCards.forEach(card => {
         card.setAttribute('tabindex', '0');

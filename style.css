@@ -593,22 +593,16 @@ footer p {
     
     /* Global Loading Overlay for Chapter Navigation */
     .global-loading-overlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #000; /* Solid black for seamless GIF background */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        transition: opacity 0.3s;
-    }
-    .global-loading-overlay img.global-loading-gif {
-        width: 160px;
-        height: 160px;
-        object-fit: contain;
-        filter: drop-shadow(0 0 32px #39ffe6) drop-shadow(0 0 16px #ff39c0);
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.3s;
     }
     .global-loading-overlay.visually-hidden {
         opacity: 0;
@@ -618,7 +612,6 @@ footer p {
         opacity: 1;
         pointer-events: all;
     }
-    
     /* Dice Roller Animation */
     .dice-rolling {
         animation: shake 0.6s;
