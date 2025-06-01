@@ -11,7 +11,7 @@
     <header>
         <div class="header-top">
             <div class="site-identity">
-                 <h1>The Portals</h1> <!-- Site title as H1 on homepage -->
+                 <h1>The Portals</h1>
             </div>
             <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-nav">
                 <span class="menu-toggle-bar"></span>
@@ -20,10 +20,8 @@
             </button>
         </div>
         <nav id="main-nav" aria-label="Main navigation" aria-hidden="true">
-            <!-- {/* This nav is initially hidden for mobile; JS will toggle aria-hidden and a class for visibility based on menu-toggle interaction */} -->
             <ul>
                 <li><a href="index.html">Home (All Campaigns)</a></li>
-                <!-- {/* Add other global navigation links here if any, e.g., About, Contact */} -->
             </ul>
         </nav>
         <div class="header-description">
@@ -87,6 +85,12 @@
            
             </div>
         </section>
+
+        <!-- Dice Roller Section -->
+        <section class="dice-roller">
+            <button id="rollDiceBtn">Roll D20</button>
+            <div id="diceResult" class="dice-result">🎲</div>
+        </section>
     </main>
 
     <div id="campaignModal" class="modal-overlay" aria-hidden="true">
@@ -101,6 +105,18 @@
                     <h3>Chapters</h3>
                     <ul id="modalChapterList" class="modal-chapter-list"></ul>
                 </div>
+                <!-- D20 Spinner (hidden by default) -->
+                <div id="modalLoadingSpinner" class="modal-loading-spinner visually-hidden" aria-live="polite">
+                    <span class="d20-spinner" aria-hidden="true">
+                        <svg viewBox="0 0 64 64" width="38" height="38" fill="none">
+                            <polygon points="32,4 60,54 4,54" fill="#e6d5b8" stroke="#4a3b31" stroke-width="3"/>
+                            <polygon points="32,4 32,54 60,54" fill="#f0e6d2" stroke="#4a3b31" stroke-width="2"/>
+                            <polygon points="32,4 32,54 4,54" fill="#d3c8b3" stroke="#4a3b31" stroke-width="2"/>
+                            <text x="32" y="40" text-anchor="middle" font-size="18" fill="#4a3b31" font-family="Cinzel Decorative, serif" font-weight="bold">20</text>
+                        </svg>
+                    </span>
+                    <span>Loading chapter...</span>
+                </div>
             </div>
         </div>
     </div>
@@ -110,5 +126,8 @@
     </footer>
 
     <script src="script.js"></script>
+    <div id="globalLoadingOverlay" class="global-loading-overlay visually-hidden">
+        <img src="images/d20-loader.gif" alt="Loading..." class="global-loading-gif" />
+</div>
 </body>
 </html>

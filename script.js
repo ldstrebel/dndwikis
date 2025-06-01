@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalSynopsis = modal.querySelector('#modalSynopsis');
     const modalChapterList = modal.querySelector('#modalChapterList');
     const modalGenreTagsContainer = modal.querySelector('.modal-genre-tags');
+    const modalLoadingSpinner = document.getElementById('modalLoadingSpinner');
+    const globalLoadingOverlay = document.getElementById('globalLoadingOverlay');
 
     // Accessibility: Make cards focusable and act as buttons
     campaignCards.forEach(card => {
@@ -51,12 +53,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     const link = document.createElement('a');
                     link.href = chapter.url;
                     link.textContent = chapter.title;
+                    // Show global loading overlay on chapter click
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (globalLoadingOverlay) {
+                            globalLoadingOverlay.classList.remove('visually-hidden');
+                            // Force reflow to ensure overlay is painted before navigation
+                            void globalLoadingOverlay.offsetWidth;
+                        }
+                        setTimeout(() => {
+                            window.location.href = chapter.url;
+                        }, 50); // Short delay to allow overlay to render
+                    });
                     listItem.appendChild(link);
                     modalChapterList.appendChild(listItem);
                 });
                 modal.querySelector('.modal-chapters-section').style.display = 'block';
             } else {
                 modal.querySelector('.modal-chapters-section').style.display = 'none';
+                if (modalLoadingSpinner) modalLoadingSpinner.classList.add('visually-hidden');
             }
 
             // 3. Display the modal
@@ -66,6 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = 'hidden';
             // Move focus to close button for accessibility
             modalCloseBtn.focus();
+            // Hide spinner if it was left visible
+            if (modalLoadingSpinner) modalLoadingSpinner.classList.add('visually-hidden');
+            modalChapterList.style.opacity = '1';
         });
 
         // Keyboard accessibility: open modal with Enter or Space
@@ -85,6 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
             if (lastFocusedElement) lastFocusedElement.focus();
+            // Hide spinner and restore opacity
+            if (modalLoadingSpinner) modalLoadingSpinner.classList.add('visually-hidden');
+            modalChapterList.style.opacity = '1';
         }, 300);
     }
 
@@ -138,6 +159,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.style.display = 'none';
                 }
             });
+        });
+    }
+
+    // --- DICE ROLLER ---
+    const rollDiceBtn = document.getElementById('rollDiceBtn');
+    const diceResult = document.getElementById('diceResult');
+    if (rollDiceBtn && diceResult) {
+        rollDiceBtn.addEventListener('click', () => {
+            diceResult.classList.remove('dice-rolling');
+            // Animate
+            setTimeout(() => {
+                diceResult.classList.add('dice-rolling');
+                diceResult.innerHTML = `
+                    <svg viewBox="0 0 64 64" width="38" height="38" fill="none" style="vertical-align:middle;">
+                        <polygon points="32,4 60,54 4,54" fill="#e6d5b8" stroke="#4a3b31" stroke-width="3"/>
+                        <polygon points="32,4 32,54 60,54" fill="#f0e6d2" stroke="#4a3b31" stroke-width="2"/>
+                        <polygon points="32,4 32,54 4,54" fill="#d3c8b3" stroke="#4a3b31" stroke-width="2"/>
+                        <text x="32" y="40" text-anchor="middle" font-size="18" fill="#4a3b31" font-family="Cinzel Decorative, serif" font-weight="bold">20</text>
+                    </svg>
+                `;
+                setTimeout(() => {
+                    const roll = Math.floor(Math.random() * 20) + 1;
+                    diceResult.innerHTML = `
+                        <svg viewBox="0 0 64 64" width="38" height="38" fill="none" style="vertical-align:middle;">
+                            <polygon points="32,4 60,54 4,54" fill="#e6d5b8" stroke="#4a3b31" stroke-width="3"/>
+                            <polygon points="32,4 32,54 60,54" fill="#f0e6d2" stroke="#4a3b31" stroke-width="2"/>
+                            <polygon points="32,4 32,54 4,54" fill="#d3c8b3" stroke="#4a3b31" stroke-width="2"/>
+                            <text x="32" y="40" text-anchor="middle" font-size="18" fill="#4a3b31" font-family="Cinzel Decorative, serif" font-weight="bold">${roll}</text>
+                        </svg>
+                    `;
+                    diceResult.classList.remove('dice-rolling');
+                }, 600);
+            }, 10);
         });
     }
 });
