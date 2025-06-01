@@ -58,12 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         e.preventDefault();
                         if (globalLoadingOverlay) {
                             globalLoadingOverlay.classList.remove('visually-hidden');
-                            // Force reflow to ensure overlay is painted before navigation
-                            void globalLoadingOverlay.offsetWidth;
-                        }
-                        setTimeout(() => {
+                            // Force paint before navigation
+                            requestAnimationFrame(() => {
+                                setTimeout(() => {
+                                    window.location.href = chapter.url;
+                                }, 80); // Enough time for overlay to render
+                            });
+                        } else {
                             window.location.href = chapter.url;
-                        }, 50); // Short delay to allow overlay to render
+                        }
                     });
                     listItem.appendChild(link);
                     modalChapterList.appendChild(listItem);
@@ -162,32 +165,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-                // --- DICE ROLLER ---
-        const rollDiceBtn = document.getElementById('rollDiceBtn');
-        const diceResult = document.getElementById('diceResult');
-        if (rollDiceBtn && diceResult) {
-            diceResult.textContent = '🎲';
-        
-            rollDiceBtn.addEventListener('click', () => {
-                let frame = 0;
-                let maxFrames = 24 + Math.floor(Math.random() * 8);
-                let lastNum = 1;
-                diceResult.classList.add('dice-rolling');
-                function animateRoll() {
-                    if (frame < maxFrames) {
-                        let num = Math.floor(Math.random() * 20) + 1;
-                        lastNum = num;
-                        diceResult.textContent = num;
-                        frame++;
-                        let delay = frame < maxFrames - 10 ? 40 : 80 + frame * 2;
-                        setTimeout(animateRoll, delay);
-                    } else {
-                        let roll = Math.floor(Math.random() * 20) + 1;
-                        diceResult.textContent = roll;
-                        diceResult.classList.remove('dice-rolling');
-                    }
+    // --- DICE ROLLER ---
+    const rollDiceBtn = document.getElementById('rollDiceBtn');
+    const diceResult = document.getElementById('diceResult');
+    if (rollDiceBtn && diceResult) {
+        diceResult.textContent = '🎲';
+
+        rollDiceBtn.addEventListener('click', () => {
+            let frame = 0;
+            let maxFrames = 24 + Math.floor(Math.random() * 8);
+            let lastNum = 1;
+            diceResult.classList.add('dice-rolling');
+            function animateRoll() {
+                if (frame < maxFrames) {
+                    let num = Math.floor(Math.random() * 20) + 1;
+                    lastNum = num;
+                    diceResult.textContent = num;
+                    frame++;
+                    let delay = frame < maxFrames - 10 ? 40 : 80 + frame * 2;
+                    setTimeout(animateRoll, delay);
+                } else {
+                    let roll = Math.floor(Math.random() * 20) + 1;
+                    diceResult.textContent = roll;
+                    diceResult.classList.remove('dice-rolling');
                 }
-                animateRoll();
-            });
-        }
+            }
+            animateRoll();
+        });
+    }
 });
