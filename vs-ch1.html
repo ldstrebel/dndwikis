@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verdant Scar - Chapter 1: The Call of the Scar</title>
+<link rel="icon" href="images/d20favicon.webp" type="image/webp">
+<link rel="shortcut icon" href="images/d20favicon.webp" type="image/webp">
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    /* Base font for chapter pages if different from style.css */
+    body { 
+        font-family: 'Inter', sans-serif; 
+    }
+    /* Slide animation for chapter content */
+    .slide { 
+        animation: fadeIn 0.5s ease-in-out; 
+    }
+    @keyframes fadeIn { 
+        from { opacity: 0; } 
+        to { opacity: 1; } 
+    }
+    
+    /* Custom scrollbar for dialogue containers (using Tailwind-like dark theme colors) */
+    .dialogue-container::-webkit-scrollbar { 
+        width: 6px; 
+        height: 6px; 
+    }
+    .dialogue-container::-webkit-scrollbar-track { 
+        background: #1e293b; /* slate-800 */ 
+    }
+    .dialogue-container::-webkit-scrollbar-thumb { 
+        background: #475569; /* slate-600 */ 
+        border-radius: 3px; 
+    }
+    .dialogue-container::-webkit-scrollbar-thumb:hover { 
+        background: #64748b; /* slate-500 */ 
+    }
+
+    /* Home button icon hover effect */
+    .chapter-home-button img {
+        transition: opacity 0.2s ease-in-out;
+    }
+    .chapter-home-button:hover img {
+        opacity: 0.75;
+    }
+</style>
+</head>
+<body class="bg-slate-900 text-slate-100 flex flex-col items-center p-4 md:p-8 min-h-screen">
+
+<div id="globalLoadingOverlayChapter" class="global-loading-overlay">
+    <img src="images/archway-loaded.gif" alt="Loading..." class="global-loading-gif" />
+</div>
+
+<header class="w-full max-w-4xl mb-6 relative flex items-center justify-center py-3 md:py-4">
+    <a href="index.html" title="Go to Homepage" class="chapter-home-button absolute top-1/2 left-2 md:left-4 -translate-y-1/2 p-1 z-10">
+        <img src="images/archway-home.webp" alt="Home" class="h-8 w-8 md:h-10 md:w-10">
+    </a>
+
+    <h1 id="chapterTitle" class="text-3xl md:text-4xl font-bold text-sky-400 text-center flex-grow px-6 md:px-8 mx-auto" style="max-width: calc(100% - 100px); line-height: 1.3;">
+        Verdant Scar - Chapter 1: The Call of the Scar
+    </h1>
+</header>
+
+<main id="slideshow-container" class="w-full relative">
+    <div class="slide w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Valley of Eldara</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                The morning mist clung to the ancient stone walls of Eldara's capital, where the first rays of dawn painted the cobblestone streets in golden light. In the heart of the city, the Grand Library stood as a testament to centuries of knowledge, its spires reaching toward the heavens like fingers grasping for forgotten wisdom.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Inside, among the dusty tomes and flickering candlelight, a young scholar named Lyra traced her finger along an ancient map. The parchment was worn and yellowed, but the ink still held its secrets—secrets that would change everything.
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Discovery</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                "This can't be right," Lyra whispered to herself, her voice barely audible in the silent library. The map showed a valley—beautiful and verdant—but there was something wrong with it. A scar, dark and jagged, cut through the heart of the valley like a wound that refused to heal.
+            </p>
+            <p class="text-lg leading-relaxed">
+                According to the ancient texts, this valley had once been the most fertile land in all of Eldara, a place where magic flowed freely and life flourished. But the scar... the scar told a different story.
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Prophecy</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                As Lyra turned the page, her eyes fell upon a prophecy written in elegant script:
+            </p>
+            <div class="bg-slate-700 rounded-lg p-4 my-4 border-l-4 border-emerald-500">
+                <p class="text-lg italic text-emerald-300">
+                    "When the scar bleeds green and the valley weeps,<br>
+                    Three shall answer the ancient call.<br>
+                    One of knowledge, one of might, one of heart,<br>
+                    To mend what was broken, to heal what was torn."
+                </p>
+            </div>
+            <p class="text-lg leading-relaxed">
+                Lyra's heart raced. She had found something that could change the fate of Eldara itself.
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Gathering</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                Word of Lyra's discovery spread quickly through the city. Within days, three individuals found themselves drawn to the Grand Library, each answering a call they couldn't explain.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                There was Thorne, a battle-hardened warrior whose sword had tasted the blood of countless enemies. His eyes held the weight of battles fought and lives lost, but there was something else there now—hope.
+            </p>
+            <p class="text-lg leading-relaxed">
+                And there was Kael, a healer whose gentle hands had mended broken bones and soothed troubled minds. His magic was pure and strong, but he had never faced a challenge like this.
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Journey Begins</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                As the three companions stood before the ancient map, the scar seemed to pulse with a dark energy that made their skin crawl. The valley called to them, its voice a whisper on the wind that spoke of ancient magic and forgotten power.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                "We have to go," Lyra said, her voice firm despite the fear in her eyes. "The prophecy is clear. We three are meant to heal the scar."
+            </p>
+            <p class="text-lg leading-relaxed">
+                Thorne nodded, his hand resting on the hilt of his sword. "Then we leave at dawn. The valley awaits."
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Road to the Scar</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                The journey to the valley took three days of hard travel through rugged terrain. As they climbed higher into the mountains, the air grew thinner and the landscape more treacherous. But with each step, the pull of the scar grew stronger.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                On the morning of the fourth day, they crested a ridge and saw it for the first time—the Valley of Eldara, spread out before them like a green jewel in the mountain's embrace.
+            </p>
+            <p class="text-lg leading-relaxed">
+                But the beauty was marred by the scar—a jagged, dark line that cut through the valley's heart, pulsing with an unnatural energy that made the very air around it shimmer and distort.
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Scar's Power</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                As they descended into the valley, the scar's influence became more apparent. Plants near its edges were twisted and deformed, their leaves blackened and their stems bent at impossible angles. The air crackled with static electricity, and the ground beneath their feet felt unstable.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                "This is worse than I imagined," Kael whispered, his healing magic flaring to life as he tried to counteract the corruption spreading from the scar.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Lyra consulted her ancient texts, searching for any clue about how to heal such a wound. "The prophecy mentioned three of us, but it didn't say how we're supposed to work together."
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The First Test</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                As they approached the scar itself, the ground began to tremble. From the depths of the dark fissure, tendrils of shadow emerged, writhing and grasping like the fingers of some ancient, malevolent being.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                "Defend yourselves!" Thorne shouted, drawing his sword. The blade gleamed with a light that seemed to push back the shadows, but the tendrils were relentless.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Kael's healing magic formed a protective barrier around them, while Lyra's knowledge of ancient spells allowed her to identify the nature of their enemy. "It's not just corruption—it's alive!"
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">Working Together</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                The battle was fierce, but as the three companions fought side by side, something remarkable happened. Their individual abilities began to merge and amplify each other in ways none of them had expected.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                Thorne's sword strikes became more precise, guided by Lyra's knowledge of the enemy's weaknesses. Kael's healing magic flowed through Thorne, making him stronger and faster. And Lyra's spells became more powerful when channeled through Kael's pure magic.
+            </p>
+            <p class="text-lg leading-relaxed">
+                Together, they pushed back the shadow tendrils, forcing them to retreat into the depths of the scar.
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Truth Revealed</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                As the shadows retreated, a voice echoed from the depths of the scar—ancient, sorrowful, and filled with regret. "You have proven yourselves worthy," it said. "But the scar cannot be healed by force alone."
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                Lyra stepped forward, her voice steady despite the fear in her heart. "Tell us what we need to do. How do we heal you?"
+            </p>
+            <p class="text-lg leading-relaxed">
+                "The scar was created by greed and the misuse of ancient magic," the voice replied. "To heal it, you must understand the true nature of power and sacrifice."
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Choice</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                The voice explained that the scar was not just a physical wound, but a manifestation of the valley's pain and anger. To heal it, one of them would have to make the ultimate sacrifice—to become one with the valley itself, serving as a bridge between the natural and magical worlds.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                "I'll do it," Kael said without hesitation. "I'm a healer. It's my purpose to mend what's broken, even if it costs me everything."
+            </p>
+            <p class="text-lg leading-relaxed">
+                Thorne and Lyra protested, but Kael was resolute. "This is why I was called here. Not just to fight, but to heal. To become the bridge that connects our world to the valley's heart."
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Transformation</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                As Kael stepped forward, his body began to glow with a pure, white light. The light spread outward, touching the scar and beginning to heal it from within. The dark energy receded, replaced by the gentle green glow of new life.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                But the transformation came at a cost. Kael's human form began to fade, his essence merging with the valley itself. He became something more than human—a guardian spirit, bound to the valley for eternity.
+            </p>
+            <p class="text-lg leading-relaxed">
+                "Don't mourn for me," his voice echoed through the valley. "I am not gone. I am everywhere now—in every blade of grass, every flower, every tree. I am the valley's heart, and it is mine."
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The Healing</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                With Kael's sacrifice, the scar began to close. The twisted plants straightened and regained their natural colors. The air cleared, and the ground became stable once more. The Valley of Eldara was whole again.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                But the healing was not just physical. The valley's magic, once corrupted and dangerous, now flowed freely and purely. It was stronger than before, but gentle and nurturing rather than destructive.
+            </p>
+            <p class="text-lg leading-relaxed">
+                "The prophecy was fulfilled," Lyra said softly, tears streaming down her face. "Three answered the call, and one became the bridge. The scar is healed."
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">The New Guardian</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                As the sun set over the healed valley, Kael's spirit appeared before them one last time. His form was ethereal and beautiful, glowing with the same green light that now filled the valley.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                "I will watch over this place forever," he said. "But you two must return to Eldara and tell them what happened here. Tell them that the valley is safe, and that magic must be used with wisdom and respect."
+            </p>
+            <p class="text-lg leading-relaxed">
+                "We will," Thorne promised. "Your sacrifice will not be forgotten."
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">Return to Eldara</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                The journey back to the capital was somber but filled with hope. Lyra and Thorne carried with them not just the tale of their adventure, but a deeper understanding of the true nature of magic and sacrifice.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                When they reached the Grand Library, they found that the ancient texts had changed. New pages had appeared, telling the story of their journey and Kael's sacrifice. The prophecy was complete.
+            </p>
+            <p class="text-lg leading-relaxed">
+                "The scar is healed," Lyra said to the gathered scholars. "But the lesson it taught us will live on forever. Magic is a gift, but it must be used with wisdom, respect, and above all, love."
+            </p>
+        </div>
+    </div>
+
+    <div class="slide hidden w-full max-w-4xl mx-auto">
+        <div class="bg-slate-800 rounded-lg p-6 mb-6 shadow-lg">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">Epilogue: The Valley's Gift</h2>
+            <p class="text-lg leading-relaxed mb-4">
+                In the years that followed, the Valley of Eldara became a place of pilgrimage for those seeking wisdom and healing. Kael's spirit continued to watch over it, his presence felt in every gentle breeze and every blooming flower.
+            </p>
+            <p class="text-lg leading-relaxed mb-4">
+                The scar was gone, but its memory lived on as a reminder of the consequences of unchecked power and the healing power of sacrifice. The valley's magic, now pure and strong, flowed freely throughout Eldara, bringing prosperity and peace.
+            </p>
+            <p class="text-lg leading-relaxed">
+                And somewhere in the heart of the valley, Kael's spirit smiled, knowing that his sacrifice had not been in vain. The Verdant Scar was healed, and the world was better for it.
+            </p>
+        </div>
+    </div>
+</main>
+
+<div class="mt-6 flex items-center justify-center space-x-4 w-full max-w-5xl">
+    <button id="prev-slide" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500">
+        &larr; Previous
+    </button>
+    <div id="slide-counter" class="text-slate-400 text-sm">Slide 1 of 20</div>
+    <button id="next-slide" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500">
+        Next &rarr;
+    </button>
+</div>
+
+<script>
+    const slidesElements = document.querySelectorAll('.slide');
+    const prevButton = document.getElementById('prev-slide');
+    const nextButton = document.getElementById('next-slide');
+    const slideCounter = document.getElementById('slide-counter');
+    let currentIndex = 0;
+    const totalSlides = slidesElements.length;
+
+    function showSlide(index) {
+        slidesElements.forEach((slide, i) => {
+            slide.classList.toggle('hidden', i !== index);
+        });
+        if (slideCounter && totalSlides > 0) {
+            slideCounter.textContent = `Slide ${index + 1} of ${totalSlides}`;
+        }
+    }
+
+    if (totalSlides > 0) {
+        showSlide(currentIndex);
+    }
+
+    if (prevButton) {
+        prevButton.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            showSlide(currentIndex);
+        });
+    }
+
+    if (nextButton) {
+        prevButton.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            showSlide(currentIndex);
+        });
+    }
+    
+    document.addEventListener('keydown', (event) => {
+        if (totalSlides <= 1) return;
+        if (event.key === 'ArrowLeft') {
+            if (prevButton) prevButton.click();
+        } else if (event.key === 'ArrowRight') {
+            if (nextButton) nextButton.click();
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chapterOverlay = document.getElementById('globalLoadingOverlayChapter');
+        if (chapterOverlay) {
+            // Optional: slight delay to ensure some paint before fade
+            setTimeout(() => {
+                chapterOverlay.classList.add('visually-hidden');
+            }, 150); // Adjust delay (e.g., 50-250ms) or remove for immediate hide attempt
+        }
+    });
+</script>
+</body>
+</html>

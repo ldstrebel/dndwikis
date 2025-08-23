@@ -26,15 +26,13 @@
             <div class="site-identity">
                  <h1>The Portals</h1>
             </div>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-nav">
-                <span class="menu-toggle-bar"></span>
-                <span class="menu-toggle-bar"></span>
-                <span class="menu-toggle-bar"></span>
-            </button>
         </div>
         <nav id="main-nav" aria-label="Main navigation" aria-hidden="true">
             <ul>
                 <li><a href="index.html">Home (All Campaigns)</a></li>
+                <li><a href="#" class="campaign-link" data-campaign="meryl">The Chronicles of Meryl</a></li>
+                <li><a href="#" class="campaign-link" data-campaign="dungeon-crawlers">Dungeon Crawlers</a></li>
+                <li><a href="#" class="campaign-link" data-campaign="verdant-scar">Verdant Scar</a></li>
             </ul>
         </nav>
         <div class="header-description">
@@ -43,22 +41,27 @@
     </header>
 
     <main>
-        <section class="campaign-filters" aria-labelledby="filter-heading">
-            <h2 id="filter-heading">Filter Campaigns</h2>
-            <div class="filter-group">
-                <label for="genre-filter">Genre:</label>
-                <select id="genre-filter" name="genre">
-                    <option value="all">All Genres</option>
-                    <option value="fantasy">Fantasy</option>
-                    <option value="sci-fi">Sci-Fi</option>
-                    <option value="litrpg">LitRPG</option>
-                </select>
-            </div>
-        </section>
+
 
         <h2 id="showcase-heading" class="visually-hidden">Campaigns</h2>
+        
+        <!-- View Toggle Controls -->
+        <section class="view-toggle-controls" aria-labelledby="view-toggle-heading">
+            <h3 id="view-toggle-heading" class="visually-hidden">View Options</h3>
+            <div class="toggle-buttons">
+                <button id="banner-view-btn" class="view-toggle-btn active" aria-pressed="true" aria-label="Show campaigns as banners">
+                    <span class="toggle-icon">🏞️</span>
+                    <span class="toggle-text">Banner View</span>
+                </button>
+                <button id="icon-view-btn" class="view-toggle-btn" aria-pressed="false" aria-label="Show campaigns as icons">
+                    <span class="toggle-icon">📱</span>
+                    <span class="toggle-text">Icon View</span>
+                </button>
+            </div>
+        </section>
+        
         <section class="campaign-showcase" aria-labelledby="showcase-heading">
-            <div class="campaign-grid">
+            <div class="campaign-grid" id="campaign-grid">
 
                 <article class="campaign-card"
                     data-genre="fantasy adventure"
@@ -94,7 +97,37 @@
                     </div>
                 </article>
              
-                <!-- Add more campaign cards here using the same structure and data attributes -->
+                <!-- 
+                    ADDING NEW CAMPAIGNS:
+                    To add a new campaign, copy this structure and update the following:
+                    
+                    1. data-genre: Space-separated genres (e.g., "fantasy adventure", "sci-fi litrpg")
+                    2. data-campaign-title: Campaign name for display
+                    3. data-poster-image: Path to campaign artwork in images/ directory
+                    4. data-full-synopsis: Full campaign description (shown in modal)
+                    5. data-chapters: JSON array with title and URL for each chapter
+                    6. campaign-poster src and alt: Update image path and description
+                    7. campaign-title: Update displayed title
+                    
+                    See README.md for detailed instructions.
+                -->
+                
+                <article class="campaign-card"
+                    data-genre="fantasy adventure"
+                    data-campaign-title="Verdant Scar"
+                    data-poster-image="images/verdant-scar.jpg"
+                    data-full-synopsis="In the mystical realm of Eldara, a verdant valley scarred by ancient magic holds secrets that could reshape the world. Follow the journey of unlikely heroes as they uncover the truth behind the Scar and face the consequences of power unchecked."
+                    data-chapters='[
+                        {"title": "Chapters 1-8", "url": "sigmar1-8.html"},
+                        {"title": "Chapter 9", "url": "sigmar-ch9.html"}
+                    ]'>
+                    <div class="tarot-art-container">
+                        <img src="images/verdant-scar.jpg" alt="Artwork for Verdant Scar campaign" class="campaign-poster">
+                    </div>
+                    <div class="tarot-info-container">
+                        <h3 class="campaign-title">Verdant Scar</h3>
+                    </div>
+                </article>
            
             </div>
         </section>
@@ -123,7 +156,7 @@
     </div>
 
     <footer>
-        <p>&copy; No electrons were harmed in the making of this whatever it is. All rights reserved.</p>
+        <p>&copy; No electrons were harmed in the making of this whatever it is.</p>
     </footer>
 
     <div id="globalLoadingOverlay" class="global-loading-overlay visually-hidden">

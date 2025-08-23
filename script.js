@@ -1,3 +1,21 @@
+/**
+ * D&D Wikis - The Portals
+ * Main JavaScript functionality for campaign showcase and modal system
+ * 
+ * FEATURES:
+ * - Campaign card interactions and modal display
+ * - Genre filtering system
+ * - Dice roller with animation
+ * - Mobile navigation toggle
+ * - Accessibility features (ARIA, keyboard navigation, focus management)
+ * 
+ * ADDING NEW CAMPAIGNS:
+ * Campaigns are automatically detected from HTML data attributes on .campaign-card elements.
+ * No JavaScript changes needed when adding new campaigns - just follow the HTML structure.
+ * 
+ * See README.md for detailed campaign addition instructions.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- MODIFICATION START: Skip initial global loading screen hiding ---
     // // This refers to the globalLoadingOverlay *within index.html itself*.
@@ -21,6 +39,71 @@ document.addEventListener('DOMContentLoaded', () => {
             mainNav.setAttribute('aria-hidden', String(isExpanded)); // Update aria-hidden for nav
         });
     }
+
+    // View Toggle System
+    const bannerViewBtn = document.getElementById('banner-view-btn');
+    const iconViewBtn = document.getElementById('icon-view-btn');
+    const campaignGrid = document.getElementById('campaign-grid');
+    
+    if (bannerViewBtn && iconViewBtn && campaignGrid) {
+        bannerViewBtn.addEventListener('click', () => {
+            campaignGrid.classList.remove('icon-view');
+            bannerViewBtn.classList.add('active');
+            bannerViewBtn.setAttribute('aria-pressed', 'true');
+            iconViewBtn.classList.remove('active');
+            iconViewBtn.setAttribute('aria-pressed', 'false');
+        });
+        
+        iconViewBtn.addEventListener('click', () => {
+            campaignGrid.classList.add('icon-view');
+            iconViewBtn.classList.add('active');
+            iconViewBtn.setAttribute('aria-pressed', 'true');
+            bannerViewBtn.classList.remove('active');
+            bannerViewBtn.setAttribute('aria-pressed', 'false');
+        });
+    }
+
+    // Mobile Menu Campaign Links
+    const campaignLinks = document.querySelectorAll('.campaign-link');
+    campaignLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const campaignType = link.dataset.campaign;
+            let targetCard;
+            
+            // Find the corresponding campaign card
+            switch(campaignType) {
+                case 'meryl':
+                    targetCard = document.querySelector('[data-campaign-title="The Chronicles of Meryl"]');
+                    break;
+                case 'dungeon-crawlers':
+                    targetCard = document.querySelector('[data-campaign-title="Dungeon Crawlers"]');
+                    break;
+                case 'verdant-scar':
+                    targetCard = document.querySelector('[data-campaign-title="Verdant Scar"]');
+                    break;
+            }
+            
+            if (targetCard) {
+                // Close mobile menu
+                mainNav.classList.remove('nav-open');
+                menuToggle.classList.remove('menu-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                mainNav.setAttribute('aria-hidden', 'true');
+                
+                // Scroll to campaign card
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Highlight the card briefly
+                targetCard.style.transform = 'scale(1.05)';
+                targetCard.style.boxShadow = '0px 8px 25px rgba(var(--logo-teal-rgb), 0.5)';
+                setTimeout(() => {
+                    targetCard.style.transform = '';
+                    targetCard.style.boxShadow = '';
+                }, 1000);
+            }
+        });
+    });
 
     const campaignCards = document.querySelectorAll('.campaign-card');
     const modal = document.getElementById('campaignModal');

@@ -1,3 +1,21 @@
+/**
+ * D&D Wikis - The Portals - Main Stylesheet
+ * Logo-Inspired Theme with Medieval Fantasy Aesthetics
+ * 
+ * FEATURES:
+ * - Custom CSS variables for consistent theming
+ * - Responsive design for mobile and desktop
+ * - Campaign card layouts and modal styling
+ * - Loading animations and transitions
+ * - Accessibility-focused design patterns
+ * 
+ * ADDING NEW CAMPAIGNS:
+ * No CSS changes needed when adding new campaigns.
+ * Campaign cards automatically inherit existing styles.
+ * 
+ * See README.md for detailed campaign addition instructions.
+ */
+
 /* style.css - Logo-Inspired Theme */
 
 :root {
@@ -8,6 +26,7 @@
     --logo-dark-background: #181A1B;
     --logo-dark-element: #22252A;
     --logo-light-text: #EAEAEA;
+    --logo-light-text-rgb: 234, 234, 234;
     --logo-bright-teal: #50D8D8;
     --logo-bright-magenta: #D850B4;
 
@@ -31,6 +50,9 @@ body {
     background-color: var(--logo-dark-background);
     margin: 0;
     font-size: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -192,66 +214,79 @@ nav#main-nav ul li a.active {
 
 /* Main Content */
 main {
-    padding: 20px;
+    padding: 15px;
     max-width: 1200px;
-    margin: 30px auto;
+    margin: 20px auto;
+    flex: 1;
+    margin-bottom: 0;
+    min-height: 0;
 }
 
-/* Campaign Filters */
-.campaign-filters {
-    background-color: var(--logo-dark-element);
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 40px;
-    border: 2px solid var(--logo-magenta); /* Magenta border for filters */
-    box-shadow: 0 2px 8px rgba(var(--logo-magenta-rgb), 0.15);
-}
 
-.campaign-filters h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.6em;
+
+
+/* View Toggle Controls */
+.view-toggle-controls {
     text-align: center;
-    color: var(--logo-bright-magenta); /* Magenta for filter title */
+    margin: 10px 0;
+    padding: 0 10px;
 }
 
-.filter-group {
+.toggle-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.view-toggle-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.filter-group label {
-    font-family: var(--font-secondary);
-    font-size: 1.1em;
-    color: var(--logo-light-text);
-}
-
-.filter-group select {
+    gap: 6px;
     padding: 8px 12px;
-    border-radius: 5px;
-    border: 1px solid var(--logo-teal); /* Teal border for select */
-    background-color: var(--logo-dark-background); /* Darker background for select */
-    font-family: var(--font-primary);
-    font-size: 1em;
+    background: var(--logo-dark-element);
     color: var(--logo-light-text);
-    min-width: 200px;
+    border: 2px solid var(--logo-teal);
+    border-radius: 8px;
     cursor: pointer;
-}
-.filter-group select:focus {
-    outline: none;
-    border-color: var(--logo-bright-teal);
-    box-shadow: 0 0 5px rgba(var(--logo-teal-rgb), 0.5);
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
 }
 
+.view-toggle-btn:hover {
+    background: var(--logo-teal);
+    color: var(--logo-dark-element);
+    transform: translateY(-2px);
+}
+
+.view-toggle-btn.active {
+    background: var(--logo-teal);
+    color: var(--logo-dark-element);
+    box-shadow: 0 4px 12px rgba(var(--logo-teal-rgb), 0.3);
+}
+
+.toggle-icon {
+    font-size: 16px;
+}
+
+.toggle-text {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .toggle-text {
+        display: inline;
+    }
+}
 
 /* Campaign Showcase & Cards */
 .campaign-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 30px;
-    padding: 20px;
+    gap: 20px;
+    padding: 15px;
 }
 
 .campaign-card {
@@ -315,6 +350,64 @@ main {
 }
 .campaign-card .btn-explore {
     display: none;
+}
+
+/* Icon View Styles */
+.campaign-grid.icon-view {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
+    grid-template-columns: unset !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.campaign-grid.icon-view .campaign-card {
+    display: flex !important;
+    align-items: center !important;
+    aspect-ratio: unset !important;
+    min-height: auto !important;
+    padding: 8px 12px !important;
+    text-align: left !important;
+    gap: 12px !important;
+    flex-direction: row !important;
+}
+
+.campaign-grid.icon-view .tarot-art-container {
+    width: 45px !important;
+    height: 45px !important;
+    margin: 0 !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    border: 2px solid var(--logo-teal) !important;
+    flex-shrink: 0 !important;
+    padding: 0 !important;
+    flex-grow: unset !important;
+}
+
+.campaign-grid.icon-view .campaign-poster {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.campaign-grid.icon-view .campaign-title {
+    font-size: 1.1em !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+    color: var(--logo-bright-teal) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.campaign-grid.icon-view .tarot-info-container {
+    padding: 0 !important;
+    flex-grow: 1 !important;
+    min-height: auto !important;
+    text-align: left !important;
 }
 
 /* Genre tags */
@@ -462,12 +555,13 @@ main {
 
 /* Dice Roller Styles */
 .dice-roller {
-    margin: 40px auto 0 auto;
+    margin: 25px auto 0 auto;
     text-align: center;
     background-color: var(--logo-dark-element);
-    padding: 20px;
+    padding: 15px;
     border-radius: 8px;
     border: 2px solid var(--logo-teal);
+    margin-bottom: 0;
 }
 #rollDiceBtn {
     font-size: 1.2em;
@@ -506,16 +600,24 @@ main {
 /* Footer */
 footer {
     text-align: center;
-    padding: 25px 20px;
-    margin-top: 50px;
+    padding: 12px 15px;
+    margin-top: 25px;
     background-color: var(--logo-dark-element);
     color: var(--logo-light-text);
-    font-size: 0.9em;
+    font-size: 0.75em;
     border-top: 2px solid var(--logo-magenta); /* Magenta top border for footer */
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    clear: both;
+    flex-shrink: 0;
+    z-index: 10;
 }
 
 footer p {
     margin: 0;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
 /* Responsive Design - Structure and layout mostly same, colors adapt from above */
@@ -529,6 +631,51 @@ footer p {
     }
     header {
         padding: 10px 15px; /* Slightly reduce header padding */
+    }
+    
+    /* Mobile view toggle adjustments */
+    .view-toggle-controls {
+        margin: 8px 0;
+        padding: 0 8px;
+    }
+    
+    .toggle-buttons {
+        gap: 4px;
+    }
+    
+    .view-toggle-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    /* Mobile motto adjustments */
+    .site-motto {
+        font-size: 1em;
+        line-height: 1.1;
+    }
+    
+    .tagline {
+        font-size: 0.85em;
+    }
+    
+    /* Icon view on mobile */
+    .campaign-grid.icon-view {
+        gap: 6px !important;
+        padding: 8px !important;
+    }
+    
+    .campaign-grid.icon-view .campaign-card {
+        padding: 6px 10px !important;
+        gap: 10px !important;
+    }
+    
+    .campaign-grid.icon-view .tarot-art-container {
+        width: 40px !important;
+        height: 40px !important;
+    }
+    
+    .campaign-grid.icon-view .campaign-title {
+        font-size: 0.95em !important;
     }
     nav#main-nav { /* Mobile nav background */
         background-color: var(--logo-dark-element);
@@ -582,8 +729,8 @@ footer p {
 
     .campaign-grid {
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 20px;
-        padding: 10px 0;
+        gap: 15px;
+        padding: 8px 0;
     }
 
     .modal-content {
