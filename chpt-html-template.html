@@ -156,3 +156,359 @@
 </script>
 </body>
 </html>
+
+
+/ version 2
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crawler 2</title>
+    <link rel="icon" href="images/d20favicon.webp" type="image/webp">
+    <link rel="shortcut icon" href="images/d20favicon.webp" type="image/webp">
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            overflow: hidden; /* Prevent body from scrolling */
+            margin: 0;
+            background-color: #0f172a; /* bg-slate-900 */
+            color: #f1f5f9; /* text-slate-100 */
+        }
+        #image-display-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 45vh; /* Image area takes top 45% of viewport height */
+            background-color: #1e293b; /* bg-slate-800 for placeholder area */
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #334155; /* slate-700 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #current-slide-image, #image-placeholder {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensures image fits without cropping, maintains aspect ratio */
+        }
+        #image-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        #text-display-area {
+            flex-grow: 1; /* Takes up remaining space */
+            overflow-y: auto; /* Only this area scrolls */
+            padding: 1rem; /* Inner padding */
+            background-color: #0f172a; /* bg-slate-900 */
+            /* Dynamic paddingTop and paddingBottom will be set by JS */
+        }
+        #text-display-area::-webkit-scrollbar { width: 8px; height: 8px; }
+        #text-display-area::-webkit-scrollbar-track { background: #1e293b; } /* slate-800 */
+        #text-display-area::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; } /* slate-600 */
+        #text-display-area::-webkit-scrollbar-thumb:hover { background: #64748b; } /* slate-500 */
+
+        #bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px; /* h-14, reduced slightly for a sleeker bar */
+            background-color: #1e293b; /* bg-slate-800 */
+            border-top: 1px solid #334155; /* slate-700 */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0.75rem; /* px-3 */
+            z-index: 10;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-button-icon {
+            background-color: transparent;
+            color: #94a3b8; /* text-slate-400 */
+            padding: 0.5rem; /* p-2 */
+            border-radius: 9999px; /* rounded-full */
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-button-icon:hover {
+            background-color: #334155; /* hover:bg-slate-700 */
+            color: #e2e8f0; /* hover:text-slate-200 */
+        }
+        .nav-button-icon:disabled {
+            color: #475569; /* text-slate-600 */
+            cursor: not-allowed;
+            background-color: transparent;
+        }
+        .nav-button-icon svg {
+             width: 1.25rem; /* w-5 */
+             height: 1.25rem; /* h-5 */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .nav-button-icon svg {
+                width: 1.5rem; /* w-6 */
+                height: 1.5rem; /* h-6 */
+            }
+        }
+
+        .home-icon img {
+            height: 2rem; /* h-8 */
+            width: 2rem; /* w-8 */
+            transition: opacity 0.2s ease-in-out;
+        }
+        .home-icon:hover img {
+            opacity: 0.75;
+        }
+        .chapter-title-nav {
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* medium */
+            color: #cbd5e1; /* text-slate-300 */
+            text-align: center;
+            flex-grow: 1;
+            margin: 0 0.5rem; /* mx-2 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+             .chapter-title-nav {
+                font-size: 1rem; /* md:text-base */
+             }
+        }
+        .slide-counter-nav {
+            font-size: 0.875rem; /* text-sm */
+            color: #94a3b8; /* text-slate-400 */
+            min-width: 40px; /* Adjusted for #/# format */
+            text-align: center;
+            padding: 0 0.25rem; /* px-1 */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .slide-counter-nav {
+                font-size: 0.875rem; /* md:text-sm */
+                min-width: 50px;
+            }
+        }
+
+        .navigation-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem; /* space-x-1 */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .navigation-controls {
+                 gap: 0.5rem; /* md:space-x-2 */
+            }
+        }
+
+
+        #globalLoadingOverlayChapter {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(15, 23, 42, 0.9); 
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.3s ease-out;
+        }
+        #globalLoadingOverlayChapter.visually-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .global-loading-gif {
+            width: 80px;
+            height: 80px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="globalLoadingOverlayChapter">
+        <img src="images/archway-loaded.gif" alt="Loading..." class="global-loading-gif" />
+    </div>
+
+    <div id="image-display-area">
+        <img id="current-slide-image" src="" alt="Current Slide Image" style="display: none;" />
+        <div id="image-placeholder">
+             <!-- Placeholder content will be set by JS if no image -->
+        </div>
+    </div>
+
+    <div id="text-display-area">
+        <!-- Dialogue and scene text will be injected here by JS -->
+    </div>
+
+    <nav id="bottom-navigation">
+        <a href="index.html" title="Go to Homepage" class="home-icon flex-shrink-0">
+            <img src="images/archway-home.webp" alt="Home">
+        </a>
+        
+        <div id="chapterTitle-bottom-nav" class="chapter-title-nav" title="Crawler 2">
+            Crawler 2
+        </div>
+        
+        <div class="navigation-controls flex-shrink-0">
+            <button id="prev-slide" class="nav-button-icon" title="Previous Slide">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+            <div id="slide-counter-nav" class="slide-counter-nav">
+                1/20
+            </div>
+            <button id="next-slide" class="nav-button-icon" title="Next Slide">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        const slidesData = [{}];
+        const totalSlides = slidesData.length;
+        let currentIndex = 0;
+
+        const imageDisplay = document.getElementById('current-slide-image');
+        const imagePlaceholder = document.getElementById('image-placeholder');
+        const textDisplay = document.getElementById('text-display-area');
+        const prevButton = document.getElementById('prev-slide');
+        const nextButton = document.getElementById('next-slide');
+        const slideCounterNav = document.getElementById('slide-counter-nav');
+        
+        const imageArea = document.getElementById('image-display-area');
+        const navArea = document.getElementById('bottom-navigation');
+
+        function setContentAreaPadding() {
+            const imageAreaHeight = imageArea.offsetHeight;
+            const navAreaHeight = navArea.offsetHeight;
+            textDisplay.style.paddingTop = imageAreaHeight + 'px';
+            textDisplay.style.paddingBottom = navAreaHeight + 'px';
+        }
+
+        function showSlide(index) {
+            if (totalSlides === 0 || index < 0 || index >= totalSlides) {
+                imageDisplay.style.display = 'none';
+                imagePlaceholder.style.display = 'flex';
+                imagePlaceholder.innerHTML = '<p class="text-slate-300 text-lg">No slides to display for this chapter.</p>';
+                textDisplay.innerHTML = '';
+                if (slideCounterNav) slideCounterNav.textContent = '0/0';
+                if (prevButton) prevButton.disabled = true;
+                if (nextButton) nextButton.disabled = true;
+                return;
+            }
+
+            const slide = slidesData[index];
+            
+            // Image
+            if (slide.imageSrc) {
+                imageDisplay.src = slide.imageSrc;
+                imageDisplay.alt = `Scene ${index + 1}`;
+                imageDisplay.style.display = 'block';
+                imagePlaceholder.style.display = 'none';
+            } else {
+                imageDisplay.style.display = 'none';
+                imagePlaceholder.style.display = 'flex';
+                imagePlaceholder.innerHTML = `
+                    <div class="text-sm text-slate-300 p-2 text-center">
+                        <p class="font-semibold text-sky-400 mb-1">Image Placeholder</p>
+                        <p class="text-xs">${slide.imagePrompt ? `Prompt: ${slide.imagePrompt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}` : 'No image prompt provided.'}</p>
+                    </div>
+                `;
+            }
+
+            // Text
+            let dialogueHtml = '';
+            if (slide.dialogueEntries && slide.dialogueEntries.length > 0) {
+                dialogueHtml = slide.dialogueEntries.map(entry => {
+                    const speakerNameHtml = entry.type === 'Character' && entry.speakerName ? `<strong class="font-semibold text-sky-300">${entry.speakerName.replace(/</g, "&lt;").replace(/>/g, "&gt;")}:</strong> ` : '';
+                    const textClass = entry.type === 'Narrator' ? 'italic text-slate-300' : 'text-slate-100';
+                    return `<div class="p-1.5 my-1 text-sm md:text-base ${textClass}">${speakerNameHtml}${entry.text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>`;
+                }).join('');
+            } else if (slide.sceneText) { // Fallback to sceneText if no dialogue
+                 dialogueHtml = `<div class="p-1.5 my-1 text-sm md:text-base italic text-slate-300">${slide.sceneText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>`;
+            } else {
+                 dialogueHtml = '<p class="text-slate-400 text-sm p-2">No text for this scene.</p>';
+            }
+            textDisplay.innerHTML = dialogueHtml;
+            textDisplay.scrollTop = 0; // Scroll to top of text area
+
+            // Update counter
+            if (slideCounterNav) {
+              slideCounterNav.textContent = `${index + 1}/${totalSlides}`; // Changed format
+            }
+
+            // Update button states
+            if (prevButton) prevButton.disabled = totalSlides <= 1; // Disable if only one slide or no slides
+            if (nextButton) nextButton.disabled = totalSlides <= 1; // Disable if only one slide or no slides
+            
+            // Explicitly enable if more than one slide
+            if (totalSlides > 1) {
+                if (prevButton) prevButton.disabled = false;
+                if (nextButton) nextButton.disabled = false;
+            }
+        }
+
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                if (totalSlides <= 0) return;
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                showSlide(currentIndex);
+            });
+        }
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                if (totalSlides <= 0) return;
+                currentIndex = (currentIndex + 1) % totalSlides;
+                showSlide(currentIndex);
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (totalSlides <= 1) return; // No keyboard nav if only one slide or no slides
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
+
+            if (event.key === 'ArrowLeft') {
+                if (prevButton && !prevButton.disabled) prevButton.click();
+            } else if (event.key === 'ArrowRight') {
+                if (nextButton && !nextButton.disabled) nextButton.click();
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            setContentAreaPadding();
+            showSlide(currentIndex); // Initial slide display
+
+            const chapterOverlay = document.getElementById('globalLoadingOverlayChapter');
+            if (chapterOverlay) {
+                setTimeout(() => {
+                    chapterOverlay.classList.add('visually-hidden');
+                }, 150); 
+            }
+        });
+
+        window.addEventListener('resize', setContentAreaPadding);
+
+    </script>
+</body>
+</html>
+    
