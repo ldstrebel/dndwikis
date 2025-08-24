@@ -16,7 +16,26 @@
  * See README.md for detailed campaign addition instructions.
  */
 
+// Constants for localStorage keys
+const CAMPAIGN_ORDER_KEY = 'campaignOrder';
+const VIEW_TYPE_KEY = 'viewType';
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if we have any clicked campaigns and apply sorting
+    const cards = document.querySelectorAll('.campaign-card');
+    let hasClickedCampaigns = false;
+    
+    cards.forEach(card => {
+        const title = card.dataset.campaignTitle;
+        if (getLastClickedTime(title) > 0) {
+            hasClickedCampaigns = true;
+        }
+    });
+
+    if (hasClickedCampaigns) {
+        sortCampaignCards();
+    }
+
     // --- MODIFICATION START: Skip initial global loading screen hiding ---
     // // This refers to the globalLoadingOverlay *within index.html itself*.
     // // If index.html has its own initial loading screen, this hides it.
@@ -40,14 +59,63 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Campaign Order Management
+    function getLastClickedTime(campaignTitle) {
+        const campaignId = campaignTitle.toLowerCase().replace(/\s+/g, '-');
+        return parseInt(localStorage.getItem(`lastClicked_${campaignId}`)) || 0;
+    }
+
+    function sortCampaignCards() {
+        const campaignGrid = document.getElementById('campaign-grid');
+        if (!campaignGrid) return;
+        
+        const cards = Array.from(campaignGrid.getElementsByClassName('campaign-card'));
+        
+        cards.sort((a, b) => {
+            const titleA = a.dataset.campaignTitle;
+            const titleB = b.dataset.campaignTitle;
+            const timeA = getLastClickedTime(titleA);
+            const timeB = getLastClickedTime(titleB);
+            return timeB - timeA; // Most recent first
+        });
+
+        // Reorder DOM elements
+        cards.forEach(card => campaignGrid.appendChild(card));
+    }
+
     // View Toggle System
     const bannerViewBtn = document.getElementById('banner-view-btn');
     const iconViewBtn = document.getElementById('icon-view-btn');
     const campaignGrid = document.getElementById('campaign-grid');
     
+    function saveViewType(isIconView) {
+        localStorage.setItem(VIEW_TYPE_KEY, isIconView ? 'icon' : 'banner');
+    }
+
+    function loadSavedViewType() {
+        const viewType = localStorage.getItem(VIEW_TYPE_KEY);
+        if (viewType === 'icon') {
+            campaignGrid.classList.add('icon-view');
+            iconViewBtn.classList.add('active');
+            iconViewBtn.setAttribute('aria-pressed', 'true');
+            bannerViewBtn.classList.remove('active');
+            bannerViewBtn.setAttribute('aria-pressed', 'false');
+        } else {
+            campaignGrid.classList.remove('icon-view');
+            bannerViewBtn.classList.add('active');
+            bannerViewBtn.setAttribute('aria-pressed', 'true');
+            iconViewBtn.classList.remove('active');
+            iconViewBtn.setAttribute('aria-pressed', 'false');
+        }
+    }
+    
     if (bannerViewBtn && iconViewBtn && campaignGrid) {
+        // Load saved view type on page load
+        loadSavedViewType();
+        
         bannerViewBtn.addEventListener('click', () => {
             campaignGrid.classList.remove('icon-view');
+            saveViewType(false);
             bannerViewBtn.classList.add('active');
             bannerViewBtn.setAttribute('aria-pressed', 'true');
             iconViewBtn.classList.remove('active');
@@ -143,6 +211,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const chapters = JSON.parse(card.dataset.chapters || '[]');
             const genres = (card.dataset.genre || "").split(' ');
 
+            // Update campaign order and sort
+            const campaignId = title.toLowerCase().replace(/\s+/g, '-');
+            localStorage.setItem(`lastClicked_${campaignId}`, Date.now());
+            sortCampaignCards();
+
+            // Show the modal and prevent background scrolling
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            
+            // Set focus to the modal close button for accessibility
+            if (modalCloseBtn) {
+                modalCloseBtn.focus();
+            }
+
             // Populate the modal
             if (modalImage) {
                 modalImage.src = posterImage;
@@ -180,6 +262,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         link.addEventListener('click', function(e) {
                             e.preventDefault(); // Prevent default navigation to handle UX first
 
+                            // Update last clicked time for the campaign
+                            const campaignId = title.toLowerCase().replace(/\s+/g, '-');
+                            localStorage.setItem(`lastClicked_${campaignId}`, Date.now());
+
                             // Show modal's own D20 spinner for immediate feedback
                             if (modalLoadingSpinner) {
                                 modalLoadingSpinner.classList.remove('visually-hidden');
@@ -187,6 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (modalChapterList) {
                                 modalChapterList.style.opacity = '0.3'; // Dim the chapter list
                             }
+
+                            // Sort campaign cards after chapter selection
+                            sortCampaignCards();
 
                             // Navigate after a brief moment to allow spinner to render
                             setTimeout(() => {
