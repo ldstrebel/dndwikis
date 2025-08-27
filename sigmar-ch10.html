@@ -13,7 +13,10 @@
             font-family: 'Inter', sans-serif;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Full viewport height */
+            height: 100vh; /* Fallback for older browsers */
+            @supports (height: 100dvh) {
+                height: 100dvh; /* Modern browsers: Full dynamic viewport height */
+            }
             overflow: hidden; /* Prevent body from scrolling */
             margin: 0;
             background-color: #0f172a; /* bg-slate-900 */
@@ -24,7 +27,10 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 45vh; /* Image area takes top 45% of viewport height */
+            height: 45vh; /* Fallback for older browsers */
+            @supports (height: 100dvh) {
+                height: 45dvh; /* Modern browsers: Image area takes top 45% of dynamic viewport height */
+            }
             background-color: #1e293b; /* bg-slate-800 for placeholder area */
             z-index: 10;
             display: flex;
