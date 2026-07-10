@@ -209,7 +209,7 @@
                 </svg>
             </button>
             <div id="slide-counter-nav" class="slide-counter-nav">
-                1/8
+                1/18
             </div>
             <button id="next-slide" class="nav-button-icon" title="Next Slide">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
@@ -223,7 +223,7 @@
         const slidesData = [
             {
                 imageSrc: 'images/vumbua/s0_page1.png',
-                sessionTitle: 'Session 0: The Trials - Page 1',
+                sessionTitle: 'Session 0: Page 1 - Secrets in the Mycelium',
                 dialogueEntries: [
                     { type: 'Narrator', text: "The Mizizi—turtle-mushroom folk—live inside the hollow mega-flora of the petrified forest. Their ancient lore warns..." },
                     { type: 'Narrator', text: "Faded Inscription: 'When things stop dying, we start dying.'" },
@@ -234,7 +234,7 @@
             },
             {
                 imageSrc: 'images/vumbua/s0_page2.png',
-                sessionTitle: 'Session 0: The Trials - Page 2',
+                sessionTitle: 'Session 0: Page 2 - The Docks & The Dials',
                 dialogueEntries: [
                     { type: 'Narrator', text: "Iggy emerges wet and shivering from the sea onto the Vumbua docks, frantically injecting pressurized fluid into his steaming goggles." },
                     { type: 'Character', speakerName: 'Iggy', text: "I gotta get more sunscreen... too bright." },
@@ -244,8 +244,16 @@
                 ]
             },
             {
+                imageSrc: 'images/vumbua/s0_page3.png',
+                sessionTitle: 'Session 0: Page 3 - The Intake Trials',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "Intake Day. 100,000 candidates take the trials. The world is open, and a cull is coming..." },
+                    { type: 'Character', speakerName: 'Dungeon Master', text: "None of you scored in the bottom tier. Welcome to Vumbua Academy!" }
+                ]
+            },
+            {
                 imageSrc: 'images/vumbua/s1_page1.png',
-                sessionTitle: 'Session 1: First Day - Page 1',
+                sessionTitle: 'Session 1: Page 1 - Scattered Housing',
                 dialogueEntries: [
                     { type: 'Narrator', text: "Housing assignments scatter the newly formed group across the modular districts of Vumbua..." },
                     { type: 'Character', speakerName: 'Iggy', text: "Block 12. Far away." },
@@ -255,8 +263,18 @@
                 ]
             },
             {
+                imageSrc: 'images/vumbua/s1_page2.png',
+                sessionTitle: 'Session 1: Page 2 - Iggy\'s Sky Climb',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "Seeking space and a view, Iggy scales the highest scaffold he can find..." },
+                    { type: 'Narrator', text: "Sound Effect: CLANK CLANK CLANK" },
+                    { type: 'Character', speakerName: 'Iggy', text: "To touch the sky. Comfortable." },
+                    { type: 'Character', speakerName: 'Dungeon Master', text: "From up here, the city looks like a puzzle box waiting to be opened." }
+                ]
+            },
+            {
                 imageSrc: 'images/vumbua/s2_page1.png',
-                sessionTitle: 'Session 2: The Bonfire - Page 1',
+                sessionTitle: 'Session 2: Page 1 - Stacking Logs at Block 99',
                 dialogueEntries: [
                     { type: 'Narrator', text: "A bonfire at Block 99 becomes the stage for new friendships and philosophical debates..." },
                     { type: 'Character', speakerName: 'Lomi', text: "You've got a real eye for structural load, Cassius. That's a beautiful stack." },
@@ -264,8 +282,27 @@
                 ]
             },
             {
+                imageSrc: 'images/vumbua/s2_page2.png',
+                sessionTitle: 'Session 2: Page 2 - The Speculators\' Debate',
+                dialogueEntries: [
+                    { type: 'Character', speakerName: 'Percy', text: "The Sixfold Theory proves the missing Earth, Air, and Water nodes must exist! Harmony cannot remain stable without them." },
+                    { type: 'Character', speakerName: 'Jax', text: "Theoretical junk. The Loom doesn't care about balance, it cares about amps." },
+                    { type: 'Character', speakerName: 'Serra Vox', text: "Under the Inverse Power Doctrine, Lady Ignis holds the highest voting power because she represents the newest integrated node." }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s2_page3.png',
+                sessionTitle: 'Session 2: Page 3 - Zephyr\'s Lightning',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "Sound Effect: CRACK-BOOM! (Purple lightning strikes Zephyr)" },
+                    { type: 'Character', speakerName: 'Ignatius', text: "Zephyr!" },
+                    { type: 'Character', speakerName: 'Rill', text: "She's okay. Everyone stand back! Zephyr, come with me." },
+                    { type: 'Character', speakerName: 'Dungeon Master', text: "Zephyr can trigger purple lightning when stressed, but she walks away unscathed every time." }
+                ]
+            },
+            {
                 imageSrc: 'images/vumbua/s3_page1.png',
-                sessionTitle: 'Session 3: Celestial Lounge - Page 1',
+                sessionTitle: 'Session 3: Page 1 - Crown & Ruin',
                 dialogueEntries: [
                     { type: 'Character', speakerName: 'Lomi', text: "Looks like Ruin for you, Val! Pay up." },
                     { type: 'Character', speakerName: 'Val', text: "Ah, clean win, Lomi. You're direct." },
@@ -273,10 +310,33 @@
                 ]
             },
             {
-                imageSrc: 'images/vumbua/s4_page1.png',
-                sessionTitle: 'Session 4: First Day of Classes - Page 1',
+                imageSrc: 'images/vumbua/s3_page2.png',
+                sessionTitle: 'Session 3: Page 2 - The Alley Ambush',
                 dialogueEntries: [
-                    { type: 'Narrator', text: "A piece of white chalk flies across the room, hitting Ignatius square in the forehead during logistics class." },
+                    { type: 'Narrator', text: "Leaving the lounge, Britt is cornered in the dark alleys of the Upper Core..." },
+                    { type: 'Character', speakerName: 'Azer', text: "Hand over the watch and the receipts, turtle-kin." },
+                    { type: 'Narrator', text: "Sound Effect: KICK!" },
+                    { type: 'Character', speakerName: 'Britt', text: "You are NOT taking this watch! It's my family's!" }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s3_page3.png',
+                sessionTitle: 'Session 3: Page 3 - Lomi & Iggy\'s Rescue',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "Sound Effect: CRUNCH! (Lomi slams his shoulder into Azer)" },
+                    { type: 'Character', speakerName: 'Lomi', text: "Get off our friend!" },
+                    { type: 'Character', speakerName: 'Azer', text: "Retreat! Let's go!" },
+                    { type: 'Character', speakerName: 'Britt', text: "They took my exam receipt. But... I kept the watch." },
+                    { type: 'Character', speakerName: 'Lomi', text: "We find Lucky tomorrow. He's got the study guide, and he's going to tell us who sent those thugs." },
+                    { type: 'Character', speakerName: 'Dungeon Master', text: "Lomi's punch broke a rib. Word gets around: don't mess with the boiler crew." }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s4_page1.png',
+                sessionTitle: 'Session 4: Page 1 - Logistics Class',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "A piece of white chalk flies across the room, hitting Ignatius square in the forehead during class." },
+                    { type: 'Narrator', text: "Sound Effect: TAP!" },
                     { type: 'Character', speakerName: 'Professor', text: "Focus, Ignatius! Attrition rate in Hangar 12 is calculated, not guessed!" },
                     { type: 'Character', speakerName: 'Ignatius', text: "Ouch! Emotional damage." },
                     { type: 'Character', speakerName: 'Lomi', text: "Hey, Finch, any chance I could copy your logistics formula?" },
@@ -284,8 +344,17 @@
                 ]
             },
             {
+                imageSrc: 'images/vumbua/s4_page2.png',
+                sessionTitle: 'Session 4: Page 2 - Trading the Myth',
+                dialogueEntries: [
+                    { type: 'Character', speakerName: 'Lucky', text: "Money's boring. I trade in stories, secrets, and high-potential people. Give me a real secret, and the study guide is yours." },
+                    { type: 'Character', speakerName: 'Ignatius', text: "My islands were formed when the Sea Dragon caught the Sky Dragon... keeping the heat alive." },
+                    { type: 'Character', speakerName: 'Lucky', text: "A genuine myth. I like it. Deal." }
+                ]
+            },
+            {
                 imageSrc: 'images/vumbua/s5_page1.png',
-                sessionTitle: 'Session 5: Cards on the Table - Page 1',
+                sessionTitle: 'Session 5: Page 1 - High-Stakes Deals',
                 dialogueEntries: [
                     { type: 'Character', speakerName: 'Lucky', text: "I track anomalies. The purple lightning, the weird tech... and you, Iggy. You don't use standard Harmony batteries. Show me what you've got." },
                     { type: 'Character', speakerName: 'Iggy', text: "Clockwork. Runs on springs. No crystals." },
@@ -294,13 +363,46 @@
                 ]
             },
             {
+                imageSrc: 'images/vumbua/s5_page2.png',
+                sessionTitle: 'Session 5: Page 2 - Lomi\'s Grease-Grog Deal',
+                dialogueEntries: [
+                    { type: 'Character', speakerName: 'Lomi', text: "Ambrosia of Luck. Furnace-grade grog. We sell it in the Bleachers on race day, and we split the profits." },
+                    { type: 'Character', speakerName: 'Lucky', text: "Phew! Smells like a boiler explosion. I love it. I'll set up the distribution." }
+                ]
+            },
+            {
                 imageSrc: 'images/vumbua/s6_page1.png',
-                sessionTitle: 'Session 6: Potatoes and Peas - Page 1',
+                sessionTitle: 'Session 6: Page 1 - Secrets in the Basin',
                 dialogueEntries: [
                     { type: 'Narrator', text: "Wednesday afternoon. Escaping the sterile dorms of Block 04, Britt scales the basalt cliffs seeking what the wilderness hides..." },
+                    { type: 'Narrator', text: "Sound Effect: CLINK!" },
                     { type: 'Narrator', text: "Floating Text Overlay: 'momentum is life always towards home.'" },
                     { type: 'Character', speakerName: 'Finch Gable', text: "Rovaldi's got the replacement engine node locked in Bay 4. Bring me the balloon pass, and it's yours." },
-                    { type: 'Narrator', text: "Dungeon Master Cameo: Finch Gable, trading secrets. Classic." }
+                    { type: 'Character', speakerName: 'Dungeon Master', text: "Finch Gable, trading secrets. Classic." }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s6_page2.png',
+                sessionTitle: 'Session 6: Page 2 - Hangar 12 (The Infiltration)',
+                dialogueEntries: [
+                    { type: 'Character', speakerName: 'Guard', text: "Hand please. Private only." },
+                    { type: 'Character', speakerName: 'Iggy', text: "I'm allowed. Yeah." },
+                    { type: 'Narrator', text: "Sound Effect: SPLASH! (testing fluid leaks onto Iggy's wrist, turning skin red)" },
+                    { type: 'Character', speakerName: 'Guard', text: "Wait! That turned red! Sir—!" },
+                    { type: 'Narrator', text: "Sound Effect: WHOOSH! (the trench coat falling flat as Iggy escapes)" },
+                    { type: 'Character', speakerName: 'Ignatius', text: "Iggy, what is happening?!" }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s6_page4.png',
+                sessionTitle: 'Session 6: Page 4 - The Ash-Blood Deal',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "Sound Effect: WHOOSH! (Ignatius trapped in Hangar 12 scaffolding)" },
+                    { type: 'Character', speakerName: 'Ember', text: "Shh! Keep your heat down. Everyone's distracted by your friend's stunt." },
+                    { type: 'Character', speakerName: 'Ignatius', text: "Ember?!" },
+                    { type: 'Character', speakerName: 'Ember', text: "Our resonator was confiscated. We need Ash-Blood heat, or our rig stalls." },
+                    { type: 'Character', speakerName: 'Ignatius', text: "I want a blank favor. Cashed in whenever I need it." },
+                    { type: 'Character', speakerName: 'Alistair', text: "Good heat, boy. She's humming." }
                 ]
             }
         ];
