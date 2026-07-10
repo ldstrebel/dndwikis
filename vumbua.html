@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vumbua: Complete Storybook</title>
+    <link rel="icon" href="images/d20favicon.webp" type="image/webp">
+    <link rel="shortcut icon" href="images/d20favicon.webp" type="image/webp">
+    <script src="https://cdn.tailwindcss.com"></script> 
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            overflow: hidden; /* Prevent body from scrolling */
+            margin: 0;
+            background-color: #0f172a; /* bg-slate-900 */
+            color: #f1f5f9; /* text-slate-100 */
+        }
+        #image-display-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 55vh; /* Image area takes top 55% of viewport height */
+            background-color: #1e293b; /* bg-slate-800 for placeholder area */
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #334155; /* slate-700 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #current-slide-image, #image-placeholder {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensures image fits without cropping, maintains aspect ratio */
+        }
+        #image-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        #text-display-area {
+            flex-grow: 1; /* Takes up remaining space */
+            overflow-y: auto; /* Only this area scrolls */
+            padding: 1rem; /* Inner padding */
+            background-color: #0f172a; /* bg-slate-900 */
+            /* Dynamic paddingTop and paddingBottom will be set by JS */
+        }
+        #text-display-area::-webkit-scrollbar { width: 8px; height: 8px; }
+        #text-display-area::-webkit-scrollbar-track { background: #1e293b; } /* slate-800 */
+        #text-display-area::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; } /* slate-600 */
+        #text-display-area::-webkit-scrollbar-thumb:hover { background: #64748b; } /* slate-500 */
+
+        #bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px; /* h-14, reduced slightly for a sleeker bar */
+            background-color: #1e293b; /* bg-slate-800 */
+            border-top: 1px solid #334155; /* slate-700 */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0.75rem; /* px-3 */
+            z-index: 10;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-button-icon {
+            background-color: transparent;
+            color: #94a3b8; /* text-slate-400 */
+            padding: 0.5rem; /* p-2 */
+            border-radius: 9999px; /* rounded-full */
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-button-icon:hover {
+            background-color: #334155; /* hover:bg-slate-700 */
+            color: #e2e8f0; /* hover:text-slate-200 */
+        }
+        .nav-button-icon:disabled {
+            color: #475569; /* text-slate-600 */
+            cursor: not-allowed;
+            background-color: transparent;
+        }
+        .nav-button-icon svg {
+             width: 1.25rem; /* w-5 */
+             height: 1.25rem; /* h-5 */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .nav-button-icon svg {
+                width: 1.5rem; /* w-6 */
+                height: 1.5rem; /* h-6 */
+            }
+        }
+
+        .home-icon img {
+            height: 2rem; /* h-8 */
+            width: 2rem; /* w-8 */
+            transition: opacity 0.2s ease-in-out;
+        }
+        .home-icon:hover img {
+            opacity: 0.75;
+        }
+        .chapter-title-nav {
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* medium */
+            color: #cbd5e1; /* text-slate-300 */
+            text-align: center;
+            flex-grow: 1;
+            margin: 0 0.5rem; /* mx-2 */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+             .chapter-title-nav {
+                font-size: 1rem; /* md:text-base */
+             }
+        }
+        .slide-counter-nav {
+            font-size: 0.875rem; /* text-sm */
+            color: #94a3b8; /* text-slate-400 */
+            min-width: 40px; /* Adjusted for #/# format */
+            text-align: center;
+            padding: 0 0.25rem; /* px-1 */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .slide-counter-nav {
+                font-size: 0.875rem; /* md:text-sm */
+                min-width: 50px;
+            }
+        }
+
+        .navigation-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem; /* space-x-1 */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .navigation-controls {
+                 gap: 0.5rem; /* md:space-x-2 */
+            }
+        }
+
+
+        #globalLoadingOverlayChapter {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(15, 23, 42, 0.9); 
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.3s ease-out;
+        }
+        #globalLoadingOverlayChapter.visually-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .global-loading-gif {
+            width: 80px;
+            height: 80px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="globalLoadingOverlayChapter">
+        <img src="images/archway-loaded.gif" alt="Loading..." class="global-loading-gif" />
+    </div>
+
+    <div id="image-display-area">
+        <img id="current-slide-image" src="" alt="Current Slide Image" style="display: none;" />
+        <div id="image-placeholder">
+             <!-- Placeholder content will be set by JS if no image -->
+        </div>
+    </div>
+
+    <div id="text-display-area">
+        <!-- Dialogue and scene text will be injected here by JS -->
+    </div>
+
+    <nav id="bottom-navigation">
+        <a href="index.html" title="Go to Homepage" class="home-icon flex-shrink-0">
+            <img src="images/archway-home.webp" alt="Home">
+        </a>
+        
+        <div id="chapterTitle-bottom-nav" class="chapter-title-nav" title="Vumbua: Complete Storybook">
+            Vumbua: Complete Storybook
+        </div>
+        
+        <div class="navigation-controls flex-shrink-0">
+            <button id="prev-slide" class="nav-button-icon" title="Previous Slide">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+            <div id="slide-counter-nav" class="slide-counter-nav">
+                1/8
+            </div>
+            <button id="next-slide" class="nav-button-icon" title="Next Slide">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        const slidesData = [
+            {
+                imageSrc: 'images/vumbua/s0_page1.png',
+                sessionTitle: 'Session 0: The Trials - Page 1',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "The Mizizi—turtle-mushroom folk—live inside the hollow mega-flora of the petrified forest. Their ancient lore warns..." },
+                    { type: 'Narrator', text: "Faded Inscription: 'When things stop dying, we start dying.'" },
+                    { type: 'Narrator', text: "Two cycles ago, the Paper Man arrived. Harmony offered weapons to destroy the petrifaction, in exchange for the forest's soil, roots, and stone." },
+                    { type: 'Character', speakerName: 'Britt', text: "Something is wrong. The call is coming from inside the house." },
+                    { type: 'Character', speakerName: 'Aggie', text: "Let's find the safe spot." }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s0_page2.png',
+                sessionTitle: 'Session 0: The Trials - Page 2',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "Iggy emerges wet and shivering from the sea onto the Vumbua docks, frantically injecting pressurized fluid into his steaming goggles." },
+                    { type: 'Character', speakerName: 'Iggy', text: "I gotta get more sunscreen... too bright." },
+                    { type: 'Narrator', text: "Sound Effect: HISS! (steam escaping goggles)" },
+                    { type: 'Character', speakerName: 'Ignatius', text: "We're subbing out our own fuel for this fake stuff. It's all wrong. I'm going to find the new source of heat." },
+                    { type: 'Character', speakerName: 'Lomi', text: "Hey! Public infrastructure is important and there are actual people running this city. Show some respect!" }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s1_page1.png',
+                sessionTitle: 'Session 1: First Day - Page 1',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "Housing assignments scatter the newly formed group across the modular districts of Vumbua..." },
+                    { type: 'Character', speakerName: 'Iggy', text: "Block 12. Far away." },
+                    { type: 'Character', speakerName: 'Lomi', text: "I'm in Block 99. The boiler rooms are right below. Smells like grease and home." },
+                    { type: 'Character', speakerName: 'Ignatius', text: "See y'all tomorrow. Don't get lost in the pipes." },
+                    { type: 'Character', speakerName: 'Britt', text: "We'll meet at the central courtyard at noon." }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s2_page1.png',
+                sessionTitle: 'Session 2: The Bonfire - Page 1',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "A bonfire at Block 99 becomes the stage for new friendships and philosophical debates..." },
+                    { type: 'Character', speakerName: 'Lomi', text: "You've got a real eye for structural load, Cassius. That's a beautiful stack." },
+                    { type: 'Character', speakerName: 'Cassius', text: "If the geometry is off, the resonance decays unevenly. It's just simple thermodynamics!" }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s3_page1.png',
+                sessionTitle: 'Session 3: Celestial Lounge - Page 1',
+                dialogueEntries: [
+                    { type: 'Character', speakerName: 'Lomi', text: "Looks like Ruin for you, Val! Pay up." },
+                    { type: 'Character', speakerName: 'Val', text: "Ah, clean win, Lomi. You're direct." },
+                    { type: 'Character', speakerName: 'Val', text: "The upcoming exam... I wrote it myself. It's tough. I sold an annotated study guide to Lucky the grifter. You should find him." }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s4_page1.png',
+                sessionTitle: 'Session 4: First Day of Classes - Page 1',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "A piece of white chalk flies across the room, hitting Ignatius square in the forehead during logistics class." },
+                    { type: 'Character', speakerName: 'Professor', text: "Focus, Ignatius! Attrition rate in Hangar 12 is calculated, not guessed!" },
+                    { type: 'Character', speakerName: 'Ignatius', text: "Ouch! Emotional damage." },
+                    { type: 'Character', speakerName: 'Lomi', text: "Hey, Finch, any chance I could copy your logistics formula?" },
+                    { type: 'Character', speakerName: 'Finch Gable', text: "I do not share telemetry with boiler-grease, Octoumba." }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s5_page1.png',
+                sessionTitle: 'Session 5: Cards on the Table - Page 1',
+                dialogueEntries: [
+                    { type: 'Character', speakerName: 'Lucky', text: "I track anomalies. The purple lightning, the weird tech... and you, Iggy. You don't use standard Harmony batteries. Show me what you've got." },
+                    { type: 'Character', speakerName: 'Iggy', text: "Clockwork. Runs on springs. No crystals." },
+                    { type: 'Character', speakerName: 'Ignatius', text: "That's high-tier craftsmanship. We want the annotated study guide and the Reso Race intel." },
+                    { type: 'Character', speakerName: 'Lucky', text: "Deal. This is beautiful." }
+                ]
+            },
+            {
+                imageSrc: 'images/vumbua/s6_page1.png',
+                sessionTitle: 'Session 6: Potatoes and Peas - Page 1',
+                dialogueEntries: [
+                    { type: 'Narrator', text: "Wednesday afternoon. Escaping the sterile dorms of Block 04, Britt scales the basalt cliffs seeking what the wilderness hides..." },
+                    { type: 'Narrator', text: "Floating Text Overlay: 'momentum is life always towards home.'" },
+                    { type: 'Character', speakerName: 'Finch Gable', text: "Rovaldi's got the replacement engine node locked in Bay 4. Bring me the balloon pass, and it's yours." },
+                    { type: 'Narrator', text: "Dungeon Master Cameo: Finch Gable, trading secrets. Classic." }
+                ]
+            }
+        ];
+        
+        const totalSlides = slidesData.length;
+        let currentIndex = 0;
+
+        const imageDisplay = document.getElementById('current-slide-image');
+        const imagePlaceholder = document.getElementById('image-placeholder');
+        const textDisplay = document.getElementById('text-display-area');
+        const prevButton = document.getElementById('prev-slide');
+        const nextButton = document.getElementById('next-slide');
+        const slideCounterNav = document.getElementById('slide-counter-nav');
+        const bottomNavTitle = document.getElementById('chapterTitle-bottom-nav');
+        
+        const imageArea = document.getElementById('image-display-area');
+        const navArea = document.getElementById('bottom-navigation');
+
+        function setContentAreaPadding() {
+            const imageAreaHeight = imageArea.offsetHeight;
+            const navAreaHeight = navArea.offsetHeight;
+            textDisplay.style.paddingTop = imageAreaHeight + 'px';
+            textDisplay.style.paddingBottom = navAreaHeight + 'px';
+        }
+
+        function showSlide(index) {
+            if (totalSlides === 0 || index < 0 || index >= totalSlides) {
+                imageDisplay.style.display = 'none';
+                imagePlaceholder.style.display = 'flex';
+                imagePlaceholder.innerHTML = '<p class="text-slate-300 text-lg">No slides to display for this chapter.</p>';
+                textDisplay.innerHTML = '';
+                if (slideCounterNav) slideCounterNav.textContent = '0/0';
+                if (prevButton) prevButton.disabled = true;
+                if (nextButton) nextButton.disabled = true;
+                return;
+            }
+
+            const slide = slidesData[index];
+            
+            // Update Chapter Title in Bottom Nav
+            if (bottomNavTitle) {
+                bottomNavTitle.textContent = slide.sessionTitle || "Vumbua: Complete Storybook";
+                bottomNavTitle.title = slide.sessionTitle || "Vumbua: Complete Storybook";
+            }
+
+            // Image
+            if (slide.imageSrc) {
+                imageDisplay.src = slide.imageSrc;
+                imageDisplay.alt = slide.sessionTitle || `Scene ${index + 1}`;
+                imageDisplay.style.display = 'block';
+                imagePlaceholder.style.display = 'none';
+            } else {
+                imageDisplay.style.display = 'none';
+                imagePlaceholder.style.display = 'flex';
+                imagePlaceholder.innerHTML = `
+                    <div class="text-sm text-slate-300 p-2 text-center">
+                        <p class="font-semibold text-sky-400 mb-1">Image Placeholder</p>
+                        <p class="text-xs">No image provided.</p>
+                    </div>
+                `;
+            }
+
+            // Text
+            let dialogueHtml = '';
+            if (slide.dialogueEntries && slide.dialogueEntries.length > 0) {
+                dialogueHtml = slide.dialogueEntries.map(entry => {
+                    const speakerNameHtml = entry.type === 'Character' && entry.speakerName ? `<strong class="font-semibold text-sky-300">${entry.speakerName.replace(/</g, "&lt;").replace(/>/g, "&gt;")}:</strong> ` : '';
+                    const textClass = entry.type === 'Narrator' ? 'italic text-slate-300' : 'text-slate-100';
+                    return `<div class="p-1.5 my-1 text-sm md:text-base ${textClass}">${speakerNameHtml}${entry.text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>`;
+                }).join('');
+            } else if (slide.sceneText) {
+                 dialogueHtml = `<div class="p-1.5 my-1 text-sm md:text-base italic text-slate-300">${slide.sceneText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>`;
+            } else {
+                 dialogueHtml = '<p class="text-slate-400 text-sm p-2">No text for this scene.</p>';
+            }
+            textDisplay.innerHTML = dialogueHtml;
+            textDisplay.scrollTop = 0; // Scroll to top of text area
+
+            // Update counter
+            if (slideCounterNav) {
+              slideCounterNav.textContent = `${index + 1}/${totalSlides}`;
+            }
+
+            // Update button states
+            if (prevButton) prevButton.disabled = totalSlides <= 1;
+            if (nextButton) nextButton.disabled = totalSlides <= 1;
+            
+            if (totalSlides > 1) {
+                if (prevButton) prevButton.disabled = false;
+                if (nextButton) nextButton.disabled = false;
+            }
+        }
+
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                if (totalSlides <= 0) return;
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                showSlide(currentIndex);
+            });
+        }
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                if (totalSlides <= 0) return;
+                currentIndex = (currentIndex + 1) % totalSlides;
+                showSlide(currentIndex);
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (totalSlides <= 1) return;
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
+
+            if (event.key === 'ArrowLeft') {
+                if (prevButton && !prevButton.disabled) prevButton.click();
+            } else if (event.key === 'ArrowRight') {
+                if (nextButton && !nextButton.disabled) nextButton.click();
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            setContentAreaPadding();
+            showSlide(currentIndex);
+
+            const chapterOverlay = document.getElementById('globalLoadingOverlayChapter');
+            if (chapterOverlay) {
+                setTimeout(() => {
+                    chapterOverlay.classList.add('visually-hidden');
+                }, 150); 
+            }
+        });
+
+        window.addEventListener('resize', setContentAreaPadding);
+
+    </script>
+</body>
+</html>
