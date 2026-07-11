@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vumbua: AI Almosts, Fails, & Bloopers</title>
+    <link rel="icon" href="images/d20favicon.webp" type="image/webp">
+    <link rel="shortcut icon" href="images/d20favicon.webp" type="image/webp">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16; /* Darker navy bg */
+            color: #f1f5f9; 
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Top Navigation Scroll Progress */
+        #top-nav {
+            transition: transform 0.3s ease-in-out;
+        }
+        #top-nav.nav-hidden {
+            transform: translateY(-100%);
+        }
+        #scroll-progress-bar {
+            height: 4px;
+            background: linear-gradient(to right, #eab308, #f59e0b); /* Amber gradient */
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Narrative Card styling to match story bridges */
+        .narrative-card {
+            background-color: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-left: 4px solid #f59e0b; /* Amber left accent */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .narrative-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scroll-fade for comic panels */
+        .comic-panel {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .comic-panel.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .scroll-down-hint {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="selection:bg-amber-500/30 selection:text-amber-200">
+
+    <!-- Global Loading Overlay -->
+    <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
+        <img src="images/archway-loaded.gif" alt="Loading..." class="w-20 h-20" />
+    </div>
+
+    <!-- Top Sticky Navigation with Progress -->
+    <nav id="top-nav" class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 py-3 relative flex items-center justify-between">
+            <a href="index.html" title="Go to Homepage" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+                <span class="hidden sm:inline font-semibold">Campaigns</span>
+            </a>
+            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-sky-400 truncate max-w-[60%] sm:max-w-none text-center">AI Almosts, Fails, Bloopers</h1>
+            <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
+        </div>
+        <div id="scroll-progress-bar"></div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-12">
+
+        <!-- Header Panel -->
+        <section class="text-center py-10 space-y-4">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-sky-400 to-amber-400">AI Almosts, Fails, Bloopers</h2>
+            <p class="text-slate-400 max-w-md mx-auto text-sm sm:text-base leading-relaxed">
+                A gallery of alternative concepts, layout attempts, and visual iterations generated during the production of the Vumbua campaign graphic novel.
+            </p>
+            <div class="scroll-down-hint flex flex-col items-center pt-6 text-slate-500 text-xs gap-1">
+                <span>Scroll to see the gallery</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+            </div>
+        </section>
+
+        <!-- Section 1: Airship Layout -->
+        <section class="space-y-6" data-title="Zephyr Airship Concepts">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/zephyr_airship_layout.png" alt="Zephyr Airship Concept Layout" class="w-full h-auto block" loading="lazy">
+            </div>
+            
+            <div class="narrative-card rounded-lg p-5">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Concept artwork detailing alternative layouts and interior schemas for the Sterling family observation airship, the <strong>Zephyr</strong>.
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Colonnade establishings -->
+        <section class="space-y-6" data-title="Reso Race Arena Ideas">
+            <!-- Demonstration of narrative bridge card between scroll images -->
+            <div class="narrative-card rounded-lg p-5">
+                <h3 class="text-amber-400 font-bold text-base mb-2">Attempts at building the reso race arena</h3>
+                <p class="text-slate-300 text-sm leading-relaxed mb-3">
+                    These concept illustrations demonstrate the design progression of the <strong>Colonnade Arena</strong>. When we have extensive narrative segments or session context that doesn't fit within dialogue balloons, we can bridge panels using these styled cards.
+                </p>
+                <p class="text-slate-400 text-xs italic">
+                    Below are the alternative architectural renders generated for the stadium entrance and starting gates.
+                </p>
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/apex_ring_colonnade_establishing.png" alt="Colonnade Establishing View" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950 mt-6">
+                <img src="images/vumbua_bloopers/apex_ring_exterior_entrance.png" alt="Colonnade Exterior Entrance" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950 mt-6">
+                <img src="images/vumbua_bloopers/colonnade_entrance_trolley.png" alt="Colonnade Entrance Trolley" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Section 3: Fairgrounds & Promenades -->
+        <section class="space-y-6" data-title="Colonnade Promenades">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_promenade_view.png" alt="Colonnade Promenade View" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_exterior_fairgrounds.png" alt="Colonnade Exterior Fairgrounds" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_fairgrounds_view.png" alt="Colonnade Fairgrounds View" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Section 4: Canyon & Spire Layouts -->
+        <section class="space-y-6" data-title="Canyon Starting Gates">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_canyon_view.png" alt="Colonnade Canyon View" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_canyon_edge_view.png" alt="Colonnade Canyon Edge View" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_banners_pillars.png" alt="Colonnade Banners and Pillars" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Section 5: Stadium Concepts -->
+        <section class="space-y-6" data-title="Alternative Stadium Concept">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_stadium_concept_fit.png" alt="Colonnade Stadium Concept Fit" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_varied_airships.png" alt="Colonnade Varied Airships" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua_bloopers/colonnade_oxford_green.png" alt="Colonnade Oxford Green" class="w-full h-auto block" loading="lazy">
+            </div>
+            
+            <div class="narrative-card rounded-lg p-5">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Oxford Green variations exploring softer grass lighting and alternate architectural spires inside Vumbua's walls.
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-10 py-6 text-center text-slate-500 text-sm border-t border-slate-950 bg-slate-950">
+        <p>Generated with LoreMaster AI.</p>
+    </footer>
+
+    <!-- Interactive JS scroll animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dismiss Loading Overlay
+            const loader = document.getElementById('globalLoadingOverlayChapter');
+            if (loader) {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 300);
+                }, 150);
+            }
+
+            // Scroll Hide/Show Top Nav
+            let lastScrollY = window.scrollY;
+            const nav = document.getElementById('top-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > lastScrollY && window.scrollY > nav.offsetHeight) {
+                    nav.classList.add('nav-hidden');
+                } else {
+                    nav.classList.remove('nav-hidden');
+                }
+                lastScrollY = window.scrollY;
+                updateProgress();
+            }, { passive: true });
+
+            // Update Progress Percentage and Progress Bar Width
+            const progressBar = document.getElementById('scroll-progress-bar');
+            const progressPercent = document.getElementById('scroll-percentage');
+            function updateProgress() {
+                const heightLimit = document.documentElement.scrollHeight - window.innerHeight;
+                if (heightLimit > 0) {
+                    const scrolledPct = (window.scrollY / heightLimit) * 100;
+                    progressBar.style.width = scrolledPct + '%';
+                    progressPercent.textContent = Math.round(scrolledPct) + '%';
+                }
+            }
+
+            // Reveal scroll triggers
+            const sections = document.querySelectorAll('main > section');
+            const navTitle = document.getElementById('nav-title');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -40% 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const target = entry.target;
+                    const panels = target.querySelectorAll('.comic-panel');
+                    const cards = target.querySelectorAll('.narrative-card');
+
+                    if (entry.isIntersecting) {
+                        panels.forEach(p => p.classList.add('visible'));
+                        cards.forEach(c => c.classList.add('visible'));
+
+                        const sectionTitle = target.getAttribute('data-title');
+                        if (sectionTitle && navTitle) {
+                            navTitle.textContent = sectionTitle;
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(sec => {
+                observer.observe(sec);
+                // Trigger initial checks
+                sec.querySelectorAll('.comic-panel').forEach(p => p.classList.add('visible'));
+                sec.querySelectorAll('.narrative-card').forEach(c => c.classList.add('visible'));
+            });
+        });
+    </script>
+</body>
+</html>
