@@ -7,7 +7,7 @@
     let pressTimer = null;
     let targetImageSrc = "";
     
-    // Create styles for modal, feedback indicators, and suppress native mobile menus
+    // Create styles for modal, feedback indicators, suppress native mobile menus, and minimal footer share link
     const styleEl = document.createElement("style");
     styleEl.innerHTML = `
         .image-container-feedback {
@@ -74,6 +74,29 @@
         }
         #feedbackModalOverlay.modal-visible .feedback-content-card {
             transform: scale(1);
+        }
+
+        /* Styling for the minimal share block in the footer */
+        .share-feedback-container {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px dashed rgba(51, 65, 85, 0.5);
+            border-radius: 8px;
+        }
+        .share-feedback-btn {
+            font-size: 13px;
+            font-weight: 600;
+            color: #38bdf8;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+        .share-feedback-btn:hover {
+            color: #f59e0b;
         }
     `;
     document.head.appendChild(styleEl);
@@ -181,7 +204,7 @@
         }
 
         const submission = {
-            panel: targetImageSrc,
+            panel: targetImageSrc.substring(targetImageSrc.lastIndexOf("/") + 1),
             rating: currentRating,
             comment: textInput.value.trim(),
             timestamp: new Date().toISOString()
@@ -214,7 +237,7 @@
             parent.classList.add("image-container-feedback");
         }
 
-        // Timer actions - increased hold threshold to 900ms to avoid scroll issues
+        // Timer actions - hold threshold to 900ms to avoid scroll issues
         function startPress(e) {
             cancelPress();
             pressTimer = setTimeout(() => {
@@ -242,13 +265,57 @@
         img.addEventListener("mouseleave", cancelPress);
 
         img.addEventListener("touchstart", (e) => {
-            // Cancel native long-press popup trigger on some browsers
             startPress(e);
         }, { passive: true });
         img.addEventListener("touchend", cancelPress);
         img.addEventListener("touchcancel", cancelPress);
-        
-        // Touchmove represents active scrolling; cancel press immediately to prevent modal trigger
         img.addEventListener("touchmove", cancelPress, { passive: true });
     });
+
+    // Inject minimal Share feedback block at the bottom of the page inside the footer
+    const footer = document.querySelector("footer");
+    if (footer) {
+        const shareContainer = document.createElement("div");
+        shareContainer.className = "share-feedback-container";
+        shareContainer.innerHTML = `
+            <span class="text-xs text-slate-500 mr-2">Done reviewing?</span>
+            <button class="share-feedback-btn" id="shareFeedbackBtn">Share click + hold feedback</button>
+        `;
+        footer.insertBefore(shareContainer, footer.firstChild);
+
+        const shareBtn = document.getElementById("shareFeedbackBtn");
+        shareBtn.addEventListener("click", () => {
+            const logs = localStorage.getItem("panel_feedback_logs");
+            if (!logs || JSON.parse(logs).length === 0) {
+                alert("No feedback reviews found to export! Long-press panels to submit reviews first.");
+                return;
+            }
+
+            const formattedLogs = JSON.parse(logs).map((l, index) => {
+                return `[${index + 1}] Panel: ${l.panel}\nRating: ${l.rating === 'up' ? '👍' : '👎'}\nComment: ${l.comment}\n`;
+            }).join("\n");
+
+            const shareData = {
+                title: "Vumbua Storybook Panel Feedback",
+                text: `Here is the panel review feedback for the Vumbua Campaign:\n\n${formattedLogs}`,
+            };
+
+            // Attempt to trigger the native device sharing sheet
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .catch((err) => {
+                        console.log("Error sharing:", err);
+                    });
+            } else {
+                // Fallback to copying to clipboard
+                navigator.clipboard.writeText(shareData.text)
+                    .then(() => {
+                        alert("Device sharing not supported by this browser. Feedback reviews copied to clipboard instead! Paste them into Slack, email, or text to share.");
+                    })
+                    .catch((err) => {
+                        alert("Could not copy logs to clipboard: " + err);
+                    });
+            }
+        });
+    }
 })();
