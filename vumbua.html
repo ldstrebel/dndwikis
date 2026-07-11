@@ -6,537 +6,776 @@
     <title>Vumbua: Complete Storybook</title>
     <link rel="icon" href="images/d20favicon.webp" type="image/webp">
     <link rel="shortcut icon" href="images/d20favicon.webp" type="image/webp">
-    <script src="https://cdn.tailwindcss.com"></script> 
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
             font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            height: 100vh; /* Full viewport height */
-            overflow: hidden; /* Prevent body from scrolling */
+            background-color: #090d16; /* Darker navy bg */
+            color: #f1f5f9; 
             margin: 0;
-            background-color: #0f172a; /* bg-slate-900 */
-            color: #f1f5f9; /* text-slate-100 */
-        }
-        #image-display-area {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 55vh; /* Image area takes top 55% of viewport height */
-            background-color: #1e293b; /* bg-slate-800 for placeholder area */
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid #334155; /* slate-700 */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        #current-slide-image, #image-placeholder {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Ensures image fits without cropping, maintains aspect ratio */
-        }
-        #image-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            text-align: center;
+            padding: 0;
+            overflow-x: hidden;
         }
 
-        #text-display-area {
-            flex-grow: 1; /* Takes up remaining space */
-            overflow-y: auto; /* Only this area scrolls */
-            padding: 1rem; /* Inner padding */
-            background-color: #0f172a; /* bg-slate-900 */
-            /* Dynamic paddingTop and paddingBottom will be set by JS */
+        /* Top Navigation Scroll Progress */
+        #top-nav {
+            transition: transform 0.3s ease-in-out;
         }
-        #text-display-area::-webkit-scrollbar { width: 8px; height: 8px; }
-        #text-display-area::-webkit-scrollbar-track { background: #1e293b; } /* slate-800 */
-        #text-display-area::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; } /* slate-600 */
-        #text-display-area::-webkit-scrollbar-thumb:hover { background: #64748b; } /* slate-500 */
-
-        #bottom-navigation {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 56px; /* h-14, reduced slightly for a sleeker bar */
-            background-color: #1e293b; /* bg-slate-800 */
-            border-top: 1px solid #334155; /* slate-700 */
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 0.75rem; /* px-3 */
-            z-index: 10;
-            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        #top-nav.nav-hidden {
+            transform: translateY(-100%);
         }
-        .nav-button-icon {
-            background-color: transparent;
-            color: #94a3b8; /* text-slate-400 */
-            padding: 0.5rem; /* p-2 */
-            border-radius: 9999px; /* rounded-full */
-            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .nav-button-icon:hover {
-            background-color: #334155; /* hover:bg-slate-700 */
-            color: #e2e8f0; /* hover:text-slate-200 */
-        }
-        .nav-button-icon:disabled {
-            color: #475569; /* text-slate-600 */
-            cursor: not-allowed;
-            background-color: transparent;
-        }
-        .nav-button-icon svg {
-             width: 1.25rem; /* w-5 */
-             height: 1.25rem; /* h-5 */
-        }
-        @media (min-width: 768px) { /* md breakpoint */
-            .nav-button-icon svg {
-                width: 1.5rem; /* w-6 */
-                height: 1.5rem; /* h-6 */
-            }
+        #scroll-progress-bar {
+            height: 4px;
+            background: linear-gradient(to right, #0ea5e9, #38bdf8);
+            width: 0%;
+            transition: width 0.1s ease-out;
         }
 
-        .home-icon img {
-            height: 2rem; /* h-8 */
-            width: 2rem; /* w-8 */
-            transition: opacity 0.2s ease-in-out;
-        }
-        .home-icon:hover img {
-            opacity: 0.75;
-        }
-        .chapter-title-nav {
-            font-size: 0.875rem; /* text-sm */
-            font-weight: 500; /* medium */
-            color: #cbd5e1; /* text-slate-300 */
-            text-align: center;
-            flex-grow: 1;
-            margin: 0 0.5rem; /* mx-2 */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        @media (min-width: 768px) { /* md breakpoint */
-             .chapter-title-nav {
-                font-size: 1rem; /* md:text-base */
-             }
-        }
-        .slide-counter-nav {
-            font-size: 0.875rem; /* text-sm */
-            color: #94a3b8; /* text-slate-400 */
-            min-width: 40px; /* Adjusted for #/# format */
-            text-align: center;
-            padding: 0 0.25rem; /* px-1 */
-        }
-        @media (min-width: 768px) { /* md breakpoint */
-            .slide-counter-nav {
-                font-size: 0.875rem; /* md:text-sm */
-                min-width: 50px;
-            }
-        }
-
-        .navigation-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem; /* space-x-1 */
-        }
-        @media (min-width: 768px) { /* md breakpoint */
-            .navigation-controls {
-                 gap: 0.5rem; /* md:space-x-2 */
-            }
-        }
-
-
-        #globalLoadingOverlayChapter {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(15, 23, 42, 0.9); 
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-            transition: opacity 0.3s ease-out;
-        }
-        #globalLoadingOverlayChapter.visually-hidden {
+        /* Narrative Cards Styling */
+        .narrative-card {
+            background-color: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-left: 4px solid #f59e0b; /* Amber accent */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s ease, opacity 0.4s ease;
             opacity: 0;
-            pointer-events: none;
+            transform: translateY(20px);
         }
-        .global-loading-gif {
-            width: 80px;
-            height: 80px;
+        .narrative-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
+        /* Speech bubbles for character dialogues */
+        .bubble-character {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            position: relative;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Scroll-fade for comic panels */
+        .comic-panel {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .comic-panel.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .scroll-down-hint {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
     </style>
 </head>
-<body>
-    <div id="globalLoadingOverlayChapter">
-        <img src="images/archway-loaded.gif" alt="Loading..." class="global-loading-gif" />
+<body class="selection:bg-amber-500/30 selection:text-amber-200">
+
+    <!-- Global Loading Overlay -->
+    <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
+        <img src="images/archway-loaded.gif" alt="Loading..." class="w-20 h-20" />
     </div>
 
-    <div id="image-display-area">
-        <img id="current-slide-image" src="" alt="Current Slide Image" style="display: none;" />
-        <div id="image-placeholder">
-             <!-- Placeholder content will be set by JS if no image -->
-        </div>
-    </div>
-
-    <div id="text-display-area">
-        <!-- Dialogue and scene text will be injected here by JS -->
-    </div>
-
-    <nav id="bottom-navigation">
-        <a href="index.html" title="Go to Homepage" class="home-icon flex-shrink-0">
-            <img src="images/archway-home.webp" alt="Home">
-        </a>
-        
-        <div id="chapterTitle-bottom-nav" class="chapter-title-nav" title="Vumbua: Complete Storybook">
-            Vumbua: Complete Storybook
-        </div>
-        
-        <div class="navigation-controls flex-shrink-0">
-            <button id="prev-slide" class="nav-button-icon" title="Previous Slide">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+    <!-- Top Sticky Navigation with Progress -->
+    <nav id="top-nav" class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 py-3 relative flex items-center justify-between">
+            <a href="index.html" title="Go to Homepage" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-1">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                 </svg>
-            </button>
-            <div id="slide-counter-nav" class="slide-counter-nav">
-                1/18
-            </div>
-            <button id="next-slide" class="nav-button-icon" title="Next Slide">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                </svg>
-            </button>
+                <span class="hidden sm:inline font-semibold">Campaigns</span>
+            </a>
+            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-sky-400 truncate max-w-[60%] sm:max-w-none text-center">Vumbua: Complete Storybook</h1>
+            <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
         </div>
+        <div id="scroll-progress-bar"></div>
     </nav>
 
-    <script>
-        const slidesData = [
-            {
-                imageSrc: 'images/vumbua/s0_page1.png',
-                sessionTitle: 'Session 0: Page 1 - Secrets in the Mycelium',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "The Mizizi—turtle-mushroom folk—live inside the hollow mega-flora of the petrified forest. Their ancient lore warns..." },
-                    { type: 'Narrator', text: "Faded Inscription: 'When things stop dying, we start dying.'" },
-                    { type: 'Narrator', text: "Two cycles ago, the Paper Man arrived. Harmony offered weapons to destroy the petrifaction, in exchange for the forest's soil, roots, and stone." },
-                    { type: 'Character', speakerName: 'Britt', text: "Something is wrong. The call is coming from inside the house." },
-                    { type: 'Character', speakerName: 'Aggie', text: "Let's find the safe spot." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s0_page2.png',
-                sessionTitle: 'Session 0: Page 2 - The Docks & The Dials',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Iggy emerges wet and shivering from the sea onto the Vumbua docks, frantically injecting pressurized fluid into his steaming goggles." },
-                    { type: 'Character', speakerName: 'Iggy', text: "I gotta get more sunscreen... too bright." },
-                    { type: 'Narrator', text: "Sound Effect: HISS! (steam escaping goggles)" },
-                    { type: 'Character', speakerName: 'Ignatius', text: "We're subbing out our own fuel for this fake stuff. It's all wrong. I'm going to find the new source of heat." },
-                    { type: 'Character', speakerName: 'Lomi', text: "Hey! Public infrastructure is important and there are actual people running this city. Show some respect!" }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s0_page3.png',
-                sessionTitle: 'Session 0: Page 3 - The Intake Trials',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Intake Day. 100,000 candidates take the trials. The world is open, and a cull is coming..." },
-                    { type: 'Character', speakerName: 'Dungeon Master', text: "None of you scored in the bottom tier. Welcome to Vumbua Academy!" }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s1_page1.png',
-                sessionTitle: 'Session 1: Page 1 - Scattered Housing',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Housing assignments scatter the newly formed group across the modular districts of Vumbua..." },
-                    { type: 'Character', speakerName: 'Iggy', text: "Block 12. Far away." },
-                    { type: 'Character', speakerName: 'Lomi', text: "I'm in Block 99. The boiler rooms are right below. Smells like grease and home." },
-                    { type: 'Character', speakerName: 'Ignatius', text: "See y'all tomorrow. Don't get lost in the pipes." },
-                    { type: 'Character', speakerName: 'Britt', text: "We'll meet at the central courtyard at noon." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s1_page2.png',
-                sessionTitle: 'Session 1: Page 2 - Iggy\'s Sky Climb',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Seeking space and a view, Iggy scales the highest scaffold he can find..." },
-                    { type: 'Narrator', text: "Sound Effect: CLANK CLANK CLANK" },
-                    { type: 'Character', speakerName: 'Iggy', text: "To touch the sky. Comfortable." },
-                    { type: 'Character', speakerName: 'Dungeon Master', text: "From up here, the city looks like a puzzle box waiting to be opened." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s2_page1.png',
-                sessionTitle: 'Session 2: Page 1 - Stacking Logs at Block 99',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "A bonfire at Block 99 becomes the stage for new friendships and philosophical debates..." },
-                    { type: 'Character', speakerName: 'Lomi', text: "You've got a real eye for structural load, Cassius. That's a beautiful stack." },
-                    { type: 'Character', speakerName: 'Cassius', text: "If the geometry is off, the resonance decays unevenly. It's just simple thermodynamics!" }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s2_page2.png',
-                sessionTitle: 'Session 2: Page 2 - The Speculators\' Debate',
-                dialogueEntries: [
-                    { type: 'Character', speakerName: 'Percy', text: "The Sixfold Theory proves the missing Earth, Air, and Water nodes must exist! Harmony cannot remain stable without them." },
-                    { type: 'Character', speakerName: 'Jax', text: "Theoretical junk. The Loom doesn't care about balance, it cares about amps." },
-                    { type: 'Character', speakerName: 'Serra Vox', text: "Under the Inverse Power Doctrine, Lady Ignis holds the highest voting power because she represents the newest integrated node." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s2_page3.png',
-                sessionTitle: 'Session 2: Page 3 - Zephyr\'s Lightning',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Sound Effect: CRACK-BOOM! (Purple lightning strikes Zephyr)" },
-                    { type: 'Character', speakerName: 'Ignatius', text: "Zephyr!" },
-                    { type: 'Character', speakerName: 'Rill', text: "She's okay. Everyone stand back! Zephyr, come with me." },
-                    { type: 'Character', speakerName: 'Dungeon Master', text: "Zephyr can trigger purple lightning when stressed, but she walks away unscathed every time." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s3_page1.png',
-                sessionTitle: 'Session 3: Page 1 - Crown & Ruin',
-                dialogueEntries: [
-                    { type: 'Character', speakerName: 'Lomi', text: "Looks like Ruin for you, Val! Pay up." },
-                    { type: 'Character', speakerName: 'Val', text: "Ah, clean win, Lomi. You're direct." },
-                    { type: 'Character', speakerName: 'Val', text: "The upcoming exam... I wrote it myself. It's tough. I sold an annotated study guide to Lucky the grifter. You should find him." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s3_page2.png',
-                sessionTitle: 'Session 3: Page 2 - The Alley Ambush',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Leaving the lounge, Britt is cornered in the dark alleys of the Upper Core..." },
-                    { type: 'Character', speakerName: 'Azer', text: "Hand over the watch and the receipts, turtle-kin." },
-                    { type: 'Narrator', text: "Sound Effect: KICK!" },
-                    { type: 'Character', speakerName: 'Britt', text: "You are NOT taking this watch! It's my family's!" }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s3_page3.png',
-                sessionTitle: 'Session 3: Page 3 - Lomi & Iggy\'s Rescue',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Sound Effect: CRUNCH! (Lomi slams his shoulder into Azer)" },
-                    { type: 'Character', speakerName: 'Lomi', text: "Get off our friend!" },
-                    { type: 'Character', speakerName: 'Azer', text: "Retreat! Let's go!" },
-                    { type: 'Character', speakerName: 'Britt', text: "They took my exam receipt. But... I kept the watch." },
-                    { type: 'Character', speakerName: 'Lomi', text: "We find Lucky tomorrow. He's got the study guide, and he's going to tell us who sent those thugs." },
-                    { type: 'Character', speakerName: 'Dungeon Master', text: "Lomi's punch broke a rib. Word gets around: don't mess with the boiler crew." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s4_page1.png',
-                sessionTitle: 'Session 4: Page 1 - Logistics Class',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "A piece of white chalk flies across the room, hitting Ignatius square in the forehead during class." },
-                    { type: 'Narrator', text: "Sound Effect: TAP!" },
-                    { type: 'Character', speakerName: 'Professor', text: "Focus, Ignatius! Attrition rate in Hangar 12 is calculated, not guessed!" },
-                    { type: 'Character', speakerName: 'Ignatius', text: "Ouch! Emotional damage." },
-                    { type: 'Character', speakerName: 'Lomi', text: "Hey, Finch, any chance I could copy your logistics formula?" },
-                    { type: 'Character', speakerName: 'Finch Gable', text: "I do not share telemetry with boiler-grease, Octoumba." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s4_page2.png',
-                sessionTitle: 'Session 4: Page 2 - Trading the Myth',
-                dialogueEntries: [
-                    { type: 'Character', speakerName: 'Lucky', text: "Money's boring. I trade in stories, secrets, and high-potential people. Give me a real secret, and the study guide is yours." },
-                    { type: 'Character', speakerName: 'Ignatius', text: "My islands were formed when the Sea Dragon caught the Sky Dragon... keeping the heat alive." },
-                    { type: 'Character', speakerName: 'Lucky', text: "A genuine myth. I like it. Deal." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s5_page1.png',
-                sessionTitle: 'Session 5: Page 1 - High-Stakes Deals',
-                dialogueEntries: [
-                    { type: 'Character', speakerName: 'Lucky', text: "I track anomalies. The purple lightning, the weird tech... and you, Iggy. You don't use standard Harmony batteries. Show me what you've got." },
-                    { type: 'Character', speakerName: 'Iggy', text: "Clockwork. Runs on springs. No crystals." },
-                    { type: 'Character', speakerName: 'Ignatius', text: "That's high-tier craftsmanship. We want the annotated study guide and the Reso Race intel." },
-                    { type: 'Character', speakerName: 'Lucky', text: "Deal. This is beautiful." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s5_page2.png',
-                sessionTitle: 'Session 5: Page 2 - Lomi\'s Grease-Grog Deal',
-                dialogueEntries: [
-                    { type: 'Character', speakerName: 'Lomi', text: "Ambrosia of Luck. Furnace-grade grog. We sell it in the Bleachers on race day, and we split the profits." },
-                    { type: 'Character', speakerName: 'Lucky', text: "Phew! Smells like a boiler explosion. I love it. I'll set up the distribution." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s6_page1.png',
-                sessionTitle: 'Session 6: Page 1 - Secrets in the Basin',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Wednesday afternoon. Escaping the sterile dorms of Block 04, Britt scales the basalt cliffs seeking what the wilderness hides..." },
-                    { type: 'Narrator', text: "Sound Effect: CLINK!" },
-                    { type: 'Narrator', text: "Floating Text Overlay: 'momentum is life always towards home.'" },
-                    { type: 'Character', speakerName: 'Finch Gable', text: "Rovaldi's got the replacement engine node locked in Bay 4. Bring me the balloon pass, and it's yours." },
-                    { type: 'Character', speakerName: 'Dungeon Master', text: "Finch Gable, trading secrets. Classic." }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s6_page2.png',
-                sessionTitle: 'Session 6: Page 2 - Hangar 12 (The Infiltration)',
-                dialogueEntries: [
-                    { type: 'Character', speakerName: 'Guard', text: "Hand please. Private only." },
-                    { type: 'Character', speakerName: 'Iggy', text: "I'm allowed. Yeah." },
-                    { type: 'Narrator', text: "Sound Effect: SPLASH! (testing fluid leaks onto Iggy's wrist, turning skin red)" },
-                    { type: 'Character', speakerName: 'Guard', text: "Wait! That turned red! Sir—!" },
-                    { type: 'Narrator', text: "Sound Effect: WHOOSH! (the trench coat falling flat as Iggy escapes)" },
-                    { type: 'Character', speakerName: 'Ignatius', text: "Iggy, what is happening?!" }
-                ]
-            },
-            {
-                imageSrc: 'images/vumbua/s6_page4.png',
-                sessionTitle: 'Session 6: Page 4 - The Ash-Blood Deal',
-                dialogueEntries: [
-                    { type: 'Narrator', text: "Sound Effect: WHOOSH! (Ignatius trapped in Hangar 12 scaffolding)" },
-                    { type: 'Character', speakerName: 'Ember', text: "Shh! Keep your heat down. Everyone's distracted by your friend's stunt." },
-                    { type: 'Character', speakerName: 'Ignatius', text: "Ember?!" },
-                    { type: 'Character', speakerName: 'Ember', text: "Our resonator was confiscated. We need Ash-Blood heat, or our rig stalls." },
-                    { type: 'Character', speakerName: 'Ignatius', text: "I want a blank favor. Cashed in whenever I need it." },
-                    { type: 'Character', speakerName: 'Alistair', text: "Good heat, boy. She's humming." }
-                ]
-            }
-        ];
-        
-        const totalSlides = slidesData.length;
-        let currentIndex = 0;
+    <!-- Main Container -->
+    <main class="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-12">
 
-        const imageDisplay = document.getElementById('current-slide-image');
-        const imagePlaceholder = document.getElementById('image-placeholder');
-        const textDisplay = document.getElementById('text-display-area');
-        const prevButton = document.getElementById('prev-slide');
-        const nextButton = document.getElementById('next-slide');
-        const slideCounterNav = document.getElementById('slide-counter-nav');
-        const bottomNavTitle = document.getElementById('chapterTitle-bottom-nav');
-        
-        const imageArea = document.getElementById('image-display-area');
-        const navArea = document.getElementById('bottom-navigation');
+        <!-- Welcome Cover Panel -->
+        <section class="text-center py-10 space-y-4">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400">VUMBUA</h2>
+            <p class="text-slate-400 max-w-md mx-auto text-sm sm:text-base leading-relaxed">
+                Detailing the trials, tribulations, and adventures of students at the prestigious Vumbua Academy across Sessions 0 to 6.
+            </p>
+            <div class="scroll-down-hint flex flex-col items-center pt-6 text-slate-500 text-xs gap-1">
+                <span>Scroll to start reading</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+            </div>
+        </section>
 
-        function setContentAreaPadding() {
-            const imageAreaHeight = imageArea.offsetHeight;
-            const navAreaHeight = navArea.offsetHeight;
-            textDisplay.style.paddingTop = imageAreaHeight + 'px';
-            textDisplay.style.paddingBottom = navAreaHeight + 'px';
-        }
+        <!-- Session 0: Page 1 -->
+        <section class="space-y-6" data-title="Session 0: Page 1 - Secrets in the Mycelium">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s0_page1.png" alt="Session 0: Page 1" class="w-full h-auto block" loading="lazy">
+            </div>
 
-        function showSlide(index) {
-            if (totalSlides === 0 || index < 0 || index >= totalSlides) {
-                imageDisplay.style.display = 'none';
-                imagePlaceholder.style.display = 'flex';
-                imagePlaceholder.innerHTML = '<p class="text-slate-300 text-lg">No slides to display for this chapter.</p>';
-                textDisplay.innerHTML = '';
-                if (slideCounterNav) slideCounterNav.textContent = '0/0';
-                if (prevButton) prevButton.disabled = true;
-                if (nextButton) nextButton.disabled = true;
-                return;
-            }
-
-            const slide = slidesData[index];
-            
-            // Update Chapter Title in Bottom Nav
-            if (bottomNavTitle) {
-                bottomNavTitle.textContent = slide.sessionTitle || "Vumbua: Complete Storybook";
-                bottomNavTitle.title = slide.sessionTitle || "Vumbua: Complete Storybook";
-            }
-
-            // Image
-            if (slide.imageSrc) {
-                imageDisplay.src = slide.imageSrc;
-                imageDisplay.alt = slide.sessionTitle || `Scene ${index + 1}`;
-                imageDisplay.style.display = 'block';
-                imagePlaceholder.style.display = 'none';
-            } else {
-                imageDisplay.style.display = 'none';
-                imagePlaceholder.style.display = 'flex';
-                imagePlaceholder.innerHTML = `
-                    <div class="text-sm text-slate-300 p-2 text-center">
-                        <p class="font-semibold text-sky-400 mb-1">Image Placeholder</p>
-                        <p class="text-xs">No image provided.</p>
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    The Mizizi—turtle-mushroom folk—live inside the hollow mega-flora of the petrified forest. Their ancient lore warns...
+                </div>
+                <div class="text-amber-400 font-semibold text-xs tracking-wider uppercase border-b border-slate-700/60 pb-1">
+                    Faded Inscription
+                </div>
+                <div class="italic text-slate-400 pl-4 border-l-2 border-slate-600 text-sm">
+                    "When things stop dying, we start dying."
+                </div>
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Two cycles ago, the Paper Man arrived. Harmony offered weapons to destroy the petrifaction, in exchange for the forest's soil, roots, and stone.
+                </div>
+                <div class="space-y-2.5 pt-2">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Britt:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Something is wrong. The call is coming from inside the house.</span>
                     </div>
-                `;
-            }
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Aggie:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Let's find the safe spot.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            // Text
-            let dialogueHtml = '';
-            if (slide.dialogueEntries && slide.dialogueEntries.length > 0) {
-                dialogueHtml = slide.dialogueEntries.map(entry => {
-                    const speakerNameHtml = entry.type === 'Character' && entry.speakerName ? `<strong class="font-semibold text-sky-300">${entry.speakerName.replace(/</g, "&lt;").replace(/>/g, "&gt;")}:</strong> ` : '';
-                    const textClass = entry.type === 'Narrator' ? 'italic text-slate-300' : 'text-slate-100';
-                    return `<div class="p-1.5 my-1 text-sm md:text-base ${textClass}">${speakerNameHtml}${entry.text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>`;
-                }).join('');
-            } else if (slide.sceneText) {
-                 dialogueHtml = `<div class="p-1.5 my-1 text-sm md:text-base italic text-slate-300">${slide.sceneText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>`;
-            } else {
-                 dialogueHtml = '<p class="text-slate-400 text-sm p-2">No text for this scene.</p>';
-            }
-            textDisplay.innerHTML = dialogueHtml;
-            textDisplay.scrollTop = 0; // Scroll to top of text area
+        <!-- Session 0: Page 2 -->
+        <section class="space-y-6" data-title="Session 0: Page 2 - Docks & Dials">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s0_page2.png" alt="Session 0: Page 2" class="w-full h-auto block" loading="lazy">
+            </div>
 
-            // Update counter
-            if (slideCounterNav) {
-              slideCounterNav.textContent = `${index + 1}/${totalSlides}`;
-            }
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Iggy emerges wet and shivering from the sea onto the Vumbua docks, frantically injecting pressurized fluid into his steaming goggles.
+                </div>
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: HISS! <span class="text-slate-400 italic lowercase font-normal">(steam escaping goggles)</span>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Iggy:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">I gotta get more sunscreen... too bright.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">We're subbing out our own fuel for this fake stuff. It's all wrong. I'm going to find the new source of heat.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Hey! Public infrastructure is important and there are actual people running this city. Show some respect!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            // Update button states
-            if (prevButton) prevButton.disabled = totalSlides <= 1;
-            if (nextButton) nextButton.disabled = totalSlides <= 1;
-            
-            if (totalSlides > 1) {
-                if (prevButton) prevButton.disabled = false;
-                if (nextButton) nextButton.disabled = false;
-            }
-        }
+        <!-- Session 0: Page 3 -->
+        <section class="space-y-6" data-title="Session 0: Page 3 - Intake Trials">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s0_page3.png" alt="Session 0: Page 3" class="w-full h-auto block" loading="lazy">
+            </div>
 
-        if (prevButton) {
-            prevButton.addEventListener('click', () => {
-                if (totalSlides <= 0) return;
-                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-                showSlide(currentIndex);
-            });
-        }
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Intake Day. 100,000 candidates take the trials. The world is open, and a cull is coming...
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character border-amber-500/30">
+                        <strong class="font-semibold text-amber-400">Dungeon Master:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">None of you scored in the bottom tier. Welcome to Vumbua Academy!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        if (nextButton) {
-            nextButton.addEventListener('click', () => {
-                if (totalSlides <= 0) return;
-                currentIndex = (currentIndex + 1) % totalSlides;
-                showSlide(currentIndex);
-            });
-        }
+        <!-- Session 1: Page 1 -->
+        <section class="space-y-6" data-title="Session 1: Page 1 - Scattered Housing">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s1_page1.png" alt="Session 1: Page 1" class="w-full h-auto block" loading="lazy">
+            </div>
 
-        document.addEventListener('keydown', (event) => {
-            if (totalSlides <= 1) return;
-            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Housing assignments scatter the newly formed group across the modular districts of Vumbua...
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Iggy:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Block 12. Far away.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">I'm in Block 99. The boiler rooms are right below. Smells like grease and home.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">See y'all tomorrow. Don't get lost in the pipes.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Britt:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">We'll meet at the central courtyard at noon.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            if (event.key === 'ArrowLeft') {
-                if (prevButton && !prevButton.disabled) prevButton.click();
-            } else if (event.key === 'ArrowRight') {
-                if (nextButton && !nextButton.disabled) nextButton.click();
-            }
-        });
-        
+        <!-- Session 1: Page 2 -->
+        <section class="space-y-6" data-title="Session 1: Page 2 - Iggy's Sky Climb">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s1_page2.png" alt="Session 1: Page 2" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Seeking space and a view, Iggy scales the highest scaffold he can find...
+                </div>
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: CLANK CLANK CLANK
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Iggy:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">To touch the sky. Comfortable.</span>
+                    </div>
+                    <div class="bubble-character border-amber-500/30">
+                        <strong class="font-semibold text-amber-400">Dungeon Master:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">From up here, the city looks like a puzzle box waiting to be opened.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 2: Page 1 -->
+        <section class="space-y-6" data-title="Session 2: Page 1 - Bonfire Logs">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s2_page1.png" alt="Session 2: Page 1" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    A bonfire at Block 99 becomes the stage for new friendships and philosophical debates...
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">You've got a real eye for structural load, Cassius. That's a beautiful stack.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Cassius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">If the geometry is off, the resonance decays unevenly. It's just simple thermodynamics!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 2: Page 2 -->
+        <section class="space-y-6" data-title="Session 2: Page 2 - Speculators' Debate">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s2_page2.png" alt="Session 2: Page 2" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Percy:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">The Sixfold Theory proves the missing Earth, Air, and Water nodes must exist! Harmony cannot remain stable without them.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Jax:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Theoretical junk. The Loom doesn't care about balance, it cares about amps.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Serra Vox:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Under the Inverse Power Doctrine, Lady Ignis holds the highest voting power because she represents the newest integrated node.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 2: Page 3 -->
+        <section class="space-y-6" data-title="Session 2: Page 3 - Zephyr's Lightning">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s2_page3.png" alt="Session 2: Page 3" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: CRACK-BOOM! <span class="text-slate-400 italic lowercase font-normal">(Purple lightning strikes Zephyr)</span>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Zephyr!</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Rill:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">She's okay. Everyone stand back! Zephyr, come with me.</span>
+                    </div>
+                    <div class="bubble-character border-amber-500/30">
+                        <strong class="font-semibold text-amber-400">Dungeon Master:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Zephyr can trigger purple lightning when stressed, but she walks away unscathed every time.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 3: Page 1 -->
+        <section class="space-y-6" data-title="Session 3: Page 1 - Crown & Ruin">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s3_page1.png" alt="Session 3: Page 1" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Looks like Ruin for you, Val! Pay up.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Val:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Ah, clean win, Lomi. You're direct. The upcoming exam... I wrote it myself. It's tough. I sold an annotated study guide to Lucky the grifter. You should find him.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 3: Page 2 -->
+        <section class="space-y-6" data-title="Session 3: Page 2 - Alley Ambush">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s3_page2.png" alt="Session 3: Page 2" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Leaving the lounge, Britt is cornered in the dark alleys of the Upper Core...
+                </div>
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: KICK!
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Azer:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Hand over the watch and the receipts, turtle-kin.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Britt:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">You are NOT taking this watch! It's my family's!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 3: Page 3 -->
+        <section class="space-y-6" data-title="Session 3: Page 3 - Rescue & Retribution">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s3_page3.png" alt="Session 3: Page 3" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: CRUNCH! <span class="text-slate-400 italic lowercase font-normal">(Lomi slams his shoulder into Azer)</span>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Get off our friend!</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Azer:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Retreat! Let's go!</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Britt:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">They took my exam receipt. But... I kept the watch.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">We find Lucky tomorrow. He's got the study guide, and he's going to tell us who sent those thugs.</span>
+                    </div>
+                    <div class="bubble-character border-amber-500/30">
+                        <strong class="font-semibold text-amber-400">Dungeon Master:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Lomi's punch broke a rib. Word gets around: don't mess with the boiler crew.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 4: Page 1 -->
+        <section class="space-y-6" data-title="Session 4: Page 1 - Logistics Class">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s4_page1.png" alt="Session 4: Page 1" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    A piece of white chalk flies across the room, hitting Ignatius square in the forehead during class.
+                </div>
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: TAP!
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Professor:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Focus, Ignatius! Attrition rate in Hangar 12 is calculated, not guessed!</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Ouch! Emotional damage.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Hey, Finch, any chance I could copy your logistics formula?</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Finch Gable:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">I do not share telemetry with boiler-grease, Octoumba.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 4: Page 2 -->
+        <section class="space-y-6" data-title="Session 4: Page 2 - Trading the Myth">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s4_page2.png" alt="Session 4: Page 2" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lucky:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Money's boring. I trade in stories, secrets, and high-potential people. Give me a real secret, and the study guide is yours.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">My islands were formed when the Sea Dragon caught the Sky Dragon... keeping the heat alive.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lucky:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">A genuine myth. I like it. Deal.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 5: Page 1 -->
+        <section class="space-y-6" data-title="Session 5: Page 1 - High-Stakes Deals">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s5_page1.png" alt="Session 5: Page 1" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lucky:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">I track anomalies. The purple lightning, the weird tech... and you, Iggy. You don't use standard Harmony batteries. Show me what you've got.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Iggy:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Clockwork. Runs on springs. No crystals.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">That's high-tier craftsmanship. We want the annotated study guide and the Reso Race intel.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lucky:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Deal. This is beautiful.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 5: Page 2 -->
+        <section class="space-y-6" data-title="Session 5: Page 2 - Lomi's Grease-Grog Deal">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s5_page2.png" alt="Session 5: Page 2" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Ambrosia of Luck. Furnace-grade grog. We sell it in the Bleachers on race day, and we split the profits.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lucky:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Phew! Smells like a boiler explosion. I love it. I'll set up the distribution.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 6: Page 1 -->
+        <section class="space-y-6" data-title="Session 6: Page 1 - Secrets in the Basin">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s6_page1.png" alt="Session 6: Page 1" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Wednesday afternoon. Escaping the sterile dorms of Block 04, Britt scales the basalt cliffs seeking what the wilderness hides...
+                </div>
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: CLINK!
+                </div>
+                <div class="text-amber-400 font-semibold text-xs tracking-wider uppercase border-b border-slate-700/60 pb-1">
+                    Text Inscription
+                </div>
+                <div class="italic text-slate-400 pl-4 border-l-2 border-slate-600 text-sm">
+                    "momentum is life always towards home."
+                </div>
+                <div class="space-y-2.5 pt-2">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Finch Gable:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Rovaldi's got the replacement engine node locked in Bay 4. Bring me the balloon pass, and it's yours.</span>
+                    </div>
+                    <div class="bubble-character border-amber-500/30">
+                        <strong class="font-semibold text-amber-400">Dungeon Master:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Finch Gable, trading secrets. Classic.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 6: Page 2 -->
+        <section class="space-y-6" data-title="Session 6: Page 2 - Hangar 12 (The Infiltration)">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s6_page2.png" alt="Session 6: Page 2" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Guard:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Hand please. Private only.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Iggy:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">I'm allowed. Yeah.</span>
+                    </div>
+                    <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                        Sound Effect: SPLASH! <span class="text-slate-400 italic lowercase font-normal">(testing fluid leaks onto Iggy's wrist, turning skin red)</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Guard:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Wait! That turned red! Sir—!</span>
+                    </div>
+                    <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                        Sound Effect: WHOOSH! <span class="text-slate-400 italic lowercase font-normal">(the trench coat falling flat as Iggy escapes)</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Iggy, what is happening?!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 6: Page 3 -->
+        <section class="space-y-6" data-title="Session 6: Page 3 - Catwalk Catastrophe">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s6_page3.png" alt="Session 6: Page 3" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Bypassing the crowd control enforcers, Iggy scurries into Hangar 12, seeking safety in the deep dark...
+                </div>
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: THUD! <span class="text-slate-400 italic lowercase font-normal">(Warden Rovaldi drops 40 feet)</span>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Rovaldi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">I see you're curious about my eye. What does yours do?</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Iggy:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Keeps them moist. Yes.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 6: Page 4 -->
+        <section class="space-y-6" data-title="Session 6: Page 4 - The Ash-Blood Deal">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s6_page4.png" alt="Session 6: Page 4" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="text-amber-500 font-semibold text-xs tracking-wider uppercase">
+                    Sound Effect: WHOOSH! <span class="text-slate-400 italic lowercase font-normal">(Ignatius trapped in scaffolding)</span>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ember:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Shh! Keep your heat down. Everyone's distracted by your friend's stunt.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Ember?! Our resonator was confiscated. We need Ash-Blood heat, or our rig stalls.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Ignatius:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">I want a blank favor. Cashed in whenever I need it.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Alistair:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Good heat, boy. She's humming.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 6: Page 5 -->
+        <section class="space-y-6" data-title="Session 6: Page 5 - Courtyard Strategy">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s6_page5.png" alt="Session 6: Page 5" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Thursday morning in the Block 04 courtyard. Bramble sighs as Pip makes grass angels in the mud. Meanwhile, secrets are shared...
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Britt:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">I found this by a runoff pipe. I also saw Finch Gable trying to trade secrets to the guard.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">That guy... that's sneaky. The compass tells us which direction is home. We can base our routes off that.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session 6: Page 6 -->
+        <section class="space-y-6" data-title="Session 6: Page 6 - Cafeteria & Sourdough Sniping">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s6_page6.png" alt="Session 6: Page 6" class="w-full h-auto block" loading="lazy">
+            </div>
+
+            <div class="narrative-card rounded-lg p-5 space-y-4">
+                <div class="italic text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Thursday lunch. Val uses baked potatoes and peas to map the Reso Circuit. Confrontation sparks...
+                </div>
+                <div class="space-y-2.5">
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Val:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Scale is off, but it works. Are you nervous about the test?</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lomi:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Val is talking about the race. Shame when we beat him off the line.</span>
+                    </div>
+                    <div class="bubble-character">
+                        <strong class="font-semibold text-sky-300">Lyra Castellan:</strong>
+                        <span class="text-slate-100 text-sm sm:text-base">Presumptuous. Do you even have a team?</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-10 py-6 text-center text-slate-500 text-sm border-t border-slate-950 bg-slate-950">
+        <p>Generated with LoreMaster AI.</p>
+    </footer>
+
+    <!-- IntersectionObserver and dynamic scroll navigation script -->
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
-            setContentAreaPadding();
-            showSlide(currentIndex);
-
-            const chapterOverlay = document.getElementById('globalLoadingOverlayChapter');
-            if (chapterOverlay) {
+            // Hide loading screen
+            const loadingScreen = document.getElementById('globalLoadingOverlayChapter');
+            if (loadingScreen) {
                 setTimeout(() => {
-                    chapterOverlay.classList.add('visually-hidden');
-                }, 150); 
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 300);
+                }, 150);
             }
+
+            // Scroll Hide/Show Nav
+            let lastScrollY = window.scrollY;
+            const nav = document.getElementById('top-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > lastScrollY && window.scrollY > nav.offsetHeight) {
+                    nav.classList.add('nav-hidden');
+                } else {
+                    nav.classList.remove('nav-hidden');
+                }
+                lastScrollY = window.scrollY;
+                updateProgressBar();
+            }, { passive: true });
+
+            // Update Progress Bar
+            const progressBar = document.getElementById('scroll-progress-bar');
+            const percentCounter = document.getElementById('scroll-percentage');
+            function updateProgressBar() {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (totalHeight > 0) {
+                    const scrolled = (window.scrollY / totalHeight) * 100;
+                    progressBar.style.width = scrolled + '%';
+                    percentCounter.textContent = Math.round(scrolled) + '%';
+                }
+            }
+
+            // IntersectionObserver for elements
+            const sections = document.querySelectorAll('main > section');
+            const navTitle = document.getElementById('nav-title');
+            
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -40% 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const target = entry.target;
+                    const panel = target.querySelector('.comic-panel');
+                    const card = target.querySelector('.narrative-card');
+
+                    if (entry.isIntersecting) {
+                        if (panel) panel.classList.add('visible');
+                        if (card) card.classList.add('visible');
+                        
+                        // Update nav title to current scene
+                        const currentTitle = target.getAttribute('data-title');
+                        if (currentTitle && navTitle) {
+                            navTitle.textContent = currentTitle;
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                // Pre-observe
+                observer.observe(section);
+                // Also trigger initial reveal check
+                const panel = section.querySelector('.comic-panel');
+                const card = section.querySelector('.narrative-card');
+                if (panel) panel.classList.add('visible');
+                if (card) card.classList.add('visible');
+            });
         });
-
-        window.addEventListener('resize', setContentAreaPadding);
-
     </script>
 </body>
 </html>
