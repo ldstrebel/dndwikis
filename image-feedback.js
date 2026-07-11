@@ -7,7 +7,7 @@
     let pressTimer = null;
     let targetImageSrc = "";
     
-    // Create styles for modal and feedback indicators
+    // Create styles for modal, feedback indicators, and suppress native mobile menus
     const styleEl = document.createElement("style");
     styleEl.innerHTML = `
         .image-container-feedback {
@@ -33,6 +33,17 @@
         .image-container-feedback:hover::after {
             opacity: 1;
         }
+        
+        /* Suppress default context menus and highlights on mobile browsers */
+        .comic-panel img {
+            -webkit-touch-callout: none !important; /* iOS Safari */
+            -webkit-user-select: none !important;   /* Safari */
+            -khtml-user-select: none !important;    /* Konqueror HTML */
+            -moz-user-select: none !important;      /* Firefox */
+            -ms-user-select: none !important;       /* Internet Explorer/Edge */
+            user-select: none !important;           /* Non-prefixed version */
+        }
+
         #feedbackModalOverlay {
             position: fixed;
             inset: 0;
@@ -70,7 +81,7 @@
     // Create Modal HTML Structure
     const modalMarkup = `
         <div id="feedbackModalOverlay">
-            <div class="feedback-content-card space-y-4">
+            <div class="feedback-content-card space-y-4" id="feedbackContentCard">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3">
                     <h3 class="text-amber-400 font-bold text-lg">Panel Feedback</h3>
                     <button id="closeFeedbackModal" class="text-slate-400 hover:text-slate-200 text-xl font-bold">&times;</button>
@@ -110,6 +121,7 @@
     document.body.appendChild(divContainer);
 
     const overlay = document.getElementById("feedbackModalOverlay");
+    const contentCard = document.getElementById("feedbackContentCard");
     const closeBtn = document.getElementById("closeFeedbackModal");
     const cancelBtn = document.getElementById("cancelFeedback");
     const submitBtn = document.getElementById("submitFeedback");
@@ -152,11 +164,13 @@
         overlay.classList.remove("modal-visible");
     }
 
-    // Modal triggers
+    // Modal triggers - Tap/Click anywhere outside the card content container to close
     closeBtn.addEventListener("click", hideModal);
     cancelBtn.addEventListener("click", hideModal);
     overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) hideModal();
+        if (!contentCard.contains(e.target)) {
+            hideModal();
+        }
     });
 
     // Submit handler (saves to LocalStorage / triggers mock analytics call)
@@ -195,18 +209,17 @@
     // Wire up events for images inside .comic-panel elements
     const images = document.querySelectorAll(".comic-panel img");
     images.forEach(img => {
-        // Wrap parent element or add custom trigger container class
         const parent = img.parentElement;
         if (parent) {
             parent.classList.add("image-container-feedback");
         }
 
-        // Timer actions
+        // Timer actions - increased hold threshold to 900ms to avoid scroll issues
         function startPress(e) {
-            // Prevent default behavior to avoid standard context menus or selections during hold
+            cancelPress();
             pressTimer = setTimeout(() => {
                 showModal(img.src);
-            }, 600); // Trigger after 600ms hold
+            }, 900);
         }
 
         function cancelPress() {
@@ -216,17 +229,26 @@
             }
         }
 
+        // Intercept and prevent the browser's default context menus (e.g. Save Image Options)
+        img.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+
         // Pointer/Touch Listeners
         img.addEventListener("mousedown", startPress);
         img.addEventListener("mouseup", cancelPress);
         img.addEventListener("mouseleave", cancelPress);
 
         img.addEventListener("touchstart", (e) => {
-            // Let touch events scroll normally but trigger hold if stationary
+            // Cancel native long-press popup trigger on some browsers
             startPress(e);
         }, { passive: true });
         img.addEventListener("touchend", cancelPress);
         img.addEventListener("touchcancel", cancelPress);
-        img.addEventListener("touchmove", cancelPress);
+        
+        // Touchmove represents active scrolling; cancel press immediately to prevent modal trigger
+        img.addEventListener("touchmove", cancelPress, { passive: true });
     });
 })();
