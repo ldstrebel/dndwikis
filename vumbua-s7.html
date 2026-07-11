@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vumbua: Session 7 - Race Day & Harmonic Anomaly</title>
+    <link rel="icon" href="images/d20favicon.webp" type="image/webp">
+    <link rel="shortcut icon" href="images/d20favicon.webp" type="image/webp">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16; /* Darker navy bg */
+            color: #f1f5f9; 
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Top Navigation Scroll Progress */
+        #top-nav {
+            transition: transform 0.3s ease-in-out;
+        }
+        #top-nav.nav-hidden {
+            transform: translateY(-100%);
+        }
+        #scroll-progress-bar {
+            height: 4px;
+            background: linear-gradient(to right, #eab308, #f59e0b); /* Amber gradient */
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Narrative Card styling to match story bridges */
+        .narrative-card {
+            background-color: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-left: 4px solid #f59e0b; /* Amber left accent */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .narrative-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Speech bubbles for character dialogues */
+        .bubble-character {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            position: relative;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Scroll-fade for comic panels */
+        .comic-panel {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .comic-panel.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .scroll-down-hint {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="selection:bg-amber-500/30 selection:text-amber-200">
+
+    <!-- Global Loading Overlay -->
+    <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
+        <img src="images/archway-loaded.gif" alt="Loading..." class="w-20 h-20" />
+    </div>
+
+    <!-- Top Sticky Navigation with Progress -->
+    <nav id="top-nav" class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 py-3 relative flex items-center justify-between">
+            <a href="index.html" title="Go to Homepage" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+                <span class="hidden sm:inline font-semibold">Campaigns</span>
+            </a>
+            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-sky-400 truncate max-w-[60%] sm:max-w-none text-center">Session 7: Race Day</h1>
+            <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
+        </div>
+        <div id="scroll-progress-bar"></div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-xl mx-auto px-4 sm:px-6 py-6 space-y-12">
+
+        <!-- Header Cover Panel -->
+        <section class="text-center py-10 space-y-4">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-sky-400 to-amber-400">Session 7: Race Day & Harmonic Anomaly</h2>
+            <p class="text-slate-400 max-w-md mx-auto text-sm sm:text-base leading-relaxed">
+                The massive Reszo Race arrives! Tensions peak inside the skyward Sterling flagship as a secret core blueprint and an old flashback reveal deep power anomalies.
+            </p>
+            <div class="scroll-down-hint flex flex-col items-center pt-6 text-slate-500 text-xs gap-1">
+                <span>Scroll to start reading</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+            </div>
+        </section>
+
+        <!-- Chapter: Introduction -->
+        <div class="narrative-card rounded-lg p-5 space-y-2 visible opacity-100 transform-none">
+            <h3 class="text-amber-400 font-bold text-lg">Morning Side Gigs</h3>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                It's Thursday morning. Reszo Race Day has finally arrived. Lomi sets up an unlicensed side gig on campus to dodge the high-society price tags, waking up dormmates and teaming with Lucky.
+            </p>
+        </div>
+
+        <!-- Page 1: Side Gigs -->
+        <section class="space-y-6" data-title="Page 1: Side Gigs (The Campus Ground)">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page1.png" alt="Session 7: Page 1" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 2: Waking Iggy -->
+        <section class="space-y-6" data-title="Page 2: Waking Iggy & Colonnade Crowd">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page2.png" alt="Session 7: Page 2" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 3: Lawn Meeting -->
+        <section class="space-y-6" data-title="Page 3: Lawn Meeting & Propeller Balloon">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page3.png" alt="Session 7: Page 3" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Chapter: Infiltrating the Flagship -->
+        <div class="narrative-card rounded-lg p-5 space-y-2">
+            <h3 class="text-amber-400 font-bold text-lg">Infiltrating the Mooring Mast</h3>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                To keep eyes on the Reszo Race, the crew runs a heist-style delivery con to board the luxurious Sterling flagship, the observation airship <strong>Zephyr</strong>.
+            </p>
+        </div>
+
+        <!-- Page 4: Mooring Mast Con -->
+        <section class="space-y-6" data-title="Page 4: Mooring Mast Con (The Sprint)">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page4.png" alt="Session 7: Page 4" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 5: The Sky-Haven Gondola (Blueprint Splash) -->
+        <section class="space-y-6" data-title="Page 5: The Sky-Haven Gondola Blueprint">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_zephyr_layout.png" alt="Session 7: Page 5" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 6: Lomi's Server Debut & Iggy's Looming Glass -->
+        <section class="space-y-6" data-title="Page 6: Lomi's Fire Show & Looming Glass">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page6.png" alt="Session 7: Page 6" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Chapter: Ash-Blood Diplomacy -->
+        <div class="narrative-card rounded-lg p-5 space-y-2">
+            <h3 class="text-amber-400 font-bold text-lg">Ash-Blood Diplomacy</h3>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                On deck, Ignatius meets Cade Ashveil, the newly appointed ambassador from Lady Ignis. Discussions regarding node standings reveal deep cultural and thematic changes in the fire clans.
+            </p>
+        </div>
+
+        <!-- Page 7: Ambassador Cade Ashveil -->
+        <section class="space-y-6" data-title="Page 7: Ambassador Cade Ashveil">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page7.png" alt="Session 7: Page 7" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 8: Node Grading -->
+        <section class="space-y-6" data-title="Page 8: Node Grading & Core realisations">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page8.png" alt="Session 7: Page 8" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Chapter: The Engine Room Investigation -->
+        <div class="narrative-card rounded-lg p-5 space-y-2">
+            <h3 class="text-amber-400 font-bold text-lg">Wireless Currents & Resistors</h3>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                Val Junior guides the team down into the humming, blue-white light of the airship's core. Ignatius and Lomi inspect the stacked Panda 5 cells and red Umbra resistor caps.
+            </p>
+        </div>
+
+        <!-- Page 9: Engine Room Break-in -->
+        <section class="space-y-6" data-title="Page 9: Engine Room Break-in">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page9.png" alt="Session 7: Page 9" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 10: Grog Siphon -->
+        <section class="space-y-6" data-title="Page 10: Night of Sparks & Grog Siphon">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page10.png" alt="Session 7: Page 10" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Chapter: Flashback Lessons -->
+        <div class="narrative-card rounded-lg p-5 space-y-2">
+            <h3 class="text-amber-400 font-bold text-lg">Iggy's Flashback: Kante's Warnings</h3>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                As Iggy gets tipsy off Lomi's smuggled grog, his mind returns to Walker-Core. He remembers Professor Kante's warnings regarding declining global amplitude and connection networks.
+            </p>
+        </div>
+
+        <!-- Page 11: Flashback Part 1 -->
+        <section class="space-y-6" data-title="Page 11: Kante's Accidental Lesson (Panda 5)">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_chalkboard1.png" alt="Session 7: Page 11" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 12: Flashback Part 2 -->
+        <section class="space-y-6" data-title="Page 12: Kante's Accidental Lesson (Declining Aether)">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_chalkboard2.png" alt="Session 7: Page 12" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Chapter: Snap Back to Reality -->
+        <div class="narrative-card rounded-lg p-5 space-y-2">
+            <h3 class="text-amber-400 font-bold text-lg">Snap Back</h3>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                Screaming Kante's equations, Iggy panics Val Jr. before collapsing into sleep behind the grease barrels. Lomi tucks him in under a warm Sterling apron.
+            </p>
+        </div>
+
+        <!-- Page 13: Snap Back & Apron Blanket -->
+        <section class="space-y-6" data-title="Page 13: Snap Back & Apron Blanket">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page13.png" alt="Session 7: Page 13" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Chapter: Climax & The Long Walk -->
+        <div class="narrative-card rounded-lg p-5 space-y-2">
+            <h3 class="text-amber-400 font-bold text-lg">The Reszo Climax</h3>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                Outside, the Reszo starting spires flash as the race resolves in a victory firework show. Afterwards, a dispute over pay forces the team back to their dorm blocks in the purple twilight.
+            </p>
+        </div>
+
+        <!-- Page 14: Reszo Race Climax -->
+        <section class="space-y-6" data-title="Page 14: Reszo Race Basin Climax">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_reso_race_map.png" alt="Session 7: Page 14" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 15: Bartender Dispute & Walk Home -->
+        <section class="space-y-6" data-title="Page 15: Bartender Dispute & Walk Home">
+            <div class="comic-panel rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+                <img src="images/vumbua/s7_page15.png" alt="Session 7: Page 15" class="w-full h-auto block" loading="lazy">
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-10 py-6 text-center text-slate-500 text-sm border-t border-slate-950 bg-slate-950">
+        <p>Generated with LoreMaster AI.</p>
+    </footer>
+
+    <!-- Interactive JS scroll animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dismiss Loading Overlay
+            const loader = document.getElementById('globalLoadingOverlayChapter');
+            if (loader) {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 300);
+                }, 150);
+            }
+
+            // Scroll Hide/Show Top Nav
+            let lastScrollY = window.scrollY;
+            const nav = document.getElementById('top-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > lastScrollY && window.scrollY > nav.offsetHeight) {
+                    nav.classList.add('nav-hidden');
+                } else {
+                    nav.classList.remove('nav-hidden');
+                }
+                lastScrollY = window.scrollY;
+                updateProgress();
+            }, { passive: true });
+
+            // Update Progress Percentage and Progress Bar Width
+            const progressBar = document.getElementById('scroll-progress-bar');
+            const progressPercent = document.getElementById('scroll-percentage');
+            function updateProgress() {
+                const heightLimit = document.documentElement.scrollHeight - window.innerHeight;
+                if (heightLimit > 0) {
+                    const scrolledPct = (window.scrollY / heightLimit) * 100;
+                    progressBar.style.width = scrolledPct + '%';
+                    progressPercent.textContent = Math.round(scrolledPct) + '%';
+                }
+            }
+
+            // Reveal scroll triggers
+            const sections = document.querySelectorAll('main > section');
+            const navTitle = document.getElementById('nav-title');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -40% 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const target = entry.target;
+                    const panel = target.querySelector('.comic-panel');
+
+                    if (entry.isIntersecting) {
+                        if (panel) panel.classList.add('visible');
+
+                        const sectionTitle = target.getAttribute('data-title');
+                        if (sectionTitle && navTitle) {
+                            navTitle.textContent = sectionTitle;
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(sec => {
+                observer.observe(sec);
+                const panel = sec.querySelector('.comic-panel');
+                if (panel) panel.classList.add('visible');
+            });
+
+            // Observe narrative cards as well for scroll effects
+            const cards = document.querySelectorAll('.narrative-card');
+            const cardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+
+            cards.forEach(card => cardObserver.observe(card));
+        });
+    </script>
+</body>
+</html>
