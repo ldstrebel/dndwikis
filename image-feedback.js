@@ -2,12 +2,51 @@
  * image-feedback.js
  * Enables users to press and hold (or long-click) any comic panel image 
  * to trigger a feedback modal with thumbs up/down and a free text area.
+ * Automatically synchronizes submissions and user telemetry to Firebase Firestore.
  */
 (function() {
     let pressTimer = null;
     let targetImageSrc = "";
     
-    // Create styles for modal, feedback indicators, suppress native mobile menus, and minimal footer share link
+    // Firestore REST API Endpoint Config
+    const FIRESTORE_PROJECT = "thecountgame";
+    const API_FEEDBACK_ENDPOINT = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/(default)/documents/vumbua_panel_feedback`;
+    const API_TELEMETRY_ENDPOINT = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/(default)/documents/vumbua_user_telemetry`;
+
+    // Local Storage anonymous session identifiers
+    let sessionId = localStorage.getItem("vumbua_session_uuid");
+    if (!sessionId) {
+        sessionId = "sess_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem("vumbua_session_uuid", sessionId);
+    }
+
+    // Capture device detail heuristics
+    const getDeviceDetails = () => {
+        const ua = navigator.userAgent;
+        let device = "Desktop";
+        if (/Mobi|Android|iPhone|iPad|iPod/i.test(ua)) {
+            device = "Mobile";
+        }
+        return {
+            userAgent: ua,
+            deviceType: device,
+            platform: navigator.platform,
+            screenSize: `${window.innerWidth}x${window.innerHeight}`
+        };
+    };
+
+    // Telemetry Session State variables
+    const sessionStart = Date.now();
+    let maxScrollPercent = 0;
+    const path = window.location.pathname;
+    const pageName = path.substring(path.lastIndexOf("/") + 1) || "index.html";
+
+    // Track active panel timers (which ones are viewed the longest)
+    const panelViews = {}; // Maps panel image src to total visible milliseconds
+    let activeVisiblePanel = null;
+    let activePanelStartTime = null;
+
+    // Create styles for modal, feedback indicators, native mobile menu suppressions, and footer links
     const styleEl = document.createElement("style");
     styleEl.innerHTML = `
         .image-container-feedback {
@@ -34,7 +73,6 @@
             opacity: 1;
         }
         
-        /* Suppress default context menus and highlights on mobile browsers */
         .comic-panel img {
             -webkit-touch-callout: none !important; /* iOS Safari */
             -webkit-user-select: none !important;   /* Safari */
@@ -76,7 +114,6 @@
             transform: scale(1);
         }
 
-        /* Styling for the minimal share block in the footer */
         .share-feedback-container {
             margin-top: 1.5rem;
             padding: 1rem;
@@ -153,9 +190,8 @@
     const btnUp = document.getElementById("btnFeedbackUp");
     const btnDown = document.getElementById("btnFeedbackDown");
 
-    let currentRating = ""; // "up" or "down"
+    let currentRating = "";
 
-    // Set up ratings handlers
     btnUp.addEventListener("click", () => {
         currentRating = "up";
         btnUp.classList.add("border-amber-500", "bg-amber-500/10");
@@ -187,7 +223,6 @@
         overlay.classList.remove("modal-visible");
     }
 
-    // Modal triggers - Tap/Click anywhere outside the card content container to close
     closeBtn.addEventListener("click", hideModal);
     cancelBtn.addEventListener("click", hideModal);
     overlay.addEventListener("click", (e) => {
@@ -196,7 +231,32 @@
         }
     });
 
-    // Submit handler (saves to LocalStorage / triggers mock analytics call)
+    // Send Feedback document to Firestore
+    const pushFeedbackToFirestore = (submission) => {
+        const payload = {
+            fields: {
+                sessionId: { stringValue: sessionId },
+                panel: { stringValue: submission.panel },
+                rating: { stringValue: submission.rating || "none" },
+                comment: { stringValue: submission.comment },
+                timestamp: { timestampValue: submission.timestamp },
+                deviceType: { stringValue: getDeviceDetails().deviceType },
+                screenSize: { stringValue: getDeviceDetails().screenSize },
+                platform: { stringValue: getDeviceDetails().platform }
+            }
+        };
+
+        fetch(API_FEEDBACK_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+        .then(res => {
+            if (!res.ok) console.error("Firestore feedback sync error status:", res.status);
+        })
+        .catch(err => console.error("Firestore feedback network error:", err));
+    };
+
     submitBtn.addEventListener("click", () => {
         if (!currentRating && !textInput.value.trim()) {
             alert("Please provide a thumbs rating or input a suggestion before submitting.");
@@ -210,12 +270,14 @@
             timestamp: new Date().toISOString()
         };
 
-        // Retrieve existing logs
+        // Cache to LocalStorage fallback
         let allFeedback = JSON.parse(localStorage.getItem("panel_feedback_logs") || "[]");
         allFeedback.push(submission);
         localStorage.setItem("panel_feedback_logs", JSON.stringify(allFeedback));
 
-        // Proprogate to global analytics tag if available
+        // Central Server Sync
+        pushFeedbackToFirestore(submission);
+
         if (typeof window.gtag === "function") {
             window.gtag("event", "panel_feedback", {
                 event_category: "comic_engagement",
@@ -229,7 +291,7 @@
         hideModal();
     });
 
-    // Wire up events for images inside .comic-panel elements
+    // Event hooks for image long-press triggers
     const images = document.querySelectorAll(".comic-panel img");
     images.forEach(img => {
         const parent = img.parentElement;
@@ -237,7 +299,6 @@
             parent.classList.add("image-container-feedback");
         }
 
-        // Timer actions - hold threshold to 900ms to avoid scroll issues
         function startPress(e) {
             cancelPress();
             pressTimer = setTimeout(() => {
@@ -252,14 +313,12 @@
             }
         }
 
-        // Intercept and prevent the browser's default context menus (e.g. Save Image Options)
         img.addEventListener("contextmenu", (e) => {
             e.preventDefault();
             e.stopPropagation();
             return false;
         });
 
-        // Pointer/Touch Listeners
         img.addEventListener("mousedown", startPress);
         img.addEventListener("mouseup", cancelPress);
         img.addEventListener("mouseleave", cancelPress);
@@ -272,7 +331,117 @@
         img.addEventListener("touchmove", cancelPress, { passive: true });
     });
 
-    // Inject minimal Share feedback block at the bottom of the page inside the footer
+    // -------------------------------------------------------------
+    // USER BEHAVIOR TELEMETRY PIPELINE
+    // -------------------------------------------------------------
+
+    // Send session telemetry document to Firestore on tab hide/exit
+    const pushTelemetryToFirestore = (isFinal = false) => {
+        // Capture view times for active panels before final compile
+        trackPanelTime(null); 
+
+        // Convert panelViews dictionary to document map fields for Firestore structure
+        const panelFields = {};
+        for (const [panelKey, ms] of Object.entries(panelViews)) {
+            const shortName = panelKey.substring(panelKey.lastIndexOf("/") + 1);
+            panelFields[shortName.replace(/\./g, "_")] = { integerValue: Math.round(ms / 1000) }; // round to seconds
+        }
+
+        const device = getDeviceDetails();
+        const durationSec = Math.round((Date.now() - sessionStart) / 1000);
+
+        const payload = {
+            fields: {
+                sessionId: { stringValue: sessionId },
+                page: { stringValue: pageName },
+                sessionDurationSeconds: { integerValue: durationSec },
+                maxScrollPercent: { integerValue: Math.round(maxScrollPercent) },
+                lastActivePanel: { stringValue: activeVisiblePanel ? activeVisiblePanel.substring(activeVisiblePanel.lastIndexOf("/") + 1) : "none" },
+                deviceType: { stringValue: device.deviceType },
+                screenSize: { stringValue: device.screenSize },
+                platform: { stringValue: device.platform },
+                timestamp: { timestampValue: new Date().toISOString() },
+                panelViews: {
+                    mapValue: {
+                        fields: panelFields
+                    }
+                }
+            }
+        };
+
+        // Utilize sendBeacon for exit requests if supported, otherwise fallback to standard fetch
+        const bodyStr = JSON.stringify(payload);
+        if (isFinal && navigator.sendBeacon) {
+            navigator.sendBeacon(API_TELEMETRY_ENDPOINT, bodyStr);
+        } else {
+            fetch(API_TELEMETRY_ENDPOINT, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: bodyStr
+            })
+            .catch(err => console.error("Telemetry fetch logging error:", err));
+        }
+    };
+
+    // Tracking active panel timings based on visibility
+    const trackPanelTime = (newActivePanel) => {
+        const now = Date.now();
+        if (activeVisiblePanel && activePanelStartTime) {
+            const viewDuration = now - activePanelStartTime;
+            if (viewDuration > 500) { // filter out brief scroll passes under 500ms
+                panelViews[activeVisiblePanel] = (panelViews[activeVisiblePanel] || 0) + viewDuration;
+            }
+        }
+        activeVisiblePanel = newActivePanel;
+        activePanelStartTime = now;
+    };
+
+    // Track scroll depth percentage
+    window.addEventListener("scroll", () => {
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (totalHeight > 0) {
+            const currentPct = (window.scrollY / totalHeight) * 100;
+            if (currentPct > maxScrollPercent) {
+                maxScrollPercent = currentPct;
+            }
+        }
+    }, { passive: true });
+
+    // Track visible panel shifts using a viewport center check
+    const panelObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target.querySelector("img");
+                if (img) {
+                    trackPanelTime(img.src);
+                }
+            }
+        });
+    }, { root: null, rootMargin: "-40% 0px -40% 0px", threshold: 0.1 });
+
+    document.querySelectorAll("main > section").forEach(section => {
+        panelObserver.observe(section);
+    });
+
+    // Push heartbeat every 30 seconds to capture active reader telemetry
+    const heartbeatInterval = setInterval(() => {
+        pushTelemetryToFirestore(false);
+    }, 30000);
+
+    // Final push on session unload / tab change
+    window.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
+            pushTelemetryToFirestore(true);
+        }
+    });
+
+    window.addEventListener("pagehide", () => {
+        pushTelemetryToFirestore(true);
+    });
+
+    // -------------------------------------------------------------
+    // EXPORTER UI SETUP
+    // -------------------------------------------------------------
     const footer = document.querySelector("footer");
     if (footer) {
         const shareContainer = document.createElement("div");
@@ -300,21 +469,14 @@
                 text: `Here is the panel review feedback for the Vumbua Campaign:\n\n${formattedLogs}`,
             };
 
-            // Attempt to trigger the native device sharing sheet
             if (navigator.share) {
-                navigator.share(shareData)
-                    .catch((err) => {
-                        console.log("Error sharing:", err);
-                    });
+                navigator.share(shareData).catch(err => console.log("Error sharing:", err));
             } else {
-                // Fallback to copying to clipboard
                 navigator.clipboard.writeText(shareData.text)
                     .then(() => {
                         alert("Device sharing not supported by this browser. Feedback reviews copied to clipboard instead! Paste them into Slack, email, or text to share.");
                     })
-                    .catch((err) => {
-                        alert("Could not copy logs to clipboard: " + err);
-                    });
+                    .catch(err => alert("Could not copy logs to clipboard: " + err));
             }
         });
     }
