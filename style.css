@@ -814,3 +814,24 @@ footer p {
     max-width: 100px; /* Example size */
     max-height: 100px;
 }
+
+/* Modal share button styling */
+.share-btn {
+    background: none;
+    border: 2px solid var(--logo-teal);
+    color: var(--logo-teal);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+.share-btn:hover {
+    background: var(--logo-teal);
+    color: var(--logo-dark-background);
+    transform: translateY(-1px);
+}

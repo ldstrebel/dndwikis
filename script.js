@@ -188,7 +188,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalSynopsis = modal.querySelector('#modalSynopsis');
     const modalChapterList = modal.querySelector('#modalChapterList');
     const modalGenreTagsContainer = modal.querySelector('.modal-genre-tags');
+    const modalShareBtn = modal.querySelector('#modalShareBtn');
     const modalLoadingSpinner = document.getElementById('modalLoadingSpinner'); // D20 spinner in modal
+
+    if (modalShareBtn) {
+        modalShareBtn.addEventListener('click', () => {
+            const title = modalTitle ? modalTitle.textContent : "Campaign";
+            let shortName = title.split(' ')[0].toLowerCase();
+            // Handle "The Chronicles of Meryl" -> "meryl"
+            if (shortName === "the") {
+                const parts = title.split(' ');
+                shortName = parts[parts.length - 1].toLowerCase();
+            }
+            const shareUrl = `${window.location.origin}${window.location.pathname}?c=${shortName}`;
+
+            const shareData = {
+                title: `${title} - Campaign Showcase`,
+                text: `Check out the chapters and storyboards for the ${title} campaign!`,
+                url: shareUrl
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .catch(err => console.log("Error sharing campaign:", err));
+            } else {
+                navigator.clipboard.writeText(shareUrl)
+                    .then(() => alert("Campaign link copied to clipboard!"))
+                    .catch(err => console.error("Could not copy link:", err));
+            }
+        });
+    }
 
     // Accessibility for campaign cards
     campaignCards.forEach(card => {

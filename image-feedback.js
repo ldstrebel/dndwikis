@@ -480,4 +480,23 @@
             }
         });
     }
+
+    // Top Sticky Navigation Share page
+    const sessionShareBtn = document.getElementById("sessionShareBtn");
+    if (sessionShareBtn) {
+        sessionShareBtn.addEventListener("click", () => {
+            const shareData = {
+                title: document.title,
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .catch(err => console.log("Error sharing page:", err));
+            } else {
+                navigator.clipboard.writeText(shareData.url)
+                    .then(() => alert("Page link copied to clipboard!"))
+                    .catch(err => console.error("Could not copy link:", err));
+            }
+        });
+    }
 })();
