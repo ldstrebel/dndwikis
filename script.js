@@ -410,4 +410,21 @@ document.addEventListener('DOMContentLoaded', () => {
             animateRoll();
         });
     }
+
+    // Auto-open campaign from URL parameters (e.g., ?c=vumbua or ?campaign=vumbua)
+    const urlParams = new URLSearchParams(window.location.search);
+    const campaignParam = urlParams.get('campaign') || urlParams.get('c');
+    if (campaignParam) {
+        const query = campaignParam.toLowerCase().trim();
+        const targetCard = Array.from(campaignCards).find(card => {
+            const title = (card.dataset.campaignTitle || "").toLowerCase();
+            return title === query || title.includes(query);
+        });
+        if (targetCard) {
+            setTimeout(() => {
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetCard.click();
+            }, 150);
+        }
+    }
 });
