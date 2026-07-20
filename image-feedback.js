@@ -53,27 +53,35 @@
             position: relative;
             cursor: pointer;
         }
-        .image-container-feedback::after {
-            content: "Click to view options / transcript";
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(4px);
-            color: #94a3b8;
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 15;
-        }
-        .image-container-feedback:hover::after {
-            opacity: 1;
-        }
         
+        /* Bottom-Right Feedback Badge Button */
+        .panel-feedback-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(6px);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 25;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .panel-feedback-badge:hover {
+            background: rgba(56, 189, 248, 0.25);
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.6);
+            transform: scale(1.06);
+        }
+
         .comic-panel img {
             -webkit-touch-callout: none !important; /* iOS Safari */
             -webkit-user-select: none !important;   /* Safari */
@@ -436,7 +444,7 @@
     }
 
     // -------------------------------------------------------------
-    // INTERACTIVE PANEL OVERLAY & CLICK SYSTEM
+    // INSTANT TRANSCRIPT & BOTTOM-RIGHT FEEDBACK BADGE SYSTEM
     // -------------------------------------------------------------
     const panels = document.querySelectorAll(".comic-panel");
     panels.forEach(panel => {
@@ -446,66 +454,22 @@
         panel.classList.add("image-container-feedback");
         panel.style.position = "relative";
 
-        // Create overlay container
-        const actionOverlay = document.createElement("div");
-        actionOverlay.className = "panel-action-overlay";
-        actionOverlay.innerHTML = `
-            <button class="overlay-btn-feedback" type="button">
-                <span>👍</span> Give Feedback
-            </button>
-            <button class="overlay-btn-transcript" type="button">
-                <span>📜</span> View Transcript
-            </button>
-        `;
-        panel.appendChild(actionOverlay);
+        // Create bottom-right feedback badge button
+        const feedbackBadge = document.createElement("button");
+        feedbackBadge.className = "panel-feedback-badge";
+        feedbackBadge.type = "button";
+        feedbackBadge.innerHTML = `<span>💬</span> Feedback`;
+        panel.appendChild(feedbackBadge);
 
-        const btnFeedback = actionOverlay.querySelector(".overlay-btn-feedback");
-        const btnTranscript = actionOverlay.querySelector(".overlay-btn-transcript");
-
-        function closeOverlay() {
-            actionOverlay.classList.remove("active");
-            panel.classList.remove("panel-active");
-        }
-
-        function toggleOverlay(e) {
+        // Clicking the bottom-right feedback badge opens the feedback modal directly
+        feedbackBadge.addEventListener("click", (e) => {
             e.stopPropagation();
-            const isActive = actionOverlay.classList.contains("active");
-            
-            // Close all open overlays first
-            document.querySelectorAll(".panel-action-overlay.active").forEach(o => {
-                o.classList.remove("active");
-                if (o.parentElement) o.parentElement.classList.remove("panel-active");
-            });
-
-            if (!isActive) {
-                actionOverlay.classList.add("active");
-                panel.classList.add("panel-active");
-            }
-        }
-
-        img.addEventListener("click", (e) => {
-            toggleOverlay(e);
-        });
-
-        // Clicking the opaque background overlay flips back to normal view
-        actionOverlay.addEventListener("click", (e) => {
-            if (e.target === actionOverlay) {
-                e.stopPropagation();
-                closeOverlay();
-            }
-        });
-
-        btnFeedback.addEventListener("click", (e) => {
-            e.stopPropagation();
-            closeOverlay();
             showModal(img.src);
         });
 
-        btnTranscript.addEventListener("click", (e) => {
+        // Clicking the panel image instantly opens the scene transcript modal
+        img.addEventListener("click", (e) => {
             e.stopPropagation();
-            closeOverlay();
-
-            // Extract transcript snippet and title from dataset
             const section = panel.closest("section");
             const sceneTitle = (section && section.dataset.title) || (panel.dataset.title) || "Scene Transcript";
             const transcriptText = (panel.dataset.transcript) || (section && section.dataset.transcript) || "";
@@ -518,7 +482,6 @@
         function startPress(e) {
             cancelPress();
             pressTimer = setTimeout(() => {
-                closeOverlay();
                 showModal(img.src);
             }, 900);
         }
