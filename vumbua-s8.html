@@ -22,15 +22,19 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #090d16; color: #f8fafc; }
+        body { font-family: 'Outfit', sans-serif; background-color: #090d16; color: #f8fafc; margin: 0; padding: 0; }
         h1, h2, h3 { font-family: 'Cinzel', serif; }
-        .comic-panel { margin-bottom: 0px !important; line-height: 0; }
-        .comic-panel img { cursor: pointer; transition: transform 0.2s ease, filter 0.2s ease; display: block; width: 100%; height: auto; }
-        .comic-panel:hover img { transform: scale(1.005); }
-        .narrative-card { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); border: 1px solid rgba(51, 65, 85, 0.6); margin: 8px 0; }
+        
+        /* ZERO GAP WEBTOON STRIP STYLING */
+        main { padding: 0 !important; margin: 0 auto !important; width: 100%; max-width: 768px; }
+        section.panel-section { padding: 0 !important; margin: 0 !important; line-height: 0 !important; border: none !important; }
+        .comic-panel { margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; line-height: 0 !important; background: #000; }
+        .comic-panel img { cursor: pointer; transition: filter 0.2s ease; display: block !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; }
+        
+        .narrative-card { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); border: 1px solid rgba(51, 65, 85, 0.6); margin: 0 !important; padding: 1.25rem; }
     </style>
 </head>
-<body class="selection:bg-amber-500/30 selection:text-amber-200">
+<body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
 
     <!-- Global Loading Overlay -->
     <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
@@ -59,11 +63,11 @@
         <div id="scroll-progress-bar" class="h-0.5 bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400 w-0"></div>
     </nav>
 
-    <!-- Main Container - Ultra Tight Spacing for Seamless Webtoon Reading -->
-    <main class="max-w-xl mx-auto px-2 sm:px-4 py-4 space-y-1 sm:space-y-2">
+    <!-- Main Container - 0px Gap Webtoon Scroll Strip -->
+    <main class="max-w-2xl mx-auto p-0 m-0">
 
         <!-- Header Panel -->
-        <section class="text-center py-6 space-y-3 mb-2">
+        <section class="text-center py-6 px-4 space-y-2 bg-slate-950 border-b border-slate-900">
             <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400">VUMBUA: SESSION 8</h2>
             <p class="text-slate-400 max-w-md mx-auto text-xs sm:text-sm leading-relaxed">
                 The Written Exam & Squad 907. Covering the aftermath of Reszo Race Day, the campus harbor dive, and the 77,000 candidate exam at the Apex Ring.
@@ -77,12 +81,12 @@
         </section>
 
         <!-- Page 1: Courtyard Shadows (Thursday Night) -->
-        <section class="p-0 m-0" data-title="Page 1: Courtyard Shadows (Thursday Night)" data-transcript="*Thursday night. The Zephyr has landed, and the fairgrounds are winding down. Student candidates are filtering back to their dorm blocks. Aggie and Britt stand in the courtyard, catching their breath.*
+        <section class="panel-section p-0 m-0" data-title="Page 1: Courtyard Shadows (Thursday Night)" data-transcript="*Thursday night. The Zephyr has landed, and the fairgrounds are winding down. Student candidates are filtering back to their dorm blocks. Aggie and Britt stand in the courtyard, catching their breath.*
 
 **Britt:** Aggie, where were you? I was looking everywhere for you.
 
 **Aggie:** I was hanging out with Pip and Bramble. Studying and exchanging notes.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 1: Courtyard Shadows (Thursday Night)" data-transcript="*Thursday night. The Zephyr has landed, and the fairgrounds are winding down. Student candidates are filtering back to their dorm blocks. Aggie and Britt stand in the courtyard, catching their breath.*
+            <div class="comic-panel p-0 m-0" data-title="Page 1: Courtyard Shadows (Thursday Night)" data-transcript="*Thursday night. The Zephyr has landed, and the fairgrounds are winding down. Student candidates are filtering back to their dorm blocks. Aggie and Britt stand in the courtyard, catching their breath.*
 
 **Britt:** Aggie, where were you? I was looking everywhere for you.
 
@@ -92,10 +96,10 @@
         </section>
 
         <!-- Page 2: Nighttime Whispers -->
-        <section class="p-0 m-0" data-title="Page 2: Nighttime Whispers" data-transcript="**Britt:** What did you see? Who did you talk to? That tonight was a whirlwind.
+        <section class="panel-section p-0 m-0" data-title="Page 2: Nighttime Whispers" data-transcript="**Britt:** What did you see? Who did you talk to? That tonight was a whirlwind.
 
 **Aggie:** Mostly studying. Where have you been?">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 2: Nighttime Whispers" data-transcript="**Britt:** What did you see? Who did you talk to? That tonight was a whirlwind.
+            <div class="comic-panel p-0 m-0" data-title="Page 2: Nighttime Whispers" data-transcript="**Britt:** What did you see? Who did you talk to? That tonight was a whirlwind.
 
 **Aggie:** Mostly studying. Where have you been?">
                 <img src="images/vumbua/s8_page2.jpg" alt="Session 8: Page 2: Nighttime Whispers" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -103,12 +107,12 @@
         </section>
 
         <!-- Page 3: The Sickness Discovered -->
-        <section class="p-0 m-0" data-title="Page 3: The Sickness Discovered" data-transcript="**Britt:** Well, I tried to find Loami. I thought I saw him and I waved him over, but then somebody put this tiny human in my arms and then there were people cheering and then I lost him and I don't really know.
+        <section class="panel-section p-0 m-0" data-title="Page 3: The Sickness Discovered" data-transcript="**Britt:** Well, I tried to find Loami. I thought I saw him and I waved him over, but then somebody put this tiny human in my arms and then there were people cheering and then I lost him and I don't really know.
 
 **Aggie:** The human child. Should we be concerned?
 
 **Britt:** I don't know. But now... I just noticed in the mirror that I don't know. I look strange. I look not like myself. Have you noticed that?">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 3: The Sickness Discovered" data-transcript="**Britt:** Well, I tried to find Loami. I thought I saw him and I waved him over, but then somebody put this tiny human in my arms and then there were people cheering and then I lost him and I don't really know.
+            <div class="comic-panel p-0 m-0" data-title="Page 3: The Sickness Discovered" data-transcript="**Britt:** Well, I tried to find Loami. I thought I saw him and I waved him over, but then somebody put this tiny human in my arms and then there were people cheering and then I lost him and I don't really know.
 
 **Aggie:** The human child. Should we be concerned?
 
@@ -118,10 +122,10 @@
         </section>
 
         <!-- Page 4: Fungal Accents -->
-        <section class="p-0 m-0" data-title="Page 4: Fungal Accents" data-transcript="**Aggie:** Angela and I were actually just talking about that earlier. They kind of look like dry spots on your shell. Are you feeling okay?
+        <section class="panel-section p-0 m-0" data-title="Page 4: Fungal Accents" data-transcript="**Aggie:** Angela and I were actually just talking about that earlier. They kind of look like dry spots on your shell. Are you feeling okay?
 
 **Britt:** I don't know. I can't tell. I think so, but something's obviously wrong. And this has never happened to me before. Have you seen anything like this before?">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 4: Fungal Accents" data-transcript="**Aggie:** Angela and I were actually just talking about that earlier. They kind of look like dry spots on your shell. Are you feeling okay?
+            <div class="comic-panel p-0 m-0" data-title="Page 4: Fungal Accents" data-transcript="**Aggie:** Angela and I were actually just talking about that earlier. They kind of look like dry spots on your shell. Are you feeling okay?
 
 **Britt:** I don't know. I can't tell. I think so, but something's obviously wrong. And this has never happened to me before. Have you seen anything like this before?">
                 <img src="images/vumbua/s8_page4.jpg" alt="Session 8: Page 4: Fungal Accents" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -129,17 +133,17 @@
         </section>
 
         <!-- Page 5: The Decade-Old Case -->
-        <section class="p-0 m-0" data-title="Page 5: The Decade-Old Case" data-transcript="**Aggie:** I think I've seen it once maybe. I mean, it was like ten years ago. I don't remember it really well. But I don't remember him getting better. I don't remember anyone really knowing what was going on, but he might have been from a different clan.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 5: The Decade-Old Case" data-transcript="**Aggie:** I think I've seen it once maybe. I mean, it was like ten years ago. I don't remember it really well. But I don't remember him getting better. I don't remember anyone really knowing what was going on, but he might have been from a different clan.">
+        <section class="panel-section p-0 m-0" data-title="Page 5: The Decade-Old Case" data-transcript="**Aggie:** I think I've seen it once maybe. I mean, it was like ten years ago. I don't remember it really well. But I don't remember him getting better. I don't remember anyone really knowing what was going on, but he might have been from a different clan.">
+            <div class="comic-panel p-0 m-0" data-title="Page 5: The Decade-Old Case" data-transcript="**Aggie:** I think I've seen it once maybe. I mean, it was like ten years ago. I don't remember it really well. But I don't remember him getting better. I don't remember anyone really knowing what was going on, but he might have been from a different clan.">
                 <img src="images/vumbua/s8_page5.jpg" alt="Session 8: Page 5: The Decade-Old Case" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 6: Tracing the Sickness -->
-        <section class="p-0 m-0" data-title="Page 6: Tracing the Sickness" data-transcript="**Britt:** Do you think it was the human child? Do you think it was some sort of contagious thing?
+        <section class="panel-section p-0 m-0" data-title="Page 6: Tracing the Sickness" data-transcript="**Britt:** Do you think it was the human child? Do you think it was some sort of contagious thing?
 
 **Aggie:** I think they saw it before you handled the human child.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 6: Tracing the Sickness" data-transcript="**Britt:** Do you think it was the human child? Do you think it was some sort of contagious thing?
+            <div class="comic-panel p-0 m-0" data-title="Page 6: Tracing the Sickness" data-transcript="**Britt:** Do you think it was the human child? Do you think it was some sort of contagious thing?
 
 **Aggie:** I think they saw it before you handled the human child.">
                 <img src="images/vumbua/s8_page6.jpg" alt="Session 8: Page 6: Tracing the Sickness" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -147,10 +151,10 @@
         </section>
 
         <!-- Page 7: Weighing Options -->
-        <section class="p-0 m-0" data-title="Page 7: Weighing Options" data-transcript="**Britt:** What do we do?
+        <section class="panel-section p-0 m-0" data-title="Page 7: Weighing Options" data-transcript="**Britt:** What do we do?
 
 **Aggie:** Do you want to go maybe see the infirmary here and see if they know anything? And if not, maybe we go talk to Great-Aunt Angela and see if she knows of anything. She's been around a lot as traveling.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 7: Weighing Options" data-transcript="**Britt:** What do we do?
+            <div class="comic-panel p-0 m-0" data-title="Page 7: Weighing Options" data-transcript="**Britt:** What do we do?
 
 **Aggie:** Do you want to go maybe see the infirmary here and see if they know anything? And if not, maybe we go talk to Great-Aunt Angela and see if she knows of anything. She's been around a lot as traveling.">
                 <img src="images/vumbua/s8_page7.jpg" alt="Session 8: Page 7: Weighing Options" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -158,14 +162,14 @@
         </section>
 
         <!-- Page 8: Sleeping On It -->
-        <section class="p-0 m-0" data-title="Page 8: Sleeping On It" data-transcript="*GM Narration:* Aggie notes that it would be a long walk to the forest and being back before the exam in the morning would be a stretch.
+        <section class="panel-section p-0 m-0" data-title="Page 8: Sleeping On It" data-transcript="*GM Narration:* Aggie notes that it would be a long walk to the forest and being back before the exam in the morning would be a stretch.
 
 **Britt:** I think I'm also worried about the exam and staying up too late. So maybe we go and rest. Maybe I'll feel better in the morning. Maybe if I just sleep some I'll be better. And then if I'm not, we can go to the infirmary when it's open in the morning.
 
 **Aggie:** Would you want me to come with you in the morning if you want to go?
 
 **Britt:** Yes, please.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 8: Sleeping On It" data-transcript="*GM Narration:* Aggie notes that it would be a long walk to the forest and being back before the exam in the morning would be a stretch.
+            <div class="comic-panel p-0 m-0" data-title="Page 8: Sleeping On It" data-transcript="*GM Narration:* Aggie notes that it would be a long walk to the forest and being back before the exam in the morning would be a stretch.
 
 **Britt:** I think I'm also worried about the exam and staying up too late. So maybe we go and rest. Maybe I'll feel better in the morning. Maybe if I just sleep some I'll be better. And then if I'm not, we can go to the infirmary when it's open in the morning.
 
@@ -177,12 +181,12 @@
         </section>
 
         <!-- Page 9: Finding Iggy in the Apron -->
-        <section class="p-0 m-0" data-title="Page 9: Finding Iggy in the Apron" data-transcript="*GM Narration:* As they look back, preparing to walk away, they notice the slumbering snores of Iggy behind a barrel of grease in the open storage bay of the Zephyr. He is passed out, wearing Loami's oversized apron that says &quot;Loami&quot; on it.
+        <section class="panel-section p-0 m-0" data-title="Page 9: Finding Iggy in the Apron" data-transcript="*GM Narration:* As they look back, preparing to walk away, they notice the slumbering snores of Iggy behind a barrel of grease in the open storage bay of the Zephyr. He is passed out, wearing Loami's oversized apron that says &quot;Loami&quot; on it.
 
 **Aggie:** Should we worry about him? *[Points at Iggy.]*
 
 **Britt:** I think Loami is around here somewhere.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 9: Finding Iggy in the Apron" data-transcript="*GM Narration:* As they look back, preparing to walk away, they notice the slumbering snores of Iggy behind a barrel of grease in the open storage bay of the Zephyr. He is passed out, wearing Loami's oversized apron that says &quot;Loami&quot; on it.
+            <div class="comic-panel p-0 m-0" data-title="Page 9: Finding Iggy in the Apron" data-transcript="*GM Narration:* As they look back, preparing to walk away, they notice the slumbering snores of Iggy behind a barrel of grease in the open storage bay of the Zephyr. He is passed out, wearing Loami's oversized apron that says &quot;Loami&quot; on it.
 
 **Aggie:** Should we worry about him? *[Points at Iggy.]*
 
@@ -192,7 +196,7 @@
         </section>
 
         <!-- Transition Bridge Card -->
-        <div class="narrative-card rounded-lg p-4 space-y-1.5 border-l-4 border-l-amber-500 shadow-xl my-2">
+        <div class="narrative-card space-y-1.5 border-l-4 border-l-amber-500 shadow-xl">
             <h3 class="text-amber-400 font-bold text-base">Friday Morning: The Academy Infirmary</h3>
             <p class="text-slate-300 text-xs sm:text-sm leading-relaxed italic">
                 Thursday night ends as the fairgrounds wind down. On Friday morning, the Vumbua Academy infirmary opens its doors. A severely hungover Iggy lies on a hospital cot, while Loami attempts a questionable hair-of-the-dog cure before Remmy steps in...
@@ -200,12 +204,12 @@
         </div>
 
         <!-- Page 10: Morning in the Ward -->
-        <section class="p-0 m-0" data-title="Page 10: Morning in the Ward" data-transcript="*Friday morning. The Vumbua Academy infirmary is open. Iggy lies on a hospital cot, letting out faint, miserable moans from alcohol poisoning. Loami stands over him, wafting a cup of coffee towards him.*
+        <section class="panel-section p-0 m-0" data-title="Page 10: Morning in the Ward" data-transcript="*Friday morning. The Vumbua Academy infirmary is open. Iggy lies on a hospital cot, letting out faint, miserable moans from alcohol poisoning. Loami stands over him, wafting a cup of coffee towards him.*
 
 **Loami:** Hey, listen. I know it doesn't sound good right now, but it's just got a tiny little bit of the grease in it.
 
 **Iggy:** Help me.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 10: Morning in the Ward" data-transcript="*Friday morning. The Vumbua Academy infirmary is open. Iggy lies on a hospital cot, letting out faint, miserable moans from alcohol poisoning. Loami stands over him, wafting a cup of coffee towards him.*
+            <div class="comic-panel p-0 m-0" data-title="Page 10: Morning in the Ward" data-transcript="*Friday morning. The Vumbua Academy infirmary is open. Iggy lies on a hospital cot, letting out faint, miserable moans from alcohol poisoning. Loami stands over him, wafting a cup of coffee towards him.*
 
 **Loami:** Hey, listen. I know it doesn't sound good right now, but it's just got a tiny little bit of the grease in it.
 
@@ -215,12 +219,12 @@
         </section>
 
         <!-- Page 11: Dehydration -->
-        <section class="p-0 m-0" data-title="Page 11: Dehydration" data-transcript="**Loami:** You got after it a little bit last night. I get it. The resi race, it's exciting. You can get caught up in the moment. I hear you. I'm glad you at least got some shut-eye when we were up there.
+        <section class="panel-section p-0 m-0" data-title="Page 11: Dehydration" data-transcript="**Loami:** You got after it a little bit last night. I get it. The resi race, it's exciting. You can get caught up in the moment. I hear you. I'm glad you at least got some shut-eye when we were up there.
 
 **Iggy:** I thought it was just hydration and it did this.
 
 **Loami:** Uh yeah, not quite hydration, I'd say. Potentially dehydration. Um, actually, your goggles are looking a bit dry. We'll have to figure that out. We'll get you checked out.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 11: Dehydration" data-transcript="**Loami:** You got after it a little bit last night. I get it. The resi race, it's exciting. You can get caught up in the moment. I hear you. I'm glad you at least got some shut-eye when we were up there.
+            <div class="comic-panel p-0 m-0" data-title="Page 11: Dehydration" data-transcript="**Loami:** You got after it a little bit last night. I get it. The resi race, it's exciting. You can get caught up in the moment. I hear you. I'm glad you at least got some shut-eye when we were up there.
 
 **Iggy:** I thought it was just hydration and it did this.
 
@@ -230,12 +234,12 @@
         </section>
 
         <!-- Page 12: Remmy's Water Order -->
-        <section class="p-0 m-0" data-title="Page 12: Remmy's Water Order" data-transcript="*GM Narration:* A halfling nurse wearing a white apron and a slanted red hat, marches over to the cot.
+        <section class="panel-section p-0 m-0" data-title="Page 12: Remmy's Water Order" data-transcript="*GM Narration:* A halfling nurse wearing a white apron and a slanted red hat, marches over to the cot.
 
 **Remmy:** Iggy, you have to drink. Not that though. *[Points at the cup.]* Get that away from him. He needs water. We performed watergation ten times tonight while Iggy was sleeping. Well, you do need someone to sit with you. So, and it's not going to be me. So yeah, why don't you just, you know, do what I told you and fill it up with water this time.
 
 **Loami:** All right, fine. Let me drink it.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 12: Remmy's Water Order" data-transcript="*GM Narration:* A halfling nurse wearing a white apron and a slanted red hat, marches over to the cot.
+            <div class="comic-panel p-0 m-0" data-title="Page 12: Remmy's Water Order" data-transcript="*GM Narration:* A halfling nurse wearing a white apron and a slanted red hat, marches over to the cot.
 
 **Remmy:** Iggy, you have to drink. Not that though. *[Points at the cup.]* Get that away from him. He needs water. We performed watergation ten times tonight while Iggy was sleeping. Well, you do need someone to sit with you. So, and it's not going to be me. So yeah, why don't you just, you know, do what I told you and fill it up with water this time.
 
@@ -245,12 +249,12 @@
         </section>
 
         <!-- Page 13: The Cousins Arrive -->
-        <section class="p-0 m-0" data-title="Page 13: The Cousins Arrive" data-transcript="*GM Narration:* The door twinkles as Britt and Aggie walk into the infirmary ward. Remmy turns to greet them.
+        <section class="panel-section p-0 m-0" data-title="Page 13: The Cousins Arrive" data-transcript="*GM Narration:* The door twinkles as Britt and Aggie walk into the infirmary ward. Remmy turns to greet them.
 
 **Remmy:** How can I help you? Are you feeling okay? Do you need help?
 
 **Britt:** I don't know what's happening, but these keep appearing and I don't know why. *[Points to the dry, discolored spots on her neck and shell.]*">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 13: The Cousins Arrive" data-transcript="*GM Narration:* The door twinkles as Britt and Aggie walk into the infirmary ward. Remmy turns to greet them.
+            <div class="comic-panel p-0 m-0" data-title="Page 13: The Cousins Arrive" data-transcript="*GM Narration:* The door twinkles as Britt and Aggie walk into the infirmary ward. Remmy turns to greet them.
 
 **Remmy:** How can I help you? Are you feeling okay? Do you need help?
 
@@ -260,10 +264,10 @@
         </section>
 
         <!-- Page 14: Behind the Partition -->
-        <section class="p-0 m-0" data-title="Page 14: Behind the Partition" data-transcript="**Remmy:** Well, why don't we take you back over here and I'll check you out. Have a seat here. Your friend can stay outside or she can come in with you.
+        <section class="panel-section p-0 m-0" data-title="Page 14: Behind the Partition" data-transcript="**Remmy:** Well, why don't we take you back over here and I'll check you out. Have a seat here. Your friend can stay outside or she can come in with you.
 
 *GM Narration:* Remmy leads Britt and Aggie behind a partitioned curtain. Meanwhile, Loami returns to Iggy's cot with a cup.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 14: Behind the Partition" data-transcript="**Remmy:** Well, why don't we take you back over here and I'll check you out. Have a seat here. Your friend can stay outside or she can come in with you.
+            <div class="comic-panel p-0 m-0" data-title="Page 14: Behind the Partition" data-transcript="**Remmy:** Well, why don't we take you back over here and I'll check you out. Have a seat here. Your friend can stay outside or she can come in with you.
 
 *GM Narration:* Remmy leads Britt and Aggie behind a partitioned curtain. Meanwhile, Loami returns to Iggy's cot with a cup.">
                 <img src="images/vumbua/s8_page14.jpg" alt="Session 8: Page 14: Behind the Partition" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -271,10 +275,10 @@
         </section>
 
         <!-- Page 15: Iggy's Protest -->
-        <section class="p-0 m-0" data-title="Page 15: Iggy's Protest" data-transcript="**Loami:** Here's your water. Here's your water. And it's actually water. I told you it was last time, but this one is actually water.
+        <section class="panel-section p-0 m-0" data-title="Page 15: Iggy's Protest" data-transcript="**Loami:** Here's your water. Here's your water. And it's actually water. I told you it was last time, but this one is actually water.
 
 **Iggy:** *[Slaps the cup away. And raspily challenges Loami]* I don't believe you.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 15: Iggy's Protest" data-transcript="**Loami:** Here's your water. Here's your water. And it's actually water. I told you it was last time, but this one is actually water.
+            <div class="comic-panel p-0 m-0" data-title="Page 15: Iggy's Protest" data-transcript="**Loami:** Here's your water. Here's your water. And it's actually water. I told you it was last time, but this one is actually water.
 
 **Iggy:** *[Slaps the cup away. And raspily challenges Loami]* I don't believe you.">
                 <img src="images/vumbua/s8_page15.jpg" alt="Session 8: Page 15: Iggy's Protest" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -282,12 +286,12 @@
         </section>
 
         <!-- Page 16: The Applicator -->
-        <section class="p-0 m-0" data-title="Page 16: The Applicator" data-transcript="*GM Narration:* Back behind the partition, Remmy prepares to examine Britt. She pulls out a small vial of clear liquid and a spatula-like applicator.
+        <section class="panel-section p-0 m-0" data-title="Page 16: The Applicator" data-transcript="*GM Narration:* Back behind the partition, Remmy prepares to examine Britt. She pulls out a small vial of clear liquid and a spatula-like applicator.
 
 **Remmy:** Okay, well, do you mind if I take a couple of readings?
 
 **Britt:** Sure.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 16: The Applicator" data-transcript="*GM Narration:* Back behind the partition, Remmy prepares to examine Britt. She pulls out a small vial of clear liquid and a spatula-like applicator.
+            <div class="comic-panel p-0 m-0" data-title="Page 16: The Applicator" data-transcript="*GM Narration:* Back behind the partition, Remmy prepares to examine Britt. She pulls out a small vial of clear liquid and a spatula-like applicator.
 
 **Remmy:** Okay, well, do you mind if I take a couple of readings?
 
@@ -297,10 +301,10 @@
         </section>
 
         <!-- Page 17: Glowing Green Reaction -->
-        <section class="p-0 m-0" data-title="Page 17: Glowing Green Reaction" data-transcript="*GM Narration:* Remmy gently brushes the liquid onto Britt's neck. As it touches the spots, the clear fluid reacts immediately, turning a vibrant green that draws stark outlines around the affected areas.
+        <section class="panel-section p-0 m-0" data-title="Page 17: Glowing Green Reaction" data-transcript="*GM Narration:* Remmy gently brushes the liquid onto Britt's neck. As it touches the spots, the clear fluid reacts immediately, turning a vibrant green that draws stark outlines around the affected areas.
 
 **Remmy:** Oh, oh dear. Yeah, you definitely have something that you're... that's not connecting with you. So, I guess have you gotten into anything weird lately? Have you eaten something weird or gone to a new place?">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 17: Glowing Green Reaction" data-transcript="*GM Narration:* Remmy gently brushes the liquid onto Britt's neck. As it touches the spots, the clear fluid reacts immediately, turning a vibrant green that draws stark outlines around the affected areas.
+            <div class="comic-panel p-0 m-0" data-title="Page 17: Glowing Green Reaction" data-transcript="*GM Narration:* Remmy gently brushes the liquid onto Britt's neck. As it touches the spots, the clear fluid reacts immediately, turning a vibrant green that draws stark outlines around the affected areas.
 
 **Remmy:** Oh, oh dear. Yeah, you definitely have something that you're... that's not connecting with you. So, I guess have you gotten into anything weird lately? Have you eaten something weird or gone to a new place?">
                 <img src="images/vumbua/s8_page17.jpg" alt="Session 8: Page 17: Glowing Green Reaction" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -308,12 +312,12 @@
         </section>
 
         <!-- Page 18: Everything is Weird -->
-        <section class="p-0 m-0" data-title="Page 18: Everything is Weird" data-transcript="**Britt:** Well, I'm in a new place and everything I've eaten is weird.
+        <section class="panel-section p-0 m-0" data-title="Page 18: Everything is Weird" data-transcript="**Britt:** Well, I'm in a new place and everything I've eaten is weird.
 
 **Remmy:** Yeah, that's true. Of course, very few people are from here. This to me feels like something that would have happened within a day or two of exposure, and you've been here for almost a week now. So, what about in the last couple days? Anything?
 
 **Britt:** *[Speaking telepathically to Aggie]* I also think it was that. I saw some weird green sludge stuff near the northeast corner of the city when I dropped my book. I was close to it. Should I say something about that? Maybe I'll just be vague.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 18: Everything is Weird" data-transcript="**Britt:** Well, I'm in a new place and everything I've eaten is weird.
+            <div class="comic-panel p-0 m-0" data-title="Page 18: Everything is Weird" data-transcript="**Britt:** Well, I'm in a new place and everything I've eaten is weird.
 
 **Remmy:** Yeah, that's true. Of course, very few people are from here. This to me feels like something that would have happened within a day or two of exposure, and you've been here for almost a week now. So, what about in the last couple days? Anything?
 
@@ -323,10 +327,10 @@
         </section>
 
         <!-- Page 19: Dodging the Nurse -->
-        <section class="p-0 m-0" data-title="Page 19: Dodging the Nurse" data-transcript="**Britt:** *[Turning to Remmy]* I was studying and I dropped my book.
+        <section class="panel-section p-0 m-0" data-title="Page 19: Dodging the Nurse" data-transcript="**Britt:** *[Turning to Remmy]* I was studying and I dropped my book.
 
 **Remmy:** Well, let me just stop you there. This sounds like dodging if I have ever heard it. You're not gonna get in trouble if you tell me. And to be honest, I don't know that I will be able to solve it because there's a lot of crazy things in the world. But I'll tell you that if you are thinking that there might be something that you came into contact with, you should probably tell someone where it is and bring it here or to someone who can study it because the way I look at this, it looks like something almost splattered on you. And it is reacting quite poorly. It doesn't seem like it's going to get any better anytime soon, and I don't have anything here that can treat you not knowing what you got into.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 19: Dodging the Nurse" data-transcript="**Britt:** *[Turning to Remmy]* I was studying and I dropped my book.
+            <div class="comic-panel p-0 m-0" data-title="Page 19: Dodging the Nurse" data-transcript="**Britt:** *[Turning to Remmy]* I was studying and I dropped my book.
 
 **Remmy:** Well, let me just stop you there. This sounds like dodging if I have ever heard it. You're not gonna get in trouble if you tell me. And to be honest, I don't know that I will be able to solve it because there's a lot of crazy things in the world. But I'll tell you that if you are thinking that there might be something that you came into contact with, you should probably tell someone where it is and bring it here or to someone who can study it because the way I look at this, it looks like something almost splattered on you. And it is reacting quite poorly. It doesn't seem like it's going to get any better anytime soon, and I don't have anything here that can treat you not knowing what you got into.">
                 <img src="images/vumbua/s8_page19.jpg" alt="Session 8: Page 19: Dodging the Nurse" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -334,12 +338,12 @@
         </section>
 
         <!-- Page 20: Green Sludge Disclosed -->
-        <section class="p-0 m-0" data-title="Page 20: Green Sludge Disclosed" data-transcript="**Britt:** It was by the northeast corner of the city overlooking the river. And it was green.
+        <section class="panel-section p-0 m-0" data-title="Page 20: Green Sludge Disclosed" data-transcript="**Britt:** It was by the northeast corner of the city overlooking the river. And it was green.
 
 **Remmy:** Okay, well, we will have someone pick this up and by the time you're done with your test today, we'll probably have a sample here and have some more information for you. So come back after your exam, and good luck for that, by the way. Just know that you were a student here when this happened, so we will take care of you regardless of the results of the exam. 22,000 will go home today, they say, and I hope that's not one of you. Try not to let this get into your head too much.
 
 *GM Narration:* Remmy pulls back the curtain to reveal that Iggy has slipped out of his cot and vanished from the ward, leaving only Loami behind.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 20: Green Sludge Disclosed" data-transcript="**Britt:** It was by the northeast corner of the city overlooking the river. And it was green.
+            <div class="comic-panel p-0 m-0" data-title="Page 20: Green Sludge Disclosed" data-transcript="**Britt:** It was by the northeast corner of the city overlooking the river. And it was green.
 
 **Remmy:** Okay, well, we will have someone pick this up and by the time you're done with your test today, we'll probably have a sample here and have some more information for you. So come back after your exam, and good luck for that, by the way. Just know that you were a student here when this happened, so we will take care of you regardless of the results of the exam. 22,000 will go home today, they say, and I hope that's not one of you. Try not to let this get into your head too much.
 
@@ -349,7 +353,7 @@
         </section>
 
         <!-- Transition Bridge Card -->
-        <div class="narrative-card rounded-lg p-4 space-y-1.5 border-l-4 border-l-amber-500 shadow-xl my-2">
+        <div class="narrative-card space-y-1.5 border-l-4 border-l-amber-500 shadow-xl">
             <h3 class="text-amber-400 font-bold text-base">The Countdown to the Written Exam</h3>
             <p class="text-slate-300 text-xs sm:text-sm leading-relaxed italic">
                 Two and a half hours remain until the Exploration 101 General Education Exam. Loami searches the crowded halls for Lucky, while Iggy—desperate for hydration and hydrostatic pressure—vanishes from the ward and staggers toward the campus harbor...
@@ -357,7 +361,7 @@
         </div>
 
         <!-- Page 21: Search for Lucky -->
-        <section class="p-0 m-0" data-title="Page 21: Search for Lucky" data-transcript="**Loami:** Oh, he's just being dramatic.
+        <section class="panel-section p-0 m-0" data-title="Page 21: Search for Lucky" data-transcript="**Loami:** Oh, he's just being dramatic.
 
 **Aggie:** Did you see him leave?
 
@@ -400,7 +404,7 @@
 **Loami:** Yeah. I hope we can build something and get out there.
 
 **Britt:** I hope so too.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 21: Search for Lucky" data-transcript="**Loami:** Oh, he's just being dramatic.
+            <div class="comic-panel p-0 m-0" data-title="Page 21: Search for Lucky" data-transcript="**Loami:** Oh, he's just being dramatic.
 
 **Aggie:** Did you see him leave?
 
@@ -448,14 +452,14 @@
         </section>
 
         <!-- Page 22: Staggering to the Dock -->
-        <section class="p-0 m-0" data-title="Page 22: Staggering to the Dock" data-transcript="*Friday, late morning. Two and a half hours remain until the exams. Large campus posters direct all candidates to report to the Apex Arena via the Colonnade entrance. Loami splits off to search for Lucky, but after an hour of hunting in the crowded dining halls and corridors, he loses the trail.*
+        <section class="panel-section p-0 m-0" data-title="Page 22: Staggering to the Dock" data-transcript="*Friday, late morning. Two and a half hours remain until the exams. Large campus posters direct all candidates to report to the Apex Arena via the Colonnade entrance. Loami splits off to search for Lucky, but after an hour of hunting in the crowded dining halls and corridors, he loses the trail.*
 
 *Meanwhile, Iggy, feeling dehydrated and shriveled like a raisin, staggers across the campus lawn heading toward the harbor. Britt spots his dragging trench coat and jogs to catch up.*
 
 **Britt:** Iggy, where are you going? There's an exam today! We only have like an hour until we have to start this exam.
 
 **Iggy:** Need water. Water. Need water.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 22: Staggering to the Dock" data-transcript="*Friday, late morning. Two and a half hours remain until the exams. Large campus posters direct all candidates to report to the Apex Arena via the Colonnade entrance. Loami splits off to search for Lucky, but after an hour of hunting in the crowded dining halls and corridors, he loses the trail.*
+            <div class="comic-panel p-0 m-0" data-title="Page 22: Staggering to the Dock" data-transcript="*Friday, late morning. Two and a half hours remain until the exams. Large campus posters direct all candidates to report to the Apex Arena via the Colonnade entrance. Loami splits off to search for Lucky, but after an hour of hunting in the crowded dining halls and corridors, he loses the trail.*
 
 *Meanwhile, Iggy, feeling dehydrated and shriveled like a raisin, staggers across the campus lawn heading toward the harbor. Britt spots his dragging trench coat and jogs to catch up.*
 
@@ -467,17 +471,17 @@
         </section>
 
         <!-- Page 23: Plummeting into the Basin -->
-        <section class="p-0 m-0" data-title="Page 23: Plummeting into the Basin" data-transcript="*GM Narration:* Iggy reaches the edge of the harbor dock. The deep harbor basin descends roughly 1,700 feet into Vumbua's aquatic infrastructure. Iggy takes a step off the dock and plummets like a stone, cannonballing into the deep water to seek the hydrostatic pressure his clay body needs to recover.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 23: Plummeting into the Basin" data-transcript="*GM Narration:* Iggy reaches the edge of the harbor dock. The deep harbor basin descends roughly 1,700 feet into Vumbua's aquatic infrastructure. Iggy takes a step off the dock and plummets like a stone, cannonballing into the deep water to seek the hydrostatic pressure his clay body needs to recover.">
+        <section class="panel-section p-0 m-0" data-title="Page 23: Plummeting into the Basin" data-transcript="*GM Narration:* Iggy reaches the edge of the harbor dock. The deep harbor basin descends roughly 1,700 feet into Vumbua's aquatic infrastructure. Iggy takes a step off the dock and plummets like a stone, cannonballing into the deep water to seek the hydrostatic pressure his clay body needs to recover.">
+            <div class="comic-panel p-0 m-0" data-title="Page 23: Plummeting into the Basin" data-transcript="*GM Narration:* Iggy reaches the edge of the harbor dock. The deep harbor basin descends roughly 1,700 feet into Vumbua's aquatic infrastructure. Iggy takes a step off the dock and plummets like a stone, cannonballing into the deep water to seek the hydrostatic pressure his clay body needs to recover.">
                 <img src="images/vumbua/s8_page23.jpg" alt="Session 8: Page 23: Plummeting into the Basin" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 23.5: Cannonball Sinking -->
-        <section class="p-0 m-0" data-title="Page 23.5: Cannonball Sinking" data-transcript="**Britt:** *[Shouting after him]* Okay, well, we have to be quick!
+        <section class="panel-section p-0 m-0" data-title="Page 23.5: Cannonball Sinking" data-transcript="**Britt:** *[Shouting after him]* Okay, well, we have to be quick!
 
 *GM Narration:* Iggy plummets down through the 1,700-foot basin.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 23.5: Cannonball Sinking" data-transcript="**Britt:** *[Shouting after him]* Okay, well, we have to be quick!
+            <div class="comic-panel p-0 m-0" data-title="Page 23.5: Cannonball Sinking" data-transcript="**Britt:** *[Shouting after him]* Okay, well, we have to be quick!
 
 *GM Narration:* Iggy plummets down through the 1,700-foot basin.">
                 <img src="images/vumbua/s8_page23_5.jpg" alt="Session 8: Page 23.5: Cannonball Sinking" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -485,70 +489,70 @@
         </section>
 
         <!-- Page 24: Waiting at the Harbor -->
-        <section class="p-0 m-0" data-title="Page 24: Waiting at the Harbor" data-transcript="*GM Narration:* Britt stands on the shore, watching the water. One minute passes. Two minutes. Five minutes. The surface remains completely flat—no bubbles, no ripples, no sign of Iggy.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 24: Waiting at the Harbor" data-transcript="*GM Narration:* Britt stands on the shore, watching the water. One minute passes. Two minutes. Five minutes. The surface remains completely flat—no bubbles, no ripples, no sign of Iggy.">
+        <section class="panel-section p-0 m-0" data-title="Page 24: Waiting at the Harbor" data-transcript="*GM Narration:* Britt stands on the shore, watching the water. One minute passes. Two minutes. Five minutes. The surface remains completely flat—no bubbles, no ripples, no sign of Iggy.">
+            <div class="comic-panel p-0 m-0" data-title="Page 24: Waiting at the Harbor" data-transcript="*GM Narration:* Britt stands on the shore, watching the water. One minute passes. Two minutes. Five minutes. The surface remains completely flat—no bubbles, no ripples, no sign of Iggy.">
                 <img src="images/vumbua/s8_page24.jpg" alt="Session 8: Page 24: Waiting at the Harbor" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 25: Pebbles into the Water -->
-        <section class="p-0 m-0" data-title="Page 25: Pebbles into the Water" data-transcript="*GM Narration:* Britt begins wading out, floating on the surface to look down, but the depth is too dark. She returns to the shore, scoops up a handful of pebbles, and begins dropping them into the water one by one.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 25: Pebbles into the Water" data-transcript="*GM Narration:* Britt begins wading out, floating on the surface to look down, but the depth is too dark. She returns to the shore, scoops up a handful of pebbles, and begins dropping them into the water one by one.">
+        <section class="panel-section p-0 m-0" data-title="Page 25: Pebbles into the Water" data-transcript="*GM Narration:* Britt begins wading out, floating on the surface to look down, but the depth is too dark. She returns to the shore, scoops up a handful of pebbles, and begins dropping them into the water one by one.">
+            <div class="comic-panel p-0 m-0" data-title="Page 25: Pebbles into the Water" data-transcript="*GM Narration:* Britt begins wading out, floating on the surface to look down, but the depth is too dark. She returns to the shore, scoops up a handful of pebbles, and begins dropping them into the water one by one.">
                 <img src="images/vumbua/s8_page25.jpg" alt="Session 8: Page 25: Pebbles into the Water" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 26: 30 Minutes Remaining -->
-        <section class="p-0 m-0" data-title="Page 26: 30 Minutes Remaining" data-transcript="*Time crawls forward. It is now 30 minutes before the exam starts, and a steady flow of candidates is streaming toward the Apex Arena.*">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 26: 30 Minutes Remaining" data-transcript="*Time crawls forward. It is now 30 minutes before the exam starts, and a steady flow of candidates is streaming toward the Apex Arena.*">
+        <section class="panel-section p-0 m-0" data-title="Page 26: 30 Minutes Remaining" data-transcript="*Time crawls forward. It is now 30 minutes before the exam starts, and a steady flow of candidates is streaming toward the Apex Arena.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 26: 30 Minutes Remaining" data-transcript="*Time crawls forward. It is now 30 minutes before the exam starts, and a steady flow of candidates is streaming toward the Apex Arena.*">
                 <img src="images/vumbua/s8_page26.jpg" alt="Session 8: Page 26: 30 Minutes Remaining" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 27: Telepathic Distress -->
-        <section class="p-0 m-0" data-title="Page 27: Telepathic Distress" data-transcript="**Britt:** *[Telepathically to Aggie]* I'm at the harbor. Iggy's here, I think. But I'm going to leave soon if I don't see them surface.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 27: Telepathic Distress" data-transcript="**Britt:** *[Telepathically to Aggie]* I'm at the harbor. Iggy's here, I think. But I'm going to leave soon if I don't see them surface.">
+        <section class="panel-section p-0 m-0" data-title="Page 27: Telepathic Distress" data-transcript="**Britt:** *[Telepathically to Aggie]* I'm at the harbor. Iggy's here, I think. But I'm going to leave soon if I don't see them surface.">
+            <div class="comic-panel p-0 m-0" data-title="Page 27: Telepathic Distress" data-transcript="**Britt:** *[Telepathically to Aggie]* I'm at the harbor. Iggy's here, I think. But I'm going to leave soon if I don't see them surface.">
                 <img src="images/vumbua/s8_page27.jpg" alt="Session 8: Page 27: Telepathic Distress" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 28: Lifting the Boulder -->
-        <section class="p-0 m-0" data-title="Page 28: Lifting the Boulder" data-transcript="*GM Narration:* Desperate to get Iggy's attention, Britt searches the shoreline, lifts a large rock, and hurls it directly into the water.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 28: Lifting the Boulder" data-transcript="*GM Narration:* Desperate to get Iggy's attention, Britt searches the shoreline, lifts a large rock, and hurls it directly into the water.">
+        <section class="panel-section p-0 m-0" data-title="Page 28: Lifting the Boulder" data-transcript="*GM Narration:* Desperate to get Iggy's attention, Britt searches the shoreline, lifts a large rock, and hurls it directly into the water.">
+            <div class="comic-panel p-0 m-0" data-title="Page 28: Lifting the Boulder" data-transcript="*GM Narration:* Desperate to get Iggy's attention, Britt searches the shoreline, lifts a large rock, and hurls it directly into the water.">
                 <img src="images/vumbua/s8_page28.jpg" alt="Session 8: Page 28: Lifting the Boulder" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 29: Hurling the Rock -->
-        <section class="p-0 m-0" data-title="Page 29: Hurling the Rock" data-transcript="*GM Narration:* The rock plunges down through the dark water column.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 29: Hurling the Rock" data-transcript="*GM Narration:* The rock plunges down through the dark water column.">
+        <section class="panel-section p-0 m-0" data-title="Page 29: Hurling the Rock" data-transcript="*GM Narration:* The rock plunges down through the dark water column.">
+            <div class="comic-panel p-0 m-0" data-title="Page 29: Hurling the Rock" data-transcript="*GM Narration:* The rock plunges down through the dark water column.">
                 <img src="images/vumbua/s8_page29.jpg" alt="Session 8: Page 29: Hurling the Rock" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 30: Collecting Pebbles Below -->
-        <section class="p-0 m-0" data-title="Page 30: Collecting Pebbles Below" data-transcript="*Deep below, curled at the bottom of the basin, Iggy has been collecting every single pebble Britt dropped. The massive rock plunges down through the water column.*">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 30: Collecting Pebbles Below" data-transcript="*Deep below, curled at the bottom of the basin, Iggy has been collecting every single pebble Britt dropped. The massive rock plunges down through the water column.*">
+        <section class="panel-section p-0 m-0" data-title="Page 30: Collecting Pebbles Below" data-transcript="*Deep below, curled at the bottom of the basin, Iggy has been collecting every single pebble Britt dropped. The massive rock plunges down through the water column.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 30: Collecting Pebbles Below" data-transcript="*Deep below, curled at the bottom of the basin, Iggy has been collecting every single pebble Britt dropped. The massive rock plunges down through the water column.*">
                 <img src="images/vumbua/s8_page30.jpg" alt="Session 8: Page 30: Collecting Pebbles Below" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 31: Catching the Boulder -->
-        <section class="p-0 m-0" data-title="Page 31: Catching the Boulder" data-transcript="*GM Narration:* With a quick reaction, Iggy catches the boulder, cradling it in his arms along with the handful of pebbles. He kicks off the bottom and surfaces next to the dock, covered from head to toe in seaweed and harbor debris, but completely restored and bright-eyed.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 31: Catching the Boulder" data-transcript="*GM Narration:* With a quick reaction, Iggy catches the boulder, cradling it in his arms along with the handful of pebbles. He kicks off the bottom and surfaces next to the dock, covered from head to toe in seaweed and harbor debris, but completely restored and bright-eyed.">
+        <section class="panel-section p-0 m-0" data-title="Page 31: Catching the Boulder" data-transcript="*GM Narration:* With a quick reaction, Iggy catches the boulder, cradling it in his arms along with the handful of pebbles. He kicks off the bottom and surfaces next to the dock, covered from head to toe in seaweed and harbor debris, but completely restored and bright-eyed.">
+            <div class="comic-panel p-0 m-0" data-title="Page 31: Catching the Boulder" data-transcript="*GM Narration:* With a quick reaction, Iggy catches the boulder, cradling it in his arms along with the handful of pebbles. He kicks off the bottom and surfaces next to the dock, covered from head to toe in seaweed and harbor debris, but completely restored and bright-eyed.">
                 <img src="images/vumbua/s8_page31.jpg" alt="Session 8: Page 31: Catching the Boulder" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 32: Surfacing Rehydrated -->
-        <section class="p-0 m-0" data-title="Page 32: Surfacing Rehydrated" data-transcript="**Iggy:** Here's your rocks back.
+        <section class="panel-section p-0 m-0" data-title="Page 32: Surfacing Rehydrated" data-transcript="**Iggy:** Here's your rocks back.
 
 **Britt:** Okay. Well, I see you got my messages. It's time to go.
 
 *GM Narration:* Aggie joins them at the harbor edge, carrying a collection of apples and food she grabbed from the dining hall to share.
 
 **Iggy:** Let's go.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 32: Surfacing Rehydrated" data-transcript="**Iggy:** Here's your rocks back.
+            <div class="comic-panel p-0 m-0" data-title="Page 32: Surfacing Rehydrated" data-transcript="**Iggy:** Here's your rocks back.
 
 **Britt:** Okay. Well, I see you got my messages. It's time to go.
 
@@ -560,7 +564,7 @@
         </section>
 
         <!-- Transition Bridge Card -->
-        <div class="narrative-card rounded-lg p-4 space-y-1.5 border-l-4 border-l-amber-500 shadow-xl my-2">
+        <div class="narrative-card space-y-1.5 border-l-4 border-l-amber-500 shadow-xl">
             <h3 class="text-amber-400 font-bold text-base">The Apex Ring: 77,000 Candidates</h3>
             <p class="text-slate-300 text-xs sm:text-sm leading-relaxed italic">
                 Rushing into the colossal Apex Arena just before the gates lock, the candidates take their seats along the stone canyon grandstands. Turbine enforcers patrol the aisles as magic-damping wards suppress telepathy...
@@ -568,17 +572,17 @@
         </div>
 
         <!-- Page 33: The Grandstands -->
-        <section class="p-0 m-0" data-title="Page 33: The Grandstands" data-transcript="*Friday midday. The massive grandstands of the Apex Arena have been converted into an exam hall. Desks are erected on every other row, wrapping around the half-mile-wide basalt canyon. 77,000 student candidates scramble to find their seats. Enforcers and proctors patrol the rows at a tight 1-to-3 ratio. Britt, Aggie, and Iggy rush in just before the gate closes, locating their seats near Loami.*">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 33: The Grandstands" data-transcript="*Friday midday. The massive grandstands of the Apex Arena have been converted into an exam hall. Desks are erected on every other row, wrapping around the half-mile-wide basalt canyon. 77,000 student candidates scramble to find their seats. Enforcers and proctors patrol the rows at a tight 1-to-3 ratio. Britt, Aggie, and Iggy rush in just before the gate closes, locating their seats near Loami.*">
+        <section class="panel-section p-0 m-0" data-title="Page 33: The Grandstands" data-transcript="*Friday midday. The massive grandstands of the Apex Arena have been converted into an exam hall. Desks are erected on every other row, wrapping around the half-mile-wide basalt canyon. 77,000 student candidates scramble to find their seats. Enforcers and proctors patrol the rows at a tight 1-to-3 ratio. Britt, Aggie, and Iggy rush in just before the gate closes, locating their seats near Loami.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 33: The Grandstands" data-transcript="*Friday midday. The massive grandstands of the Apex Arena have been converted into an exam hall. Desks are erected on every other row, wrapping around the half-mile-wide basalt canyon. 77,000 student candidates scramble to find their seats. Enforcers and proctors patrol the rows at a tight 1-to-3 ratio. Britt, Aggie, and Iggy rush in just before the gate closes, locating their seats near Loami.*">
                 <img src="images/vumbua/s8_page33.jpg" alt="Session 8: Page 33: The Grandstands" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 34: Telepathic Suppressors -->
-        <section class="p-0 m-0" data-title="Page 34: Telepathic Suppressors" data-transcript="*As they settle in, Britt attempts to speak telepathically to Aggie, but the message comes through garbled and suppressed. The arena is blanketed in a magic-damping ward to prevent cheating.*
+        <section class="panel-section p-0 m-0" data-title="Page 34: Telepathic Suppressors" data-transcript="*As they settle in, Britt attempts to speak telepathically to Aggie, but the message comes through garbled and suppressed. The arena is blanketed in a magic-damping ward to prevent cheating.*
 
 *Loami sits near the edge of the ring, looking down at the race floor below. He notices that walker-core crews are actively preparing the terrain, but strangely, suspicious debris remains scattered in sectors that should have been completely cleared.*">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 34: Telepathic Suppressors" data-transcript="*As they settle in, Britt attempts to speak telepathically to Aggie, but the message comes through garbled and suppressed. The arena is blanketed in a magic-damping ward to prevent cheating.*
+            <div class="comic-panel p-0 m-0" data-title="Page 34: Telepathic Suppressors" data-transcript="*As they settle in, Britt attempts to speak telepathically to Aggie, but the message comes through garbled and suppressed. The arena is blanketed in a magic-damping ward to prevent cheating.*
 
 *Loami sits near the edge of the ring, looking down at the race floor below. He notices that walker-core crews are actively preparing the terrain, but strangely, suspicious debris remains scattered in sectors that should have been completely cleared.*">
                 <img src="images/vumbua/s8_page34.jpg" alt="Session 8: Page 34: Telepathic Suppressors" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -586,12 +590,12 @@
         </section>
 
         <!-- Page 35: The Slates Delivered -->
-        <section class="p-0 m-0" data-title="Page 35: The Slates Delivered" data-transcript="*Before he can study it further, a turbine enforcer steps in front of each desk, placing a copper-lined slate and a glowing crystal paperweight in front of them.*
+        <section class="panel-section p-0 m-0" data-title="Page 35: The Slates Delivered" data-transcript="*Before he can study it further, a turbine enforcer steps in front of each desk, placing a copper-lined slate and a glowing crystal paperweight in front of them.*
 
 *Dean Isolde Vane stands at the center dais, her voice echoing across the stadium.*
 
 **Dean Isolde Vane:** Hello students. No words, just tests. Begin.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 35: The Slates Delivered" data-transcript="*Before he can study it further, a turbine enforcer steps in front of each desk, placing a copper-lined slate and a glowing crystal paperweight in front of them.*
+            <div class="comic-panel p-0 m-0" data-title="Page 35: The Slates Delivered" data-transcript="*Before he can study it further, a turbine enforcer steps in front of each desk, placing a copper-lined slate and a glowing crystal paperweight in front of them.*
 
 *Dean Isolde Vane stands at the center dais, her voice echoing across the stadium.*
 
@@ -601,19 +605,19 @@
         </section>
 
         <!-- Page 36: Two Hours of Silence -->
-        <section class="p-0 m-0" data-title="Page 36: Two Hours of Silence" data-transcript="*GM Narration:* The paperweights flare, and the written questions of the Exploration 101 General Education Exam write themselves across the slates. The candidates work in absolute silence for two hours.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 36: Two Hours of Silence" data-transcript="*GM Narration:* The paperweights flare, and the written questions of the Exploration 101 General Education Exam write themselves across the slates. The candidates work in absolute silence for two hours.">
+        <section class="panel-section p-0 m-0" data-title="Page 36: Two Hours of Silence" data-transcript="*GM Narration:* The paperweights flare, and the written questions of the Exploration 101 General Education Exam write themselves across the slates. The candidates work in absolute silence for two hours.">
+            <div class="comic-panel p-0 m-0" data-title="Page 36: Two Hours of Silence" data-transcript="*GM Narration:* The paperweights flare, and the written questions of the Exploration 101 General Education Exam write themselves across the slates. The candidates work in absolute silence for two hours.">
                 <img src="images/vumbua/s8_page36.jpg" alt="Session 8: Page 36: Two Hours of Silence" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 37: Slate Grading Flares -->
-        <section class="p-0 m-0" data-title="Page 37: Slate Grading Flares" data-transcript="*Once the final bell rings, the crystal paperweights flare again, and the slates begin to glow with their grading results. Across the stadium, the slates change color. Gold and Silver lights illuminate successful students, while a dark, rusty crimson red indicates failure.*
+        <section class="panel-section p-0 m-0" data-title="Page 37: Slate Grading Flares" data-transcript="*Once the final bell rings, the crystal paperweights flare again, and the slates begin to glow with their grading results. Across the stadium, the slates change color. Gold and Silver lights illuminate successful students, while a dark, rusty crimson red indicates failure.*
 
 *Bjorn, sitting near Loami, looks down at his slate. It glows a dark, rusty crimson.*
 
 **Bjorn:** It was fun while it lasted. *[Shrugs and stands up.]*">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 37: Slate Grading Flares" data-transcript="*Once the final bell rings, the crystal paperweights flare again, and the slates begin to glow with their grading results. Across the stadium, the slates change color. Gold and Silver lights illuminate successful students, while a dark, rusty crimson red indicates failure.*
+            <div class="comic-panel p-0 m-0" data-title="Page 37: Slate Grading Flares" data-transcript="*Once the final bell rings, the crystal paperweights flare again, and the slates begin to glow with their grading results. Across the stadium, the slates change color. Gold and Silver lights illuminate successful students, while a dark, rusty crimson red indicates failure.*
 
 *Bjorn, sitting near Loami, looks down at his slate. It glows a dark, rusty crimson.*
 
@@ -623,10 +627,10 @@
         </section>
 
         <!-- Page 37.5: Party Results & The Cull -->
-        <section class="p-0 m-0" data-title="Page 37.5: Party Results & The Cull" data-transcript="*GM Narration:* Aggie's slate glows Gold. Britt's slate glows Gold. Iggy's slate glows Silver. Loami's slate glows Silver. Roughly 25% of the stadium's slates glow crimson rust, representing 22,000 eliminated candidates. Whimpers and groans ripple through the stands.
+        <section class="panel-section p-0 m-0" data-title="Page 37.5: Party Results & The Cull" data-transcript="*GM Narration:* Aggie's slate glows Gold. Britt's slate glows Gold. Iggy's slate glows Silver. Loami's slate glows Silver. Roughly 25% of the stadium's slates glow crimson rust, representing 22,000 eliminated candidates. Whimpers and groans ripple through the stands.
 
 **Dean Isolde Vane:** Well, that's your exams. If you didn't get the result you're looking for, especially one that means you have to leave, we ask that you please do so with as minimum violence as possible. We will retribute very quickly. We don't want to, though.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 37.5: Party Results & The Cull" data-transcript="*GM Narration:* Aggie's slate glows Gold. Britt's slate glows Gold. Iggy's slate glows Silver. Loami's slate glows Silver. Roughly 25% of the stadium's slates glow crimson rust, representing 22,000 eliminated candidates. Whimpers and groans ripple through the stands.
+            <div class="comic-panel p-0 m-0" data-title="Page 37.5: Party Results & The Cull" data-transcript="*GM Narration:* Aggie's slate glows Gold. Britt's slate glows Gold. Iggy's slate glows Silver. Loami's slate glows Silver. Roughly 25% of the stadium's slates glow crimson rust, representing 22,000 eliminated candidates. Whimpers and groans ripple through the stands.
 
 **Dean Isolde Vane:** Well, that's your exams. If you didn't get the result you're looking for, especially one that means you have to leave, we ask that you please do so with as minimum violence as possible. We will retribute very quickly. We don't want to, though.">
                 <img src="images/vumbua/s8_page37_5.jpg" alt="Session 8: Page 37.5: Party Results & The Cull" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -634,17 +638,17 @@
         </section>
 
         <!-- Page 37.6: Crimson Red Elimination -->
-        <section class="p-0 m-0" data-title="Page 37.6: Crimson Red Elimination" data-transcript="*GM Narration:* Groans and whimpers ripple through the stands as 22,000 student candidates process their elimination.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 37.6: Crimson Red Elimination" data-transcript="*GM Narration:* Groans and whimpers ripple through the stands as 22,000 student candidates process their elimination.">
+        <section class="panel-section p-0 m-0" data-title="Page 37.6: Crimson Red Elimination" data-transcript="*GM Narration:* Groans and whimpers ripple through the stands as 22,000 student candidates process their elimination.">
+            <div class="comic-panel p-0 m-0" data-title="Page 37.6: Crimson Red Elimination" data-transcript="*GM Narration:* Groans and whimpers ripple through the stands as 22,000 student candidates process their elimination.">
                 <img src="images/vumbua/s8_page37_6.jpg" alt="Session 8: Page 37.6: Crimson Red Elimination" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
         <!-- Page 38: Lyra's Outrage -->
-        <section class="p-0 m-0" data-title="Page 38: Lyra's Outrage" data-transcript="*GM Narration:* A disturbance erupts at the front of the hall. Lyra Castellan stands at her desk, screaming at the proctors.*
+        <section class="panel-section p-0 m-0" data-title="Page 38: Lyra's Outrage" data-transcript="*GM Narration:* A disturbance erupts at the front of the hall. Lyra Castellan stands at her desk, screaming at the proctors.*
 
 **Lyra Castellan:** No! Get your hands off of me! Get!">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 38: Lyra's Outrage" data-transcript="*GM Narration:* A disturbance erupts at the front of the hall. Lyra Castellan stands at her desk, screaming at the proctors.*
+            <div class="comic-panel p-0 m-0" data-title="Page 38: Lyra's Outrage" data-transcript="*GM Narration:* A disturbance erupts at the front of the hall. Lyra Castellan stands at her desk, screaming at the proctors.*
 
 **Lyra Castellan:** No! Get your hands off of me! Get!">
                 <img src="images/vumbua/s8_page38.jpg" alt="Session 8: Page 38: Lyra's Outrage" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -652,12 +656,12 @@
         </section>
 
         <!-- Page 39: Escorted Out -->
-        <section class="p-0 m-0" data-title="Page 39: Escorted Out" data-transcript="*GM Narration:* Her brothers step in, shouting at the guards.
+        <section class="panel-section p-0 m-0" data-title="Page 39: Escorted Out" data-transcript="*GM Narration:* Her brothers step in, shouting at the guards.
 
 **Castellan Brother:** Don't you touch her! Don't!
 
 *GM Narration:* Security guards immediately seize the siblings by their arms and forcibly march them out of the stadium.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 39: Escorted Out" data-transcript="*GM Narration:* Her brothers step in, shouting at the guards.
+            <div class="comic-panel p-0 m-0" data-title="Page 39: Escorted Out" data-transcript="*GM Narration:* Her brothers step in, shouting at the guards.
 
 **Castellan Brother:** Don't you touch her! Don't!
 
@@ -667,14 +671,14 @@
         </section>
 
         <!-- Page 40: Squad 907 Sorted -->
-        <section class="p-0 m-0" data-title="Page 40: Squad 907 Sorted" data-transcript="**Dean Isolde Vane:** With that said, you are now all officially in the first year of Vimilia. Congratulations. However, that is just the start, because as you know, you have one week to gain the captain savers. And if you don't, well, you might still be in the class, but you won't be exploring. And what's the fun in that?
+        <section class="panel-section p-0 m-0" data-title="Page 40: Squad 907 Sorted" data-transcript="**Dean Isolde Vane:** With that said, you are now all officially in the first year of Vimilia. Congratulations. However, that is just the start, because as you know, you have one week to gain the captain savers. And if you don't, well, you might still be in the class, but you won't be exploring. And what's the fun in that?
 
 *GM Narration:* Dean Vance snaps her fingers, and their slates update to display three digital resources: a Scatters List of the arena floor, a Captain's Dossier, and Professor Kante's Loom Analysis.
 
 **Dean Isolde Vane:** I have three things for you. One is a list of things you will find on the arena floor. Two is a list of captains and what they're looking for. And three is an analysis by our great Professor Kante of this year's Loom results. So you have the rest of today. Join your squad.
 
 *GM Narration:* The slates refresh to show their official team assignment: **Squad 907**, containing Aggie, Britt, Loami, Ignatius, and Iggy.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 40: Squad 907 Sorted" data-transcript="**Dean Isolde Vane:** With that said, you are now all officially in the first year of Vimilia. Congratulations. However, that is just the start, because as you know, you have one week to gain the captain savers. And if you don't, well, you might still be in the class, but you won't be exploring. And what's the fun in that?
+            <div class="comic-panel p-0 m-0" data-title="Page 40: Squad 907 Sorted" data-transcript="**Dean Isolde Vane:** With that said, you are now all officially in the first year of Vimilia. Congratulations. However, that is just the start, because as you know, you have one week to gain the captain savers. And if you don't, well, you might still be in the class, but you won't be exploring. And what's the fun in that?
 
 *GM Narration:* Dean Vance snaps her fingers, and their slates update to display three digital resources: a Scatters List of the arena floor, a Captain's Dossier, and Professor Kante's Loom Analysis.
 
@@ -686,10 +690,10 @@
         </section>
 
         <!-- Page 41: Into the Canyon Floor -->
-        <section class="p-0 m-0" data-title="Page 41: Into the Canyon Floor" data-transcript="**Dean Isolde Vane:** Find your squad and do something incredible, I guess. Don't waste this opportunity. Welcome to school.
+        <section class="panel-section p-0 m-0" data-title="Page 41: Into the Canyon Floor" data-transcript="**Dean Isolde Vane:** Find your squad and do something incredible, I guess. Don't waste this opportunity. Welcome to school.
 
 *GM Narration:* Mechanical lifts rise from the lip of the arena. Students immediately scramble onto them, pressing buttons to descend to the canyon floor below for the Freshman Run.">
-            <div class="comic-panel rounded-lg overflow-hidden border border-slate-900 shadow-xl bg-slate-950 p-0 m-0" data-title="Page 41: Into the Canyon Floor" data-transcript="**Dean Isolde Vane:** Find your squad and do something incredible, I guess. Don't waste this opportunity. Welcome to school.
+            <div class="comic-panel p-0 m-0" data-title="Page 41: Into the Canyon Floor" data-transcript="**Dean Isolde Vane:** Find your squad and do something incredible, I guess. Don't waste this opportunity. Welcome to school.
 
 *GM Narration:* Mechanical lifts rise from the lip of the arena. Students immediately scramble onto them, pressing buttons to descend to the canyon floor below for the Freshman Run.">
                 <img src="images/vumbua/s8_page41.jpg" alt="Session 8: Page 41: Into the Canyon Floor" class="w-full h-auto block p-0 m-0" loading="lazy">
@@ -699,7 +703,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="mt-12 py-8 border-t border-slate-800 text-center text-xs text-slate-500">
+    <footer class="py-8 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950">
         <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
     </footer>
 
