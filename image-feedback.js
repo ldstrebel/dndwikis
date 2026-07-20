@@ -49,39 +49,6 @@
     // Create styles for modal, feedback indicators, native mobile menu suppressions, and footer links
     const styleEl = document.createElement("style");
     styleEl.innerHTML = `
-        .image-container-feedback {
-            position: relative;
-            cursor: pointer;
-        }
-        
-        /* Bottom-Right Feedback Badge Button */
-        .panel-feedback-badge {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(6px);
-            color: #38bdf8;
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            z-index: 25;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
-        }
-        .panel-feedback-badge:hover {
-            background: rgba(56, 189, 248, 0.25);
-            color: #f59e0b;
-            border-color: rgba(245, 158, 11, 0.6);
-            transform: scale(1.06);
-        }
-
         .comic-panel img {
             -webkit-touch-callout: none !important; /* iOS Safari */
             -webkit-user-select: none !important;   /* Safari */
@@ -89,35 +56,12 @@
             -moz-user-select: none !important;      /* Firefox */
             -ms-user-select: none !important;       /* Internet Explorer/Edge */
             user-select: none !important;           /* Non-prefixed version */
-            transition: opacity 0.3s ease, filter 0.3s ease;
+            cursor: pointer;
+            transition: filter 0.2s ease;
         }
 
-        .comic-panel.panel-active img {
-            opacity: 0.25 !important;
-            filter: brightness(0.4) blur(1px);
-        }
-
-        /* Panel Action Overlay */
-        .panel-action-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: rgba(9, 13, 22, 0.7);
-            backdrop-filter: blur(4px);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 20;
-            border-radius: 12px;
-            padding: 16px;
-        }
-        .panel-action-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+        .comic-panel img:hover {
+            filter: brightness(1.05);
         }
         .overlay-btn-feedback {
             background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
@@ -276,11 +220,12 @@
                     <!-- Dynamic Transcript Content -->
                 </div>
 
-                <div class="flex justify-end pt-2 border-t border-slate-800">
-                    <button id="closeTranscriptBtn" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-lg text-sm transition-colors">Close</button>
+                <div class="flex justify-between items-center pt-2 border-t border-slate-800 gap-3">
+                    <button id="openFeedbackFromTranscriptBtn" class="px-4 py-2 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-slate-950 font-bold rounded-lg text-sm transition-all shadow-md flex items-center gap-2" type="button">
+                        <span>💬</span> Give Panel Feedback
+                    </button>
+                    <button id="closeTranscriptBtn" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-lg text-sm transition-colors" type="button">Close</button>
                 </div>
-            </div>
-        </div>
             </div>
         </div>
     `;
@@ -405,12 +350,16 @@
     const transcriptCard = document.getElementById("transcriptContentCard");
     const transcriptClose = document.getElementById("closeTranscriptModal");
     const transcriptCloseBtn = document.getElementById("closeTranscriptBtn");
+    const openFeedbackFromTranscriptBtn = document.getElementById("openFeedbackFromTranscriptBtn");
     const transcriptTitle = document.getElementById("transcriptModalTitle");
     const transcriptSub = document.getElementById("transcriptModalSub");
     const transcriptBody = document.getElementById("transcriptModalBody");
 
-    function showTranscriptModal(title, text, filename) {
+    let activeTranscriptImgSrc = "";
+
+    function showTranscriptModal(title, text, filename, imgSrc) {
         if (!transcriptTitle) return;
+        activeTranscriptImgSrc = imgSrc || "";
         transcriptTitle.textContent = title || "Scene Transcript";
         transcriptSub.textContent = filename ? `Reference Panel: ${filename}` : "";
         if (text) {
@@ -435,6 +384,12 @@
 
     if (transcriptClose) transcriptClose.addEventListener("click", hideTranscriptModal);
     if (transcriptCloseBtn) transcriptCloseBtn.addEventListener("click", hideTranscriptModal);
+    if (openFeedbackFromTranscriptBtn) {
+        openFeedbackFromTranscriptBtn.addEventListener("click", () => {
+            hideTranscriptModal();
+            showModal(activeTranscriptImgSrc);
+        });
+    }
     if (transcriptOverlay) {
         transcriptOverlay.addEventListener("click", (e) => {
             if (!transcriptCard.contains(e.target)) {
@@ -444,28 +399,14 @@
     }
 
     // -------------------------------------------------------------
-    // INSTANT TRANSCRIPT & BOTTOM-RIGHT FEEDBACK BADGE SYSTEM
+    // INSTANT SCENE TRANSCRIPT SYSTEM ON IMAGE TAP
     // -------------------------------------------------------------
     const panels = document.querySelectorAll(".comic-panel");
     panels.forEach(panel => {
         const img = panel.querySelector("img");
         if (!img) return;
 
-        panel.classList.add("image-container-feedback");
         panel.style.position = "relative";
-
-        // Create bottom-right feedback badge button
-        const feedbackBadge = document.createElement("button");
-        feedbackBadge.className = "panel-feedback-badge";
-        feedbackBadge.type = "button";
-        feedbackBadge.innerHTML = `<span>💬</span> Feedback`;
-        panel.appendChild(feedbackBadge);
-
-        // Clicking the bottom-right feedback badge opens the feedback modal directly
-        feedbackBadge.addEventListener("click", (e) => {
-            e.stopPropagation();
-            showModal(img.src);
-        });
 
         // Clicking the panel image instantly opens the scene transcript modal
         img.addEventListener("click", (e) => {
@@ -475,7 +416,7 @@
             const transcriptText = (panel.dataset.transcript) || (section && section.dataset.transcript) || "";
             const filename = img.src.substring(img.src.lastIndexOf("/") + 1);
 
-            showTranscriptModal(sceneTitle, transcriptText, filename);
+            showTranscriptModal(sceneTitle, transcriptText, filename, img.src);
         });
 
         // Long-press fallback directly opens feedback modal
