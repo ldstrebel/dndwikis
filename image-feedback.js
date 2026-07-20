@@ -54,11 +54,11 @@
             cursor: pointer;
         }
         .image-container-feedback::after {
-            content: "Hold to give feedback";
+            content: "Click to view options / transcript";
             position: absolute;
             bottom: 8px;
             right: 8px;
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(4px);
             color: #94a3b8;
             font-size: 10px;
@@ -68,6 +68,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
+            z-index: 15;
         }
         .image-container-feedback:hover::after {
             opacity: 1;
@@ -80,9 +81,78 @@
             -moz-user-select: none !important;      /* Firefox */
             -ms-user-select: none !important;       /* Internet Explorer/Edge */
             user-select: none !important;           /* Non-prefixed version */
+            transition: opacity 0.3s ease, filter 0.3s ease;
         }
 
-        #feedbackModalOverlay {
+        .comic-panel.panel-active img {
+            opacity: 0.25 !important;
+            filter: brightness(0.4) blur(1px);
+        }
+
+        /* Panel Action Overlay */
+        .panel-action-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(9, 13, 22, 0.7);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 20;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .panel-action-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .overlay-btn-feedback {
+            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            color: #0f172a;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            width: 80%;
+            max-width: 220px;
+            justify-content: center;
+        }
+        .overlay-btn-transcript {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #0f172a;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            width: 80%;
+            max-width: 220px;
+            justify-content: center;
+        }
+        .overlay-btn-feedback:hover, .overlay-btn-transcript:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        #feedbackModalOverlay, #transcriptModalOverlay {
             position: fixed;
             inset: 0;
             background-color: rgba(9, 13, 22, 0.85);
@@ -95,22 +165,29 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-        #feedbackModalOverlay.modal-visible {
+        #feedbackModalOverlay.modal-visible, #transcriptModalOverlay.modal-visible {
             opacity: 1;
             pointer-events: auto;
         }
-        .feedback-content-card {
+        .feedback-content-card, .transcript-content-card {
             background-color: #1e293b;
             border: 1px solid rgba(51, 65, 85, 0.8);
             border-radius: 12px;
             width: 90%;
-            max-width: 420px;
+            max-width: 500px;
             padding: 24px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
             transform: scale(0.95);
             transition: transform 0.3s ease;
         }
-        #feedbackModalOverlay.modal-visible .feedback-content-card {
+        .transcript-content-card {
+            max-width: 650px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #feedbackModalOverlay.modal-visible .feedback-content-card,
+        #transcriptModalOverlay.modal-visible .transcript-content-card {
             transform: scale(1);
         }
 
@@ -138,8 +215,9 @@
     `;
     document.head.appendChild(styleEl);
 
-    // Create Modal HTML Structure
+    // Create Modal HTML Structure (Feedback + Transcript)
     const modalMarkup = `
+        <!-- Feedback Modal -->
         <div id="feedbackModalOverlay">
             <div class="feedback-content-card space-y-4" id="feedbackContentCard">
                 <div class="flex justify-between items-center border-b border-slate-700 pb-3">
@@ -172,6 +250,29 @@
                     <button id="cancelFeedback" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg text-sm transition-colors">Cancel</button>
                     <button id="submitFeedback" class="flex-1 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-sm transition-colors shadow-lg shadow-amber-500/20">Submit</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Transcript Viewer Modal -->
+        <div id="transcriptModalOverlay">
+            <div class="transcript-content-card space-y-4" id="transcriptContentCard">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                    <div>
+                        <h3 id="transcriptModalTitle" class="text-amber-400 font-bold text-lg">Scene Transcript</h3>
+                        <div id="transcriptModalSub" class="text-xs text-sky-400 font-semibold mt-0.5"></div>
+                    </div>
+                    <button id="closeTranscriptModal" class="text-slate-400 hover:text-slate-200 text-2xl font-bold">&times;</button>
+                </div>
+
+                <div id="transcriptModalBody" class="text-slate-200 text-sm leading-relaxed overflow-y-auto max-h-[60vh] pr-2 space-y-3 bg-slate-900/50 p-4 rounded-lg border border-slate-800">
+                    <!-- Dynamic Transcript Content -->
+                </div>
+
+                <div class="flex justify-end pt-2 border-t border-slate-800">
+                    <button id="closeTranscriptBtn" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-lg text-sm transition-colors">Close</button>
+                </div>
+            </div>
+        </div>
             </div>
         </div>
     `;
@@ -291,17 +392,125 @@
         hideModal();
     });
 
-    // Event hooks for image long-press triggers
-    const images = document.querySelectorAll(".comic-panel img");
-    images.forEach(img => {
-        const parent = img.parentElement;
-        if (parent) {
-            parent.classList.add("image-container-feedback");
+    // Transcript Modal Controllers
+    const transcriptOverlay = document.getElementById("transcriptModalOverlay");
+    const transcriptCard = document.getElementById("transcriptContentCard");
+    const transcriptClose = document.getElementById("closeTranscriptModal");
+    const transcriptCloseBtn = document.getElementById("closeTranscriptBtn");
+    const transcriptTitle = document.getElementById("transcriptModalTitle");
+    const transcriptSub = document.getElementById("transcriptModalSub");
+    const transcriptBody = document.getElementById("transcriptModalBody");
+
+    function showTranscriptModal(title, text, filename) {
+        if (!transcriptTitle) return;
+        transcriptTitle.textContent = title || "Scene Transcript";
+        transcriptSub.textContent = filename ? `Reference Panel: ${filename}` : "";
+        if (text) {
+            // Format transcript text into paragraph and bold speakers
+            const formatted = text.split('\n\n').map(p => {
+                let cleanP = p.trim();
+                if (!cleanP) return '';
+                cleanP = cleanP.replace(/\*\*(.*?)\*\*/g, '<strong class="text-amber-400">$1</strong>');
+                cleanP = cleanP.replace(/\*(.*?)\*/g, '<em class="text-sky-300">$1</em>');
+                return `<p class="mb-2">${cleanP}</p>`;
+            }).join('');
+            transcriptBody.innerHTML = formatted;
+        } else {
+            transcriptBody.innerHTML = `<p class="italic text-slate-400">No scene transcript snippet available for this panel.</p>`;
+        }
+        transcriptOverlay.classList.add("modal-visible");
+    }
+
+    function hideTranscriptModal() {
+        if (transcriptOverlay) transcriptOverlay.classList.remove("modal-visible");
+    }
+
+    if (transcriptClose) transcriptClose.addEventListener("click", hideTranscriptModal);
+    if (transcriptCloseBtn) transcriptCloseBtn.addEventListener("click", hideTranscriptModal);
+    if (transcriptOverlay) {
+        transcriptOverlay.addEventListener("click", (e) => {
+            if (!transcriptCard.contains(e.target)) {
+                hideTranscriptModal();
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // INTERACTIVE PANEL OVERLAY & CLICK SYSTEM
+    // -------------------------------------------------------------
+    const panels = document.querySelectorAll(".comic-panel");
+    panels.forEach(panel => {
+        const img = panel.querySelector("img");
+        if (!img) return;
+
+        panel.classList.add("image-container-feedback");
+        panel.style.position = "relative";
+
+        // Create overlay container
+        const actionOverlay = document.createElement("div");
+        actionOverlay.className = "panel-action-overlay";
+        actionOverlay.innerHTML = `
+            <button class="overlay-btn-feedback" type="button">
+                <span>👍</span> Give Feedback
+            </button>
+            <button class="overlay-btn-transcript" type="button">
+                <span>📜</span> View Transcript
+            </button>
+        `;
+        panel.appendChild(actionOverlay);
+
+        const btnFeedback = actionOverlay.querySelector(".overlay-btn-feedback");
+        const btnTranscript = actionOverlay.querySelector(".overlay-btn-transcript");
+
+        function closeOverlay() {
+            actionOverlay.classList.remove("active");
+            panel.classList.remove("panel-active");
         }
 
+        function toggleOverlay(e) {
+            e.stopPropagation();
+            const isActive = actionOverlay.classList.contains("active");
+            
+            // Close all other open overlays first
+            document.querySelectorAll(".panel-action-overlay.active").forEach(o => {
+                o.classList.remove("active");
+                if (o.parentElement) o.parentElement.classList.remove("panel-active");
+            });
+
+            if (!isActive) {
+                actionOverlay.classList.add("active");
+                panel.classList.add("panel-active");
+            }
+        }
+
+        img.addEventListener("click", (e) => {
+            toggleOverlay(e);
+        });
+
+        btnFeedback.addEventListener("click", (e) => {
+            e.stopPropagation();
+            closeOverlay();
+            showModal(img.src);
+        });
+
+        btnTranscript.addEventListener("click", (e) => {
+            e.stopPropagation();
+            closeOverlay();
+
+            // Extract transcript snippet and title from dataset
+            const section = panel.closest("section");
+            const sceneTitle = (section && section.dataset.title) || (panel.dataset.title) || "Scene Transcript";
+            const transcriptText = (panel.dataset.transcript) || (section && section.dataset.transcript) || "";
+            const filename = img.src.substring(img.src.lastIndexOf("/") + 1);
+
+            showTranscriptModal(sceneTitle, transcriptText, filename);
+        });
+
+        // Long-press fallback directly opens feedback modal
         function startPress(e) {
             cancelPress();
             pressTimer = setTimeout(() => {
+                closeOverlay();
                 showModal(img.src);
             }, 900);
         }
@@ -329,6 +538,16 @@
         img.addEventListener("touchend", cancelPress);
         img.addEventListener("touchcancel", cancelPress);
         img.addEventListener("touchmove", cancelPress, { passive: true });
+    });
+
+    // Close overlays when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".comic-panel")) {
+            document.querySelectorAll(".panel-action-overlay.active").forEach(o => {
+                o.classList.remove("active");
+                if (o.parentElement) o.parentElement.classList.remove("panel-active");
+            });
+        }
     });
 
     // -------------------------------------------------------------
