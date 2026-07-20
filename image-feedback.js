@@ -114,37 +114,37 @@
         .overlay-btn-feedback {
             background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
             color: #0f172a;
-            font-weight: 700;
-            padding: 10px 20px;
-            border-radius: 8px;
+            font-weight: 800;
+            padding: 14px 24px;
+            border-radius: 12px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 18px rgba(56, 189, 248, 0.4);
+            transition: transform 0.2s, filter 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            width: 80%;
-            max-width: 220px;
+            gap: 10px;
+            font-size: 16px;
+            width: 85%;
+            max-width: 280px;
             justify-content: center;
         }
         .overlay-btn-transcript {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: #0f172a;
-            font-weight: 700;
-            padding: 10px 20px;
-            border-radius: 8px;
+            font-weight: 800;
+            padding: 14px 24px;
+            border-radius: 12px;
             border: none;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
+            transition: transform 0.2s, filter 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            width: 80%;
-            max-width: 220px;
+            gap: 10px;
+            font-size: 16px;
+            width: 85%;
+            max-width: 280px;
             justify-content: center;
         }
         .overlay-btn-feedback:hover, .overlay-btn-transcript:hover {
@@ -471,7 +471,7 @@
             e.stopPropagation();
             const isActive = actionOverlay.classList.contains("active");
             
-            // Close all other open overlays first
+            // Close all open overlays first
             document.querySelectorAll(".panel-action-overlay.active").forEach(o => {
                 o.classList.remove("active");
                 if (o.parentElement) o.parentElement.classList.remove("panel-active");
@@ -485,6 +485,14 @@
 
         img.addEventListener("click", (e) => {
             toggleOverlay(e);
+        });
+
+        // Clicking the opaque background overlay flips back to normal view
+        actionOverlay.addEventListener("click", (e) => {
+            if (e.target === actionOverlay) {
+                e.stopPropagation();
+                closeOverlay();
+            }
         });
 
         btnFeedback.addEventListener("click", (e) => {
