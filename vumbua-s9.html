@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Vumbua: Session 9 - Five Sectors in the Sand</title>
+    <meta name="description" content="Session 9 graphic novel storybook for Vumbua - Five Sectors in the Sand.">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#090d16' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #090d16; color: #f8fafc; margin: 0 !important; padding: 0 !important; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; }
+        
+        /* 0px SEAMLESS WEBTOON STRIP STYLING (COMPACT MAX-WIDTH 480px) */
+        main { padding: 0 !important; margin: 0 auto !important; width: 100%; max-width: 480px; }
+        section.panel-section { padding: 0 !important; margin: 0 !important; line-height: 0 !important; border: none !important; }
+        .comic-panel { margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; line-height: 0 !important; background: #000; }
+        .comic-panel img { cursor: pointer; transition: filter 0.2s ease; display: block !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; }
+        
+        .narrative-card { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); border: 1px solid rgba(51, 65, 85, 0.6); margin: 0 !important; padding: 0.75rem 1rem; }
+    </style>
+</head>
+<body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
+
+    <!-- Global Loading Overlay -->
+    <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
+        <img src="images/archway-loaded.gif" alt="Loading..." class="w-20 h-20" />
+    </div>
+
+    <!-- Top Sticky Navigation -->
+    <nav id="top-nav" class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 py-3 relative flex items-center justify-between">
+            <a href="index.html" title="Go to Homepage" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+                <span class="hidden sm:inline font-semibold">Campaigns</span>
+            </a>
+            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-sky-400 truncate max-w-[60%] sm:max-w-none text-center">Session 9: Five Sectors</h1>
+            <div class="flex items-center gap-2">
+                <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share this page" aria-label="Share this page" style="background: none; border: none; cursor: pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186l5.302-2.548a2.25 2.25 0 1 1 .74 1.49L7.95 11.07m0 1.86l5.302 2.548a2.25 2.25 0 1 1-.74 1.49l-5.302-2.548M13.5 5.25a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0zm0 13.5a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0z" />
+                    </svg>
+                </button>
+                <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
+            </div>
+        </div>
+        <div id="scroll-progress-bar" class="h-0.5 bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400 w-0"></div>
+    </nav>
+
+    <!-- Main Container - Compact 480px Webtoon Scroll Strip -->
+    <main class="max-w-md mx-auto p-0 m-0">
+
+        <!-- Header Panel -->
+        <section class="text-center py-5 px-4 space-y-2 bg-slate-950 border-b border-slate-900">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400">VUMBUA: SESSION 9</h2>
+            <h3 class="text-slate-400 text-xs tracking-widest uppercase">Five Sectors in the Sand</h3>
+            <p class="text-slate-400 max-w-md mx-auto text-xs leading-relaxed mt-1">
+                The Freshman Run begins! Squad 907 drops into the Apex Ring to scavenge heavy industrial scrap across volcanic plains, steam vents, and gravity canyons.
+            </p>
+            <div class="scroll-down-hint flex flex-col items-center pt-2 text-slate-500 text-xs gap-1">
+                <span>Click any panel for transcript & feedback options</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 animate-bounce mt-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+            </div>
+        </section>
+
+        <!-- Page 1: Flashback — The Zephyr Bar (Thursday Night) -->
+        <section class="panel-section p-0 m-0" data-title="Page 1: Flashback — The Zephyr Bar (Thursday Night)" data-transcript="*Thursday night, hours before the final written exam. On the VIP deck of the airship Zephyr, the ambient hum of golden dirigible engines echoes through the polished wood and brass lounge. Loami stands behind the mahogany bar, pouring heavy rounds of grog for Dee, an Arena Logistics Officer.*
+
+**Dee:** It's impossible! I tell you, there's no way that we can reset the ring in a day. It's preposterous! I mean, look at the carnage they're wreaking down there!
+
+**Loami:** What's going on, Dee?
+
+**Dee:** I mean, they expect me to just find all these materials and stuff and set them out in the sand. I just don't understand why!">
+            <div class="comic-panel p-0 m-0" data-title="Page 1: Flashback — The Zephyr Bar (Thursday Night)" data-transcript="*Thursday night, hours before the final written exam. On the VIP deck of the airship Zephyr, the ambient hum of golden dirigible engines echoes through the polished wood and brass lounge. Loami stands behind the mahogany bar, pouring heavy rounds of grog for Dee, an Arena Logistics Officer.*
+
+**Dee:** It's impossible! I tell you, there's no way that we can reset the ring in a day. It's preposterous! I mean, look at the carnage they're wreaking down there!
+
+**Loami:** What's going on, Dee?
+
+**Dee:** I mean, they expect me to just find all these materials and stuff and set them out in the sand. I just don't understand why!">
+                <img src="images/vumbua/s9_page1.jpg?v=1784937193" alt="Session 9: Page 1: Flashback — The Zephyr Bar (Thursday Night)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 2: The Seeded Manifest -->
+        <section class="panel-section p-0 m-0" data-title="Page 2: The Seeded Manifest" data-transcript="*Dee pulls a rolled parchment manifest from her coat and lays it out across the bar. It lists five distinct sectors of the Apex Ring tin, marked to be seeded with industrial scrap.*
+
+**Loami:** Dee, do you know why they need these materials?
+
+**Dee:** I don't know... but they always make squads after the first year, so it makes sense that they're gonna put them to some test or something.
+
+*GM Narration:* The words hit Loami like a sudden spark. Sorting into squads follows the written exam, based on the natural harmonic connections generated over the first week. Loami begins mapping the connections — Ignatious's flame, Britt's root resilience, Iggy's deep clay nature, and Aggie's fungal wisdom — predicting Squad 907's roster.">
+            <div class="comic-panel p-0 m-0" data-title="Page 2: The Seeded Manifest" data-transcript="*Dee pulls a rolled parchment manifest from her coat and lays it out across the bar. It lists five distinct sectors of the Apex Ring tin, marked to be seeded with industrial scrap.*
+
+**Loami:** Dee, do you know why they need these materials?
+
+**Dee:** I don't know... but they always make squads after the first year, so it makes sense that they're gonna put them to some test or something.
+
+*GM Narration:* The words hit Loami like a sudden spark. Sorting into squads follows the written exam, based on the natural harmonic connections generated over the first week. Loami begins mapping the connections — Ignatious's flame, Britt's root resilience, Iggy's deep clay nature, and Aggie's fungal wisdom — predicting Squad 907's roster.">
+                <img src="images/vumbua/s9_page2.jpg?v=1784937193" alt="Session 9: Page 2: The Seeded Manifest" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Friday Morning: The Bleachers Scramble</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                The flashback fades. Friday morning arrives at the Apex Arena grandstands. Dean Isolde Vane stands on the high podium addressing the 50,000 newly minted first-year candidates...
+            </p>
+        </div>
+
+        <!-- Page 3: Dean Vane's Address -->
+        <section class="panel-section p-0 m-0" data-title="Page 3: Dean Vane's Address" data-transcript="*Dean Isolde Vane stands at the center dais, overlooking the colossal stadium tin.*
+
+**Dean Isolde Vane:** Cadets of Vumbua! Your written results are recorded. Your first year begins now. Behind me lies the Apex Ring. Down on that floor, your squads must prove your worth before the Senior Captains. Your voyage depends on what you build and what you discover.">
+            <div class="comic-panel p-0 m-0" data-title="Page 3: Dean Vane's Address" data-transcript="*Dean Isolde Vane stands at the center dais, overlooking the colossal stadium tin.*
+
+**Dean Isolde Vane:** Cadets of Vumbua! Your written results are recorded. Your first year begins now. Behind me lies the Apex Ring. Down on that floor, your squads must prove your worth before the Senior Captains. Your voyage depends on what you build and what you discover.">
+                <img src="images/vumbua/s9_page3.jpg?v=1784937193" alt="Session 9: Page 3: Dean Vane's Address" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 4: The Telepathic Check-In -->
+        <section class="panel-section p-0 m-0" data-title="Page 4: The Telepathic Check-In" data-transcript="*As the written exam finishes and the slate tablets turn silver, the telepathic suppression wards lift. Aggie check-ins with Britt.*
+
+**Aggie:** *(telepathically)* Britt, are you feeling healthy and ready to proceed? There's no rush for us to head back to the forest tonight... if we don't get back for a week or more, it will be totally fine. But I can talk to plants! If I go to one of the zones that has a lot of plant life in it, I can quickly find out where things are.
+
+**Britt:** Got it. Aggie, deliver the note to Iggy, then head toward Sector 3 to scout the plants. We've got things we need to do, and you've got things you need to do.">
+            <div class="comic-panel p-0 m-0" data-title="Page 4: The Telepathic Check-In" data-transcript="*As the written exam finishes and the slate tablets turn silver, the telepathic suppression wards lift. Aggie check-ins with Britt.*
+
+**Aggie:** *(telepathically)* Britt, are you feeling healthy and ready to proceed? There's no rush for us to head back to the forest tonight... if we don't get back for a week or more, it will be totally fine. But I can talk to plants! If I go to one of the zones that has a lot of plant life in it, I can quickly find out where things are.
+
+**Britt:** Got it. Aggie, deliver the note to Iggy, then head toward Sector 3 to scout the plants. We've got things we need to do, and you've got things you need to do.">
+                <img src="images/vumbua/s9_page4.jpg?v=1784937193" alt="Session 9: Page 4: The Telepathic Check-In" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 5: Bribing the Guard -->
+        <section class="panel-section p-0 m-0" data-title="Page 5: Bribing the Guard" data-transcript="*Loami spots a familiar face among the temporary security guards—a former UN maintenance colleague. He decides to bribe him with homemade brew to pass a message to Iggy.*
+
+**Loami:** Hey! You're gonna see Humazi and a little stone-looking guy together down there. Give this to them. All right, fine. Here. I made this at the bar the other day. Here you go. It's literally every tip I got... but it's worth it.
+
+**Firefighter Guard:** All right! You know, for you, I'll do it. But two Mizizi and a stone? You got these goggles on. You can't miss him. Good luck on the test!">
+            <div class="comic-panel p-0 m-0" data-title="Page 5: Bribing the Guard" data-transcript="*Loami spots a familiar face among the temporary security guards—a former UN maintenance colleague. He decides to bribe him with homemade brew to pass a message to Iggy.*
+
+**Loami:** Hey! You're gonna see Humazi and a little stone-looking guy together down there. Give this to them. All right, fine. Here. I made this at the bar the other day. Here you go. It's literally every tip I got... but it's worth it.
+
+**Firefighter Guard:** All right! You know, for you, I'll do it. But two Mizizi and a stone? You got these goggles on. You can't miss him. Good luck on the test!">
+                <img src="images/vumbua/s9_page5.jpg?v=1784937193" alt="Session 9: Page 5: Bribing the Guard" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 6: Security Lapses & Protests -->
+        <section class="panel-section p-0 m-0" data-title="Page 6: Security Lapses & Protests" data-transcript="*The firefighter guard returns to his post, drinking the brew and waving his squad over, completely abandoning his section's security corridor.*
+
+**Firefighter Guard:** Yes, they got this handled right! There's nothing to be worried about over here. What are we even doing? Let's go find some Mizizi!
+
+*Meanwhile, Ludo and Lyra Castellan scream at proctors after seeing their slates glow red.*
+
+**Ludo Castellan:** This is preposterous! We demand a re-evaluation!
+
+**Security Guard:** Shut up! Shut up! Stop whining! Do better on the next test!">
+            <div class="comic-panel p-0 m-0" data-title="Page 6: Security Lapses & Protests" data-transcript="*The firefighter guard returns to his post, drinking the brew and waving his squad over, completely abandoning his section's security corridor.*
+
+**Firefighter Guard:** Yes, they got this handled right! There's nothing to be worried about over here. What are we even doing? Let's go find some Mizizi!
+
+*Meanwhile, Ludo and Lyra Castellan scream at proctors after seeing their slates glow red.*
+
+**Ludo Castellan:** This is preposterous! We demand a re-evaluation!
+
+**Security Guard:** Shut up! Shut up! Stop whining! Do better on the next test!">
+                <img src="images/vumbua/s9_page6.jpg?v=1784937193" alt="Session 9: Page 6: Security Lapses & Protests" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Canyon Floor Attendant's Briefing</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                Amidst the chaos of the security lapse and the Castellan sibling arrest, the steam lifts open. Candidates pack into them as the Attendant shouts out the rules of the day...
+            </p>
+        </div>
+
+        <!-- Page 7: Ignatious Wakes Up -->
+        <section class="panel-section p-0 m-0" data-title="Page 7: Ignatious Wakes Up" data-transcript="*Ignatious sleeps through the final bells, waking up just as the candidates rush the lifts.*
+
+**Ignatius:** Yes! Yes, I won! I touched the Obelisk! Where am I?
+
+**Britt:** Did you take your exam?
+
+**Ignatius:** Uh... you know, I think so! It was a very fast exam. You know, it's just you're right or you're wrong. We just move on. I've been wrong on a lot of them, but that's fine. It's fine.">
+            <div class="comic-panel p-0 m-0" data-title="Page 7: Ignatious Wakes Up" data-transcript="*Ignatious sleeps through the final bells, waking up just as the candidates rush the lifts.*
+
+**Ignatius:** Yes! Yes, I won! I touched the Obelisk! Where am I?
+
+**Britt:** Did you take your exam?
+
+**Ignatius:** Uh... you know, I think so! It was a very fast exam. You know, it's just you're right or you're wrong. We just move on. I've been wrong on a lot of them, but that's fine. It's fine.">
+                <img src="images/vumbua/s9_page7.jpg?v=1784937193" alt="Session 9: Page 7: Ignatious Wakes Up" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 8: Attendant's Warning Lecture -->
+        <section class="panel-section p-0 m-0" data-title="Page 8: Attendant's Warning Lecture" data-transcript="*A dwarf attendant shouts out the rules of the survival test.*
+
+**Attendant:** So arena is your first day of class! Get down there and show them what you can do with what you actually do! Get across the arena! There's dinner waiting on the other side. Try not to get hurt. Glider rescues will cost you Academy graduation credits! And at 8:00 AM tomorrow there is a challenge — if you're still in the arena, you are eligible. It is very dangerous! Evacuate by 5:00 AM if you don't want to participate! We cannot protect you from your own stupidity!">
+            <div class="comic-panel p-0 m-0" data-title="Page 8: Attendant's Warning Lecture" data-transcript="*A dwarf attendant shouts out the rules of the survival test.*
+
+**Attendant:** So arena is your first day of class! Get down there and show them what you can do with what you actually do! Get across the arena! There's dinner waiting on the other side. Try not to get hurt. Glider rescues will cost you Academy graduation credits! And at 8:00 AM tomorrow there is a challenge — if you're still in the arena, you are eligible. It is very dangerous! Evacuate by 5:00 AM if you don't want to participate! We cannot protect you from your own stupidity!">
+                <img src="images/vumbua/s9_page8.jpg?v=1784937193" alt="Session 9: Page 8: Attendant's Warning Lecture" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 9: The Descent -->
+        <section class="panel-section p-0 m-0" data-title="Page 9: The Descent" data-transcript="*Britt and Ignatious step onto the fourth steam-lift. As it descends through the static ozone layer, the ambient noise vanishes, leaving them in absolute silence. They check their gear.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 9: The Descent" data-transcript="*Britt and Ignatious step onto the fourth steam-lift. As it descends through the static ozone layer, the ambient noise vanishes, leaving them in absolute silence. They check their gear.*">
+                <img src="images/vumbua/s9_page9.jpg?v=1784937193" alt="Session 9: Page 9: The Descent" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 10: Pixie Attendant Rescue -->
+        <section class="panel-section p-0 m-0" data-title="Page 10: Pixie Attendant Rescue" data-transcript="*At the canyon floor landing, a tiny pixie cadet stands frozen in fear directly under the lift's descending counterweights.*
+
+**Britt:** Look out!
+
+*Britt drops on her belly, reaches under the platform, and grabs the pixie by the collar, throwing them clear to safety.*
+
+**Spectator Cadet:** Holy shit! Is that worse or better than getting crushed?!">
+            <div class="comic-panel p-0 m-0" data-title="Page 10: Pixie Attendant Rescue" data-transcript="*At the canyon floor landing, a tiny pixie cadet stands frozen in fear directly under the lift's descending counterweights.*
+
+**Britt:** Look out!
+
+*Britt drops on her belly, reaches under the platform, and grabs the pixie by the collar, throwing them clear to safety.*
+
+**Spectator Cadet:** Holy shit! Is that worse or better than getting crushed?!">
+                <img src="images/vumbua/s9_page10.jpg?v=1784937193" alt="Session 9: Page 10: Pixie Attendant Rescue" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Entering the Gravity Canyons</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                With the landing zone clear, Ignatious activates his boot wings to launch them high into the shifting gravity sectors of the basalt canyon floor...
+            </p>
+        </div>
+
+        <!-- Page 11: Hermes Flight -->
+        <section class="panel-section p-0 m-0" data-title="Page 11: Hermes Flight" data-transcript="*Ignatious activates his winged boots and carries Britt into the gravity-scrambled canyon corridors. Directional gravity shifts violently. Ignatious clips an outcrop as gravity flips sideways, taking 10 damage from the collision, but uses prayer dice to absorb the impact.*
+
+**Ignatius:** We're taking the air route! We're air shopping, baby!
+
+**Britt:** There! I see bamboo thickets and supply piles near Sector 2!">
+            <div class="comic-panel p-0 m-0" data-title="Page 11: Hermes Flight" data-transcript="*Ignatious activates his winged boots and carries Britt into the gravity-scrambled canyon corridors. Directional gravity shifts violently. Ignatious clips an outcrop as gravity flips sideways, taking 10 damage from the collision, but uses prayer dice to absorb the impact.*
+
+**Ignatius:** We're taking the air route! We're air shopping, baby!
+
+**Britt:** There! I see bamboo thickets and supply piles near Sector 2!">
+                <img src="images/vumbua/s9_page11.jpg?v=1784937193" alt="Session 9: Page 11: Hermes Flight" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 12: Material Acquisitions -->
+        <section class="panel-section p-0 m-0" data-title="Page 12: Material Acquisitions" data-transcript="*Britt leans out from Ignatious's grip, grabbing vital scrap from the piles.*
+
+**Britt:** Leaking coolant hoses for the table, please!
+
+*They secure fuel bladders, coolant hoses, tar buckets, hollow bamboo, and a sponge boom block, spending hope to manage their stress.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 12: Material Acquisitions" data-transcript="*Britt leans out from Ignatious's grip, grabbing vital scrap from the piles.*
+
+**Britt:** Leaking coolant hoses for the table, please!
+
+*They secure fuel bladders, coolant hoses, tar buckets, hollow bamboo, and a sponge boom block, spending hope to manage their stress.*">
+                <img src="images/vumbua/s9_page12.jpg?v=1784937193" alt="Session 9: Page 12: Material Acquisitions" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">The Wetlands & Steam Vents</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                While Britt and Ignatious gather lumber and hose fittings, Iggy scuttles down into the roaring geothermal steam vents and sulfur deposits of Sector 4...
+            </p>
+        </div>
+
+        <!-- Page 13: Steam Vent Spa -->
+        <section class="panel-section p-0 m-0" data-title="Page 13: Steam Vent Spa" data-transcript="*Iggy enters geothermal Sector 4, letting the hot sulfur steam hydrate his dry clay skin.*
+
+**Iggy:** 'S warm down here... best thing Iggy's ever smelt in his life.
+
+*He takes minor fire damage but feels hydrated and restored. He gathers dense clay plugs from a fissure, then spots raw energy crystals.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 13: Steam Vent Spa" data-transcript="*Iggy enters geothermal Sector 4, letting the hot sulfur steam hydrate his dry clay skin.*
+
+**Iggy:** 'S warm down here... best thing Iggy's ever smelt in his life.
+
+*He takes minor fire damage but feels hydrated and restored. He gathers dense clay plugs from a fissure, then spots raw energy crystals.*">
+                <img src="images/vumbua/s9_page13.jpg?v=1784937193" alt="Session 9: Page 13: Steam Vent Spa" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 14: The 18-Foot Cyclops Troll -->
+        <section class="panel-section p-0 m-0" data-title="Page 14: The 18-Foot Cyclops Troll" data-transcript="*An 18-foot-tall Cyclops Troll holds the highest quality crystals. Iggy climbs up the troll's back Santa-sack style.*
+
+**Iggy:** Hey! Big guy! Size ain't everything with crystals, ya know!
+
+**Cyclops Troll:** Hey, hey, hey! What are you doing? I got the best crystals! I did not make a mistake! Your crystals, my crystals!
+
+**Iggy:** You can have one of my crystals in exchange for one of your crystals!">
+            <div class="comic-panel p-0 m-0" data-title="Page 14: The 18-Foot Cyclops Troll" data-transcript="*An 18-foot-tall Cyclops Troll holds the highest quality crystals. Iggy climbs up the troll's back Santa-sack style.*
+
+**Iggy:** Hey! Big guy! Size ain't everything with crystals, ya know!
+
+**Cyclops Troll:** Hey, hey, hey! What are you doing? I got the best crystals! I did not make a mistake! Your crystals, my crystals!
+
+**Iggy:** You can have one of my crystals in exchange for one of your crystals!">
+                <img src="images/vumbua/s9_page14.jpg?v=1784937193" alt="Session 9: Page 14: The 18-Foot Cyclops Troll" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 15: Biting the Troll -->
+        <section class="panel-section p-0 m-0" data-title="Page 15: Biting the Troll" data-transcript="*The troll refuses to negotiate and lifts Iggy 10 feet. Iggy leans forward and bites the cyclops troll right on his massive hand.*
+
+**Cyclops Troll:** SHRIEK!
+
+*The troll drops the crystals. Iggy falls 8 feet to the ground, but fires a mud whip to snag the largest raw crystal, scuttling away as a female cyclops NPC charges.*
+
+**Female Cyclops:** Sam! He bit you!">
+            <div class="comic-panel p-0 m-0" data-title="Page 15: Biting the Troll" data-transcript="*The troll refuses to negotiate and lifts Iggy 10 feet. Iggy leans forward and bites the cyclops troll right on his massive hand.*
+
+**Cyclops Troll:** SHRIEK!
+
+*The troll drops the crystals. Iggy falls 8 feet to the ground, but fires a mud whip to snag the largest raw crystal, scuttling away as a female cyclops NPC charges.*
+
+**Female Cyclops:** Sam! He bit you!">
+                <img src="images/vumbua/s9_page15.jpg?v=1784937193" alt="Session 9: Page 15: Biting the Troll" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Loami's Wall Run</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                Across the canyons in Sector 1, Loami runs along the vertical basalt walls, timing his jumps between gravity shifts as he reaches the edge of the 200-foot center canyon drop tunnel...
+            </p>
+        </div>
+
+        <!-- Page 16: Sector 1 Wall Run -->
+        <section class="panel-section p-0 m-0" data-title="Page 16: Sector 1 Wall Run" data-transcript="*Loami sprints along the gravity canyons, jumping from wall to wall as gravity shifts directional vectors.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 16: Sector 1 Wall Run" data-transcript="*Loami sprints along the gravity canyons, jumping from wall to wall as gravity shifts directional vectors.*">
+                <img src="images/vumbua/s9_page16.jpg?v=1784937193" alt="Session 9: Page 16: Sector 1 Wall Run" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 17: Headfirst Dive -->
+        <section class="panel-section p-0 m-0" data-title="Page 17: Headfirst Dive" data-transcript="*Loami reaches the edge of the 200-foot vertical fall tunnel. He decides to overclock his speed and dive straight down.*
+
+**Loami:** No time to climb. Going down! AAAAAAAAHHHHHHH!">
+            <div class="comic-panel p-0 m-0" data-title="Page 17: Headfirst Dive" data-transcript="*Loami reaches the edge of the 200-foot vertical fall tunnel. He decides to overclock his speed and dive straight down.*
+
+**Loami:** No time to climb. Going down! AAAAAAAAHHHHHHH!">
+                <img src="images/vumbua/s9_page17.jpg?v=1784937193" alt="Session 9: Page 17: Headfirst Dive" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 18: Snagging the Canvas Tarp -->
+        <section class="panel-section p-0 m-0" data-title="Page 18: Snagging the Canvas Tarp" data-transcript="*Mid-fall, Loami snags a heavy canvas tarp, bungees, and rusted grappling hooks from a scaffolding shelf, crashing into the water pool at the bottom under falling debris. He surfaces bruised but successful.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 18: Snagging the Canvas Tarp" data-transcript="*Mid-fall, Loami snags a heavy canvas tarp, bungees, and rusted grappling hooks from a scaffolding shelf, crashing into the water pool at the bottom under falling debris. He surfaces bruised but successful.*">
+                <img src="images/vumbua/s9_page18.jpg?v=1784937193" alt="Session 9: Page 18: Snagging the Canvas Tarp" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Sector 3 Rendezvous</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                Dusk falls over the basalt ring. Gathering their heavy haul, the squad converges on the deciduous mycelium clearing of Sector 3, where Aggie has aligned the local plant nodes...
+            </p>
+        </div>
+
+        <!-- Page 19: Squad 907 Rendezvous -->
+        <section class="panel-section p-0 m-0" data-title="Page 19: Squad 907 Rendezvous" data-transcript="*Dusk falls over the mycelium maze of Sector 3. Ignatious and Britt touch down as Loami emerges from the water channel.*
+
+**Iggy:** Over here! Got the big crystal!
+
+**Loami:** Canvas tarp, bungees, and grappling hooks secured! Aggie's already ahead of us setting up the plant node alignment.
+
+**Britt:** We've got fuel bladders, coolant hoses, bamboo, and sponge boom. Phase 1 scavenge complete.
+
+*The five gather their haul, ready to assemble their build before tomorrow morning's 8:00 AM deadline.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 19: Squad 907 Rendezvous" data-transcript="*Dusk falls over the mycelium maze of Sector 3. Ignatious and Britt touch down as Loami emerges from the water channel.*
+
+**Iggy:** Over here! Got the big crystal!
+
+**Loami:** Canvas tarp, bungees, and grappling hooks secured! Aggie's already ahead of us setting up the plant node alignment.
+
+**Britt:** We've got fuel bladders, coolant hoses, bamboo, and sponge boom. Phase 1 scavenge complete.
+
+*The five gather their haul, ready to assemble their build before tomorrow morning's 8:00 AM deadline.*">
+                <img src="images/vumbua/s9_page19.jpg?v=1784937193" alt="Session 9: Page 19: Squad 907 Rendezvous" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950">
+        <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
+    </footer>
+
+    <script src="image-feedback.js?v=1784937193"></script>
+    <script>
+        // Progress bar scroll handler
+        window.addEventListener('scroll', () => {
+            const total = document.documentElement.scrollHeight - window.innerHeight;
+            const current = window.scrollY;
+            const pct = Math.round((current / total) * 100) || 0;
+            document.getElementById('scroll-percentage').textContent = pct + '%';
+            document.getElementById('scroll-progress-bar').style.width = pct + '%';
+        });
+
+        // Hide overlay on load
+        window.addEventListener('load', () => {
+            const l = document.getElementById('globalLoadingOverlayChapter');
+            if(l) l.style.opacity = '0', setTimeout(() => l.style.display = 'none', 300);
+        });
+    </script>
+</body>
+</html>
