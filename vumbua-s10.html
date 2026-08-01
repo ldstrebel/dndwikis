@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Vumbua: Session 10 - Dagger Sharks</title>
+    <meta name="description" content="Session 10 graphic novel storybook for Vumbua - Dagger Sharks.">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#090d16' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #090d16; color: #f8fafc; margin: 0 !important; padding: 0 !important; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; }
+        
+        /* 0px SEAMLESS WEBTOON STRIP STYLING (COMPACT MAX-WIDTH 480px) */
+        main { padding: 0 !important; margin: 0 auto !important; width: 100%; max-width: 480px; }
+        section.panel-section { padding: 0 !important; margin: 0 !important; line-height: 0 !important; border: none !important; }
+        .comic-panel { margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; line-height: 0 !important; background: #000; }
+        .comic-panel img { cursor: pointer; transition: filter 0.2s ease; display: block !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; }
+        
+        .narrative-card { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); border: 1px solid rgba(51, 65, 85, 0.6); margin: 0 !important; padding: 0.75rem 1rem; }
+    </style>
+</head>
+<body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
+
+    <!-- Global Loading Overlay -->
+    <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
+        <img src="images/archway-loaded.gif" alt="Loading..." class="w-20 h-20" />
+    </div>
+
+    <!-- Top Sticky Navigation -->
+    <nav id="top-nav" class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 py-3 relative flex items-center justify-between">
+            <a href="index.html" title="Go to Homepage" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+                <span class="hidden sm:inline font-semibold">Campaigns</span>
+            </a>
+            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-sky-400 truncate max-w-[60%] sm:max-w-none text-center">Session 10: Dagger Sharks</h1>
+            <div class="flex items-center gap-2">
+                <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share this page" aria-label="Share this page" style="background: none; border: none; cursor: pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186l5.302-2.548a2.25 2.25 0 1 1 .74 1.49L7.95 11.07m0 1.86l5.302 2.548a2.25 2.25 0 1 1-.74 1.49l-5.302-2.548M13.5 5.25a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0zm0 13.5a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0z" />
+                    </svg>
+                </button>
+                <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
+            </div>
+        </div>
+        <div id="scroll-progress-bar" class="h-0.5 bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400 w-0"></div>
+    </nav>
+
+    <!-- Main Container - Compact 480px Webtoon Scroll Strip -->
+    <main class="max-w-md mx-auto p-0 m-0">
+
+        <!-- Header Panel -->
+        <section class="text-center py-5 px-4 space-y-2 bg-slate-950 border-b border-slate-900">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400">VUMBUA: SESSION 10</h2>
+            <h3 class="text-slate-400 text-xs tracking-widest uppercase">Dagger Sharks</h3>
+            <p class="text-slate-400 max-w-md mx-auto text-xs leading-relaxed mt-1">
+                The barriers drop! Squad 907 constructs the Canopy Raft, meets Rill in the early morning fog, and defends against bioluminescent Dagger Sharks in the stormy water basin.
+            </p>
+            <div class="scroll-down-hint flex flex-col items-center pt-2 text-slate-500 text-xs gap-1">
+                <span>Click any panel for transcript & feedback options</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 animate-bounce mt-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+            </div>
+        </section>
+
+        <!-- Page 1: Pre-Rendezvous Scavenging & Magnetic Sand Surfing -->
+        <section class="panel-section p-0 m-0" data-title="Page 1: Pre-Rendezvous Scavenging & Magnetic Sand Surfing" data-transcript="*GM Narration: Sector 1 Canyons. Before reaching the Sector 3 rendezvous point, Loami uses salvaged copper-wound industrial anchors and magnetic clamps to scavenge heavy hardware from the shifting canyon sands.*\n\n**Loami (PC):** *&quot;The friction of the sand creates static electricity that temporarily charges up these magnetic clamps...&quot;*\n\n*Loami trudges through the canyon like a living metal detector as static friction charges his clamps. Shifting sand waves—40 to 80 feet tall—solidify into sheer cliffs in seconds. Ignatius attempts to hold the magnets overhead as a flying spotter, but the sudden magnetic surge yanks him down into a sand wave. Adapting quickly, Loami mounts a sheet of scrap metal, using magnetic polarity flips to surf and sled across the shifting canyon waves while Ignatius calls out search targets from above. Loami collects iron-hooped barrels, cables, and copper fittings before heading to Sector 3.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 1: Pre-Rendezvous Scavenging & Magnetic Sand Surfing" data-transcript="*GM Narration: Sector 1 Canyons. Before reaching the Sector 3 rendezvous point, Loami uses salvaged copper-wound industrial anchors and magnetic clamps to scavenge heavy hardware from the shifting canyon sands.*\n\n**Loami (PC):** *&quot;The friction of the sand creates static electricity that temporarily charges up these magnetic clamps...&quot;*\n\n*Loami trudges through the canyon like a living metal detector as static friction charges his clamps. Shifting sand waves—40 to 80 feet tall—solidify into sheer cliffs in seconds. Ignatius attempts to hold the magnets overhead as a flying spotter, but the sudden magnetic surge yanks him down into a sand wave. Adapting quickly, Loami mounts a sheet of scrap metal, using magnetic polarity flips to surf and sled across the shifting canyon waves while Ignatius calls out search targets from above. Loami collects iron-hooped barrels, cables, and copper fittings before heading to Sector 3.*">
+                <img src="images/vumbua/s10_page1.jpg?v=1785600006" alt="Session 10: Page 1: Pre-Rendezvous Scavenging & Magnetic Sand Surfing" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Bridge: Crossing the Sector Border</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                After securing iron-hooped barrels, heavy cables, and copper fittings in the Sector 1 canyons, the squad crosses the border into Sector 3. Iggy splits off to explore the misty tree line, seeing a real forest for the first time in his life...
+            </p>
+        </div>
+
+        <!-- Page 2: Iggy's First Tree & The Petrified Sketch -->
+        <section class="panel-section p-0 m-0" data-title="Page 2: Iggy's First Tree & The Petrified Sketch" data-transcript="*GM Narration: Sector 3 Tree Line. Iggy exits the steam-vented terrain and enters Sector 3. He stands at the edge of the forest, staring up at 90-foot tall petrified trees. Iggy has never seen a real forest or full-sized tree in his entire life (having only seen manicured city median trees in Bamboo). Intrigued, Iggy sets down his gear, pulls out his journal, and begins sketching the massive stone trunks. He carefully peels bark samples to store in his knapsack. A frustrated roar echoes through the clearing steam—Sam the Cyclops is closing in.*\n\n**Iggy (PC):** *&quot;Let's go, let's go!&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 2: Iggy's First Tree & The Petrified Sketch" data-transcript="*GM Narration: Sector 3 Tree Line. Iggy exits the steam-vented terrain and enters Sector 3. He stands at the edge of the forest, staring up at 90-foot tall petrified trees. Iggy has never seen a real forest or full-sized tree in his entire life (having only seen manicured city median trees in Bamboo). Intrigued, Iggy sets down his gear, pulls out his journal, and begins sketching the massive stone trunks. He carefully peels bark samples to store in his knapsack. A frustrated roar echoes through the clearing steam—Sam the Cyclops is closing in.*\n\n**Iggy (PC):** *&quot;Let's go, let's go!&quot;*">
+                <img src="images/vumbua/s10_page2.jpg?v=1785600006" alt="Session 10: Page 2: Iggy's First Tree & The Petrified Sketch" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 3: The Forest Pinball Loop -->
+        <section class="panel-section p-0 m-0" data-title="Page 3: The Forest Pinball Loop" data-transcript="*Iggy packs his bark samples and attempts to navigate southwest through the dense woods. Navigation Attempt 1: Iggy walks for 20 minutes, but the canopy brightens and he steps right back OUT of the tree line—where Sam is now three-quarters closer. Navigation Attempt 2 (The Pinball Loop): Iggy tries again, bouncing off stone trunks like a pinball machine. He pops back out of the forest line a second time—directly in front of Sam, Sarah (the female cyclops), and the young elf girl. Sarah stands with her arms crossed, smirking at Iggy and holding out her hand for her stolen crystal.*\n\n**Iggy (PC):** *&quot;Hold please!&quot;*\n\n*Iggy chugs a stamina potion, drops into his rolling ball form, and bolts for the basin water 100 yards away.*\n\n**Iggy (PC):** *(dropping his bark samples on the ground as he runs)* *&quot;A peace offering! A tiny version of an apology!&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 3: The Forest Pinball Loop" data-transcript="*Iggy packs his bark samples and attempts to navigate southwest through the dense woods. Navigation Attempt 1: Iggy walks for 20 minutes, but the canopy brightens and he steps right back OUT of the tree line—where Sam is now three-quarters closer. Navigation Attempt 2 (The Pinball Loop): Iggy tries again, bouncing off stone trunks like a pinball machine. He pops back out of the forest line a second time—directly in front of Sam, Sarah (the female cyclops), and the young elf girl. Sarah stands with her arms crossed, smirking at Iggy and holding out her hand for her stolen crystal.*\n\n**Iggy (PC):** *&quot;Hold please!&quot;*\n\n*Iggy chugs a stamina potion, drops into his rolling ball form, and bolts for the basin water 100 yards away.*\n\n**Iggy (PC):** *(dropping his bark samples on the ground as he runs)* *&quot;A peace offering! A tiny version of an apology!&quot;*">
+                <img src="images/vumbua/s10_page3.jpg?v=1785600006" alt="Session 10: Page 3: The Forest Pinball Loop" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 4: The Shoreline Tree Impact -->
+        <section class="panel-section p-0 m-0" data-title="Page 4: The Shoreline Tree Impact" data-transcript="*Sam tries to trap Iggy under his massive stone hands, but forgets to close his fingers, allowing Iggy to pop out like a bowling ball. Frustrated, Sam rears back with a 20-foot petrified tree trunk and hucks it like a spear at Iggy on the riverbank. The tree trunk crashes into the mud right beside Iggy, exploding mud and shockwaves into his side for 6 physical damage. Iggy burns 3 stress to absorb the impact. As a result of having a 20-foot tree hurled at his head by a shouting cyclops, Iggy acquires a permanent traumatic phobia of trees. Clutching his head in shock, Iggy leaps off the muddy riverbank into the 1,700-foot deep water basin to escape.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 4: The Shoreline Tree Impact" data-transcript="*Sam tries to trap Iggy under his massive stone hands, but forgets to close his fingers, allowing Iggy to pop out like a bowling ball. Frustrated, Sam rears back with a 20-foot petrified tree trunk and hucks it like a spear at Iggy on the riverbank. The tree trunk crashes into the mud right beside Iggy, exploding mud and shockwaves into his side for 6 physical damage. Iggy burns 3 stress to absorb the impact. As a result of having a 20-foot tree hurled at his head by a shouting cyclops, Iggy acquires a permanent traumatic phobia of trees. Clutching his head in shock, Iggy leaps off the muddy riverbank into the 1,700-foot deep water basin to escape.*">
+                <img src="images/vumbua/s10_page4.jpg?v=1785600006" alt="Session 10: Page 4: The Shoreline Tree Impact" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 5: The Underwater Safe Haven -->
+        <section class="panel-section p-0 m-0" data-title="Page 5: The Underwater Safe Haven" data-transcript="*Iggy plunges into the 1,700-foot deep dark turquoise basin water, bubbles swirling around his oversized round copper goggles. He sinks gracefully into the calm deeps where giant slate-grey cyclops hands splash fruitlessly at the surface far above.*\n\n**Iggy (PC):** *(thought bubble underwater)* *&quot;If I pop back up and see a tree, I'm going straight back down.&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 5: The Underwater Safe Haven" data-transcript="*Iggy plunges into the 1,700-foot deep dark turquoise basin water, bubbles swirling around his oversized round copper goggles. He sinks gracefully into the calm deeps where giant slate-grey cyclops hands splash fruitlessly at the surface far above.*\n\n**Iggy (PC):** *(thought bubble underwater)* *&quot;If I pop back up and see a tree, I'm going straight back down.&quot;*">
+                <img src="images/vumbua/s10_page5.jpg?v=1785600006" alt="Session 10: Page 5: The Underwater Safe Haven" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Bridge: Shoreline Observations</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                As Iggy rests safely on a submerged ledge 30 feet below the surface, Aggie and Britt arrive at the rendezvous shoreline. Aggie places her hands on an ancient stone trunk, feeling a strange void in its resonance...
+            </p>
+        </div>
+
+        <!-- Page 6: The Soulless Forest & Tree Misinformation -->
+        <section class="panel-section p-0 m-0" data-title="Page 6: The Soulless Forest & Tree Misinformation" data-transcript="*GM Narration: Along the Sector 3 shoreline, Aggie and Britt wait at the rendezvous point. Aggie reflects on her walk through the woods.*\n\n**Aggie (PC):** *&quot;It looks like home, but it's missing the soul. A master artist created this place knowing nothing about what it feels like to live in it.&quot;*\n\n**Aggie (PC):** *&quot;Are we worried about anyone not being able to find us?&quot;*\n\n**Britt (PC):** *&quot;Nope.&quot;*\n\n*Aggie walks up to an ancient petrified tree and places her hands against the rough bark, channeling her Mizizi instinct.*\n\n**Aggie (PC):** *(Rolling Instinct check: 17 with Hope)* *&quot;Tell me where our people are.&quot;*\n\n*GM Narration: The forest doesn't speak in words, but sends vivid mental images to Aggie's mind: &quot;We were told not to tell you where your people were... but one of yours tried to enter the forest twice and got lost. We lost track after one of our brethren was felled and thrown at him.&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 6: The Soulless Forest & Tree Misinformation" data-transcript="*GM Narration: Along the Sector 3 shoreline, Aggie and Britt wait at the rendezvous point. Aggie reflects on her walk through the woods.*\n\n**Aggie (PC):** *&quot;It looks like home, but it's missing the soul. A master artist created this place knowing nothing about what it feels like to live in it.&quot;*\n\n**Aggie (PC):** *&quot;Are we worried about anyone not being able to find us?&quot;*\n\n**Britt (PC):** *&quot;Nope.&quot;*\n\n*Aggie walks up to an ancient petrified tree and places her hands against the rough bark, channeling her Mizizi instinct.*\n\n**Aggie (PC):** *(Rolling Instinct check: 17 with Hope)* *&quot;Tell me where our people are.&quot;*\n\n*GM Narration: The forest doesn't speak in words, but sends vivid mental images to Aggie's mind: &quot;We were told not to tell you where your people were... but one of yours tried to enter the forest twice and got lost. We lost track after one of our brethren was felled and thrown at him.&quot;*">
+                <img src="images/vumbua/s10_page6.jpg?v=1785600006" alt="Session 10: Page 6: The Soulless Forest & Tree Misinformation" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 7: The Shoreline Pebble Signal & Emergence -->
+        <section class="panel-section p-0 m-0" data-title="Page 7: The Shoreline Pebble Signal & Emergence" data-transcript="*Realizing Iggy is hiding underwater nearby, Aggie kneels at a flat basalt ledge and taps river stones rhythmically over the water—a steady, repeating acoustic signal echoing across the basin.*\n\n**Aggie (PC):** *&quot;Someone threw a tree?!&quot;*\n\n*Submerged 30 feet below, Iggy hears the clacking, follows the sound waves, collects every dropped river stone from the underwater silt, and crawls up onto the muddy shore.*\n\n**Iggy (PC):** *(shivering, glaring back at the tree line)* *&quot;The trees... they're hostile. They threw themselves at me.&quot;*\n\n**Aggie (PC):** *&quot;The trees didn't throw themselves, Iggy! The cyclops threw them!&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 7: The Shoreline Pebble Signal & Emergence" data-transcript="*Realizing Iggy is hiding underwater nearby, Aggie kneels at a flat basalt ledge and taps river stones rhythmically over the water—a steady, repeating acoustic signal echoing across the basin.*\n\n**Aggie (PC):** *&quot;Someone threw a tree?!&quot;*\n\n*Submerged 30 feet below, Iggy hears the clacking, follows the sound waves, collects every dropped river stone from the underwater silt, and crawls up onto the muddy shore.*\n\n**Iggy (PC):** *(shivering, glaring back at the tree line)* *&quot;The trees... they're hostile. They threw themselves at me.&quot;*\n\n**Aggie (PC):** *&quot;The trees didn't throw themselves, Iggy! The cyclops threw them!&quot;*">
+                <img src="images/vumbua/s10_page7.jpg?v=1785600006" alt="Session 10: Page 7: The Shoreline Pebble Signal & Emergence" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Bridge: Midnight Assembly</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                Midnight arrives. Loami and Natty haul in heavy scrap metal, fuel bladders, and raw sulfur crystals to assemble an escape vessel before morning...
+            </p>
+        </div>
+
+        <!-- Page 8: Midnight Assembly & The 'Natty' Renaming -->
+        <section class="panel-section p-0 m-0" data-title="Page 8: Midnight Assembly & The 'Natty' Renaming" data-transcript="*GM Narration: Midnight. Loami and Ignatious arrive hauling scavenged barrels, tar buckets, coolant hoses, canvas, and raw sulfur crystals.*\n\n**Loami (PC):** *(handing Ignatious a swig from a wineskin)* *&quot;First of all, your name is great and all, but we already have an Iggy. We have an Aggie. So, you're now Natty. I'm calling you Natty.&quot;*\n\n**Loami (PC):** *&quot;Alright, crew. Phase 1 is done. Now we build.&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 8: Midnight Assembly & The 'Natty' Renaming" data-transcript="*GM Narration: Midnight. Loami and Ignatious arrive hauling scavenged barrels, tar buckets, coolant hoses, canvas, and raw sulfur crystals.*\n\n**Loami (PC):** *(handing Ignatious a swig from a wineskin)* *&quot;First of all, your name is great and all, but we already have an Iggy. We have an Aggie. So, you're now Natty. I'm calling you Natty.&quot;*\n\n**Loami (PC):** *&quot;Alright, crew. Phase 1 is done. Now we build.&quot;*">
+                <img src="images/vumbua/s10_page8.jpg?v=1785600006" alt="Session 10: Page 8: Midnight Assembly & The 'Natty' Renaming" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 9: Building The Canopy Raft -->
+        <section class="panel-section p-0 m-0" data-title="Page 9: Building The Canopy Raft" data-transcript="*Squad 907 works through the night constructing the Canopy Raft (raft.png):*\n1. *The Deck & Hull: Six heavy iron-hooped buoyancy barrels bound with steel cables and high-tension bungees, supporting a wooden deck and canvas tarp. Four heavy rusted shovels serve as steering oars.*\n2. *The Balloon Canopy: Fuel bladders sealed with dark tar and painted in forest camouflage, suspended over a central burner mounting Natty's raw sulfur crystal.*\n3. *Armament: Two coolant-hose slingshots loaded with petrified seed pods wrapped in glowing green bioluminescent moss (glowing tracer rounds) and mycelial root bundles.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 9: Building The Canopy Raft" data-transcript="*Squad 907 works through the night constructing the Canopy Raft (raft.png):*\n1. *The Deck & Hull: Six heavy iron-hooped buoyancy barrels bound with steel cables and high-tension bungees, supporting a wooden deck and canvas tarp. Four heavy rusted shovels serve as steering oars.*\n2. *The Balloon Canopy: Fuel bladders sealed with dark tar and painted in forest camouflage, suspended over a central burner mounting Natty's raw sulfur crystal.*\n3. *Armament: Two coolant-hose slingshots loaded with petrified seed pods wrapped in glowing green bioluminescent moss (glowing tracer rounds) and mycelial root bundles.*">
+                <img src="images/vumbua/s10_page9.jpg?v=1785600006" alt="Session 10: Page 9: Building The Canopy Raft" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 10: Central Burner & Craft Check Success -->
+        <section class="panel-section p-0 m-0" data-title="Page 10: Central Burner & Craft Check Success" data-transcript="*The central burner is completed and inspected.*\n\n**Loami (PC):** *(Rolling Crafting check: DC 15 — Full Success!)* *&quot;She's airtight, buoyant, and hidden!&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 10: Central Burner & Craft Check Success" data-transcript="*The central burner is completed and inspected.*\n\n**Loami (PC):** *(Rolling Crafting check: DC 15 — Full Success!)* *&quot;She's airtight, buoyant, and hidden!&quot;*">
+                <img src="images/vumbua/s10_page10.jpg?v=1785600006" alt="Session 10: Page 10: Central Burner & Craft Check Success" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Bridge: 04:00 AM Encounter</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                As silver river fog rolls across the mudflats, a slender figure steps out of the gloom. Rill, captain of Team 6, approaches the squad with an ominous warning...
+            </p>
+        </div>
+
+        <!-- Page 11: Rill's Mist Entrance -->
+        <section class="panel-section p-0 m-0" data-title="Page 11: Rill's Mist Entrance" data-transcript="*GM Narration: 04:00 AM. Silver river fog rolls over the Sector 3 shoreline. A figure steps silently out of the mist—Rill, captain of Team 6 (The Silent Drift).*\n\n**Rill:** *&quot;You've built something impressive out of scrap, candidates.&quot;*\n\n**Aggie (PC):** *&quot;Rill! What are you doing out here?&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 11: Rill's Mist Entrance" data-transcript="*GM Narration: 04:00 AM. Silver river fog rolls over the Sector 3 shoreline. A figure steps silently out of the mist—Rill, captain of Team 6 (The Silent Drift).*\n\n**Rill:** *&quot;You've built something impressive out of scrap, candidates.&quot;*\n\n**Aggie (PC):** *&quot;Rill! What are you doing out here?&quot;*">
+                <img src="images/vumbua/s10_page11.jpg?v=1785600006" alt="Session 10: Page 11: Rill's Mist Entrance" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 12: Rill's Barrier Warning -->
+        <section class="panel-section p-0 m-0" data-title="Page 12: Rill's Barrier Warning" data-transcript="**Rill:** *&quot;Warning you. The 08:00 challenge isn't a standard run. The Dean and the Logistics Officers are dropping the sector suppression barriers. Whatever is inside these sectors is coming out. If you're staying past the 05:00 evac deadline, survival itself is what gets you noticed... they love their heroes.&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 12: Rill's Barrier Warning" data-transcript="**Rill:** *&quot;Warning you. The 08:00 challenge isn't a standard run. The Dean and the Logistics Officers are dropping the sector suppression barriers. Whatever is inside these sectors is coming out. If you're staying past the 05:00 evac deadline, survival itself is what gets you noticed... they love their heroes.&quot;*">
+                <img src="images/vumbua/s10_page12.jpg?v=1785600006" alt="Session 10: Page 12: Rill's Barrier Warning" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 13: Emergency Flare Gun Handoff -->
+        <section class="panel-section p-0 m-0" data-title="Page 13: Emergency Flare Gun Handoff" data-transcript="*Rill hands Aggie a heavy brass-bound flare gun.*\n\n**Rill:** *&quot;If the storm takes the sky or you get pinned in the basin, fire this straight up. Don't die out here.&quot;*\n\n*Rill melts back into the misty tree line. The 05:00 AM evacuation bell bongs in the distance.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 13: Emergency Flare Gun Handoff" data-transcript="*Rill hands Aggie a heavy brass-bound flare gun.*\n\n**Rill:** *&quot;If the storm takes the sky or you get pinned in the basin, fire this straight up. Don't die out here.&quot;*\n\n*Rill melts back into the misty tree line. The 05:00 AM evacuation bell bongs in the distance.*">
+                <img src="images/vumbua/s10_page13.jpg?v=1785600006" alt="Session 10: Page 13: Emergency Flare Gun Handoff" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Bridge: The Storm Gathers</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                The evacuation deadline passes at 05:00 AM. Three hours of thick, static-filled tension build until the morning alarms sound and the massive sector barriers drop...
+            </p>
+        </div>
+
+        <!-- Page 14: 08:00 AM Barrier Drop & Static Storm Breach -->
+        <section class="panel-section p-0 m-0" data-title="Page 14: 08:00 AM Barrier Drop & Static Storm Breach" data-transcript="*GM Narration: 08:00 AM. Sirens blare. Bruised-violet static arcs crack down from colossal iron Walker-Core legs as sector suppression barriers shatter. Squad 907 pushes their raft 100 yards out into open basin water.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 14: 08:00 AM Barrier Drop & Static Storm Breach" data-transcript="*GM Narration: 08:00 AM. Sirens blare. Bruised-violet static arcs crack down from colossal iron Walker-Core legs as sector suppression barriers shatter. Squad 907 pushes their raft 100 yards out into open basin water.*">
+                <img src="images/vumbua/s10_page14.jpg?v=1785600006" alt="Session 10: Page 14: 08:00 AM Barrier Drop & Static Storm Breach" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 15: Dagger Sharks Attack -->
+        <section class="panel-section p-0 m-0" data-title="Page 15: Dagger Sharks Attack" data-transcript="*Long chitinous fins slice through the foam—a pod of 12-foot bioluminescent, armored Dagger Sharks with glowing violet lateral stripes.*\n\n**Iggy (PC):** *(panicking)* *&quot;Dagger sharks! They track living energy signatures! They took my friends in the lower trenches! We have to get off the water NOW!&quot;*\n\n**Ignatious (PC):** *&quot;I'm lighting the sulfur crystal! Get the balloon up!&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 15: Dagger Sharks Attack" data-transcript="*Long chitinous fins slice through the foam—a pod of 12-foot bioluminescent, armored Dagger Sharks with glowing violet lateral stripes.*\n\n**Iggy (PC):** *(panicking)* *&quot;Dagger sharks! They track living energy signatures! They took my friends in the lower trenches! We have to get off the water NOW!&quot;*\n\n**Ignatious (PC):** *&quot;I'm lighting the sulfur crystal! Get the balloon up!&quot;*">
+                <img src="images/vumbua/s10_page15.jpg?v=1785600006" alt="Session 10: Page 15: Dagger Sharks Attack" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 16: Armored Dagger Shark Bite & Lift-Off -->
+        <section class="panel-section p-0 m-0" data-title="Page 16: Armored Dagger Shark Bite & Lift-Off" data-transcript="*Natty uses Sparking Engines to ignite the burner. As flames erupt, a 12-foot Dagger Shark leaps out of the foam, biting Natty's shoulder armor for 8 physical damage. Natty burns an armor slot to hold the burner steady.*\n\n**Aggie (PC):** *(using Wild Touch)* *&quot;Hold the fire steady, Natty! I've got you!&quot;*\n\n*Aggie supercharges the flame. The camouflage balloon swells, lifting the Canopy Raft 15 feet into the air just as Dagger Sharks snap empty jaws below.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 16: Armored Dagger Shark Bite & Lift-Off" data-transcript="*Natty uses Sparking Engines to ignite the burner. As flames erupt, a 12-foot Dagger Shark leaps out of the foam, biting Natty's shoulder armor for 8 physical damage. Natty burns an armor slot to hold the burner steady.*\n\n**Aggie (PC):** *(using Wild Touch)* *&quot;Hold the fire steady, Natty! I've got you!&quot;*\n\n*Aggie supercharges the flame. The camouflage balloon swells, lifting the Canopy Raft 15 feet into the air just as Dagger Sharks snap empty jaws below.*">
+                <img src="images/vumbua/s10_page16.jpg?v=1785600006" alt="Session 10: Page 16: Armored Dagger Shark Bite & Lift-Off" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Transition Bridge Card -->
+        <div class="narrative-card space-y-1 border-l-4 border-l-amber-500 shadow-xl">
+            <h3 class="text-amber-400 font-bold text-sm">Bridge: Up into the Thermals</h3>
+            <p class="text-slate-300 text-xs leading-relaxed italic">
+                Superheated sulfur steam lifts the balloon-raft high above the reach of the aquatic predators, letting them float on warm drafts toward the elevated branches...
+            </p>
+        </div>
+
+        <!-- Page 17: Flying the Raft & Slingshot Banter -->
+        <section class="panel-section p-0 m-0" data-title="Page 17: Flying the Raft & Slingshot Banter" data-transcript="*The Canopy Raft hovers 30 feet above the basin, drifting toward the Sector 3 petrified forest canopy.*\n\n**Iggy (PC):** *&quot;Distraction tactic! They're still tracking our bio-resonance! Aggie, Brit—fire the seed pods toward the forest bank!&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 17: Flying the Raft & Slingshot Banter" data-transcript="*The Canopy Raft hovers 30 feet above the basin, drifting toward the Sector 3 petrified forest canopy.*\n\n**Iggy (PC):** *&quot;Distraction tactic! They're still tracking our bio-resonance! Aggie, Brit—fire the seed pods toward the forest bank!&quot;*">
+                <img src="images/vumbua/s10_page17.jpg?v=1785600006" alt="Session 10: Page 17: Flying the Raft & Slingshot Banter" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 18: Slingshot Decoy Launch -->
+        <section class="panel-section p-0 m-0" data-title="Page 18: Slingshot Decoy Launch" data-transcript="*Aggie and Britt load seed pods wrapped in glowing bioluminescent moss into the coolant-hose slingshots, launching them 100 yards onto shoreline mudflats (THWWACK-SNAP! / SPLAAASH!). The kinetic impact and bioluminescent glow lure the entire Dagger Shark pod away from the vessel.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 18: Slingshot Decoy Launch" data-transcript="*Aggie and Britt load seed pods wrapped in glowing bioluminescent moss into the coolant-hose slingshots, launching them 100 yards onto shoreline mudflats (THWWACK-SNAP! / SPLAAASH!). The kinetic impact and bioluminescent glow lure the entire Dagger Shark pod away from the vessel.*">
+                <img src="images/vumbua/s10_page18.jpg?v=1785600006" alt="Session 10: Page 18: Slingshot Decoy Launch" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 19: High Canopy Anchoring -->
+        <section class="panel-section p-0 m-0" data-title="Page 19: High Canopy Anchoring" data-transcript="**Loami (PC):** *&quot;Grappling hook deployed! Tie us off to the high canopy branch!&quot;*\n\n*Loami launches a rusted grappling hook around an 80-foot petrified canopy bough. Squad 907 secures the heavy steel cables, anchoring their camouflaged balloon-raft safely inside the elevated tree foliage—hidden, elevated, and safe from the storm below.*">
+            <div class="comic-panel p-0 m-0" data-title="Page 19: High Canopy Anchoring" data-transcript="**Loami (PC):** *&quot;Grappling hook deployed! Tie us off to the high canopy branch!&quot;*\n\n*Loami launches a rusted grappling hook around an 80-foot petrified canopy bough. Squad 907 secures the heavy steel cables, anchoring their camouflaged balloon-raft safely inside the elevated tree foliage—hidden, elevated, and safe from the storm below.*">
+                <img src="images/vumbua/s10_page19.jpg?v=1785600006" alt="Session 10: Page 19: High Canopy Anchoring" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+        <!-- Page 20: Ready for the Bonus Round -->
+        <section class="panel-section p-0 m-0" data-title="Page 20: Ready for the Bonus Round" data-transcript="*Squad 907 sits gathered around the sulfur burner inside the elevated canopy tree fort raft, ready for the morning's challenge.*\n\n**Natty (PC):** *&quot;Bonus round time!&quot;*">
+            <div class="comic-panel p-0 m-0" data-title="Page 20: Ready for the Bonus Round" data-transcript="*Squad 907 sits gathered around the sulfur burner inside the elevated canopy tree fort raft, ready for the morning's challenge.*\n\n**Natty (PC):** *&quot;Bonus round time!&quot;*">
+                <img src="images/vumbua/s10_page20.jpg?v=1785600006" alt="Session 10: Page 20: Ready for the Bonus Round" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950">
+        <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
+    </footer>
+
+    <script src="image-feedback.js?v=1785600006"></script>
+    <script>
+        // Progress bar scroll handler
+        window.addEventListener('scroll', () => {
+            const total = document.documentElement.scrollHeight - window.innerHeight;
+            const current = window.scrollY;
+            const pct = Math.round((current / total) * 100) || 0;
+            document.getElementById('scroll-percentage').textContent = pct + '%';
+            document.getElementById('scroll-progress-bar').style.width = pct + '%';
+        });
+
+        // Hide overlay on load
+        window.addEventListener('load', () => {
+            const l = document.getElementById('globalLoadingOverlayChapter');
+            if(l) l.style.opacity = '0', setTimeout(() => l.style.display = 'none', 300);
+        });
+    </script>
+</body>
+</html>
