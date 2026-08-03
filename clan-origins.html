@@ -1,1687 +1,572 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vumbua Academy — The Clans: Origin (Pre-Release Review)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-dark: #09090b;
-      --panel-bg: rgba(20, 20, 25, 0.6);
-      --border-color: rgba(255, 255, 255, 0.08);
-      --text-main: #f4f4f5;
-      --text-muted: #a1a1aa;
-      --accent-teal: #06b6d4;
-      --accent-orange: #f97316;
-      --accent-violet: #8b5cf6;
-      --glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      --font-body: 'Outfit', sans-serif;
-      --font-display: 'Space Grotesk', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: var(--font-body);
-      min-height: 100vh;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: -10%;
-      left: -10%;
-      width: 40%;
-      height: 50%;
-      background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -10%;
-      right: -10%;
-      width: 50%;
-      height: 60%;
-      background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(9, 9, 11, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .logo-glow {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: var(--accent-teal);
-      box-shadow: 0 0 10px var(--accent-teal);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.5; }
-    }
-
-    h1 {
-      font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      background: linear-gradient(to right, var(--text-main), var(--text-muted));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .badge {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(6, 182, 212, 0.2));
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--accent-orange);
-      letter-spacing: 0.05em;
-    }
-
-    .view-controls {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-family: var(--font-body);
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--text-muted);
-    }
-
-    .btn.active {
-      background: var(--accent-teal);
-      color: #000;
-      border-color: var(--accent-teal);
-      font-weight: 600;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 1;
-      max-width: 1600px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 1.5rem;
-    }
-
-    .story-slide {
-      display: none;
-      width: 100%;
-      animation: fadeIn 0.4s ease forwards;
-    }
-
-    .story-slide.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .slide-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 2rem;
-      min-height: 80vh;
-    }
-
-    @media (max-width: 1024px) {
-      .slide-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .image-viewer-pane {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      justify-content: flex-start;
-      align-items: center;
-    }
-
-    .comic-image-container {
-      position: relative;
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-      background: #000;
-      box-shadow: var(--glass-glow);
-      cursor: zoom-in;
-      transition: transform 0.2s ease;
-    }
-
-    .comic-image-container:hover {
-      transform: scale(1.005);
-    }
-
-    .comic-page-img {
-      width: 100%;
-      height: auto;
-      display: block;
-      object-fit: contain;
-    }
-
-    .zoom-hint {
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(4px);
-      padding: 0.35rem 0.75rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      pointer-events: none;
-      letter-spacing: 0.05em;
-    }
-
-    .scene-metadata-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      width: 100%;
-      justify-content: flex-start;
-    }
-
-    .meta-tag {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-color);
-      padding: 0.35rem 0.75rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .info-pane {
-      background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      height: 80vh;
-      overflow-y: auto;
-      box-shadow: var(--glass-glow);
-    }
-
-    .page-title-row {
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 1rem;
-    }
-
-    .page-badge {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent-teal);
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-      display: block;
-    }
-
-    .info-pane h2 {
-      font-family: var(--font-display);
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .panels-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .panel-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 8px;
-      padding: 1.25rem;
-      transition: border-color 0.2s ease;
-    }
-
-    .panel-card:hover {
-      border-color: rgba(6, 182, 212, 0.3);
-    }
-
-    .panel-header {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--accent-teal);
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.02em;
-    }
-
-    .panel-fallback {
-      margin-bottom: 0.75rem;
-    }
-
-    .panel-fallback strong {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--accent-orange);
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    .panel-fallback p {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: var(--text-main);
-    }
-
-    .panel-script-lines {
-      margin-top: 0.75rem;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 0.75rem;
-      border-radius: 6px;
-      border-left: 2px solid var(--accent-violet);
-    }
-
-    .panel-script-lines strong {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      color: var(--accent-violet);
-      display: block;
-      margin-bottom: 0.35rem;
-    }
-
-    .panel-script-lines ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-
-    .panel-script-lines li {
-      font-size: 0.9rem;
-      line-height: 1.4;
-      color: #e4e4e7;
-      margin-bottom: 0.4rem;
-    }
-
-    .panel-script-lines li:last-child {
-      margin-bottom: 0;
-    }
-
-    .panel-prompt-collapsible {
-      margin-top: 0.75rem;
-    }
-
-    .panel-prompt-collapsible details {
-      width: 100%;
-    }
-
-    .panel-prompt-collapsible summary {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      outline: none;
-      user-select: none;
-      transition: color 0.2s ease;
-    }
-
-    .panel-prompt-collapsible summary:hover {
-      color: var(--text-main);
-    }
-
-    .prompt-text {
-      display: block;
-      margin-top: 0.5rem;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 0.75rem;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.8rem;
-      line-height: 1.4;
-      color: #38bdf8;
-      word-break: break-word;
-    }
-
-    .carousel-nav-bar {
-      position: sticky;
-      bottom: 0;
-      z-index: 100;
-      background: rgba(9, 9, 11, 0.95);
-      border-top: 1px solid var(--border-color);
-      padding: 1.25rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      backdrop-filter: blur(12px);
-    }
-
-    .nav-arrow {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      font-size: 1.25rem;
-    }
-
-    .nav-arrow:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: var(--text-muted);
-    }
-
-    .dots-container {
-      display: flex;
-      gap: 0.4rem;
-      align-items: center;
-    }
-
-    .nav-dot {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      font-family: var(--font-body);
-    }
-
-    .nav-dot:hover {
-      background: rgba(255, 255, 255, 0.2);
-      color: var(--text-main);
-    }
-
-    .nav-dot.active {
-      background: var(--accent-teal);
-      color: #000;
-      box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
-      transform: scale(1.1);
-    }
-
-    .fullscreen-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      cursor: zoom-out;
-    }
-
-    .fullscreen-modal img {
-      max-width: 95%;
-      max-height: 95%;
-      object-fit: contain;
-      box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    }
-
-    .close-modal-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid var(--border-color);
-      color: #fff;
-      font-size: 1.5rem;
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .close-modal-btn:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <div class="brand">
-      <div class="logo-glow"></div>
-      <h1>The Clans: Origin</h1>
-      <span class="badge">Pre-Release Draft</span>
-    </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Vumbua Academy — The Clans: Origin (Pre-Release Review)</title>
+    <meta name="description" content="Pre-release graphic novel review for The Clans: Origin.">
     
-    <div class="view-controls">
-      <button class="btn active" id="btn-split">Split View</button>
-      <button class="btn" id="btn-comic">Comic Only</button>
-    </div>
-  </header>
-
-  <main>
-    
-      <!-- Slide 1 -->
-      <div class="story-slide active" id="slide-1">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page01.png" alt="Page 1" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Center Grove at dusk before the ancient petrified oak.</div>
-              <div class="meta-tag">🎨 Deep turquoise dusk, dark moss greens, vivid glowing violet lichen.</div>
-              <div class="meta-tag">💡 Twilight ambient forest shade with brilliant point-source violet and teal glow from wood.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 1 of 13</span>
-              <h2>The Forbidden Taboo Mark (Present Day Frame)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Wide Shot)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Shows the quiet dusk forest where Squad 907 stands before an ancient petrified oak tree carrying a worn, taboo five-pointed mandala mark carved into its trunk.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li>Narration Box (Top Left):** `"Before you stands the oldest petrified tree in the forest. High on its trunk is a worn, taboo carving—a forbidden mark that ancient records warn to avoid."`</li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide shot of dark twilight forest clearing in Center Grove. Colossal petrified oak tree with dark-grey bark. On trunk is a worn carving of a broken five-pointed mandala mark, illuminated by glowing violet lichen. Five travelers stand in clearing looking up at tree in caution. Deep turquoise dusk shadows, soft mist. Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Medium Close-Up)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Two turtle-mushroom hybrid cousins, Britt and Aggie, step forward together and cautiously touch their bare palms to the forbidden mark on the trunk, triggering a sudden flare of teal light.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li>Narration Box (Top Left):** `"Britt and Aggie step forward together, pressing their bare palms against the taboo mark."`</li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium close-up shot. [turtle-mushroom hybrid female of Mizizi clan, olivaceous green turtle skin, long root dreadlocks, dark grey tunic, lumpy turtle shell] and [turtle-mushroom hybrid female of Mizizi clan, light grey turtle skin, white hair with leaf crown, white linen dress, red-and-white spotted mushroom shell] step forward together, pressing bare palms against carved five-pointed mandala mark on rough oak bark. Glowing violet lichen erupts into bright teal light around their hands. Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Dynamic Splash Background with Inset Panel)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>The tree unleashes a blinding vortex of teal portal energy. In an inset panel, Iggy, Ignatious, and Loami freeze in shock as Loami warns that the mark is forbidden.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Dynamic splash background showing blinding vortex of teal energy engulfing forest. Inset rectangular panel showing [small clay-and-soil-kin, packed dirt brown skin, moss sprouts, copper goggles, trench coat, NO SHELL], [young male, dark brown skin, literal burning orange flame crown hair, glowing orange eyes], and [rugged male, brown flat cap with Italian ribbon, grease smudges] standing frozen in awe. Speech bubble from small clay creature: "'S glowing!" Speech bubble from flaming-hair male: "Look at the lichen... it's pulsating with Aether!" Speech bubble from flat-cap male: "Hold on—that's the broken taboo mark from the forbidden records! Don't touch it!" Sound effect in bold teal lightning font across panel border: "⚡ PORTAL SNAP!" Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 2 -->
-      <div class="story-slide " id="slide-2">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page02.png" alt="Page 2" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Jet-black volcanic sand shoreline under tropical mist.</div>
-              <div class="meta-tag">🎨 Jet black sand, volcanic orange lava vents, turquoise ocean water.</div>
-              <div class="meta-tag">💡 Harsh orange magma glow contrasting with damp turquoise tropical daylight.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 2 of 13</span>
-              <h2>The Shoreline of Fire & Root (Act I — The First Union)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Wide Panoramic Splash)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>A split view of a black volcanic beach: cold forest dwellers huddling in damp wooden huts on the left, and smoldering warriors huddled around lava vents on the right.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li>Narration Box (Top Left):** `"Three hundred years ago. Two primitive peoples lived in isolation: cold forest dwellers without fire, and smoldering warriors without homes."`</li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide panoramic splash panel of jet-black volcanic sand beach. On left, damp rainforest with barefoot primitive people shivering in cold dark wooden huts. On right, volcanic magma crags with warriors huddling around roaring lava vents. Turquoise ocean waves crashing in middle. Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Medium Shot)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Mwangi, leader of the forest dwellers, meets Brakkan, leader of the volcanic warriors, on the neutral black sand beach.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li>Narration Box (Top Left):** `"Before the volcanic tide, two leaders meet in silence."`</li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot on black volcanic sand shore. On left stands [tall regal male, dark clay-brown skin, draped in living green moss robes, holding petrified ironbark staff, calm brown eyes]. On right kneels [athletic warrior male, dark brown skin, beaten bronze scale armor, hair crowning with natural orange flames, smoldering ember eyes]. They face each other across wet black sand. Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Close-Up Ground Shot)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Hands carve the first two strokes of the Master Glyph into the wet black sand—a volcanic glass fire arc intersected by an ironbark root line.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Close-up ground shot of wet jet-black volcanic sand. A glowing fragment of volcanic glass held by a bronze-gloved hand draws a curved fire arc in the sand. A petrified ironbark staff held by dark clay-brown hand strikes straight through the arc, carving a root-line. Narration box top center: "A Connection was born." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 3 -->
-      <div class="story-slide " id="slide-3">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page03.png" alt="Page 3" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Forest clearing and volcanic forge; ancient heated wooden home.</div>
-              <div class="meta-tag">🎨 Warm mahogany, glowing thermal amber, soft firelit shadows.</div>
-              <div class="meta-tag">💡 Intimate, cozy warm amber light from a thermal bronze core-fire lamp.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 3 of 13</span>
-              <h2>The Cultural Spark (Act I — Fire & Tree Carvings)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Split Vertical Panel)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Shows the Mizizi carving the Root line into an oak threshold in the forest, while the Ash-Blood sear the Fire arc into a volcanic magma wall.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Split vertical panel. Left half: [tall regal male, dark clay-brown skin, moss robes] carving a straight root mark into an oak door mantle in damp forest. Right half: [athletic warrior male, dark brown skin, flaming orange hair crown] searing a glowing orange fire arc into a molten magma wall. Speech bubble left: "The tree remembers the fire!" Speech bubble right: "The fire remembers the tree!" Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Wide Construction Montage)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Mizizi wood-weavers and Ash-Blood smiths work side-by-side fitting thermal bronze pipes into ironbark timber frames, carving the combined 2-stroke mark above the main doorway.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide construction montage panel. Mizizi craftsmen [tall figures, dark clay-brown skin, moss trim] and Ash-Blood smiths [athletic figures, dark brown skin, bronze scale armor, ember eyes] work side-by-side, fitting glowing thermal bronze pipes into polished ironbark timber frames. Above main wooden door arch, the two-stroke mark (Root line cutting Fire arc) is deeply chiseled into wooden mantle. Narration box top left: "Connecting two peoples unleashes an explosion of creation. Mizizi woodcraft and Ash-Blood thermal heat combine, forging the world's first comfortable, heated home." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Medium Interior Shot)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Inside a cozy heated timber room, a core-fire lamp projects shadow puppets of trees and flames onto the wooden wall while families laugh together.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot inside warm wooden room built of dark polished ironbark logs. Warm amber light from a core-fire lamp casts detailed shadow-puppets across wooden wall—carved bark cutouts depicting trees and jumping flames. Clan families watch happily. Narration box bottom right: "On wooden walls, the world's first shadow puppets come alive—families laughing in the initial joy of mutual discovery." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 4 -->
-      <div class="story-slide " id="slide-4">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page04.png" alt="Page 4" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Dark ocean surface cavern with crashing waves.</div>
-              <div class="meta-tag">🎨 Deep ocean navy blue, slate grey basalt stone, thermal bronze orange accents.</div>
-              <div class="meta-tag">💡 Cold ambient cave shadows broken by glowing bronze lanterns.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 4 of 13</span>
-              <h2>Binding of the Deep (Act II — Trench-Kin Cavern)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Wide Shot)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Trench-Kin clay-and-stone humanoids in seaweed togas huddle shivering on basalt cave ledges above crashing waves.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide shot of dark ocean surface cavern. Crashing blue ocean waves against giant basalt stone ledges. Subterranean Trench-Kin [stocky heavy-set clay-and-stone-kin humanoids, packed dirt brown skin, smooth grey basalt stone shoulder accents, wearing close-fitting dark green seaweed togas fastened with copper brooches] huddle shivering on wet rocks. Narration box top left: "In dark ocean caves, the Trench-Kin huddle on cold basalt ledges, wishing to build in the deep but lacking warmth and structural strength." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Medium Shot)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Mwangi brings a glowing thermal lantern to Barnaby, offering woodcraft flexibility for stone strength.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot on wet stone ledge inside ocean cave. [tall male, dark clay-brown skin, green moss robes, holding ironbark staff] sets down a glowing thermal timber lamp next to [stocky clay-and-stone-kin leader, packed dirt brown skin, smooth grey basalt shoulder accents, close-fitting seaweed toga]. Warm amber lantern light reflects off wet basalt walls. Speech bubble from moss leader: "You freeze on these rocks because you fight the sea alone. We built warmth in the trees; we can build strength in your stone." Speech bubble from Trench leader: "Our walls crack in the tide. If your wood flexes without breaking, we open the ocean gates." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Dynamic Action Splash Panel)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Barnaby strikes the third stroke—an ocean wave curve—into the basalt arch keystone alongside Root and Fire marks.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Dynamic action splash panel at submerged basalt archway. Glowing root-resin and molten bronze pour into lead pressure seal. [stocky clay-and-stone-kin leader, packed dirt brown skin, seaweed toga] swings heavy iron mallet, striking the 3rd stroke—an ocean wave curve—into the basalt keystone alongside existing Root and Fire marks. Water spray flying. Speech bubble from Trench leader: "We give you the depth of the ocean floor! I am Barnaby, Lord of the Trench!" Sound effect across panel border: "CLANG!" Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 5 -->
-      <div class="story-slide " id="slide-5">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page05.png" alt="Page 5" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Cavern ocean city built inside basalt sea walls.</div>
-              <div class="meta-tag">🎨 Bioluminescent teal green, deep navy blue, warm thermal bronze.</div>
-              <div class="meta-tag">💡 Bioluminescent teal root-lamps casting soft reflections on flowing water.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 5 of 13</span>
-              <h2>Ocean Cavern City & The Abyssal Gaze (Act II — Deep City)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Panoramic Wide View)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>A subterranean ocean cave metropolis lit by teal root-lamps and thermal water channels.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Panoramic wide view inside giant ocean surface cavern. Warm thermal water channels flow past carved basalt colonnades. Bioluminescent teal root-lamps illuminate stone walkways filled with citizens trading thermal timber and ocean stone. Narration box top left: "Combining Trench-Kin masonry, Mizizi root-scaffolding, and Ash-Blood thermal bronze, they build their first city inside a colossal ocean cave." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Engineering Montage Panel)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Mizizi builders and Trench masons in seaweed togas fit flexible ironbark beams into a massive sea archway as waves crash below.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot inside ocean cavern. Mizizi craftsmen [tall figures, dark clay-brown skin, moss robes] and Trench-Kin masons [stocky clay-and-stone-kin humanoids, seaweed togas, basalt shoulder accents] fit flexible petrified ironbark beams into a massive basalt archway as waves crash below. Water spray glistening. Speech bubble from Mizizi builder: "Flex-bark bends with the tide where stone snaps!" Speech bubble from Trench mason: "Then the sea arch stands! The ocean gates belong to us both!" Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Medium Close-Up Profile)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Barnaby stands at a cave ledge, gazing down into the pitch-black ocean chasm below.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium close-up shot of [stocky clay-and-stone-kin leader, packed dirt brown skin, smooth grey basalt shoulder accents, close-fitting seaweed toga] standing at edge of basalt ledge. He gazes down into pitch-black oceanic abyssal chasm below. Water droplets glisten on his skin. Narration box bottom right: "Yet Barnaby gazes into the dark abyss below—knowing they cannot plunge into the ultra-deep until they master extreme pressure." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 6 -->
-      <div class="story-slide " id="slide-6">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page06.png" alt="Page 6" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 High mountain peaks above clouds; midnight campfire truce.</div>
-              <div class="meta-tag">🎨 Dark tempest grey, electric blue lightning, warm hearth fire orange.</div>
-              <div class="meta-tag">💡 Flickering orange campfire glow against cold electric blue storm flashes.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 6 of 13</span>
-              <h2>Storm War & The Campfire Truce (Act III — Mountain Peaks)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Wide Split Action Panel)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>High mountain peaks where the Storm War raged until the united clan shield-wall held the line.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide split action panel. High mountain basalt peaks above storm clouds. Lightning arcing across dark sky. Memory of wild tempest riders throwing electric bolts down on petrified forest while united clan shield-wall holds stone barricades. Narration box top left: "On high storm peaks lived the Fulgur-Born. The Storm War raged until United Clans stood side-by-side: heat melted lightning, roots anchored soil, stone held walls." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Campfire Negotiation)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Astra of the Fulgur pushes back at a midnight campfire, fiercely rejecting stone walls that trap the wind.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot around flickering basalt campfire hearth on stormy cliff ledge. [athletic warrior female, olivaceous green skin, electric blue scale armor, dark hair floating in static coils] stands before [stocky clay-and-stone-kin leader in seaweed toga] and [tall male, moss robes], gesturing fiercely toward tempest sky as static blue sparks arc from her hands. Speech bubble from Fulgur leader: "Your stone walls will suffocate our tempests! We ride the open sky—we will not be anchored to your ground!" Speech bubble from Trench leader: "A wall does not trap the wind, Astra—it stops the wind from tearing down the nursery." Speech bubble from Ash-Blood leader: "We do not seek to tame your storm. We seek to channel our collective strength." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Close-Up Resolution)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Mwangi presents a vine-wrapped copper spire, explaining that a lightning rod channels the storm to light the dark for everyone.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Close-up panel. [tall male, dark clay-brown skin, moss robes] holds out a polished copper spire wrapped in living green vine. [athletic warrior female, olivaceous green skin, dark hair floating in static coils] stares at spire as static around her hair calms into gentle hum. Speech bubble from Mizizi leader: "We do not cage your lightning. A lightning rod doesn't trap the storm... it channels it to light the dark for everyone." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 7 -->
-      <div class="story-slide " id="slide-7">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page07.png" alt="Page 7" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Basalt step-pyramid top and high mountain-fortress city.</div>
-              <div class="meta-tag">🎨 Deep stormy violet, electric teal lightning, warm copper metal.</div>
-              <div class="meta-tag">💡 Lightning harvested on copper capstone channels cool blue/violet light into cliffside buildings.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 7 of 13</span>
-              <h2>Step-Pyramid & Mountain Fortress (Act III — Lightning City)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Full Page Splash Panel)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Astra raises her arms as a massive lightning bolt strikes a 50-foot copper capstone atop a basalt step-pyramid, fusing the 4-stroke mark (Root, Fire, Wave, Lightning) into the plate.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Full page splash panel atop a colossal basalt step-pyramid. [athletic warrior female, olivaceous green skin, electric blue scale armor, dark hair floating in static coils] raises her arms into tempest sky. A massive violet lightning bolt strikes a 50-foot copper capstone, fusing four metal bars into the 4-stroke mark (Root, Fire, Wave, Lightning). Five elders touch glowing metal plate together. Speech bubble from Fulgur leader: "Five roots! Five fires! One grid! I am Astra of the Cloud Peak!" Sound effect in bold lightning font: "⚡ KRA-BOOM!" Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Wide Landscape View)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>A mountain-fortress city carved into cliff faces above storm clouds, lit by static-conduit streetlamps in cool blue and violet tones.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide landscape view of a colossal mountain-fortress city carved directly into jagged basalt cliff faces above storm clouds. High storm-copper lightning conductors glow with blue energy, illuminating cliffside stone homes and streetlamps in cool blue and violet light. Narration box top left: "The clans construct a mountain-fortress city—harvesting storm energy to light cliffside homes in cool, brilliant colors." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 8 -->
-      <div class="story-slide " id="slide-8">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page08.png" alt="Page 8" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Floating Renali cloud sanctuary and mountain pyramid platform.</div>
-              <div class="meta-tag">🎨 Ethereal pearl white, iridescent dragonfly purple, clear sky azure blue.</div>
-              <div class="meta-tag">💡 Radiant golden sunlight reflecting off clouds and crystal spires.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 8 of 13</span>
-              <h2>Renali Sky-Council & Arrival (Act IV — Renali Alliance)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Sky-Council Trade-Off Debate)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Renali elders debate atop floating crystal spires, weighing the loss of absolute freedom against being left behind as the empire thrives below.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot atop floating crystal spire platform above clouds. Renali elders [pale porcelain skin, silver-white hair, flowing purple gowns] inspect luxury goods brought up by traders—polished bronze lamps, glowing sea-silk, thermal timber. Speech bubble from Renali elder: "If we remain isolated in the mist, the world below will leave us behind..." Speech bubble from Seraphina: "We trade our total solitude for a place in the great mandala—and bring sky-craft to the deep!" Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Descent of Sky-Riders)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Renali riders descend aboard giant biological dragonflies to meet the four clan leaders on the mountain pyramid.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide shot above cloud line. A fleet of tall graceful Renali riders [pale porcelain skin, silver-white hair, flowing purple gowns, human body with NO wings on back] descends aboard colossal biological iridescent dragonfly mounts. Sky-rider leader dismounts before four clan elders on mountain pyramid landing pad. Narration box top left: "From high mist descend the Renali sky-riders, bringing the final piece to complete the mandala." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Mandala Altar Completion)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Seraphina places a crystal pressure-sphere into the mandala plate on the altar, completing the 5-piece Master Glyph in stone as golden light flares.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium close-up at central mandala altar. [graceful female, pale porcelain skin, silver-white hair, purple silk gown] places glowing crystal pressure-sphere into center of carved mandala plate, completing full five-piece Master Clan Glyph in stone as golden light flares. Five elders place hands upon altar together. Speech bubble from Seraphina: "I am Seraphina of the Renali, and the circle is complete!" Speech bubble from Elders: "One Mandala! One Empire!" Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 9 -->
-      <div class="story-slide " id="slide-9">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page09.png" alt="Page 9" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Floating sky-gardens and ultra-deep ocean floor city beneath pressure domes.</div>
-              <div class="meta-tag">🎨 Upper half: vibrant floral pinks, greens, golden sun. Lower half: bioluminescent ocean blue, teal dome glow.</div>
-              <div class="meta-tag">💡 Dual contrast—dazzling sky sunlight above, deep underwater bioluminescent glow below.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 9 of 13</span>
-              <h2>Dual Marvels — Sky Gardens & Deep Atlantis (Act IV — Peak Wonders)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Hanging Gardens in the Sky)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Terraced sanctuary gardens floating in the azure sky anchored by heavy copper cables, where dragonfly mounts dock at wooden piers.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide horizontal shot of Hanging Gardens in the Sky. Floating terraced sanctuary islands suspended in azure sky above clouds, anchored by heavy copper suspension cables, producing sweet fruits, glowing flowers, and crops. Dragonfly mounts dock at floating wooden piers. Narration box top left: "High above, they build Hanging Gardens in the Sky—floating terraced islands anchored by copper cables." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Ultra-Deep Atlantis Ocean City)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Deep ocean floor metropolis where citizens walk through basalt avenues beneath glowing copper and glass pressure-domes underwater.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide horizontal shot of Ultra-Deep Atlantis City on ocean floor. Citizens walk through dry basalt stone avenues beneath giant glowing copper and glass pressure-domes underwater. Bioluminescent teal sea creatures swim outside domes. Narration box top left: "As the Mandala Clans synergized even more, great marvels were unlocked—including Ultra-Deep Atlantis cities beneath copper pressure-domes." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 10 -->
-      <div class="story-slide " id="slide-10">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page10.png" alt="Page 10" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Grand Forum of Relina during the Golden Age Apex.</div>
-              <div class="meta-tag">🎨 Royal purple, rich gold, vibrant petrified oak green, crystal teal.</div>
-              <div class="meta-tag">💡 Glorious golden hour sunlight illuminating central forum and glowing Master Glyph spire.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 10 of 13</span>
-              <h2>Golden Apex Era (Act V — Relina Era)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Full Page Epic Splash with Inset Scenes)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Grand Forum of Relina with marble plaza, petrified oak towers, firefly-powered sky-sleds, and Empress Relina Vox addressing citizens from a balcony.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Full page epic splash panel of Grand Forum of Relina. Colossal marble plaza surrounded by living petrified oak towers, firefly-powered sky-sleds pulling light wooden transport cars, and underwater dome conduits. Central copper spire holds Master Clan Glyph glowing with bright unbroken teal light. Inset Panel A top right (Ash-Blood Domain): obsidian temples carved into volcanic slopes with thermal light rivers. Inset Panel B bottom left (Mizizi Domain): living oak canopy cities with glowing sap lamps. Inset Panel C bottom right (Forum Balcony): [stately royal woman, fair skin, silver braided hair, royal purple silk robes with gold mandala embroidery] addressing citizens from balcony. Speech bubble from Empress: "People of the Five Domains! As long as our connection endures, this golden age will never end!" Narration box top left: "For a time, there was prosperity." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 11 -->
-      <div class="story-slide " id="slide-11">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page11.png" alt="Page 11" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 High Observatory Spire overlooking floor mosaic map and grey fog.</div>
-              <div class="meta-tag">🎨 Faded purple, slate grey fog, pale muted brass, cold shadows.</div>
-              <div class="meta-tag">💡 Dim, grey overcast light filtering through dusty arched observatory windows.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 11 of 13</span>
-              <h2>Ease of Bliss & The Stagnation Meeting (Act VI — Stagnation)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Observatory Spire Floor Mosaic)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Inside an ornate observatory chamber with a colossal floor mosaic world map, the aging Empress looks out arched glass windows at a wall of thick grey mist.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Wide high shot inside ornate observatory chamber. Floor is inlaid with a colossal copper-and-stone floor mosaic world map. [stately aging woman, silver hair, faded purple robes] stands quietly staring out floor-to-ceiling arched glass windows at endless wall of thick grey mist outside. Narration box top left: "Before the aging Empress lies a world map fully claimed—every spring tapped, every chasm bridged." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Citizens Meeting of Stagnation)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>A council meeting of generalized citizens—where clan boundaries have blurred—deciding that no further growth or exploration is needed.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot around ornate marble table. Homogenized citizens of indistinct clan attire recline lazily on cushioned benches, gesturing indifferently toward map scrolls. Speech bubble from citizen: "Why push into the dark or challenge ourselves for more... when we have all we need right here?" Speech bubble from second citizen: "The world is complete. Growth is finished." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (The Wall of Fear)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Citizens look fearfully at the thick grey Mist on a balcony—a barrier born not of physical walls, but of fear, lies, and lack of desire to push into the dark.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot on cliff balcony. Citizens stand looking fearfully at thick grey Mist. Mist is a barrier born of fear, lies, and lack of desire to push into the dark. Narration box bottom right: "Lies spread that the Mist was the physical end of the world—when in truth, the Mist was a wall built of fear, lies, and refusal to push into the dark." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 12 -->
-      <div class="story-slide " id="slide-12">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page12.png" alt="Page 12" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Habitat ruins, failing transport lines, and exploding mountain ziggurats.</div>
-              <div class="meta-tag">🎨 Harsh forge red, dying grey fog, cold ash grey.</div>
-              <div class="meta-tag">💡 Dimming Aetheric pressure lamps flickering out.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 12 of 13</span>
-              <h2>Breakdown Timeline & The Fall (Act VI — Collapse)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Deep Pressure-Dome Breakdown)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>A Trench-Kin deep sea pressure-dome habitat cracks under pressure override as sea water bursts through stone joints.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium wide shot inside underwater stone habitat. Massive stress cracks fracture glass and copper pressure dome; high-pressure sea water sprays violently through broken basalt arch joints. Citizens panic. Narration box top left: "As time went on the paradise was taken for granted. No growth. No new connections, and before the clans knew it, things started breaking." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Overloaded Dragonfly Mount Collapse)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>A Renali dragonfly mount struggles in mid-air and falls under the excessive weight of luxury cargo and passengers.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot in sky above clouds. A giant biological dragonfly mount buckles in mid-air, translucent wings straining and tearing under heavy over-stacked luxury cargo chests and multiple passengers, plunging toward cloud layer below. Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Ziggurat Lightning Explosion)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>A high mountain ziggurat conductor explodes in sparks during a storm instead of redirecting lightning safely into light.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Dynamic wide action shot of mountain basalt step-pyramid. A massive lightning bolt strikes unmaintained copper conductor, violently exploding top stone ziggurat in a blast of fiery sparks and flying masonry instead of redirecting power safely. Narration box bottom right: "Theories were abundant, but one thing was clear: the time of abundance was over—and to survive, change was needed." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 4 &mdash; (Final Portal Snap Explosive Exit)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>The grey fog observatory shatters like glass into a high-energy teal portal energy vortex.</p>
-          </div>
-          <div class="panel-script-lines">
-            <strong>Script:</strong>
-            <ul>
-              <li></li>
-            </ul>
-           </div>
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. High-energy explosion panel. The grey fog observatory shatters like glass into swirling high-frequency acoustic teal portal energy vortex. Sound effect across panel border: "⚡ DEAFENING PORTAL SNAP!" Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <!-- Slide 13 -->
-      <div class="story-slide " id="slide-13">
-        <div class="slide-grid">
-          <!-- Left side: Comic Image -->
-          <div class="image-viewer-pane">
-            <div class="comic-image-container">
-              <img src="storyboards/assets/clans_origin_page13.png" alt="Page 13" class="comic-page-img" />
-              <div class="zoom-hint">Click image to inspect full screen</div>
-            </div>
-            
-            <div class="scene-metadata-row">
-              <div class="meta-tag">📍 Center Grove at dusk before petrified oak tree.</div>
-              <div class="meta-tag">🎨 Twilight turquoise dusk, soft forest moss green, glowing golden-teal mental map lines in air.</div>
-              <div class="meta-tag">💡 Dusk ambient forest light with ethereal mental map overlay floating in air.</div>
-            </div>
-          </div>
-
-          <!-- Right side: Script & BTS Descriptions -->
-          <div class="info-pane">
-            <div class="page-title-row">
-              <span class="page-badge">Page 13 of 13</span>
-              <h2>Present Return & Tortoise Shell Map (Epilogue)</h2>
-            </div>
-            
-            <div class="panels-container">
-              
-        <div class="panel-card">
-          <div class="panel-header">Panel 1 &mdash; (Snap Back to Reality)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Britt and Aggie gasp back into their bodies, lying on the forest ground in Center Grove as the ancient lichen on the oak tree fades to stone.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot in Center Grove dusk. [turtle-mushroom hybrid female of Mizizi clan, olivaceous green turtle skin, long root dreadlocks, dark grey tunic, lumpy turtle shell] and [turtle-mushroom hybrid female of Mizizi clan, light grey turtle skin, white hair with leaf crown, white linen dress, red-and-white spotted mushroom shell] lie on damp forest floor, gasping back into their bodies as glowing violet lichen on petrified oak fades back to quiet stone. Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 2 &mdash; (Ancient Glowing Tortoise)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>Sitting on the ground between Britt and Aggie is a colossal ancient tortoise with glowing golden-teal eyes, while Iggy, Ignatious, and Loami watch in awe.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Medium shot on forest ground. Sitting between Britt and Aggie is a colossal ancient tortoise with glowing golden-teal eyes. Standing behind them, [small clay-and-soil-kin, moss head sprouts, copper goggles, trench coat, NO SHELL], [young male, dark brown skin, flaming orange hair crown], and [rugged male, brown flat cap with Italian ribbon] watch frozen in awe. Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-        <div class="panel-card">
-          <div class="panel-header">Panel 3 &mdash; (Tortoise Shell Map Splash)</div>
-          <div class="panel-fallback">
-            <strong>Behind the Scenes:</strong>
-            <p>A full page splash showing a close-up of the ancient tortoise's back shell—depicting an ethereal glowing map of an unknown fantasy land with several distinct pinpricks of light across its shell segments.</p>
-          </div>
-          
-          <div class="panel-prompt-collapsible">
-            <details>
-              <summary>Show Art Generation Prompt</summary>
-              <code class="prompt-text">`Detailed 2D graphic novel style, clean expressive manga-style linework, crisp black ink outlines, cel-shaded color flats, cinematic volumetric lighting. Full page close-up splash of ancient tortoise shell. Shell segments display an ethereal glowing golden-teal map of an unknown fantasy wilderness (Vumbua realm, NOT Earth) with several distinct pinpricks of light scattered across landmasses. Narration box bottom center: "Squad 907 holds the map, the words of the ancestral rites, and the mandate to begin the active, ongoing work of growth." Black gutters.`</code>
-            </details>
-          </div>
-        </div>
-      
-            </div>
-          </div>
-        </div>
-      </div>
-    
-  </main>
-
-  <footer class="carousel-nav-bar">
-    <button class="nav-arrow" id="nav-prev" aria-label="Previous Page">&larr;</button>
-    
-    <div class="dots-container">
-      <button class="nav-dot active" data-slide="1" title="Page 1: The Forbidden Taboo Mark (Present Day Frame)">1</button><button class="nav-dot " data-slide="2" title="Page 2: The Shoreline of Fire & Root (Act I — The First Union)">2</button><button class="nav-dot " data-slide="3" title="Page 3: The Cultural Spark (Act I — Fire & Tree Carvings)">3</button><button class="nav-dot " data-slide="4" title="Page 4: Binding of the Deep (Act II — Trench-Kin Cavern)">4</button><button class="nav-dot " data-slide="5" title="Page 5: Ocean Cavern City & The Abyssal Gaze (Act II — Deep City)">5</button><button class="nav-dot " data-slide="6" title="Page 6: Storm War & The Campfire Truce (Act III — Mountain Peaks)">6</button><button class="nav-dot " data-slide="7" title="Page 7: Step-Pyramid & Mountain Fortress (Act III — Lightning City)">7</button><button class="nav-dot " data-slide="8" title="Page 8: Renali Sky-Council & Arrival (Act IV — Renali Alliance)">8</button><button class="nav-dot " data-slide="9" title="Page 9: Dual Marvels — Sky Gardens & Deep Atlantis (Act IV — Peak Wonders)">9</button><button class="nav-dot " data-slide="10" title="Page 10: Golden Apex Era (Act V — Relina Era)">10</button><button class="nav-dot " data-slide="11" title="Page 11: Ease of Bliss & The Stagnation Meeting (Act VI — Stagnation)">11</button><button class="nav-dot " data-slide="12" title="Page 12: Breakdown Timeline & The Fall (Act VI — Collapse)">12</button><button class="nav-dot " data-slide="13" title="Page 13: Present Return & Tortoise Shell Map (Epilogue)">13</button>
-    </div>
-    
-    <button class="nav-arrow" id="nav-next" aria-label="Next Page">&rarr;</button>
-  </footer>
-
-  <div class="fullscreen-modal" id="fs-modal">
-    <button class="close-modal-btn">&times;</button>
-    <img id="fs-img" src="" alt="Fullscreen view" />
-  </div>
-
-  <script>
-    let currentSlide = 1;
-    const totalSlides = 13;
-
-    const slides = document.querySelectorAll('.story-slide');
-    const dots = document.querySelectorAll('.nav-dot');
-    const prevBtn = document.getElementById('nav-prev');
-    const nextBtn = document.getElementById('nav-next');
-    
-    const btnSplit = document.getElementById('btn-split');
-    const btnComic = document.getElementById('btn-comic');
-
-    function showSlide(num) {
-      if (num < 1) num = 1;
-      if (num > totalSlides) num = totalSlides;
-      
-      currentSlide = num;
-
-      slides.forEach(s => s.classList.remove('active'));
-      dots.forEach(d => d.classList.remove('active'));
-
-      const activeSlide = document.getElementById('slide-' + num);
-      const activeDot = document.querySelector('.nav-dot[data-slide="' + num + '"]');
-      
-      if (activeSlide) activeSlide.classList.add('active');
-      if (activeDot) activeDot.classList.add('active');
-
-      const infoPane = activeSlide ? activeSlide.querySelector('.info-pane') : null;
-      if (infoPane) infoPane.scrollTop = 0;
-
-      history.replaceState(null, null, '#page-' + num);
-    }
-
-    prevBtn.addEventListener('click', () => {
-      if (currentSlide > 1) showSlide(currentSlide - 1);
-    });
-
-    nextBtn.addEventListener('click', () => {
-      if (currentSlide < totalSlides) showSlide(currentSlide + 1);
-    });
-
-    dots.forEach(dot => {
-      dot.addEventListener('click', (e) => {
-        const slideNum = parseInt(e.target.getAttribute('data-slide'), 10);
-        showSlide(slideNum);
-      });
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
-        if (currentSlide > 1) showSlide(currentSlide - 1);
-      } else if (e.key === 'ArrowRight') {
-        if (currentSlide < totalSlides) showSlide(currentSlide + 1);
-      }
-    });
-
-    btnSplit.addEventListener('click', () => {
-      btnSplit.classList.add('active');
-      btnComic.classList.remove('active');
-      document.querySelectorAll('.slide-grid').forEach(g => {
-        g.style.gridTemplateColumns = '';
-      });
-      document.querySelectorAll('.info-pane').forEach(ip => {
-        ip.style.display = 'flex';
-      });
-    });
-
-    btnComic.addEventListener('click', () => {
-      btnComic.classList.add('active');
-      btnSplit.classList.remove('active');
-      document.querySelectorAll('.slide-grid').forEach(g => {
-        g.style.gridTemplateColumns = '1fr';
-      });
-      document.querySelectorAll('.info-pane').forEach(ip => {
-        ip.style.display = 'none';
-      });
-    });
-
-    const fsModal = document.getElementById('fs-modal');
-    const fsImg = document.getElementById('fs-img');
-    const closeBtn = document.querySelector('.close-modal-btn');
-
-    document.querySelectorAll('.comic-image-container').forEach(container => {
-      container.addEventListener('click', (e) => {
-        const img = container.querySelector('.comic-page-img');
-        if (img) {
-          fsImg.src = img.src;
-          fsModal.style.display = 'flex';
-          document.body.style.overflow = 'hidden';
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#090d16' }
+                    }
+                }
+            }
         }
-      });
-    });
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #090d16; color: #f8fafc; margin: 0 !important; padding: 0 !important; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; }
+        
+        /* 0px SEAMLESS WEBTOON STRIP STYLING (COMPACT MAX-WIDTH 480px) */
+        main { padding: 0 !important; margin: 0 auto !important; width: 100%; max-width: 480px; }
+        section.panel-section { padding: 0 !important; margin: 0 !important; line-height: 0 !important; border: none !important; }
+        .comic-panel { margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; line-height: 0 !important; background: #000; }
+        .comic-panel img { cursor: pointer; transition: filter 0.2s ease; display: block !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; }
+        
+        .narrative-card { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); border: 1px solid rgba(51, 65, 85, 0.6); margin: 0 !important; padding: 0.75rem 1rem; }
+    </style>
+</head>
+<body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
 
-    function closeFS() {
-      fsModal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
+    <!-- Global Loading Overlay -->
+    <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
+        <div class="flex flex-col items-center gap-3">
+            <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs text-amber-500 tracking-widest uppercase">Loading Storybook...</span>
+        </div>
+    </div>
 
-    fsModal.addEventListener('click', closeFS);
-    closeBtn.addEventListener('click', closeFS);
+    <!-- Top Sticky Navigation -->
+    <nav id="top-nav" class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 py-3 relative flex items-center justify-between">
+            <a href="index.html" title="Go to Homepage" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+                <span class="hidden sm:inline font-semibold">Campaigns</span>
+            </a>
+            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-sky-400 truncate max-w-[60%] sm:max-w-none text-center">The Clans: Origin</h1>
+            <div class="flex items-center gap-2">
+                <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share this page" aria-label="Share this page" style="background: none; border: none; cursor: pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186l5.302-2.548a2.25 2.25 0 1 1 .74 1.49L7.95 11.07m0 1.86l5.302 2.548a2.25 2.25 0 1 1-.74 1.49l-5.302-2.548M13.5 5.25a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0zm0 13.5a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0z" />
+                    </svg>
+                </button>
+                <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
+            </div>
+        </div>
+        <div id="scroll-progress-bar" class="h-0.5 bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400 w-0"></div>
+    </nav>
 
-    const hash = window.location.hash;
-    const match = hash.match(/#page-(d+)/);
-    if (match) {
-      const pageNum = parseInt(match[1], 10);
-      if (pageNum >= 1 && pageNum <= totalSlides) {
-        showSlide(pageNum);
-      } else {
-        showSlide(1);
-      }
-    } else {
-      showSlide(1);
-    }
-  </script>
+    <!-- Main Container - Compact 480px Webtoon Scroll Strip -->
+    <main class="max-w-md mx-auto p-0 m-0">
+
+        <!-- Header Panel -->
+        <section class="text-center py-5 px-4 space-y-2 bg-slate-950 border-b border-slate-900">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400">THE CLANS: ORIGIN</h2>
+            <h3 class="text-slate-400 text-xs tracking-widest uppercase">Pre-Release Review Chapter</h3>
+            <p class="text-slate-400 max-w-md mx-auto text-xs leading-relaxed mt-1">
+                A historical look at the founding connections of Relina. Discover how the Mizizi, Ash-Blood, Trench-Kin, Fulgur, and Renali first united to forge their great wonders.
+            </p>
+            <div class="scroll-down-hint flex flex-col items-center pt-2 text-slate-500 text-xs gap-1">
+                <span>Click any panel to view "Behind the Scenes" descriptions & transcripts</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 animate-bounce mt-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+            </div>
+        </section>
+
+        
+        <!-- Page 1: The Forbidden Taboo Mark (Present Day Frame) -->
+        <section class="panel-section p-0 m-0" data-title="Page 1: The Forbidden Taboo Mark (Present Day Frame)" data-transcript="*Metadata - Location: Center Grove at dusk before the ancient petrified oak. | Palette: Deep turquoise dusk, dark moss greens, vivid glowing violet lichen. | Lighting: Twilight ambient forest shade with brilliant point-source violet and teal glow from wood.*
+
+**Panel 1 ((Wide Shot))**
+
+*Behind the Scenes (Story Action):* Shows the quiet dusk forest where Squad 907 stands before an ancient petrified oak tree carrying a worn, taboo five-pointed mandala mark carved into its trunk.
+
+**Top Left (Narration Box):** *`&quot;Before you stands the oldest petrified tree in the forest. High on its trunk is a worn, taboo carving—a forbidden mark that ancient records warn to avoid.&quot;`*
+
+**Panel 2 ((Medium Close-Up))**
+
+*Behind the Scenes (Story Action):* Two turtle-mushroom hybrid cousins, Britt and Aggie, step forward together and cautiously touch their bare palms to the forbidden mark on the trunk, triggering a sudden flare of teal light.
+
+**Top Left (Narration Box):** *`&quot;Britt and Aggie step forward together, pressing their bare palms against the taboo mark.&quot;`*
+
+**Panel 3 ((Dynamic Splash Background with Inset Panel))**
+
+*Behind the Scenes (Story Action):* The tree unleashes a blinding vortex of teal portal energy. In an inset panel, Iggy, Ignatious, and Loami freeze in shock as Loami warns that the mark is forbidden.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 1: The Forbidden Taboo Mark (Present Day Frame)" data-transcript="*Metadata - Location: Center Grove at dusk before the ancient petrified oak. | Palette: Deep turquoise dusk, dark moss greens, vivid glowing violet lichen. | Lighting: Twilight ambient forest shade with brilliant point-source violet and teal glow from wood.*
+
+**Panel 1 ((Wide Shot))**
+
+*Behind the Scenes (Story Action):* Shows the quiet dusk forest where Squad 907 stands before an ancient petrified oak tree carrying a worn, taboo five-pointed mandala mark carved into its trunk.
+
+**Top Left (Narration Box):** *`&quot;Before you stands the oldest petrified tree in the forest. High on its trunk is a worn, taboo carving—a forbidden mark that ancient records warn to avoid.&quot;`*
+
+**Panel 2 ((Medium Close-Up))**
+
+*Behind the Scenes (Story Action):* Two turtle-mushroom hybrid cousins, Britt and Aggie, step forward together and cautiously touch their bare palms to the forbidden mark on the trunk, triggering a sudden flare of teal light.
+
+**Top Left (Narration Box):** *`&quot;Britt and Aggie step forward together, pressing their bare palms against the taboo mark.&quot;`*
+
+**Panel 3 ((Dynamic Splash Background with Inset Panel))**
+
+*Behind the Scenes (Story Action):* The tree unleashes a blinding vortex of teal portal energy. In an inset panel, Iggy, Ignatious, and Loami freeze in shock as Loami warns that the mark is forbidden.
+
+">
+                <img src="storyboards/assets/clans_origin_page01.png?v=1785732222623" alt="Page 1: The Forbidden Taboo Mark (Present Day Frame)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 2: The Shoreline of Fire & Root (Act I — The First Union) -->
+        <section class="panel-section p-0 m-0" data-title="Page 2: The Shoreline of Fire &amp; Root (Act I — The First Union)" data-transcript="*Metadata - Location: Jet-black volcanic sand shoreline under tropical mist. | Palette: Jet black sand, volcanic orange lava vents, turquoise ocean water. | Lighting: Harsh orange magma glow contrasting with damp turquoise tropical daylight.*
+
+**Panel 1 ((Wide Panoramic Splash))**
+
+*Behind the Scenes (Story Action):* A split view of a black volcanic beach: cold forest dwellers huddling in damp wooden huts on the left, and smoldering warriors huddled around lava vents on the right.
+
+**Top Left (Narration Box):** *`&quot;Three hundred years ago. Two primitive peoples lived in isolation: cold forest dwellers without fire, and smoldering warriors without homes.&quot;`*
+
+**Panel 2 ((Medium Shot))**
+
+*Behind the Scenes (Story Action):* Mwangi, leader of the forest dwellers, meets Brakkan, leader of the volcanic warriors, on the neutral black sand beach.
+
+**Top Left (Narration Box):** *`&quot;Before the volcanic tide, two leaders meet in silence.&quot;`*
+
+**Panel 3 ((Close-Up Ground Shot))**
+
+*Behind the Scenes (Story Action):* Hands carve the first two strokes of the Master Glyph into the wet black sand—a volcanic glass fire arc intersected by an ironbark root line.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 2: The Shoreline of Fire &amp; Root (Act I — The First Union)" data-transcript="*Metadata - Location: Jet-black volcanic sand shoreline under tropical mist. | Palette: Jet black sand, volcanic orange lava vents, turquoise ocean water. | Lighting: Harsh orange magma glow contrasting with damp turquoise tropical daylight.*
+
+**Panel 1 ((Wide Panoramic Splash))**
+
+*Behind the Scenes (Story Action):* A split view of a black volcanic beach: cold forest dwellers huddling in damp wooden huts on the left, and smoldering warriors huddled around lava vents on the right.
+
+**Top Left (Narration Box):** *`&quot;Three hundred years ago. Two primitive peoples lived in isolation: cold forest dwellers without fire, and smoldering warriors without homes.&quot;`*
+
+**Panel 2 ((Medium Shot))**
+
+*Behind the Scenes (Story Action):* Mwangi, leader of the forest dwellers, meets Brakkan, leader of the volcanic warriors, on the neutral black sand beach.
+
+**Top Left (Narration Box):** *`&quot;Before the volcanic tide, two leaders meet in silence.&quot;`*
+
+**Panel 3 ((Close-Up Ground Shot))**
+
+*Behind the Scenes (Story Action):* Hands carve the first two strokes of the Master Glyph into the wet black sand—a volcanic glass fire arc intersected by an ironbark root line.
+
+">
+                <img src="storyboards/assets/clans_origin_page02.png?v=1785732222623" alt="Page 2: The Shoreline of Fire &amp; Root (Act I — The First Union)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 3: The Cultural Spark (Act I — Fire & Tree Carvings) -->
+        <section class="panel-section p-0 m-0" data-title="Page 3: The Cultural Spark (Act I — Fire &amp; Tree Carvings)" data-transcript="*Metadata - Location: Forest clearing and volcanic forge; ancient heated wooden home. | Palette: Warm mahogany, glowing thermal amber, soft firelit shadows. | Lighting: Intimate, cozy warm amber light from a thermal bronze core-fire lamp.*
+
+**Panel 1 ((Split Vertical Panel))**
+
+*Behind the Scenes (Story Action):* Shows the Mizizi carving the Root line into an oak threshold in the forest, while the Ash-Blood sear the Fire arc into a volcanic magma wall.
+
+**Panel 2 ((Wide Construction Montage))**
+
+*Behind the Scenes (Story Action):* Mizizi wood-weavers and Ash-Blood smiths work side-by-side fitting thermal bronze pipes into ironbark timber frames, carving the combined 2-stroke mark above the main doorway.
+
+**Panel 3 ((Medium Interior Shot))**
+
+*Behind the Scenes (Story Action):* Inside a cozy heated timber room, a core-fire lamp projects shadow puppets of trees and flames onto the wooden wall while families laugh together.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 3: The Cultural Spark (Act I — Fire &amp; Tree Carvings)" data-transcript="*Metadata - Location: Forest clearing and volcanic forge; ancient heated wooden home. | Palette: Warm mahogany, glowing thermal amber, soft firelit shadows. | Lighting: Intimate, cozy warm amber light from a thermal bronze core-fire lamp.*
+
+**Panel 1 ((Split Vertical Panel))**
+
+*Behind the Scenes (Story Action):* Shows the Mizizi carving the Root line into an oak threshold in the forest, while the Ash-Blood sear the Fire arc into a volcanic magma wall.
+
+**Panel 2 ((Wide Construction Montage))**
+
+*Behind the Scenes (Story Action):* Mizizi wood-weavers and Ash-Blood smiths work side-by-side fitting thermal bronze pipes into ironbark timber frames, carving the combined 2-stroke mark above the main doorway.
+
+**Panel 3 ((Medium Interior Shot))**
+
+*Behind the Scenes (Story Action):* Inside a cozy heated timber room, a core-fire lamp projects shadow puppets of trees and flames onto the wooden wall while families laugh together.
+
+">
+                <img src="storyboards/assets/clans_origin_page03.png?v=1785732222623" alt="Page 3: The Cultural Spark (Act I — Fire &amp; Tree Carvings)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 4: Binding of the Deep (Act II — Trench-Kin Cavern) -->
+        <section class="panel-section p-0 m-0" data-title="Page 4: Binding of the Deep (Act II — Trench-Kin Cavern)" data-transcript="*Metadata - Location: Dark ocean surface cavern with crashing waves. | Palette: Deep ocean navy blue, slate grey basalt stone, thermal bronze orange accents. | Lighting: Cold ambient cave shadows broken by glowing bronze lanterns.*
+
+**Panel 1 ((Wide Shot))**
+
+*Behind the Scenes (Story Action):* Trench-Kin clay-and-stone humanoids in seaweed togas huddle shivering on basalt cave ledges above crashing waves.
+
+**Panel 2 ((Medium Shot))**
+
+*Behind the Scenes (Story Action):* Mwangi brings a glowing thermal lantern to Barnaby, offering woodcraft flexibility for stone strength.
+
+**Panel 3 ((Dynamic Action Splash Panel))**
+
+*Behind the Scenes (Story Action):* Barnaby strikes the third stroke—an ocean wave curve—into the basalt arch keystone alongside Root and Fire marks.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 4: Binding of the Deep (Act II — Trench-Kin Cavern)" data-transcript="*Metadata - Location: Dark ocean surface cavern with crashing waves. | Palette: Deep ocean navy blue, slate grey basalt stone, thermal bronze orange accents. | Lighting: Cold ambient cave shadows broken by glowing bronze lanterns.*
+
+**Panel 1 ((Wide Shot))**
+
+*Behind the Scenes (Story Action):* Trench-Kin clay-and-stone humanoids in seaweed togas huddle shivering on basalt cave ledges above crashing waves.
+
+**Panel 2 ((Medium Shot))**
+
+*Behind the Scenes (Story Action):* Mwangi brings a glowing thermal lantern to Barnaby, offering woodcraft flexibility for stone strength.
+
+**Panel 3 ((Dynamic Action Splash Panel))**
+
+*Behind the Scenes (Story Action):* Barnaby strikes the third stroke—an ocean wave curve—into the basalt arch keystone alongside Root and Fire marks.
+
+">
+                <img src="storyboards/assets/clans_origin_page04.png?v=1785732222623" alt="Page 4: Binding of the Deep (Act II — Trench-Kin Cavern)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 5: Ocean Cavern City & The Abyssal Gaze (Act II — Deep City) -->
+        <section class="panel-section p-0 m-0" data-title="Page 5: Ocean Cavern City &amp; The Abyssal Gaze (Act II — Deep City)" data-transcript="*Metadata - Location: Cavern ocean city built inside basalt sea walls. | Palette: Bioluminescent teal green, deep navy blue, warm thermal bronze. | Lighting: Bioluminescent teal root-lamps casting soft reflections on flowing water.*
+
+**Panel 1 ((Panoramic Wide View))**
+
+*Behind the Scenes (Story Action):* A subterranean ocean cave metropolis lit by teal root-lamps and thermal water channels.
+
+**Panel 2 ((Engineering Montage Panel))**
+
+*Behind the Scenes (Story Action):* Mizizi builders and Trench masons in seaweed togas fit flexible ironbark beams into a massive sea archway as waves crash below.
+
+**Panel 3 ((Medium Close-Up Profile))**
+
+*Behind the Scenes (Story Action):* Barnaby stands at a cave ledge, gazing down into the pitch-black ocean chasm below.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 5: Ocean Cavern City &amp; The Abyssal Gaze (Act II — Deep City)" data-transcript="*Metadata - Location: Cavern ocean city built inside basalt sea walls. | Palette: Bioluminescent teal green, deep navy blue, warm thermal bronze. | Lighting: Bioluminescent teal root-lamps casting soft reflections on flowing water.*
+
+**Panel 1 ((Panoramic Wide View))**
+
+*Behind the Scenes (Story Action):* A subterranean ocean cave metropolis lit by teal root-lamps and thermal water channels.
+
+**Panel 2 ((Engineering Montage Panel))**
+
+*Behind the Scenes (Story Action):* Mizizi builders and Trench masons in seaweed togas fit flexible ironbark beams into a massive sea archway as waves crash below.
+
+**Panel 3 ((Medium Close-Up Profile))**
+
+*Behind the Scenes (Story Action):* Barnaby stands at a cave ledge, gazing down into the pitch-black ocean chasm below.
+
+">
+                <img src="storyboards/assets/clans_origin_page05.png?v=1785732222623" alt="Page 5: Ocean Cavern City &amp; The Abyssal Gaze (Act II — Deep City)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 6: Storm War & The Campfire Truce (Act III — Mountain Peaks) -->
+        <section class="panel-section p-0 m-0" data-title="Page 6: Storm War &amp; The Campfire Truce (Act III — Mountain Peaks)" data-transcript="*Metadata - Location: High mountain peaks above clouds; midnight campfire truce. | Palette: Dark tempest grey, electric blue lightning, warm hearth fire orange. | Lighting: Flickering orange campfire glow against cold electric blue storm flashes.*
+
+**Panel 1 ((Wide Split Action Panel))**
+
+*Behind the Scenes (Story Action):* High mountain peaks where the Storm War raged until the united clan shield-wall held the line.
+
+**Panel 2 ((Campfire Negotiation))**
+
+*Behind the Scenes (Story Action):* Astra of the Fulgur pushes back at a midnight campfire, fiercely rejecting stone walls that trap the wind.
+
+**Panel 3 ((Close-Up Resolution))**
+
+*Behind the Scenes (Story Action):* Mwangi presents a vine-wrapped copper spire, explaining that a lightning rod channels the storm to light the dark for everyone.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 6: Storm War &amp; The Campfire Truce (Act III — Mountain Peaks)" data-transcript="*Metadata - Location: High mountain peaks above clouds; midnight campfire truce. | Palette: Dark tempest grey, electric blue lightning, warm hearth fire orange. | Lighting: Flickering orange campfire glow against cold electric blue storm flashes.*
+
+**Panel 1 ((Wide Split Action Panel))**
+
+*Behind the Scenes (Story Action):* High mountain peaks where the Storm War raged until the united clan shield-wall held the line.
+
+**Panel 2 ((Campfire Negotiation))**
+
+*Behind the Scenes (Story Action):* Astra of the Fulgur pushes back at a midnight campfire, fiercely rejecting stone walls that trap the wind.
+
+**Panel 3 ((Close-Up Resolution))**
+
+*Behind the Scenes (Story Action):* Mwangi presents a vine-wrapped copper spire, explaining that a lightning rod channels the storm to light the dark for everyone.
+
+">
+                <img src="storyboards/assets/clans_origin_page06.png?v=1785732222623" alt="Page 6: Storm War &amp; The Campfire Truce (Act III — Mountain Peaks)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 7: Step-Pyramid & Mountain Fortress (Act III — Lightning City) -->
+        <section class="panel-section p-0 m-0" data-title="Page 7: Step-Pyramid &amp; Mountain Fortress (Act III — Lightning City)" data-transcript="*Metadata - Location: Basalt step-pyramid top and high mountain-fortress city. | Palette: Deep stormy violet, electric teal lightning, warm copper metal. | Lighting: Lightning harvested on copper capstone channels cool blue/violet light into cliffside buildings.*
+
+**Panel 1 ((Full Page Splash Panel))**
+
+*Behind the Scenes (Story Action):* Astra raises her arms as a massive lightning bolt strikes a 50-foot copper capstone atop a basalt step-pyramid, fusing the 4-stroke mark (Root, Fire, Wave, Lightning) into the plate.
+
+**Panel 2 ((Wide Landscape View))**
+
+*Behind the Scenes (Story Action):* A mountain-fortress city carved into cliff faces above storm clouds, lit by static-conduit streetlamps in cool blue and violet tones.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 7: Step-Pyramid &amp; Mountain Fortress (Act III — Lightning City)" data-transcript="*Metadata - Location: Basalt step-pyramid top and high mountain-fortress city. | Palette: Deep stormy violet, electric teal lightning, warm copper metal. | Lighting: Lightning harvested on copper capstone channels cool blue/violet light into cliffside buildings.*
+
+**Panel 1 ((Full Page Splash Panel))**
+
+*Behind the Scenes (Story Action):* Astra raises her arms as a massive lightning bolt strikes a 50-foot copper capstone atop a basalt step-pyramid, fusing the 4-stroke mark (Root, Fire, Wave, Lightning) into the plate.
+
+**Panel 2 ((Wide Landscape View))**
+
+*Behind the Scenes (Story Action):* A mountain-fortress city carved into cliff faces above storm clouds, lit by static-conduit streetlamps in cool blue and violet tones.
+
+">
+                <img src="storyboards/assets/clans_origin_page07.png?v=1785732222623" alt="Page 7: Step-Pyramid &amp; Mountain Fortress (Act III — Lightning City)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 8: Renali Sky-Council & Arrival (Act IV — Renali Alliance) -->
+        <section class="panel-section p-0 m-0" data-title="Page 8: Renali Sky-Council &amp; Arrival (Act IV — Renali Alliance)" data-transcript="*Metadata - Location: Floating Renali cloud sanctuary and mountain pyramid platform. | Palette: Ethereal pearl white, iridescent dragonfly purple, clear sky azure blue. | Lighting: Radiant golden sunlight reflecting off clouds and crystal spires.*
+
+**Panel 1 ((Sky-Council Trade-Off Debate))**
+
+*Behind the Scenes (Story Action):* Renali elders debate atop floating crystal spires, weighing the loss of absolute freedom against being left behind as the empire thrives below.
+
+**Panel 2 ((Descent of Sky-Riders))**
+
+*Behind the Scenes (Story Action):* Renali riders descend aboard giant biological dragonflies to meet the four clan leaders on the mountain pyramid.
+
+**Panel 3 ((Mandala Altar Completion))**
+
+*Behind the Scenes (Story Action):* Seraphina places a crystal pressure-sphere into the mandala plate on the altar, completing the 5-piece Master Glyph in stone as golden light flares.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 8: Renali Sky-Council &amp; Arrival (Act IV — Renali Alliance)" data-transcript="*Metadata - Location: Floating Renali cloud sanctuary and mountain pyramid platform. | Palette: Ethereal pearl white, iridescent dragonfly purple, clear sky azure blue. | Lighting: Radiant golden sunlight reflecting off clouds and crystal spires.*
+
+**Panel 1 ((Sky-Council Trade-Off Debate))**
+
+*Behind the Scenes (Story Action):* Renali elders debate atop floating crystal spires, weighing the loss of absolute freedom against being left behind as the empire thrives below.
+
+**Panel 2 ((Descent of Sky-Riders))**
+
+*Behind the Scenes (Story Action):* Renali riders descend aboard giant biological dragonflies to meet the four clan leaders on the mountain pyramid.
+
+**Panel 3 ((Mandala Altar Completion))**
+
+*Behind the Scenes (Story Action):* Seraphina places a crystal pressure-sphere into the mandala plate on the altar, completing the 5-piece Master Glyph in stone as golden light flares.
+
+">
+                <img src="storyboards/assets/clans_origin_page08.png?v=1785732222623" alt="Page 8: Renali Sky-Council &amp; Arrival (Act IV — Renali Alliance)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 9: Dual Marvels — Sky Gardens & Deep Atlantis (Act IV — Peak Wonders) -->
+        <section class="panel-section p-0 m-0" data-title="Page 9: Dual Marvels — Sky Gardens &amp; Deep Atlantis (Act IV — Peak Wonders)" data-transcript="*Metadata - Location: Floating sky-gardens and ultra-deep ocean floor city beneath pressure domes. | Palette: Upper half: vibrant floral pinks, greens, golden sun. Lower half: bioluminescent ocean blue, teal dome glow. | Lighting: Dual contrast—dazzling sky sunlight above, deep underwater bioluminescent glow below.*
+
+**Panel 1 ((Hanging Gardens in the Sky))**
+
+*Behind the Scenes (Story Action):* Terraced sanctuary gardens floating in the azure sky anchored by heavy copper cables, where dragonfly mounts dock at wooden piers.
+
+**Panel 2 ((Ultra-Deep Atlantis Ocean City))**
+
+*Behind the Scenes (Story Action):* Deep ocean floor metropolis where citizens walk through basalt avenues beneath glowing copper and glass pressure-domes underwater.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 9: Dual Marvels — Sky Gardens &amp; Deep Atlantis (Act IV — Peak Wonders)" data-transcript="*Metadata - Location: Floating sky-gardens and ultra-deep ocean floor city beneath pressure domes. | Palette: Upper half: vibrant floral pinks, greens, golden sun. Lower half: bioluminescent ocean blue, teal dome glow. | Lighting: Dual contrast—dazzling sky sunlight above, deep underwater bioluminescent glow below.*
+
+**Panel 1 ((Hanging Gardens in the Sky))**
+
+*Behind the Scenes (Story Action):* Terraced sanctuary gardens floating in the azure sky anchored by heavy copper cables, where dragonfly mounts dock at wooden piers.
+
+**Panel 2 ((Ultra-Deep Atlantis Ocean City))**
+
+*Behind the Scenes (Story Action):* Deep ocean floor metropolis where citizens walk through basalt avenues beneath glowing copper and glass pressure-domes underwater.
+
+">
+                <img src="storyboards/assets/clans_origin_page09.png?v=1785732222623" alt="Page 9: Dual Marvels — Sky Gardens &amp; Deep Atlantis (Act IV — Peak Wonders)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 10: Golden Apex Era (Act V — Relina Era) -->
+        <section class="panel-section p-0 m-0" data-title="Page 10: Golden Apex Era (Act V — Relina Era)" data-transcript="*Metadata - Location: Grand Forum of Relina during the Golden Age Apex. | Palette: Royal purple, rich gold, vibrant petrified oak green, crystal teal. | Lighting: Glorious golden hour sunlight illuminating central forum and glowing Master Glyph spire.*
+
+**Panel 1 ((Full Page Epic Splash with Inset Scenes))**
+
+*Behind the Scenes (Story Action):* Grand Forum of Relina with marble plaza, petrified oak towers, firefly-powered sky-sleds, and Empress Relina Vox addressing citizens from a balcony.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 10: Golden Apex Era (Act V — Relina Era)" data-transcript="*Metadata - Location: Grand Forum of Relina during the Golden Age Apex. | Palette: Royal purple, rich gold, vibrant petrified oak green, crystal teal. | Lighting: Glorious golden hour sunlight illuminating central forum and glowing Master Glyph spire.*
+
+**Panel 1 ((Full Page Epic Splash with Inset Scenes))**
+
+*Behind the Scenes (Story Action):* Grand Forum of Relina with marble plaza, petrified oak towers, firefly-powered sky-sleds, and Empress Relina Vox addressing citizens from a balcony.
+
+">
+                <img src="storyboards/assets/clans_origin_page10.png?v=1785732222623" alt="Page 10: Golden Apex Era (Act V — Relina Era)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 11: Ease of Bliss & The Stagnation Meeting (Act VI — Stagnation) -->
+        <section class="panel-section p-0 m-0" data-title="Page 11: Ease of Bliss &amp; The Stagnation Meeting (Act VI — Stagnation)" data-transcript="*Metadata - Location: High Observatory Spire overlooking floor mosaic map and grey fog. | Palette: Faded purple, slate grey fog, pale muted brass, cold shadows. | Lighting: Dim, grey overcast light filtering through dusty arched observatory windows.*
+
+**Panel 1 ((Observatory Spire Floor Mosaic))**
+
+*Behind the Scenes (Story Action):* Inside an ornate observatory chamber with a colossal floor mosaic world map, the aging Empress looks out arched glass windows at a wall of thick grey mist.
+
+**Panel 2 ((Citizens Meeting of Stagnation))**
+
+*Behind the Scenes (Story Action):* A council meeting of generalized citizens—where clan boundaries have blurred—deciding that no further growth or exploration is needed.
+
+**Panel 3 ((The Wall of Fear))**
+
+*Behind the Scenes (Story Action):* Citizens look fearfully at the thick grey Mist on a balcony—a barrier born not of physical walls, but of fear, lies, and lack of desire to push into the dark.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 11: Ease of Bliss &amp; The Stagnation Meeting (Act VI — Stagnation)" data-transcript="*Metadata - Location: High Observatory Spire overlooking floor mosaic map and grey fog. | Palette: Faded purple, slate grey fog, pale muted brass, cold shadows. | Lighting: Dim, grey overcast light filtering through dusty arched observatory windows.*
+
+**Panel 1 ((Observatory Spire Floor Mosaic))**
+
+*Behind the Scenes (Story Action):* Inside an ornate observatory chamber with a colossal floor mosaic world map, the aging Empress looks out arched glass windows at a wall of thick grey mist.
+
+**Panel 2 ((Citizens Meeting of Stagnation))**
+
+*Behind the Scenes (Story Action):* A council meeting of generalized citizens—where clan boundaries have blurred—deciding that no further growth or exploration is needed.
+
+**Panel 3 ((The Wall of Fear))**
+
+*Behind the Scenes (Story Action):* Citizens look fearfully at the thick grey Mist on a balcony—a barrier born not of physical walls, but of fear, lies, and lack of desire to push into the dark.
+
+">
+                <img src="storyboards/assets/clans_origin_page11.png?v=1785732222623" alt="Page 11: Ease of Bliss &amp; The Stagnation Meeting (Act VI — Stagnation)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 12: Breakdown Timeline & The Fall (Act VI — Collapse) -->
+        <section class="panel-section p-0 m-0" data-title="Page 12: Breakdown Timeline &amp; The Fall (Act VI — Collapse)" data-transcript="*Metadata - Location: Habitat ruins, failing transport lines, and exploding mountain ziggurats. | Palette: Harsh forge red, dying grey fog, cold ash grey. | Lighting: Dimming Aetheric pressure lamps flickering out.*
+
+**Panel 1 ((Deep Pressure-Dome Breakdown))**
+
+*Behind the Scenes (Story Action):* A Trench-Kin deep sea pressure-dome habitat cracks under pressure override as sea water bursts through stone joints.
+
+**Panel 2 ((Overloaded Dragonfly Mount Collapse))**
+
+*Behind the Scenes (Story Action):* A Renali dragonfly mount struggles in mid-air and falls under the excessive weight of luxury cargo and passengers.
+
+**Panel 3 ((Ziggurat Lightning Explosion))**
+
+*Behind the Scenes (Story Action):* A high mountain ziggurat conductor explodes in sparks during a storm instead of redirecting lightning safely into light.
+
+**Panel 4 ((Final Portal Snap Explosive Exit))**
+
+*Behind the Scenes (Story Action):* The grey fog observatory shatters like glass into a high-energy teal portal energy vortex.
+
+">
+            <div class="comic-panel p-0 m-0" data-title="Page 12: Breakdown Timeline &amp; The Fall (Act VI — Collapse)" data-transcript="*Metadata - Location: Habitat ruins, failing transport lines, and exploding mountain ziggurats. | Palette: Harsh forge red, dying grey fog, cold ash grey. | Lighting: Dimming Aetheric pressure lamps flickering out.*
+
+**Panel 1 ((Deep Pressure-Dome Breakdown))**
+
+*Behind the Scenes (Story Action):* A Trench-Kin deep sea pressure-dome habitat cracks under pressure override as sea water bursts through stone joints.
+
+**Panel 2 ((Overloaded Dragonfly Mount Collapse))**
+
+*Behind the Scenes (Story Action):* A Renali dragonfly mount struggles in mid-air and falls under the excessive weight of luxury cargo and passengers.
+
+**Panel 3 ((Ziggurat Lightning Explosion))**
+
+*Behind the Scenes (Story Action):* A high mountain ziggurat conductor explodes in sparks during a storm instead of redirecting lightning safely into light.
+
+**Panel 4 ((Final Portal Snap Explosive Exit))**
+
+*Behind the Scenes (Story Action):* The grey fog observatory shatters like glass into a high-energy teal portal energy vortex.
+
+">
+                <img src="storyboards/assets/clans_origin_page12.png?v=1785732222623" alt="Page 12: Breakdown Timeline &amp; The Fall (Act VI — Collapse)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+        <!-- Page 13: Present Return & Tortoise Shell Map (Epilogue) -->
+        <section class="panel-section p-0 m-0" data-title="Page 13: Present Return &amp; Tortoise Shell Map (Epilogue)" data-transcript="*Metadata - Location: Center Grove at dusk before petrified oak tree. | Palette: Twilight turquoise dusk, soft forest moss green, glowing golden-teal mental map lines in air. | Lighting: Dusk ambient forest light with ethereal mental map overlay floating in air.*
+
+**Panel 1 ((Snap Back to Reality))**
+
+*Behind the Scenes (Story Action):* Britt and Aggie gasp back into their bodies, lying on the forest ground in Center Grove as the ancient lichen on the oak tree fades to stone.
+
+**Panel 2 ((Ancient Glowing Tortoise))**
+
+*Behind the Scenes (Story Action):* Sitting on the ground between Britt and Aggie is a colossal ancient tortoise with glowing golden-teal eyes, while Iggy, Ignatious, and Loami watch in awe.
+
+**Panel 3 ((Tortoise Shell Map Splash))**
+
+*Behind the Scenes (Story Action):* A full page splash showing a close-up of the ancient tortoise&#039;s back shell—depicting an ethereal glowing map of an unknown fantasy land with several distinct pinpricks of light across its shell segments.">
+            <div class="comic-panel p-0 m-0" data-title="Page 13: Present Return &amp; Tortoise Shell Map (Epilogue)" data-transcript="*Metadata - Location: Center Grove at dusk before petrified oak tree. | Palette: Twilight turquoise dusk, soft forest moss green, glowing golden-teal mental map lines in air. | Lighting: Dusk ambient forest light with ethereal mental map overlay floating in air.*
+
+**Panel 1 ((Snap Back to Reality))**
+
+*Behind the Scenes (Story Action):* Britt and Aggie gasp back into their bodies, lying on the forest ground in Center Grove as the ancient lichen on the oak tree fades to stone.
+
+**Panel 2 ((Ancient Glowing Tortoise))**
+
+*Behind the Scenes (Story Action):* Sitting on the ground between Britt and Aggie is a colossal ancient tortoise with glowing golden-teal eyes, while Iggy, Ignatious, and Loami watch in awe.
+
+**Panel 3 ((Tortoise Shell Map Splash))**
+
+*Behind the Scenes (Story Action):* A full page splash showing a close-up of the ancient tortoise&#039;s back shell—depicting an ethereal glowing map of an unknown fantasy land with several distinct pinpricks of light across its shell segments.">
+                <img src="storyboards/assets/clans_origin_page13.png?v=1785732222623" alt="Page 13: Present Return &amp; Tortoise Shell Map (Epilogue)" class="w-full h-auto block p-0 m-0" loading="lazy">
+            </div>
+        </section>
+    
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950">
+        <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
+    </footer>
+
+    <script src="image-feedback.js?v=1785732222623"></script>
+    <script>
+        // Progress bar scroll handler
+        window.addEventListener('scroll', () => {
+            const total = document.documentElement.scrollHeight - window.innerHeight;
+            const current = window.scrollY;
+            const pct = Math.round((current / total) * 100) || 0;
+            document.getElementById('scroll-percentage').textContent = pct + '%';
+            document.getElementById('scroll-progress-bar').style.width = pct + '%';
+        });
+
+        // Hide overlay on load
+        window.addEventListener('load', () => {
+            const l = document.getElementById('globalLoadingOverlayChapter');
+            if(l) l.style.opacity = '0', setTimeout(() => l.style.display = 'none', 300);
+        });
+    </script>
 </body>
 </html>
