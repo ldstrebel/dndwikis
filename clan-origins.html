@@ -25,7 +25,14 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Cinzel:ital,wght@0,400;0,700;0,900;1,600;1,800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #000000 !important; color: #f8fafc; margin: 0 !important; padding: 0 !important; overflow-x: hidden; }
+        html, body {
+            background-color: #000000 !important;
+            color: #f8fafc;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
         h1, h2, h3 { font-family: 'Cinzel', serif; }
         
         /* FIXED BACKGROUND PURE PITCH BLACK WARP CANVAS */
@@ -40,23 +47,57 @@
             background-color: #000000 !important;
         }
 
-        /* 0px SEAMLESS WEBTOON STRIP STYLING (COMPACT MAX-WIDTH 480px) */
-        main { padding: 0 !important; margin: 0 auto !important; width: 100%; max-width: 480px; position: relative; z-index: 10; background: #000000 !important; }
-        section.panel-section { padding: 0 !important; margin: 0 !important; line-height: 0 !important; border: none !important; position: relative; z-index: 10; background: #000000 !important; }
-        .comic-panel { margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; line-height: 0 !important; background: #000000 !important; }
-        .comic-panel img { cursor: pointer; transition: filter 0.2s ease; display: block !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; }
+        /* 0px SEAMLESS WEBTOON STRIP STYLING (TRANSPARENT CONTAINER FOR FULL CANVAS VISIBILITY) */
+        main {
+            padding: 0 !important;
+            margin: 0 auto !important;
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 10;
+            background: transparent !important;
+        }
+        section.panel-section {
+            padding: 0 !important;
+            margin: 0 !important;
+            line-height: 0 !important;
+            border: none !important;
+            position: relative;
+            z-index: 10;
+            background: transparent !important;
+        }
+        .comic-panel {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            line-height: 0 !important;
+            background: transparent !important;
+        }
+        .comic-panel img {
+            cursor: pointer;
+            transition: filter 0.2s ease;
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+        }
         
-        /* DOUBLE LENGTH (150vh) PURE PITCH-BLACK MEMORY VOID TRANSITION SECTIONS */
+        /* DOUBLE LENGTH (160vh) TRANSPARENT MEMORY VOID TRANSITION SECTIONS */
         .memory-transition-void {
-            min-height: 150vh;
-            background: #000000 !important;
+            min-height: 160vh;
+            background: transparent !important;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
             z-index: 10;
-            padding: 8rem 1.5rem;
+            padding: 10rem 1.5rem;
             margin: 0;
             text-align: center;
             user-select: none;
@@ -93,17 +134,17 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186l5.302-2.548a2.25 2.25 0 1 1 .74 1.49L7.95 11.07m0 1.86l5.302 2.548a2.25 2.25 0 1 1-.74 1.49l-5.302-2.548M13.5 5.25a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0zm0 13.5a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0z" />
                     </svg>
                 </button>
-                <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
+                <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-black/80 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
             </div>
         </div>
         <div id="scroll-progress-bar" class="h-0.5 bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400 w-0"></div>
     </nav>
 
-    <!-- Main Container - Compact 480px Webtoon Scroll Strip -->
-    <main class="max-w-md mx-auto p-0 m-0 bg-black">
+    <!-- Main Container - Compact 480px Webtoon Scroll Strip (Transparent) -->
+    <main class="max-w-md mx-auto p-0 m-0">
 
         <!-- Header Panel -->
-        <section class="text-center py-8 px-4 space-y-2 bg-black border-b border-slate-900 relative z-10">
+        <section class="text-center py-8 px-4 space-y-2 bg-black/90 border-b border-slate-900 relative z-10 backdrop-blur-sm">
             <h2 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-400 to-sky-400">THE CLANS: ORIGIN</h2>
             <h3 class="text-slate-400 text-xs tracking-widest uppercase">Pre-Release Review Chapter</h3>
             <p class="text-slate-400 max-w-md mx-auto text-xs leading-relaxed mt-1">
@@ -117,28 +158,28 @@
             </div>
         </section>
 
-        <!-- 150vh PURE PITCH-BLACK MEMORY VOID TRANSITION SECTION -->
+        <!-- 160vh TRANSPARENT MEMORY VOID TRANSITION SECTION -->
         <section class="memory-transition-void">
             <!-- Top Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mb-8"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mb-8"></div>
             
             <!-- Floating Act Badge -->
-            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">
                 ACT I
             </div>
             
             <!-- Floating Title -->
-            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_20px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_24px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
                 The Shoreline of Fire & Root
             </h2>
             
             <!-- Poetic Subtitle -->
-            <p class="text-xs sm:text-sm text-slate-400 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">
+            <p class="text-xs sm:text-sm text-slate-300 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,1)]">
                 Thousands of years ago... on a primitive beach of jet-black volcanic sand, two isolated tribes meet in silence.
             </p>
 
             <!-- Bottom Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mt-10"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mt-10"></div>
         </section>
 
         <!-- Page 1: The Taboo Mark (Present Day Frame) -->
@@ -192,7 +233,7 @@
 **Loami:** *&quot;So uh... does that normally happen in these trees?&quot;*
 
 **Sound Effect:** *&quot;⚡ WOOOSH!&quot;*">
-                <img src="images/vumbua/origin_page1.jpg?v=1785980561" alt="Clans Origin: Page 1: The Taboo Mark (Present Day Frame)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page1.jpg?v=1785981052" alt="Clans Origin: Page 1: The Taboo Mark (Present Day Frame)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -243,7 +284,7 @@
 **Brakkan:** *&quot;Ash!&quot;*
 
 **Mwangi:** *&quot;Root!&quot;*">
-                <img src="images/vumbua/origin_page2.jpg?v=1785980561" alt="Clans Origin: Page 2: The Shoreline of Fire & Root (Act I — The First Union)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page2.jpg?v=1785981052" alt="Clans Origin: Page 2: The Shoreline of Fire & Root (Act I — The First Union)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -290,32 +331,32 @@
 *Behind the Scenes (Story Action):* Inside a cozy heated timber room, a core-fire lamp projects shadow puppets of trees and flames onto the wooden wall while families laugh together.
 
 **Bottom Right (Narration Box):** *&quot;On wooden walls, the world's first shadow puppets come alive—families laughing in the initial joy of mutual discovery.&quot;*">
-                <img src="images/vumbua/origin_page3.jpg?v=1785980561" alt="Clans Origin: Page 3: The Cultural Spark (Act I — Fire & Tree Carvings)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page3.jpg?v=1785981052" alt="Clans Origin: Page 3: The Cultural Spark (Act I — Fire & Tree Carvings)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
-        <!-- 150vh PURE PITCH-BLACK MEMORY VOID TRANSITION SECTION -->
+        <!-- 160vh TRANSPARENT MEMORY VOID TRANSITION SECTION -->
         <section class="memory-transition-void">
             <!-- Top Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mb-8"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mb-8"></div>
             
             <!-- Floating Act Badge -->
-            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">
                 ACT II
             </div>
             
             <!-- Floating Title -->
-            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_20px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_24px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
                 Binding of the Deep
             </h2>
             
             <!-- Poetic Subtitle -->
-            <p class="text-xs sm:text-sm text-slate-400 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">
+            <p class="text-xs sm:text-sm text-slate-300 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,1)]">
                 Subterranean ocean caverns where wood flexibility binds with basalt stone strength...
             </p>
 
             <!-- Bottom Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mt-10"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mt-10"></div>
         </section>
 
         <!-- Page 4: Binding of the Deep (Act II — Trench-Kin Cavern) -->
@@ -365,7 +406,7 @@
 **Barnaby:** *&quot;The stone anchors where the trees stay. Together we will last an era!&quot;*
 
 **Sound Effect:** *&quot;CLANG!&quot;*">
-                <img src="images/vumbua/origin_page4.jpg?v=1785980561" alt="Clans Origin: Page 4: Binding of the Deep (Act II — Trench-Kin Cavern)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page4.jpg?v=1785981052" alt="Clans Origin: Page 4: Binding of the Deep (Act II — Trench-Kin Cavern)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -412,32 +453,32 @@
 *Behind the Scenes (Story Action):* Barnaby stands at a cave ledge, gazing down into the pitch-black ocean chasm below.
 
 **Bottom Right (Narration Box):** *&quot;Yet the Trench felt they could go deeper if they could just handle the pressure better.&quot;*">
-                <img src="images/vumbua/origin_page5.jpg?v=1785980561" alt="Clans Origin: Page 5: Ocean Cavern City & The Abyssal Gaze (Act II — Deep City)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page5.jpg?v=1785981052" alt="Clans Origin: Page 5: Ocean Cavern City & The Abyssal Gaze (Act II — Deep City)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
-        <!-- 150vh PURE PITCH-BLACK MEMORY VOID TRANSITION SECTION -->
+        <!-- 160vh TRANSPARENT MEMORY VOID TRANSITION SECTION -->
         <section class="memory-transition-void">
             <!-- Top Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mb-8"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mb-8"></div>
             
             <!-- Floating Act Badge -->
-            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">
                 ACT III
             </div>
             
             <!-- Floating Title -->
-            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_20px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_24px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
                 The Storm War & Mountain Fortress
             </h2>
             
             <!-- Poetic Subtitle -->
-            <p class="text-xs sm:text-sm text-slate-400 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">
+            <p class="text-xs sm:text-sm text-slate-300 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,1)]">
                 High tempest peaks above storm clouds where static lightning is channeled to light the dark...
             </p>
 
             <!-- Bottom Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mt-10"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mt-10"></div>
         </section>
 
         <!-- Page 6: The Fulgur Bridge & Storm War (Act III — Mountain Peaks) -->
@@ -483,7 +524,7 @@
 *Behind the Scenes (Story Action):* Mwangi presents a vine-wrapped copper spire, explaining that a lightning rod channels the storm to light the dark for everyone.
 
 **Mwangi:** *&quot;We do not cage your lightning. A lightning rod doesn't trap the storm... it channels it to light the dark for everyone.&quot;*">
-                <img src="images/vumbua/origin_page6.jpg?v=1785980561" alt="Clans Origin: Page 6: The Fulgur Bridge & Storm War (Act III — Mountain Peaks)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page6.jpg?v=1785981052" alt="Clans Origin: Page 6: The Fulgur Bridge & Storm War (Act III — Mountain Peaks)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -518,32 +559,32 @@
 *Behind the Scenes (Story Action):* A mountain-fortress city carved into cliff faces above storm clouds, using lightning strikes to create dynamic light shows and temporarily light up the cliffside, acting as neon across the mountain city.
 
 **Top Left (Narration Box):** *&quot;The clans construct a mountain-fortress city—using lightning to create light shows that temporarily light up the mountain, acting as neon across the city.&quot;*">
-                <img src="images/vumbua/origin_page7.jpg?v=1785980561" alt="Clans Origin: Page 7: Step-Pyramid & Neon Mountain Fortress (Act III — Lightning City)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page7.jpg?v=1785981052" alt="Clans Origin: Page 7: Step-Pyramid & Neon Mountain Fortress (Act III — Lightning City)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
-        <!-- 150vh PURE PITCH-BLACK MEMORY VOID TRANSITION SECTION -->
+        <!-- 160vh TRANSPARENT MEMORY VOID TRANSITION SECTION -->
         <section class="memory-transition-void">
             <!-- Top Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mb-8"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mb-8"></div>
             
             <!-- Floating Act Badge -->
-            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">
                 ACT IV
             </div>
             
             <!-- Floating Title -->
-            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_20px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_24px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
                 Canyon Terraces & Sky Ziggurats
             </h2>
             
             <!-- Poetic Subtitle -->
-            <p class="text-xs sm:text-sm text-slate-400 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">
+            <p class="text-xs sm:text-sm text-slate-300 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,1)]">
                 Deep sandstone gorges and shimmering sky-isles completing the macro-hearth...
             </p>
 
             <!-- Bottom Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mt-10"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mt-10"></div>
         </section>
 
         <!-- Page 8: The Wadi of the Canyon (Act IV — Canyon Stream Origins) -->
@@ -573,7 +614,7 @@
 *Behind the Scenes (Story Action):* Soon the Wadi are building terraced cities into the canyon walls, able to grow their own food thanks to Ash-Blood heat, Mizizi instructions, and Trench soil.
 
 **Top Left (Narration Box):** *&quot;Soon, they built terraced cities into the canyon walls, growing abundant food thanks to Ash-Blood heat, Mizizi instructions, and Trench soil.&quot;*">
-                <img src="images/vumbua/origin_page8.jpg?v=1785980561" alt="Clans Origin: Page 8: The Wadi of the Canyon (Act IV — Canyon Stream Origins)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page8.jpg?v=1785981052" alt="Clans Origin: Page 8: The Wadi of the Canyon (Act IV — Canyon Stream Origins)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -604,7 +645,7 @@
 *Behind the Scenes (Story Action):* The progress of the land-dwellers was impossible to miss, drawing the Renali to the flame of the Mandala. They needed Ash-Blood fire, Mizizi planning/records, Fulgur energy, and Wadi water. They joined to complete the Mandala Empire.
 
 **Top Left (Narration Box):** *&quot;And the progress of the land-dwellers was impossible to miss. It drew the Renali to the flame of the Mandala. They needed Ash-Blood fire, Mizizi planning, Fulgur energy, and Wadi water. They joined to complete the Mandala Empire.&quot;*">
-                <img src="images/vumbua/origin_page9.jpg?v=1785980561" alt="Clans Origin: Page 9: Primitive Renali Origins & Floating Isles (Act IV — Sky Origins)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page9.jpg?v=1785981052" alt="Clans Origin: Page 9: Primitive Renali Origins & Floating Isles (Act IV — Sky Origins)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -639,32 +680,32 @@
 **Seraphina:** *&quot;I am Seraphina of the Renali, and the circle is complete!&quot;*
 
 **Elders:** *&quot;One Mandala! One Empire!&quot;*">
-                <img src="images/vumbua/origin_page10.jpg?v=1785980561" alt="Clans Origin: Page 10: Renali Sky-Ziggurats & Mandala Completion (Act IV — Sky Empire)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page10.jpg?v=1785981052" alt="Clans Origin: Page 10: Renali Sky-Ziggurats & Mandala Completion (Act IV — Sky Empire)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
-        <!-- 150vh PURE PITCH-BLACK MEMORY VOID TRANSITION SECTION -->
+        <!-- 160vh TRANSPARENT MEMORY VOID TRANSITION SECTION -->
         <section class="memory-transition-void">
             <!-- Top Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mb-8"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mb-8"></div>
             
             <!-- Floating Act Badge -->
-            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">
                 ACT V
             </div>
             
             <!-- Floating Title -->
-            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_20px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_24px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
                 The Golden Apex Era
             </h2>
             
             <!-- Poetic Subtitle -->
-            <p class="text-xs sm:text-sm text-slate-400 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">
+            <p class="text-xs sm:text-sm text-slate-300 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,1)]">
                 The height of civilization across living tree-cities, sky-gardens, and abyssal domes...
             </p>
 
             <!-- Bottom Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mt-10"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mt-10"></div>
         </section>
 
         <!-- Page 11: Golden Apex Era (Act V — Relina Era) -->
@@ -686,32 +727,32 @@
 **Top Left (Narration Box):** *&quot;For a time, there was prosperity.&quot;*
 
 **Empress Relina Vox:** *&quot;People of the Five Domains! As long as our connection endures, this golden age will never end!&quot;*">
-                <img src="images/vumbua/origin_page11.jpg?v=1785980561" alt="Clans Origin: Page 11: Golden Apex Era (Act V — Relina Era)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page11.jpg?v=1785981052" alt="Clans Origin: Page 11: Golden Apex Era (Act V — Relina Era)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
-        <!-- 150vh PURE PITCH-BLACK MEMORY VOID TRANSITION SECTION -->
+        <!-- 160vh TRANSPARENT MEMORY VOID TRANSITION SECTION -->
         <section class="memory-transition-void">
             <!-- Top Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mb-8"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mb-8"></div>
             
             <!-- Floating Act Badge -->
-            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">
                 ACT VI
             </div>
             
             <!-- Floating Title -->
-            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_20px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_24px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
                 Complacency, Collapse & Isolation Pact
             </h2>
             
             <!-- Poetic Subtitle -->
-            <p class="text-xs sm:text-sm text-slate-400 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">
+            <p class="text-xs sm:text-sm text-slate-300 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,1)]">
                 The ease of bliss, stagnation, physical breakdown, regression of war, and the secret pact...
             </p>
 
             <!-- Bottom Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mt-10"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mt-10"></div>
         </section>
 
         <!-- Page 12: Ease of Bliss & Complacency (Act VI — Stagnation) -->
@@ -745,7 +786,7 @@
 **Citizen 1:** *&quot;So much effort to do new things... why bother?&quot;*
 
 **Citizen 2:** *&quot;We have all we need right here.&quot;*">
-                <img src="images/vumbua/origin_page12.jpg?v=1785980561" alt="Clans Origin: Page 12: Ease of Bliss & Complacency (Act VI — Stagnation)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page12.jpg?v=1785981052" alt="Clans Origin: Page 12: Ease of Bliss & Complacency (Act VI — Stagnation)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -780,7 +821,7 @@
 **Corvus (Architect):** *&quot;My Empress... the surveyors turned back at the edges. They were simply afraid to step into the dark.&quot;*
 
 **Empress Relina:** *&quot;We lied to ourselves. Resting on our successes was our decay.&quot;*">
-                <img src="images/vumbua/origin_page13.jpg?v=1785980561" alt="Clans Origin: Page 13: Fantasy Floor Map & Seasonal Sun-Dial Timelapse (Act VI — Complacency)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page13.jpg?v=1785981052" alt="Clans Origin: Page 13: Fantasy Floor Map & Seasonal Sun-Dial Timelapse (Act VI — Complacency)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -815,7 +856,7 @@
 **Scholar:** *&quot;The sparks that created the empire cannot sustain it without new air! Change is needed... or decay is inevitable.&quot;*
 
 **Bottom Right (Narration Box):** *&quot;The scholars saw the flaw—living on past glory was choking the living flame.&quot;*">
-                <img src="images/vumbua/origin_page14.jpg?v=1785980561" alt="Clans Origin: Page 14: The Mizizi Tree Archive & Cross-Clan Scholars' Warning (Act VI — The Warning)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page14.jpg?v=1785981052" alt="Clans Origin: Page 14: The Mizizi Tree Archive & Cross-Clan Scholars' Warning (Act VI — The Warning)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -842,7 +883,7 @@
 **Panel 2 ((Dragonfly Mount Flipping & Crashing))**
 
 *Behind the Scenes (Story Action):* A giant biological Renali dragonfly mount struggles in mid-air and flips upside down, crashing down toward the cloud layer as luxury cargo chests and seats spill off into the abyss below.">
-                <img src="images/vumbua/origin_page15.jpg?v=1785980561" alt="Clans Origin: Page 15: Physical Breakdown & Collapse (Act VI — The Breakdown Part 1)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page15.jpg?v=1785981052" alt="Clans Origin: Page 15: Physical Breakdown & Collapse (Act VI — The Breakdown Part 1)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -861,7 +902,7 @@
 *Behind the Scenes (Story Action):* A massive storm lightning bolt strikes an unmaintained copper conductor atop a mountain basalt step-pyramid ziggurat, violently exploding the top tower in a blast of fiery sparks and flying masonry instead of redirecting power safely.
 
 **Bottom Right (Narration Box):** *&quot;Theories were abundant, but one thing was clear: the time of abundance was over—and to survive, change was needed.&quot;*">
-                <img src="images/vumbua/origin_page15.5.jpg?v=1785980561" alt="Clans Origin: Page 15.5: Physical Breakdown & Collapse (Act VI — The Breakdown Part 2)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page15.5.jpg?v=1785981052" alt="Clans Origin: Page 15.5: Physical Breakdown & Collapse (Act VI — The Breakdown Part 2)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -888,7 +929,7 @@
 **Narration Box 2 (Middle Center):** *&quot;So the clans fought. As their sparks decayed, their grand clan-tech weapons failed one by one. The war regressed into crude medieval iron and wooden siege engines.&quot;*
 
 **Narration Box 3 (Bottom Right):** *&quot;No matter the weapons forged or blood spilled, they could not reignite their sparks. Without them, annihilation loomed.&quot;*">
-                <img src="images/vumbua/origin_page16.jpg?v=1785980561" alt="Clans Origin: Page 16: The Grand Melee & Technological Regression of War (Act VI — The War)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page16.jpg?v=1785981052" alt="Clans Origin: Page 16: The Grand Melee & Technological Regression of War (Act VI — The War)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -919,7 +960,7 @@
 **Mizizi Scholar:** *&quot;A Mizizi could recall anything our clan knew—now trying to remember five years back makes us catatonic.&quot;*
 
 **Wadi Scholar:** *&quot;A Wadi controlled the currents of the river—now the river is dry.&quot;*">
-                <img src="images/vumbua/origin_page16.5.jpg?v=1785980561" alt="Clans Origin: Page 17 Panel 1: The Secret Cross-Clan Council (Act VI — Spark-Soul Decay)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page16.5.jpg?v=1785981052" alt="Clans Origin: Page 17 Panel 1: The Secret Cross-Clan Council (Act VI — Spark-Soul Decay)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -946,7 +987,7 @@
 **Renali Scholar:** *&quot;A Renali could control the air currents all around us—now barely able to make a home habitable for a Trench-Kin.&quot;*
 
 **Mizizi Scholar:** *&quot;When the spark truly dies—it will take our souls with it. We will not survive.&quot;*">
-                <img src="images/vumbua/origin_page17.1.jpg?v=1785980561" alt="Clans Origin: Page 17 Panel 2: The Spark-Soul Discovery (Act VI — Close-Up Scroll)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page17.1.jpg?v=1785981052" alt="Clans Origin: Page 17 Panel 2: The Spark-Soul Discovery (Act VI — Close-Up Scroll)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -977,32 +1018,32 @@
 **Mwangi:** *&quot;We seal the ancestral Sparks into isolation. Through The Exchange alone shall our clans trade—keeping the smallest spark alive until a new generation learns to grow.&quot;*
 
 **Sound Effect:** *&quot;⚡ DEAFENING PORTAL SNAP!&quot;*">
-                <img src="images/vumbua/origin_page17.5.jpg?v=1785980561" alt="Clans Origin: Page 18/19: Theory of The Exchange & Pact of Isolation (Act VI — The Goldilocks Connection)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page17.5.jpg?v=1785981052" alt="Clans Origin: Page 18/19: Theory of The Exchange & Pact of Isolation (Act VI — The Goldilocks Connection)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
-        <!-- 150vh PURE PITCH-BLACK MEMORY VOID TRANSITION SECTION -->
+        <!-- 160vh TRANSPARENT MEMORY VOID TRANSITION SECTION -->
         <section class="memory-transition-void">
             <!-- Top Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mb-8"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mb-8"></div>
             
             <!-- Floating Act Badge -->
-            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+            <div class="text-[10px] sm:text-[11px] font-serif tracking-[0.4em] text-cyan-400 font-semibold uppercase mb-3 drop-shadow-[0_0_10px_rgba(34,211,238,0.6)]">
                 EPILOGUE
             </div>
             
             <!-- Floating Title -->
-            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_20px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
+            <h2 class="text-2xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-amber-300 font-serif drop-shadow-[0_4px_24px_rgba(0,0,0,1)] max-w-xs sm:max-w-md leading-tight">
                 Return to the Present Day
             </h2>
             
             <!-- Poetic Subtitle -->
-            <p class="text-xs sm:text-sm text-slate-400 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_10px_rgba(0,0,0,1)]">
+            <p class="text-xs sm:text-sm text-slate-300 font-light italic leading-relaxed tracking-wide max-w-xs sm:max-w-sm mt-4 drop-shadow-[0_2px_12px_rgba(0,0,0,1)]">
                 Snapping back to Center Grove before the ancient petrified oak and the organic tortoise shell map...
             </p>
 
             <!-- Bottom Connecting Line -->
-            <div class="w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent mt-10"></div>
+            <div class="w-[1px] h-28 bg-gradient-to-b from-transparent via-cyan-400/60 to-transparent mt-10"></div>
         </section>
 
         <!-- Page 20: Present Return & Organic Tortoise Shell Map (Epilogue) -->
@@ -1028,7 +1069,7 @@
 *Behind the Scenes (Story Action):* Full page splash showing a close-up of the ancient tortoise's back shell—where natural keratin scute scales and bioluminescent lichen veins naturally form the fantasy world map with glowing pinprick runes of the clans embedded into the shell plates.
 
 **Bottom Center (Narration Box):** *&quot;On the living shell rest the pinprick runes of the other clans—the map of a forgotten world awaiting the work of growth.&quot;*">
-                <img src="images/vumbua/origin_page20.jpg?v=1785980561" alt="Clans Origin: Page 20: Present Return & Organic Tortoise Shell Map (Epilogue)" class="w-full h-auto block p-0 m-0" loading="lazy">
+                <img src="images/vumbua/origin_page20.jpg?v=1785981052" alt="Clans Origin: Page 20: Present Return & Organic Tortoise Shell Map (Epilogue)" class="w-full h-auto block p-0 m-0" loading="lazy">
             </div>
         </section>
 
@@ -1039,9 +1080,9 @@
         <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
     </footer>
 
-    <script src="image-feedback.js?v=1785980561"></script>
+    <script src="image-feedback.js?v=1785981052"></script>
     <script>
-        // PURE PITCH-BLACK 3D WARP SPEED PARTICLE CANVAS
+        // PURE PITCH-BLACK 3D WARP SPEED PARTICLE CANVAS (NO SHADOW BLUR ACCUMULATION)
         (function() {
             const canvas = document.getElementById('warpCanvas');
             if(!canvas) return;
@@ -1055,16 +1096,16 @@
             window.addEventListener('resize', resize, { passive: true });
             resize();
             
-            const NUM_PARTICLES = 95;
+            const NUM_PARTICLES = 110;
             const particles = [];
-            const colors = ['#22d3ee', '#f59e0b', '#a855f7', '#38bdf8', '#fbbf24', '#ffffff'];
+            const colors = ['#22d3ee', '#f59e0b', '#38bdf8', '#fbbf24', '#ffffff', '#67e8f9'];
             
             for (let i = 0; i < NUM_PARTICLES; i++) {
                 particles.push({
                     x: (Math.random() - 0.5) * width * 1.5,
                     y: (Math.random() - 0.5) * height * 1.5,
                     z: Math.random() * width,
-                    size: Math.random() * 1.8 + 0.8,
+                    size: Math.random() * 2.0 + 1.0,
                     color: colors[Math.floor(Math.random() * colors.length)]
                 });
             }
@@ -1079,17 +1120,20 @@
             }, { passive: true });
             
             function animate() {
-                scrollSpeed *= 0.90;
+                scrollSpeed *= 0.88;
                 
-                // Clear with pure pitch black (rgba 0,0,0)
-                const alpha = Math.min(0.35, 0.15 + scrollSpeed * 0.006);
+                // Clear with pure pitch black (rgba 0,0,0) with no shadowBlur accumulation
+                const alpha = Math.min(0.38, 0.16 + scrollSpeed * 0.008);
                 ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
                 ctx.fillRect(0, 0, width, height);
                 
                 const cx = width / 2;
                 const cy = height / 2;
-                const speed = 1.2 + Math.min(scrollSpeed * 0.55, 25);
-                const rotation = (scrollSpeed * 0.0015);
+                const speed = 1.5 + Math.min(scrollSpeed * 0.6, 28);
+                const rotation = (scrollSpeed * 0.0018);
+                
+                // Disable shadowBlur to prevent purple/magenta tint accumulation
+                ctx.shadowBlur = 0;
                 
                 for (let i = 0; i < NUM_PARTICLES; i++) {
                     const p = particles[i];
@@ -1101,7 +1145,7 @@
                         p.y = (Math.random() - 0.5) * height * 1.5;
                     }
                     
-                    const k = 220 / p.z;
+                    const k = 240 / p.z;
                     const px = p.x * k + cx;
                     const py = p.y * k + cy;
                     
@@ -1111,10 +1155,8 @@
                     const finalY = cy + Math.sin(angle) * dist;
                     
                     if (finalX >= 0 && finalX <= width && finalY >= 0 && finalY <= height) {
-                        const size = Math.max(0.8, (1 - p.z / width) * p.size * 2.2);
+                        const size = Math.max(1.0, (1 - p.z / width) * p.size * 2.5);
                         ctx.fillStyle = p.color;
-                        ctx.shadowBlur = 6;
-                        ctx.shadowColor = p.color;
                         ctx.beginPath();
                         ctx.arc(finalX, finalY, size, 0, Math.PI * 2);
                         ctx.fill();
