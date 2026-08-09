@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vumbua Academy — Session 11: Don't Touch My Biscuits (Multi-Medium)</title>
-    <meta name="description" content="Multi-medium edition of Session 11: Audiobook Sync, Ebook Text, and Graphic Novel.">
+    <title>Vumbua Academy — Session 11: Don't Touch My Biscuits (Multi-Medium Audiobook)</title>
+    <meta name="description" content="Multi-medium edition of Session 11: Master Audiobook Sync, Ebook Text, and Graphic Novel.">
     
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,8 +25,7 @@
         body { font-family: 'Outfit', sans-serif; background-color: #090d16; color: #f8fafc; margin: 0 !important; padding: 0 !important; overflow-x: hidden; }
         h1, h2, h3 { font-family: 'Cinzel', serif; }
         .font-ebook { font-family: 'Merriweather', serif; }
-        
-        /* 0px SEAMLESS WEBTOON STRIP STYLING FOR GRAPHIC NOVEL VIEW */
+
         #view-graphic-novel main { padding: 0 !important; margin: 0 auto !important; width: 100%; max-width: 480px; position: relative; z-index: 10; background: #090d16; }
         #view-graphic-novel section.panel-section { padding: 0 !important; margin: 0 !important; line-height: 0 !important; border: none !important; position: relative; z-index: 10; background: #090d16; }
         .comic-panel { margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; line-height: 0 !important; background: #000; }
@@ -35,7 +34,10 @@
         /* SPOTIFY-STYLE ACTIVE LYRIC HIGHLIGHT */
         .sync-para.active-lyric {
             border-left-color: #f59e0b !important;
-            background-color: rgba(245, 158, 11, 0.12) !important;
+            background-color: rgba(245, 158, 11, 0.15) !important;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.15) !important;
+        }
+        .sync-para.active-lyric p {
             color: #ffffff !important;
             font-weight: 500;
         }
@@ -43,14 +45,14 @@
 </head>
 <body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
 
-    <!-- Hidden HTML5 Audio Element -->
-    <audio id="audioElement" preload="metadata" src="audio/s11-clean-story-audio.mp3?v=1786310387"></audio>
+    <!-- Master Audiobook HTML5 Audio Element -->
+    <audio id="audioElement" preload="metadata" src="audio/s11-clean-story-audio.mp3?v=1786311427"></audio>
 
     <!-- Global Loading Overlay -->
     <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
         <div class="flex flex-col items-center gap-3">
             <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-xs text-amber-500 tracking-widest uppercase font-semibold">Loading Storybook...</span>
+            <span class="text-xs text-amber-500 tracking-widest uppercase font-semibold">Loading Audiobook...</span>
         </div>
     </div>
 
@@ -65,7 +67,7 @@
             </a>
             <h1 id="nav-title" class="text-base sm:text-lg font-bold text-amber-400 truncate max-w-[50%] sm:max-w-none text-center">Session 11: Don't Touch My Biscuits</h1>
             <div class="flex items-center gap-2">
-                <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share this page" aria-label="Share page">
+                <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share page" aria-label="Share page">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186l5.302-2.548a2.25 2.25 0 1 1 .74 1.49L7.95 11.07m0 1.86l5.302 2.548a2.25 2.25 0 1 1-.74 1.49l-5.302-2.548M13.5 5.25a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0zm0 13.5a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0z" />
                     </svg>
@@ -90,7 +92,7 @@
     <!-- VIEW 1: AUDIOBOOK & TIME-SYNCED TRANSCRIPT -->
     <div id="view-audio" class="medium-view max-w-2xl mx-auto px-4 py-6">
         <!-- Floating Sticky Media Control Bar -->
-        <div id="mediaPlayerBar" class="sticky top-[108px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-xl mb-6">
+        <div id="mediaPlayerBar" class="sticky top-[108px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-2xl mb-6">
             <div class="flex items-center justify-between gap-3 mb-2">
                 <div class="flex items-center gap-2">
                     <button id="playBtn" class="w-10 h-10 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/30">
@@ -104,6 +106,9 @@
                     </button>
                 </div>
                 <div class="flex items-center gap-2">
+                    <button id="autoScrollToggle" class="text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 transition-all flex items-center gap-1">
+                        <span id="scrollIcon">📜</span> Auto-Scroll: ON
+                    </button>
                     <button id="speedBtn" class="text-xs font-mono font-bold text-amber-400 bg-slate-800 border border-slate-700 px-2.5 py-1.5 rounded-lg hover:bg-slate-700 transition-colors">
                         1.0x
                     </button>
@@ -114,683 +119,1300 @@
             <input type="range" id="audioScrubber" min="0" max="100" value="0" step="0.1" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
         </div>
 
-        <!-- Sync Instructions -->
         <div class="text-center text-xs text-slate-500 mb-4 italic">
-            💡 Click any paragraph in the transcript below to jump audio to that exact moment!
+            💡 Tap any paragraph below to jump the audiobook directly to that line!
         </div>
 
-        <!-- Transcript Content -->
-        <div class="sync-transcript-container space-y-1">
+        <div class="sync-transcript-container space-y-2">
             
-    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="0">
+    <div class="audio-chapter-heading py-4 my-4 border-b border-amber-500/20" data-timestamp="0.0">
         <h3 class="text-xl font-bold text-amber-400 font-serif">Intro</h3>
     </div>
     
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="0">
-            # DON'T TOUCH MY BISCUITS
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="0.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 0m 00s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p># DON'T TOUCH MY BISCUITS</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="3">
-            ---
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="2.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 0m 02s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>---</p>
+        </div>
         
-    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="6">
+    <div class="audio-chapter-heading py-4 my-4 border-b border-amber-500/20" data-timestamp="6.2">
         <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 1: THE NIGHT OF EMBERS</h3>
     </div>
     
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="6">
-            Rain fell through the colossal leaves in heavy, rhythmic sheets, filling the petrified canopy with a sound like distant drumming. Fifty feet below, the forest floor was lost in twilight shadow.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="6.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 0m 06s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Rain fell through the colossal leaves in heavy, rhythmic sheets, filling the petrified canopy with a sound like distant drumming. Fifty feet below, the forest floor was lost in twilight shadow.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="18">
-            High in the woven limbs of four ancient petrified giants, the Canopy Raft strained against its high-tension bungees. Ignatious leaned over the wooden gunwale, blowing a plume of grey ash through his nostrils. Faint orange embers danced along the cuffs of his heavy leather coat, fighting off the damp chill.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="7.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 0m 07s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>High in the woven limbs of four ancient petrified giants, the Canopy Raft strained against its high-tension bungees. Ignatious leaned over the wooden gunwale, blowing a plume of grey ash through his nostrils. Faint orange embers danced along the cuffs of his heavy leather coat, fighting off the damp chill.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="38">
-            "Well," he grunted, adjusting the warhammer strapped across his back. "The landing went bettah than I thought."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="21.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 0m 21s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Well," he grunted, adjusting the warhammer strapped across his back. "The landing went bettah than I thought."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="44">
-            Beside him, Loami unbolted the central winch casing. He wiped grease and rainwater from his brow with the back of a calloused hand, adjusting his damp woolen flat cap.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="43.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 0m 43s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Beside him, Loami unbolted the central winch casing. He wiped grease and rainwater from his brow with the back of a calloused hand, adjusting his damp woolen flat cap.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="55">
-            "Gotta say I'm shocked we made it up here at all," Loami said, his broad shoulders tensing as he checked the rig's balance. "We look a little like a ragtag crew, but here we are. Safe as we're gonna get."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="45.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 0m 45s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Gotta say I'm shocked we made it up here at all," Loami said, his broad shoulders tensing as he checked the rig's balance. "We look a little like a ragtag crew, but here we are. Safe as we're gonna get."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="71">
-            A low, resonant thud vibrated through the petrified wood beneath their boots. Miles away, through gaps in the foliage, a jagged pillar of violet lightning hammered the central Mon. The air tasted sharply of copper and ozone.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="49.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 0m 49s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>A low, resonant thud vibrated through the petrified wood beneath their boots. Miles away, through gaps in the foliage, a jagged pillar of violet lightning hammered the central Mon. The air tasted sharply of copper and ozone.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="85">
-            Ignatious squinted toward the flash. "What's the purpose of all this? Is the Academy testing our adventurism, or is there a reason the sky keeps tryin' to melt the obelisk?"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="60.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 1m 00s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious squinted toward the flash. "What's the purpose of all this? Is the Academy testing our adventurism, or is there a reason the sky keeps tryin' to melt the obelisk?"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="97">
-            Loami's expression darkened. Before entering the Academy, he had spent years servicing power conduits in Harmony, learning the temperamental pulse of Aether technology.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="68.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 1m 08s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami's expression darkened. Before entering the Academy, he had spent years servicing power conduits in Harmony, learning the temperamental pulse of Aether technology.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="106">
-            "They've lost control," Loami murmured, inspecting the hum of their craft's instruments. "The nodes broadcast a high-frequency pulse to keep canopy beasts at bay. But whatever hit the bay short-circuited the main line. The shields are down. Recovery time... eight increments, minimum."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="72.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 1m 12s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"They've lost control," Loami murmured, inspecting the hum of their craft's instruments. "The nodes broadcast a high-frequency pulse to keep canopy beasts at bay. But whatever hit the bay short-circuited the main line. The shields are down. Recovery time... eight increments, minimum."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="122">
-            He looked back at the party. "We've got three clocks tickin' against us now: how long we can survive out here, when the storm surge hits, and whether this raft holds together."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="88.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 1m 28s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>He looked back at the party. "We've got three clocks tickin' against us now: how long we can survive out here, when the storm surge hits, and whether this raft holds together."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="134">
-            Ignatious ran a gloved hand along a thick, fibrous vine clinging to the petrified trunk. "Can I grab some of these vines for extra ropage? You can always use more rope."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="95.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 1m 35s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious ran a gloved hand along a thick, fibrous vine clinging to the petrified trunk. "Can I grab some of these vines for extra ropage? You can always use more rope."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="146">
-            "Hop off if you want," Loami said, scanning the dark canopy. "I'm gonna scout."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="98.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 1m 38s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Hop off if you want," Loami said, scanning the dark canopy. "I'm gonna scout."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="151">
-            Ignatious swung his boot over the rail, stepping onto a wide, moss-slick bough. But as his weight shifted, the dark foliage rustled unnaturally. He froze, clutching the vine.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="115.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 1m 55s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious swung his boot over the rail, stepping onto a wide, moss-slick bough. But as his weight shifted, the dark foliage rustled unnaturally. He froze, clutching the vine.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="162">
-            "No, no," Ignatious muttered, his eyes darting through the leaves. "There's always somethin' hidin' out there waitin' to snap at you when you get close. All right, guys... I'm grabbin' some vines, but keep your eyes open. You nevah know when you'll need more rope."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="127.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 07s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"No, no," Ignatious muttered, his eyes darting through the leaves. "There's always somethin' hidin' out there waitin' to snap at you when you get close. All right, guys... I'm grabbin' some vines, but keep your eyes open. You nevah know when you'll need more rope."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="180">
-            Loami crouched low on the bough, narrowing his dark eyes. His low-light vision pierced the rain-dappled twilight. Beneath the creeping vines, sleek, four-legged silhouettes prowled across the petrified bark—lean, cat-like predators perfectly camouflaged against the dark timber.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="139.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 19s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami crouched low on the bough, narrowing his dark eyes. His low-light vision pierced the rain-dappled twilight. Beneath the creeping vines, sleek, four-legged silhouettes prowled across the petrified bark—lean, cat-like predators perfectly camouflaged against the dark timber.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="194">
-            "Hey!" Loami hissed, dropping his center of gravity. "We've got feline creatures out on the branches! Natty, hurry back!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="143.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 23s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Hey!" Loami hissed, dropping his center of gravity. "We've got feline creatures out on the branches! Natty, hurry back!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="201">
-            Britt and Aggie scrambled up beside him, peering into the shadows. The creatures were built somewhere between a coyote and a mountain cat—territorial predators native to the upper canopy, known as Meowders.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="151.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 31s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt and Aggie scrambled up beside him, peering into the shadows. The creatures were built somewhere between a coyote and a mountain cat—territorial predators native to the upper canopy, known as Meowders.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="213">
-            "A coyobi? Interesting," Ignatious mused.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="156.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 36s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"A coyobi? Interesting," Ignatious mused.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="216">
-            Britt drew her hunting knife, her green skin shimmering faintly in the dim light. "Oh yeah, we know those! They're in our forest back home—Meowders!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="158.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 38s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt drew her hunting knife, her green skin shimmering faintly in the dim light. "Oh yeah, we know those! They're in our forest back home—Meowders!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="226">
-            "Seen what?" Ignatious asked, blinking. "What did you see?"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="162.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 42s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Seen what?" Ignatious asked, blinking. "What did you see?"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="229">
-            A sudden flurry of scurrying claws echoed across the bark. Dozens of glowing orange eyes ignited in the dark leaves surrounding the party.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="165.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 45s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>A sudden flurry of scurrying claws echoed across the bark. Dozens of glowing orange eyes ignited in the dark leaves surrounding the party.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="238">
-            At the rear of the raft, Iggy sat curled in a tight, shivering ball inside his heavy wool trench coat. His round copper goggles were slick with rain, his small clay-and-soil body rocking back and forth in sheer terror.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="171.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 51s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>At the rear of the raft, Iggy sat curled in a tight, shivering ball inside his heavy wool trench coat. His round copper goggles were slick with rain, his small clay-and-soil body rocking back and forth in sheer terror.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="253">
-            [panicked] "The treeth have eyeth!" Iggy whimpered, clutching his head. "The treeth have eyeth!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="173.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 53s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"The treeth have eyeth!" Iggy whimpered, clutching his head. "The treeth have eyeth!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="258">
-            "Those aren't trees, Iggy!" Aggie called back. "They're basically just mean cats!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="176.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 2m 56s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Those aren't trees, Iggy!" Aggie called back. "They're basically just mean cats!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="262">
-            Britt didn't hesitate. "Natty—move over, I've got a plan!" she shouted, vaulting past Ignatious.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="188.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 3m 08s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt didn't hesitate. "Natty—move over, I've got a plan!" she shouted, vaulting past Ignatious.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="267">
-            She raised her hands and unleashed *Hypnotic Shimmer*. A brilliant cascade of pulsing chromatic light erupted across the bough. The radiant illusion dazzled the pack of Meowders, leaving them pawing blindly at the glowing air.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="201.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 3m 21s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>She raised her hands and unleashed *Hypnotic Shimmer*. A brilliant cascade of pulsing chromatic light erupted across the bough. The radiant illusion dazzled the pack of Meowders, leaving them pawing blindly at the glowing air.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="281">
-            "Are they dazed?!" Ignatious called out.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="213.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 3m 33s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Are they dazed?!" Ignatious called out.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="284">
-            "They're stunned!" Britt shouted back. "Move while they're dazed!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="216.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 3m 36s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"They're stunned!" Britt shouted back. "Move while they're dazed!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="287">
-            "Do we try to move the raft or lower a branch?" Loami asked, eyeing their position.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="221.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 3m 41s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Do we try to move the raft or lower a branch?" Loami asked, eyeing their position.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="293">
-            "With lightning and thunder like this?" Ignatious countered. "Can we get away, or are these things gonna pursue us with bloodlust?"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="240.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 00s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"With lightning and thunder like this?" Ignatious countered. "Can we get away, or are these things gonna pursue us with bloodlust?"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="301">
-            "They're territorial," Aggie warned. "They won't back off easily."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="245.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 05s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"They're territorial," Aggie warned. "They won't back off easily."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="304">
-            "I'm gonna try somethin' else," Ignatious said. "Just brandishin' the flames a bit! Let's see how these cats like my dreadful visage!" Fanning the inner furnace of his chest, he activated *Dread Visage*. A terrifying, roaring face of orange fire erupted over his features.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="248.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 08s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I'm gonna try somethin' else," Ignatious said. "Just brandishin' the flames a bit! Let's see how these cats like my dreadful visage!" Fanning the inner furnace of his chest, he activated *Dread Visage*. A terrifying, roaring face of orange fire erupted over his features.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="321">
-            Loami grinned, stepping beside him with his spanner raised. "All right, you little cats! Bring it on!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="249.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 09s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami grinned, stepping beside him with his spanner raised. "All right, you little cats! Bring it on!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="327">
-            The explosion of fire shattered the nerve of several Meowders. Screeching in terror, two of the creatures scrambled back into the foliage. But the alpha snarled, lunging forward with reckless fury, claws raking across Loami's shoulder pauldron.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="263.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 23s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The explosion of fire shattered the nerve of several Meowders. Screeching in terror, two of the creatures scrambled back into the foliage. But the alpha snarled, lunging forward with reckless fury, claws raking across Loami's shoulder pauldron.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="341">
-            [groans] "Psh, these little cats can only do minor damage!" Loami grunted, bracing as his armor absorbed the strike.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="264.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 24s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Psh, these little cats can only do minor damage!" Loami grunted, bracing as his armor absorbed the strike.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="348">
-            ---
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="269.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 29s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>---</p>
+        </div>
         
-    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="351">
+    <div class="audio-chapter-heading py-4 my-4 border-b border-amber-500/20" data-timestamp="271.3">
         <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 2: THE CAZITO MANEUVER</h3>
     </div>
     
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="351">
-            Rain drummed against the giant leaves in a steady rhythm.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="271.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 31s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Rain drummed against the giant leaves in a steady rhythm.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="355">
-            Britt stepped to the edge of the limb, running her green-skinned hand along the petrified grain. "This forest feels wrong," she murmured to Aggie. "Fifty feet up, dead quiet... like a set built to imitate real life. And when I touch the bark, there's no hum. The Mizizi network is dead here."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="277.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 37s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt stepped to the edge of the limb, running her green-skinned hand along the petrified grain. "This forest feels wrong," she murmured to Aggie. "Fifty feet up, dead quiet... like a set built to imitate real life. And when I touch the bark, there's no hum. The Mizizi network is dead here."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="375">
-            Ahead on the bough, the remaining Meowders darted around Loami's boots. Loami swung a devastating right hook, but the cat twisted beneath his fist with improbable speed.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="278.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 38s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ahead on the bough, the remaining Meowders darted around Loami's boots. Loami swung a devastating right hook, but the cat twisted beneath his fist with improbable speed.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="385">
-            "Dammit! These skimpers are quick!" Loami spat as his fist whistled through empty air.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="283.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 43s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Dammit! These skimpers are quick!" Loami spat as his fist whistled through empty air.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="390">
-            "I'll help speed you up!" Ignatious roared. Channeling his hearthfire, he pulsed a wave of invigorating energy into Loami's spirit. "Try again!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="284.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 44s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I'll help speed you up!" Ignatious roared. Channeling his hearthfire, he pulsed a wave of invigorating energy into Loami's spirit. "Try again!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="398">
-            Loami lunged again, but the tree-cats were too nimble, nipping at his collar.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="286.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 46s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami lunged again, but the tree-cats were too nimble, nipping at his collar.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="403">
-            Britt's eyes brightened. "Would it be possible to grab one of these vines and tie a lazizi? It's a traditional Mizizi hunting method!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="295.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 55s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt's eyes brightened. "Would it be possible to grab one of these vines and tie a lazizi? It's a traditional Mizizi hunting method!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="412">
-            Ignatious turned to her in confusion, his hands still smoldering. "I have no idea what a 'Lazizi' is! But if you call it out, I'll shape it!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="299.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 4m 59s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious turned to her in confusion, his hands still smoldering. "I have no idea what a 'Lazizi' is! But if you call it out, I'll shape it!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="422">
-            "I think you'd call it a lasso!" Aggie called out, translating for Britt.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="313.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 13s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I think you'd call it a lasso!" Aggie called out, translating for Britt.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="427">
-            Nodding, Ignatious seized a thick length of raw vine, channeling *Shaped Material*. Flames licked along the fibers, instant-curing the wood into a supple, perfectly balanced hunting loop. He tossed it to Britt. "There! A flawless Lazizi rope!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="316.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 16s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Nodding, Ignatious seized a thick length of raw vine, channeling *Shaped Material*. Flames licked along the fibers, instant-curing the wood into a supple, perfectly balanced hunting loop. He tossed it to Britt. "There! A flawless Lazizi rope!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="441">
-            Loami stared in awe. "Holy shit, Natty, you're really good at that!" He drew upon *Soldier's Bond*, bolstering both himself and Ignatious as they stared down the agile felines.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="320.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 20s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami stared in awe. "Holy shit, Natty, you're really good at that!" He drew upon *Soldier's Bond*, bolstering both himself and Ignatious as they stared down the agile felines.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="452">
-            Britt slapped a wide-brimmed cowboy hat onto her head. Channeling her *Hunter* training, she whirled the flame-forged vine above her head while Ignatious fortified her throw with a surge of prayer dice.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="322.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 22s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt slapped a wide-brimmed cowboy hat onto her head. Channeling her *Hunter* training, she whirled the flame-forged vine above her head while Ignatious fortified her throw with a surge of prayer dice.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="464">
-            "Cazito! I got ya now!" Britt yelled as the loop sailed through the tempest wind. "Come here, you!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="325.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 25s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Cazito! I got ya now!" Britt yelled as the loop sailed through the tempest wind. "Come here, you!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="471">
-            The loop snapped tight around their necks, bundling the three Meowders together like a litter of house cats picked up by the scruff.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="329.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 29s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The loop snapped tight around their necks, bundling the three Meowders together like a litter of house cats picked up by the scruff.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="480">
-            Britt planted her boots, spun the entire cluster around her head in a roaring arc, and pitched them off the bough into the fifty-foot abyss below.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="331.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 31s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt planted her boots, spun the entire cluster around her head in a roaring arc, and pitched them off the bough into the fifty-foot abyss below.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="490">
-            "LAZIZI!" she screamed.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="333.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 33s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"LAZIZI!" she screamed.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="493">
-            Loami howled with laughter, clapping Ignatious on the shoulder. "What a Kazizi-boy! Bye, gazitos!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="337.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 37s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami howled with laughter, clapping Ignatious on the shoulder. "What a Kazizi-boy! Bye, gazitos!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="498">
-            Ignatious blinked, wiping soot from his brow. "I don't know what any of these words mean!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="338.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 38s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious blinked, wiping soot from his brow. "I don't know what any of these words mean!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="504">
-            "It's Spanish!" Loami yelled back. "A gazito!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="355.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 55s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"It's Spanish!" Loami yelled back. "A gazito!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="507">
-            "Yeah, that doesn't help," Ignatious replied, scratching his head as they turned back toward the raft.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="356.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 56s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Yeah, that doesn't help," Ignatious replied, scratching his head as they turned back toward the raft.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="513">
-            ---
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="359.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 5m 59s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>---</p>
+        </div>
         
-    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="516">
+    <div class="audio-chapter-heading py-4 my-4 border-b border-amber-500/20" data-timestamp="361.1">
         <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 3: THE STORM RAPTOR</h3>
     </div>
     
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="516">
-            As the Meowders vanished into the understory, a shrill screech echoed from above.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="361.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 01s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>As the Meowders vanished into the understory, a shrill screech echoed from above.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="521">
-            A massive shadow cut through the driving rain. A high-pitched, furious voice echoed through the upper canopy:
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="363.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 03s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>A massive shadow cut through the driving rain. A high-pitched, furious voice echoed through the upper canopy:</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="527">
-            [screaming] "NO! MY BISCUIT! NOT THESE! THESE ARE MINE, YOU FLAPPING FUZZBALL!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="366.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 06s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"NO! MY BISCUIT! NOT THESE! THESE ARE MINE, YOU FLAPPING FUZZBALL!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="531">
-            Loami's head snapped upward. "Is that Pip?!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="368.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 08s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami's head snapped upward. "Is that Pip?!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="534">
-            High above, tiny halfling legs were kicking frantically in mid-air. Pip was trapped in the talons of a monstrous Storm Raptor flying across the high branches.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="370.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 10s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>High above, tiny halfling legs were kicking frantically in mid-air. Pip was trapped in the talons of a monstrous Storm Raptor flying across the high branches.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="544">
-            "LET ME GO, YOU STUPID BIRD! DON'T TOUCH MY BISCUITS!" Pip screamed.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="378.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 18s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"LET ME GO, YOU STUPID BIRD! DON'T TOUCH MY BISCUITS!" Pip screamed.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="548">
-            "I'm climbin' to the top of the canopy to get in range!" Loami shouted, scrambling up the slick bark.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="381.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 21s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I'm climbin' to the top of the canopy to get in range!" Loami shouted, scrambling up the slick bark.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="555">
-            The instant Aggie's boots touched the upper branch, the entire forest erupted in a rush of telepathic whispers: *"Aggie, Aggie, Aggie, Aggie!"*
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="386.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 26s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The instant Aggie's boots touched the upper branch, the entire forest erupted in a rush of telepathic whispers: *"Aggie, Aggie, Aggie, Aggie!"*</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="563">
-            Aggie closed her eyes, listening as the ancient roots poured impressions into her mind. She turned to the squad, translating the rustling plant-whispers. A 'little tree'—Bramble—had been using *Speak to Plants* to send signals through the network. He apologized through the arbol telephone network, explaining he had been seeding false signals to confuse rival salvagers.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="388.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 28s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Aggie closed her eyes, listening as the ancient roots poured impressions into her mind. She turned to the squad, translating the rustling plant-whispers. A 'little tree'—Bramble—had been using *Speak to Plants* to send signals through the network. He apologized through the arbol telephone network, explaining he had been seeding false signals to confuse rival salvagers.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="585">
-            "That son of a bitch!" Ignatious swore fondly.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="391.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 31s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"That son of a bitch!" Ignatious swore fondly.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="588">
-            Aggie's eyes widened as the vision clarified. Bramble had realized Squad 907 was in the forest and was trying to reach them because Pip had run out alone before the storm to fetch emergency breakfast pastries!
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="397.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 37s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Aggie's eyes widened as the vision clarified. Bramble had realized Squad 907 was in the forest and was trying to reach them because Pip had run out alone before the storm to fetch emergency breakfast pastries!</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="602">
-            Above them, the Storm Raptor carrying Pip circled closer.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="398.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 38s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Above them, the Storm Raptor carrying Pip circled closer.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="605">
-            On the raft deck, hearing Pip's screams shattered Iggy's paralysis instantly. "I have to help her!" he shouted, surging to his feet and raising his wooden staff.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="405.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 45s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>On the raft deck, hearing Pip's screams shattered Iggy's paralysis instantly. "I have to help her!" he shouted, surging to his feet and raising his wooden staff. "Eth-ereal Wall!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="615">
-            [gasp] "Eth-ereal Wall!" Iggy commanded.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="408.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 48s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>A fifty-foot barrier of shimmering translucent force erupted in mid-air. The Storm Raptor screeched, slamming full-force into the wall and beating its wings weakly against the barrier.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="618">
-            A fifty-foot barrier of shimmering translucent force erupted in mid-air. The Storm Raptor screeched, slamming full-force into the wall and beating its wings weakly against the barrier.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="419.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 6m 59s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Stupid bird! Watch where you're flyin'! You're gonna make me drop my biscuits!" Pip yelled, clutching her canvas pouch as golden crumbs rained down.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="628">
-            [screaming] "Stupid bird! Watch where you're flyin'! You're gonna make me drop my biscuits!" Pip yelled, clutching her canvas pouch as golden crumbs rained down.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="421.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 7m 01s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious squinted into the rain, muttering to himself, "Hmm... are English biscuits or nice southern biscuits?!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="638">
-            Ignatious squinted into the rain, muttering to himself, "Hmm... are English biscuits or nice southern biscuits?!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="425.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 7m 05s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Hesitating only a second as the bird hung stalled against the barrier, Ignatious raised his hand and fired a bolt of pure flame at the Raptor. "This bird glows! It's vulnerable! I saved you! You're welcome! I love it when a plan comes together!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="644">
-            Hesitating only a second as the bird hung stalled against the barrier, Ignatious raised his hand and fired a bolt of pure flame at the Raptor. "This bird glows! It's vulnerable! I saved you! You're welcome! I love it when a plan comes together!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="428.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 7m 08s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The impact forced the hawk's talons open, dropping Pip into open air. But as she fell, three bioluminescent shadows bounded out of the foliage—Mwaza-Chui, apex canopy jaguars lured by the rich scent of warm butter and caramelized bacon.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="661">
-            The impact forced the hawk's talons open, dropping Pip into open air. But as she fell, three bioluminescent shadows bounded out of the foliage—Mwaza-Chui, apex canopy jaguars lured by the rich scent of warm butter and caramelized bacon.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="444.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 7m 24s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>---</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="676">
-            ---
-        </p>
-        
-    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="679">
+    <div class="audio-chapter-heading py-4 my-4 border-b border-amber-500/20" data-timestamp="447.2">
         <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 4: THE TREE IGLOO</h3>
     </div>
     
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="679">
-            Loami sprinted toward the drop zone. "Hey! You want a piece of this?! Come and get a little piece of this!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="447.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 7m 27s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami sprinted toward the drop zone. "Hey! You want a piece of this?! Come and get a little piece of this!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="687">
-            Two jaguars darted past him, while the third leapt and caught Pip by her ponytail in its massive jaws, dangling her over the edge!
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="450.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 7m 30s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Two jaguars darted past him, while the third leapt and caught Pip by her ponytail in its massive jaws, dangling her over the edge!</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="696">
-            "How many god's damn cats are in this gods damn forest!" Ignatious bellowed.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="464.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 7m 44s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"How many god's damn cats are in this gods damn forest!" Ignatious bellowed.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="701">
-            The jaguar opened its jaws and unleashed *Frequency Overload*—a roaring cone of static ember energy that rocked Loami and Iggy, suppressing their spellcasting under a wave of psychic shock.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="468.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 7m 48s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The jaguar opened its jaws and unleashed *Frequency Overload*—a roaring cone of static ember energy that rocked Loami and Iggy, suppressing their spellcasting under a wave of psychic shock.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="712">
-            Pip dangled over the abyss, smacking the predator's snout with her food bag. "These are my biscuits! Stop it!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="481.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 01s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Pip dangled over the abyss, smacking the predator's snout with her food bag. "These are my biscuits! Stop it!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="719">
-            Suddenly, the tempest peaked. The colossal trees bent in half under a howling hurricane gale that battered the canopy with sleet and hail.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="488.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 08s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Suddenly, the tempest peaked. The colossal trees bent in half under a howling hurricane gale that battered the canopy with sleet and hail.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="728">
-            Reacting instantly, Ignatious used *Shaped Material* to form a wooden shield against the sleet. Aggie ran beneath the limb using *Wall Walk*, placed her palm against the bark, and channeled *Wild Fortress*, growing a complete Tree Igloo of living root-vines around Pip and Loami.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="491.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 11s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Reacting instantly, Ignatious used *Shaped Material* to form a wooden shield against the sleet. Aggie ran beneath the limb using *Wall Walk*, placed her palm against the bark, and channeled *Wild Fortress*, growing a complete Tree Igloo of living root-vines around Pip and Loami.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="745">
-            "Loami, get into the shell! I can protect you from the storm!" Aggie shouted through the wind.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="501.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 21s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Loami, get into the shell! I can protect you from the storm!" Aggie shouted through the wind.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="751">
-            Loami dived over Pip, rolling them both into the wooden dome like a player recovering a fumble, just as the root-vines sealed tight.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="503.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 23s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami dived over Pip, rolling them both into the wooden dome like a player recovering a fumble, just as the root-vines sealed tight.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="760">
-            Inside the quiet Tree Igloo, Pip gasped, [sighs] "I just wanted to get some snacks, man!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="505.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 25s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Inside the quiet Tree Igloo, Pip gasped, "I just wanted to get some snacks, man!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="766">
-            "I know you did, Pip! That does sound about right," Loami replied, catching his breath.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="509.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 29s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I know you did, Pip! That does sound about right," Loami replied, catching his breath.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="772">
-            Leaning back against the root wall, Loami looked over at Pip. "So here's my theory: I think they created this challenge for first-years, and somethin' went terribly wrong and short-circuited. Are you familiar with the Day of Sparks?"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="511.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 31s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Leaning back against the root wall, Loami looked over at Pip. "So here's my theory: I think they created this challenge for first-years, and somethin' went terribly wrong and short-circuited. Are you familiar with the Day of Sparks?"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="787">
-            "It's the Night of Sparks!" Pip corrected chidingly, opening her bag of snacks to inspect the damage. "Did you not listen to anythin' they taught us in school?!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="518.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 38s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"It's the Night of Sparks!" Pip corrected chidingly, opening her bag of snacks to inspect the damage. "Did you not listen to anythin' they taught us in school?!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="798">
-            "Uh, no," Loami admitted. "But the Night of Sparks—that was about havin' too much power. It was too little power here! The shields went down, and all these beasts started stormin' the ring!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="523.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 43s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Uh, no," Loami admitted. "But the Night of Sparks—that was about havin' too much power. It was too little power here! The shields went down, and all these beasts started stormin' the ring!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="811">
-            Outside, through the gale, stadium speakers crackled across the sky: *"Just hold on... halfway... shield crack up... hold on!"*
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="529.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 49s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Outside, through the gale, stadium speakers crackled across the sky: *"Just hold on... halfway... shield crack up... hold on!"*</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="818">
-            In the bay below, a giant iron steamship—the *Deep-Hull*—rose through the waves, its heavy steam cannons firing pulse rounds to push back beasts attacking the center spire.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="531.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 51s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>In the bay below, a giant iron steamship—the *Deep-Hull*—rose through the waves, its heavy steam cannons firing pulse rounds to push back beasts attacking the center spire.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="828">
-            ---
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="535.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 8m 55s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>---</p>
+        </div>
         
-    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="831">
+    <div class="audio-chapter-heading py-4 my-4 border-b border-amber-500/20" data-timestamp="540.3">
         <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 5: THE RAFT DROP</h3>
     </div>
     
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="831">
-            Outside the Igloo, as the storm wall passed, Ignatious looked at his boots, then up into the sky, before slapping his own forehead in sudden realization.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="540.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 00s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Outside the Igloo, as the storm wall passed, Ignatious looked at his boots, then up into the sky, before slapping his own forehead in sudden realization.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="841">
-            "Wait a minute," Ignatious realized aloud. "I can fucking fly!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="542.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 02s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Wait a minute," Ignatious realized aloud. "I can fucking fly!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="845">
-            Ignatious ignited his ember wings, soaring up with his warhammer to strike the glowing Storm Raptor, sending it crashing into the underbrush.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="544.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 04s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious ignited his ember wings, soaring up with his warhammer to strike the glowing Storm Raptor, sending it crashing into the underbrush.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="853">
-            Meanwhile, the pack of Mwaza-Chui slammed against the exterior of the Tree Igloo, their claws punching at the timber. Within, Pip and Loami sat in comfort, scarfing down a biscuit each.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="546.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 06s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Meanwhile, the pack of Mwaza-Chui slammed against the exterior of the Tree Igloo, their claws punching at the timber. Within, Pip and Loami sat in comfort, scarfing down a biscuit each.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="865">
-            "This biscuit is great, I can feel the stress drainin' away!" Loami exclaimed between bites.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="562.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 22s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"This biscuit is great, I can feel the stress drainin' away!" Loami exclaimed between bites.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="871">
-            "Yeah, I'm nevah stressed!" Pip replied through a mouthful of buttery flakes.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="564.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 24s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Yeah, I'm nevah stressed!" Pip replied through a mouthful of buttery flakes.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="875">
-            Suddenly, a jaguar snout breached the dome, roaring into the igloo.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="575.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 35s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Suddenly, a jaguar snout breached the dome, roaring into the igloo.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="879">
-            "Pip, watch out!" Loami yelled, jumping to cover her. But Pip simply dodged.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="587.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 47s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Pip, watch out!" Loami yelled, jumping to cover her. But Pip simply dodged.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="884">
-            "Bad cat!" Pip scolded, popping up and bopping the jaguar on the nose with her bag of food. The jaguar froze, scrunching its nose in shock.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="590.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 50s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Bad cat!" Pip scolded, popping up and bopping the jaguar on the nose with her bag of food. The jaguar froze, scrunching its nose in shock.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="894">
-            Outside, Britt and Iggy gathered a massive pile of phosphorescent mushrooms along the trunk. "In Mizizi lore, jaguars are super attracted to bioluminescent light! I have a plan," Britt said, collecting spores while Iggy stacked them on the raft deck.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="594.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 9m 54s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Outside, Britt and Iggy gathered a massive pile of phosphorescent mushrooms along the trunk. "In Mizizi lore, jaguars are super attracted to bioluminescent light! I have a plan," Britt said, collecting spores while Iggy stacked them on the raft deck.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="910">
-            Aggie channeled *Conjure Swarm*, sending a trail of glowing fireflies toward the bait. The scent and brilliant glow caught the jaguars' nostrils. Turning away from the Igloo, the pack bounded onto the raft deck to gorge on the fungi.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="601.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 01s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Aggie channeled *Conjure Swarm*, sending a trail of glowing fireflies toward the bait. The scent and brilliant glow caught the jaguars' nostrils. Turning away from the Igloo, the pack bounded onto the raft deck to gorge on the fungi.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="925">
-            Pip started to yell, "Hey, you big furbag—!" before Aggie shushed her.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="610.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 10s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Pip started to yell, "Hey, you big furbag—!" before Aggie shushed her.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="929">
-            As the cats gorged, Loami stalked behind them. Waiting until all three were on the deck, Loami heaved his shoulder against the timber. "Now! Push together and cut the bungees!" Loami yelled.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="611.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 11s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>As the cats gorged, Loami stalked behind them. Waiting until all three were on the deck, Loami heaved his shoulder against the timber. "Now! Push together and cut the bungees!" Loami yelled.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="941">
-            Britt slashed the high-tension bungees. Loami and Iggy heaved with all their strength, tipping the Canopy Raft off the branch.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="612.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 12s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt slashed the high-tension bungees. Loami and Iggy heaved with all their strength, tipping the Canopy Raft off the branch.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="949">
-            The raft pitched over, sending the entire pack of Mwaza-Chui plummeting fifty feet into the dark abyss below with echoing roars and a heavy crash.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="615.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 15s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The raft pitched over, sending the entire pack of Mwaza-Chui plummeting fifty feet into the dark abyss below with echoing roars and a heavy crash.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="959">
-            Across the branch, a second Storm Raptor lunged at Iggy.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="618.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 18s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Across the branch, a second Storm Raptor lunged at Iggy.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="963">
-            "Natty, bring it this way!" Loami shouted across the canopy.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="620.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 20s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Natty, bring it this way!" Loami shouted across the canopy.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="967">
-            Ignatious dodged a talon strike and streaked across the bough. As the Raptor dived, Loami stepped in, shielding Ignatious with a well-timed punch that countered the talons. Frustrated and outnumbered, the Raptor screeched and fled into the storm.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="623.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 23s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious dodged a talon strike and streaked across the bough. As the Raptor dived, Loami stepped in, shielding Ignatious with a well-timed punch that countered the talons. Frustrated and outnumbered, the Raptor screeched and fled into the storm.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="982">
-            "Oh my gods, thank you!" Ignatious gasped.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="625.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 25s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Oh my gods, thank you!" Ignatious gasped.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="985">
-            "I figured a little one-on-one with one of those things wasn't a fair fight," Loami said.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="626.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 26s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I figured a little one-on-one with one of those things wasn't a fair fight," Loami said.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="991">
-            "The one-on-one was fine. The two-on-one aftahward was not!" Ignatious laughed.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="628.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 28s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"The one-on-one was fine. The two-on-one aftahward was not!" Ignatious laughed.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="995">
-            ---
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="632.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 32s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>---</p>
+        </div>
         
-    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="998">
+    <div class="audio-chapter-heading py-4 my-4 border-b border-amber-500/20" data-timestamp="637.8">
         <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 6: THE SACRED TORTOISE</h3>
     </div>
     
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="998">
-            The wind died down to a light, cool sprinkle. Sitting across the bough was Pip, gnawing on her jerky.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="637.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 37s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The wind died down to a light, cool sprinkle. Sitting across the bough was Pip, gnawing on her jerky.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1005">
-            Behind her sat Mwaza-Kasa—the sacred Spirit Tortoise of the Mizizi clan, its bark-like shell looming over Pip, its glassy eyes flicking between Aggie and Britt.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="644.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 44s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Behind her sat Mwaza-Kasa—the sacred Spirit Tortoise of the Mizizi clan, its bark-like shell looming over Pip, its glassy eyes flicking between Aggie and Britt.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1015">
-            "Is that... a family membah of yours?" Ignatious whispered.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="650.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 50s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Is that... a family membah of yours?" Ignatious whispered.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1018">
-            "It's just sittin' there loomin'... menacingly," Loami noted.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="652.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 52s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"It's just sittin' there loomin'... menacingly," Loami noted.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1021">
-            Britt gestured frantically for Pip to back away, but Pip reached into her bag.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="653.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 10m 53s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt gestured frantically for Pip to back away, but Pip reached into her bag.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1026">
-            "I found a big turtle!" Pip announced, holding out a biscuit. The tortoise snapped it down in one bite. "See, it's my friend!" Pip exulted, scratching under its chin.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="664.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 04s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I found a big turtle!" Pip announced, holding out a biscuit. The tortoise snapped it down in one bite. "See, it's my friend!" Pip exulted, scratching under its chin.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1037">
-            "Don't—!" Britt gasped.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="668.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 08s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Don't—!" Britt gasped.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1040">
-            The moment Pip touched its chin, a deep *BOOM* echoed as the tortoise collapsed, its eyes glowing ember-red. Pip's eyes rolled back, and she collapsed down the branch.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="669.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 09s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The moment Pip touched its chin, a deep *BOOM* echoed as the tortoise collapsed, its eyes glowing ember-red. Pip's eyes rolled back, and she collapsed down the branch.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1051">
-            Aggie sprinted forward, catching Pip before she slipped off the edge. Pip was already convulsing in her arms—entering the mycelium network alone.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="672.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 12s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Aggie sprinted forward, catching Pip before she slipped off the edge. Pip was already convulsing in her arms—entering the mycelium network alone.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1059">
-            "You can nevah go through the network alone, or you get pulled in and nevah come out! How do we anchor her?!" Britt cried.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="675.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 15s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"You can nevah go through the network alone, or you get pulled in and nevah come out! How do we anchor her?!" Britt cried.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1068">
-            "Touching Mwaza-Kasa is taboo to the Mizizi, but in absence of the trees, it acts as a physical anchor!" Aggie realized. "We have to touch the living sacred tortoise to save Pip!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="677.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 17s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Touching Mwaza-Kasa is taboo to the Mizizi, but in absence of the trees, it acts as a physical anchor!" Aggie realized. "We have to touch the living sacred tortoise to save Pip!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1080">
-            Britt grabbed Aggie's hand. "Three... two... one!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="684.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 24s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt grabbed Aggie's hand. "Three... two... one!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1083">
-            Pip immediately calmed into a peaceful sleep in Aggie's arms. Simultaneously, Aggie and Britt slumped forward against the shell, entering the deep network.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="710.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 50s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Pip immediately calmed into a peaceful sleep in Aggie's arms. Simultaneously, Aggie and Britt slumped forward against the shell, entering the deep network.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1092">
-            Ignatious blinked. "Hey, Loami! What's with the weird glowin' turtle?! Everyone who touches that turtle falls asleep! Am I the crazy one here?! We should NOT touch that turtle!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="712.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 52s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Ignatious blinked. "Hey, Loami! What's with the weird glowin' turtle?! Everyone who touches that turtle falls asleep! Am I the crazy one here?! We should NOT touch that turtle!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1103">
-            "I think it might be a little too late for that," Loami replied sardonically, stepping forward with his hand outstretched.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="714.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 11m 54s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I think it might be a little too late for that," Loami replied sardonically, stepping forward with his hand outstretched.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1111">
-            ---
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="727.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 07s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>---</p>
+        </div>
         
-    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="1114">
+    <div class="audio-chapter-heading py-4 my-4 border-b border-amber-500/20" data-timestamp="731.5">
         <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 7: WHAT WAS FORGOTTEN</h3>
     </div>
     
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1114">
-            Touching Mwaza-Kasa plunged Aggie and Britt into the deep network. They found Pip easily, lost in a vast, silent forest.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="731.5">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 11s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Touching Mwaza-Kasa plunged Aggie and Britt into the deep network. They found Pip easily, lost in a vast, silent forest.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1122">
-            As they reached her side, the network unlocked a forgotten memory:
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="733.8">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 13s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>As they reached her side, the network unlocked a forgotten memory:</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1126">
-            Young child versions of Aggie and Britt were laughing as they ran through a sunlit sacred grove—a memory wiped from their minds years ago. In the memory, the children sat on a mossy root to rest. But as adult Aggie and Britt watched, they saw the root open its eyes. It was a Spirit Tortoise. The moment the children touched it, they passed out, and the vision shattered.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="743.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 23s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Young child versions of Aggie and Britt were laughing as they ran through a sunlit sacred grove—a memory wiped from their minds years ago. In the memory, the children sat on a mossy root to rest. But as adult Aggie and Britt watched, they saw the root open its eyes. It was a Spirit Tortoise. The moment the children touched it, they passed out, and the vision shattered.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1153">
-            Memories played across the bark like moving shadows: they remembered lost clan members who had vanished years ago after dying of the green shell rot currently on Britt's arm.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="754.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 34s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Memories played across the bark like moving shadows: they remembered lost clan members who had vanished years ago after dying of the green shell rot currently on Britt's arm.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1164">
-            In their adult bodies, Britt and Aggie grabbed Pip's arms and pulled.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="759.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 39s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>In their adult bodies, Britt and Aggie grabbed Pip's arms and pulled.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1168">
-            Loami was inches from touching the shell when Britt, Aggie, and Pip's eyes snapped open back on the high branch, gasping for breath!
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="764.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 44s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami was inches from touching the shell when Britt, Aggie, and Pip's eyes snapped open back on the high branch, gasping for breath!</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1177">
-            "Hey! Whoa! What happened?!" Loami asked.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="767.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 47s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Hey! Whoa! What happened?!" Loami asked.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1180">
-            "You saw that?!" Aggie gasped, staring at Britt.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="770.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 50s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"You saw that?!" Aggie gasped, staring at Britt.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1183">
-            "Yeah... I definitely saw that," Britt said, shaken. "We were kids... in the sacred grove..."
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="777.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 12m 57s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Yeah... I definitely saw that," Britt said, shaken. "We were kids... in the sacred grove..."</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1189">
-            "What?! Saw what?!" Ignatious asked.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="786.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 13m 06s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"What?! Saw what?!" Ignatious asked.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1192">
-            [screaming] "WHAT THE SHIT WAS THAT, MR TURTLE!?" Pip screamed, glaring at the tortoise.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="804.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 13m 24s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"WHAT THE SHIT WAS THAT, MR TURTLE!?" Pip screamed, glaring at the tortoise.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1197">
-            Mwaza-Kasa stood slowly on four legs, looking sad and determined. It stomped its heavy foot twice against the bark, tucked its limbs into its shell, and rolled off the edge of the fifty-foot branch!
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="807.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 13m 27s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Mwaza-Kasa stood slowly on four legs, looking sad and determined. It stomped its heavy foot twice against the bark, tucked its limbs into its shell, and rolled off the edge of the fifty-foot branch!</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1210">
-            [panicked] "OH NO!" Iggy yelled.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="810.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 13m 30s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"OH NO!" Iggy yelled.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1213">
-            *CRASH!*
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="819.2">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 13m 39s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>*CRASH!*</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1216">
-            The shell plunged fifty feet, smashing into the ground with a thud that created a dirt crater. Moments later, the tortoise popped out of its shell, looked up at Squad 907, and waited.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="822.4">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 13m 42s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>The shell plunged fifty feet, smashing into the ground with a thud that created a dirt crater. Moments later, the tortoise popped out of its shell, looked up at Squad 907, and waited.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1229">
-            "Well... that can't be right!" Loami said.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="824.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 13m 44s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Well... that can't be right!" Loami said.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1232">
-            "I think it wants you to follow it!" Ignatious said.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="838.3">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 13m 58s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I think it wants you to follow it!" Ignatious said.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1236">
-            "Well, I'm definitely not jumpin' off the tree!" Britt said.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="840.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 14m 00s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"Well, I'm definitely not jumpin' off the tree!" Britt said.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1240">
-            "I can carry one of you down!" Ignatious offered.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="844.7">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 14m 04s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>"I can carry one of you down!" Ignatious offered.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1243">
-            Loami shrugged. "I've fallen from furthah! Besides... I'm nevah stayin' up in these trees alone!"
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="854.1">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 14m 14s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami shrugged. "I've fallen from furthah! Besides... I'm nevah stayin' up in these trees alone!"</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1249">
-            Loami dived fifty feet straight down into the crater. Slamming into the dirt, he staggered to his feet and bowed deeply to Mwaza-Kasa. The sacred tortoise nodded in approval.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="874.6">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 14m 34s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Loami dived fifty feet straight down into the crater. Slamming into the dirt, he staggered to his feet and bowed deeply to Mwaza-Kasa. The sacred tortoise nodded in approval.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1260">
-            Britt used *Wall Walk* to carry Pip down, who grumbled, "My headdd." Iggy walked over and hand-fed Pip bacon biscuits as she cried tears of relief.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="878.0">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 14m 38s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Britt used *Wall Walk* to carry Pip down, who grumbled, "My headdd." Iggy walked over and hand-fed Pip bacon biscuits as she cried tears of relief.</p>
+        </div>
         
-        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1270">
-            Mwaza-Kasa looked at Squad 907, nodded slowly, and turned to lead them on foot into the petrified forest as dawn broke.
-        </p>
+        <div class="sync-para group text-slate-300 text-sm sm:text-base leading-relaxed py-2.5 px-3.5 my-1.5 rounded-xl bg-slate-900/60 border-l-4 border-slate-800 hover:border-amber-400 cursor-pointer transition-all duration-200" data-timestamp="879.9">
+            <div class="flex items-center justify-between mb-1 text-[11px] font-mono text-slate-500 group-hover:text-amber-400">
+                <span>▶ 14m 39s</span>
+                <span>Tap to seek</span>
+            </div>
+            <p>Mwaza-Kasa looked at Squad 907, nodded slowly, and turned to lead them on foot into the petrified forest as dawn broke.</p>
+        </div>
         
         </div>
     </div>
 
     <!-- VIEW 2: EBOOK READABLE TEXT -->
     <div id="view-ebook" class="medium-view hidden max-w-2xl mx-auto px-4 py-8">
-        <!-- Ebook Top Toolbar -->
         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
             <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold">
-                Adapted by Brandon Sanderson Style
+                Novel Adaptation by Brandon Sanderson Style
             </div>
             <div class="flex items-center gap-2">
                 <button id="fontDown" class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 hover:text-white border border-slate-700">A-</button>
@@ -798,7 +1420,6 @@
             </div>
         </div>
 
-        <!-- Ebook Content Container -->
         <div id="ebookTextContainer" class="font-ebook space-y-4">
             
     <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
@@ -906,7 +1527,7 @@
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            [panicked] "The treeth have eyeth!" Iggy whimpered, clutching his head. "The treeth have eyeth!"
+            "The treeth have eyeth!" Iggy whimpered, clutching his head. "The treeth have eyeth!"
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
@@ -954,7 +1575,7 @@
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            [groans] "Psh, these little cats can only do minor damage!" Loami grunted, bracing as his armor absorbed the strike.
+            "Psh, these little cats can only do minor damage!" Loami grunted, bracing as his armor absorbed the strike.
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
@@ -1062,7 +1683,7 @@
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            [screaming] "NO! MY BISCUIT! NOT THESE! THESE ARE MINE, YOU FLAPPING FUZZBALL!"
+            "NO! MY BISCUIT! NOT THESE! THESE ARE MINE, YOU FLAPPING FUZZBALL!"
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
@@ -1102,11 +1723,7 @@
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            On the raft deck, hearing Pip's screams shattered Iggy's paralysis instantly. "I have to help her!" he shouted, surging to his feet and raising his wooden staff.
-        </p>
-        
-        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            [gasp] "Eth-ereal Wall!" Iggy commanded.
+            On the raft deck, hearing Pip's screams shattered Iggy's paralysis instantly. "I have to help her!" he shouted, surging to his feet and raising his wooden staff. "Eth-ereal Wall!"
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
@@ -1114,7 +1731,7 @@
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            [screaming] "Stupid bird! Watch where you're flyin'! You're gonna make me drop my biscuits!" Pip yelled, clutching her canvas pouch as golden crumbs rained down.
+            "Stupid bird! Watch where you're flyin'! You're gonna make me drop my biscuits!" Pip yelled, clutching her canvas pouch as golden crumbs rained down.
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
@@ -1174,7 +1791,7 @@
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            Inside the quiet Tree Igloo, Pip gasped, [sighs] "I just wanted to get some snacks, man!"
+            Inside the quiet Tree Igloo, Pip gasped, "I just wanted to get some snacks, man!"
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
@@ -1410,7 +2027,7 @@
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            [screaming] "WHAT THE SHIT WAS THAT, MR TURTLE!?" Pip screamed, glaring at the tortoise.
+            "WHAT THE SHIT WAS THAT, MR TURTLE!?" Pip screamed, glaring at the tortoise.
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
@@ -1418,7 +2035,7 @@
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
-            [panicked] "OH NO!" Iggy yelled.
+            "OH NO!" Iggy yelled.
         </p>
         
         <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
@@ -1478,99 +2095,97 @@
             
     <section class="panel-section p-0 m-0" data-title="Page 1: High Canopy Docking">
         <div class="comic-panel p-0 m-0" data-title="Page 1: High Canopy Docking">
-            <img src="images/vumbua/s11_page1.jpg?v=1786310387" alt="Session 11: Page 1: High Canopy Docking" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page1.jpg?v=1786311427" alt="Session 11: Page 1: High Canopy Docking" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 2: Shadowing Shadows">
         <div class="comic-panel p-0 m-0" data-title="Page 2: Shadowing Shadows">
-            <img src="images/vumbua/s11_page2.jpg?v=1786310387" alt="Session 11: Page 2: Shadowing Shadows" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page2.jpg?v=1786311427" alt="Session 11: Page 2: Shadowing Shadows" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 3: The Ambush & Hypnotic Shimmer">
         <div class="comic-panel p-0 m-0" data-title="Page 3: The Ambush & Hypnotic Shimmer">
-            <img src="images/vumbua/s11_page3.jpg?v=1786310387" alt="Session 11: Page 3: The Ambush & Hypnotic Shimmer" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page3.jpg?v=1786311427" alt="Session 11: Page 3: The Ambush & Hypnotic Shimmer" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 4: The Dreadful Massage">
         <div class="comic-panel p-0 m-0" data-title="Page 4: The Dreadful Massage">
-            <img src="images/vumbua/s11_page4.jpg?v=1786310387" alt="Session 11: Page 4: The Dreadful Massage" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page4.jpg?v=1786311427" alt="Session 11: Page 4: The Dreadful Massage" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 5: Flame-Forged Vine">
         <div class="comic-panel p-0 m-0" data-title="Page 5: Flame-Forged Vine">
-            <img src="images/vumbua/s11_page5.jpg?v=1786310387" alt="Session 11: Page 5: Flame-Forged Vine" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page5.jpg?v=1786311427" alt="Session 11: Page 5: Flame-Forged Vine" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 6: The Kazy Boy Splash!">
         <div class="comic-panel p-0 m-0" data-title="Page 6: The Kazy Boy Splash!">
-            <img src="images/vumbua/s11_page6.jpg?v=1786310387" alt="Session 11: Page 6: The Kazy Boy Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page6.jpg?v=1786311427" alt="Session 11: Page 6: The Kazy Boy Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 7: Snatched in Mid-Air!">
         <div class="comic-panel p-0 m-0" data-title="Page 7: Snatched in Mid-Air!">
-            <img src="images/vumbua/s11_page7.jpg?v=1786310387" alt="Session 11: Page 7: Snatched in Mid-Air!" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page7.jpg?v=1786311427" alt="Session 11: Page 7: Snatched in Mid-Air!" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 8: The Ethereal Wall">
         <div class="comic-panel p-0 m-0" data-title="Page 8: The Ethereal Wall">
-            <img src="images/vumbua/s11_page8.jpg?v=1786310387" alt="Session 11: Page 8: The Ethereal Wall" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page8.jpg?v=1786311427" alt="Session 11: Page 8: The Ethereal Wall" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 9: Bacon Biscuit Rescue & The Apex Jaguars">
         <div class="comic-panel p-0 m-0" data-title="Page 9: Bacon Biscuit Rescue & The Apex Jaguars">
-            <img src="images/vumbua/s11_page9.jpg?v=1786310387" alt="Session 11: Page 9: Bacon Biscuit Rescue & The Apex Jaguars" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page9.jpg?v=1786311427" alt="Session 11: Page 9: Bacon Biscuit Rescue & The Apex Jaguars" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 10: Pony-Tail Snatch & Overload">
         <div class="comic-panel p-0 m-0" data-title="Page 10: Pony-Tail Snatch & Overload">
-            <img src="images/vumbua/s11_page10.jpg?v=1786310387" alt="Session 11: Page 10: Pony-Tail Snatch & Overload" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page10.jpg?v=1786311427" alt="Session 11: Page 10: Pony-Tail Snatch & Overload" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 11: The Tree Igloo Splash!">
         <div class="comic-panel p-0 m-0" data-title="Page 11: The Tree Igloo Splash!">
-            <img src="images/vumbua/s11_page11.jpg?v=1786310387" alt="Session 11: Page 11: The Tree Igloo Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page11.jpg?v=1786311427" alt="Session 11: Page 11: The Tree Igloo Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 12: Storytime & The Battleship">
         <div class="comic-panel p-0 m-0" data-title="Page 12: Storytime & The Battleship">
-            <img src="images/vumbua/s11_page12.jpg?v=1786310387" alt="Session 11: Page 12: Storytime & The Battleship" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page12.jpg?v=1786311427" alt="Session 11: Page 12: Storytime & The Battleship" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 13: Flight of Ember Wings">
         <div class="comic-panel p-0 m-0" data-title="Page 13: Flight of Ember Wings">
-            <img src="images/vumbua/s11_page13.jpg?v=1786310387" alt="Session 11: Page 13: Flight of Ember Wings" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page13.jpg?v=1786311427" alt="Session 11: Page 13: Flight of Ember Wings" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0" data-title="Page 14: The Raft Plunge Splash!">
         <div class="comic-panel p-0 m-0" data-title="Page 14: The Raft Plunge Splash!">
-            <img src="images/vumbua/s11_page14.jpg?v=1786310387" alt="Session 11: Page 14: The Raft Plunge Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page14.jpg?v=1786311427" alt="Session 11: Page 14: The Raft Plunge Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
         </main>
     </div>
 
-    <!-- Footer -->
     <footer class="py-8 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950 relative z-10">
         <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
     </footer>
 
-    <script src="image-feedback.js?v=1786310387"></script>
+    <script src="image-feedback.js?v=1786311427"></script>
     <script>
-        // MULTI-MEDIUM TAB SWITCHER LOGIC
         const tabBtnAudio = document.getElementById('tabBtnAudio');
         const tabBtnEbook = document.getElementById('tabBtnEbook');
         const tabBtnComic = document.getElementById('tabBtnComic');
@@ -1580,12 +2195,10 @@
         const viewComic = document.getElementById('view-graphic-novel');
         
         function setTab(activeTab) {
-            // Hide all views
             viewAudio.classList.add('hidden');
             viewEbook.classList.add('hidden');
             viewComic.classList.add('hidden');
             
-            // Reset tab button styles
             [tabBtnAudio, tabBtnEbook, tabBtnComic].forEach(btn => {
                 btn.className = 'tab-btn px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all';
             });
@@ -1606,7 +2219,6 @@
         tabBtnEbook.addEventListener('click', () => setTab('ebook'));
         tabBtnComic.addEventListener('click', () => setTab('comic'));
 
-        // AUDIOBOOK CONTROLLER & TIME-SYNCED TRANSCRIPT LOGIC
         const audio = document.getElementById('audioElement');
         const playBtn = document.getElementById('playBtn');
         const skipBackBtn = document.getElementById('skipBackBtn');
@@ -1614,7 +2226,22 @@
         const speedBtn = document.getElementById('speedBtn');
         const timeDisplay = document.getElementById('timeDisplay');
         const scrubber = document.getElementById('audioScrubber');
+        const autoScrollToggle = document.getElementById('autoScrollToggle');
         const syncParas = document.querySelectorAll('.sync-para');
+
+        let autoScrollEnabled = true;
+        let lastScrolledEl = null;
+
+        autoScrollToggle.addEventListener('click', () => {
+            autoScrollEnabled = !autoScrollEnabled;
+            if(autoScrollEnabled) {
+                autoScrollToggle.className = 'text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 transition-all flex items-center gap-1';
+                autoScrollToggle.innerHTML = '<span>📜</span> Auto-Scroll: ON';
+            } else {
+                autoScrollToggle.className = 'text-xs font-semibold text-slate-400 bg-slate-800 border border-slate-700 px-2.5 py-1.5 rounded-lg hover:bg-slate-700 transition-all flex items-center gap-1';
+                autoScrollToggle.innerHTML = '<span>📜</span> Auto-Scroll: OFF';
+            }
+        });
 
         const speeds = [1.0, 1.25, 1.5, 1.75, 2.0];
         let speedIdx = 0;
@@ -1656,7 +2283,6 @@
             scrubber.value = cur;
             timeDisplay.textContent = `${formatTime(cur)} / ${formatTime(audio.duration)}`;
 
-            // Active lyric highlighting
             let activeEl = null;
             syncParas.forEach(el => {
                 const ts = parseFloat(el.dataset.timestamp || '0');
@@ -1668,6 +2294,10 @@
             syncParas.forEach(el => el.classList.remove('active-lyric'));
             if(activeEl) {
                 activeEl.classList.add('active-lyric');
+                if(autoScrollEnabled && activeEl !== lastScrolledEl) {
+                    activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    lastScrolledEl = activeEl;
+                }
             }
         });
 
@@ -1675,7 +2305,6 @@
             audio.currentTime = scrubber.value;
         });
 
-        // Click paragraph to seek audio
         syncParas.forEach(el => {
             el.addEventListener('click', () => {
                 const ts = parseFloat(el.dataset.timestamp || '0');
@@ -1685,7 +2314,6 @@
             });
         });
 
-        // EBOOK FONT CONTROLS
         const fontDown = document.getElementById('fontDown');
         const fontUp = document.getElementById('fontUp');
         const ebookContainer = document.getElementById('ebookTextContainer');
@@ -1701,7 +2329,6 @@
             ebookContainer.style.fontSize = currentFontSize + 'px';
         });
 
-        // Hide loading overlay on load
         window.addEventListener('load', () => {
             const l = document.getElementById('globalLoadingOverlayChapter');
             if(l) l.style.opacity = '0', setTimeout(() => l.style.display = 'none', 300);
