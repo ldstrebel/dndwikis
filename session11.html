@@ -46,7 +46,7 @@
 </head>
 <body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
 
-    <audio id="audioElement" preload="metadata" src="audio/s11-clean-story-audio.mp3?v=1786315349"></audio>
+    <audio id="audioElement" preload="metadata" src="audio/s11-clean-story-audio.mp3?v=1786315677"></audio>
 
     <!-- Loading overlay -->
     <div id="loadingOverlay" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center">
@@ -58,15 +58,15 @@
 
     <!-- Top nav -->
     <nav class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="index.html" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+            <a href="index.html" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-1">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                 </svg>
                 <span class="hidden sm:inline font-semibold">Campaigns</span>
             </a>
-            <h1 class="text-base sm:text-lg font-bold text-amber-400 truncate">Session 11: Don't Touch My Biscuits</h1>
-            <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share">
+            <h1 class="text-sm sm:text-base md:text-lg font-bold text-amber-400 truncate text-center flex-1 px-2">Session 11: Don't Touch My Biscuits</h1>
+            <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1 shrink-0" title="Share">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186l5.302-2.548a2.25 2.25 0 1 1 .74 1.49L7.95 11.07m0 1.86l5.302 2.548a2.25 2.25 0 1 1-.74 1.49l-5.302-2.548M13.5 5.25a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0zm0 13.5a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0z" />
                 </svg>
@@ -86,16 +86,16 @@
 
         <!-- Sticky player bar -->
         <div id="mediaPlayerBar" class="sticky top-[108px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-2xl mb-5">
-            <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
+            <div class="flex items-center justify-between gap-3 mb-2 flex-wrap sm:flex-nowrap">
                 <div class="flex items-center gap-2">
-                    <button id="playBtn" class="w-10 h-10 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/30">▶</button>
-                    <button id="skipBackBtn" class="text-xs text-slate-400 hover:text-amber-400 px-2 py-1.5 rounded bg-slate-800 border border-slate-700">⏪ 15s</button>
-                    <button id="skipFwdBtn"  class="text-xs text-slate-400 hover:text-amber-400 px-2 py-1.5 rounded bg-slate-800 border border-slate-700">15s ⏩</button>
+                    <button id="playBtn" class="w-10 h-10 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/30 shrink-0">▶</button>
+                    <button id="skipBackBtn" class="text-xs text-slate-400 hover:text-amber-400 px-2 py-1.5 rounded bg-slate-800 border border-slate-700 whitespace-nowrap">⏪ 15s</button>
+                    <button id="skipFwdBtn"  class="text-xs text-slate-400 hover:text-amber-400 px-2 py-1.5 rounded bg-slate-800 border border-slate-700 whitespace-nowrap">15s ⏩</button>
                 </div>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button id="autoScrollToggle" class="text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 flex items-center gap-1">📜 Auto-Scroll: ON</button>
-                    <button id="speedBtn" class="text-xs font-mono font-bold text-amber-400 bg-slate-800 border border-slate-700 px-2.5 py-1.5 rounded-lg">1.0x</button>
-                    <span id="timeDisplay" class="text-xs font-mono text-slate-400 w-20 text-right">00:00 / 00:00</span>
+                <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap ml-auto">
+                    <button id="autoScrollToggle" class="text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 flex items-center gap-1 whitespace-nowrap">📜 Auto-Scroll: ON</button>
+                    <button id="speedBtn" class="text-xs font-mono font-bold text-amber-400 bg-slate-800 border border-slate-700 px-2.5 py-1.5 rounded-lg whitespace-nowrap">1.0x</button>
+                    <span id="timeDisplay" class="text-xs font-mono text-slate-400 min-w-[105px] whitespace-nowrap text-right">00:00 / 00:00</span>
                 </div>
             </div>
             <input type="range" id="audioScrubber" min="0" max="100" value="0" step="0.1" class="w-full h-1.5 bg-slate-800 rounded-full appearance-none cursor-pointer accent-amber-500">
@@ -2302,85 +2302,85 @@
             
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page1.jpg?v=1786315349" alt="Session 11: Page 1: High Canopy Docking" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page1.jpg?v=1786315677" alt="Session 11: Page 1: High Canopy Docking" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page2.jpg?v=1786315349" alt="Session 11: Page 2: Shadowing Shadows" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page2.jpg?v=1786315677" alt="Session 11: Page 2: Shadowing Shadows" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page3.jpg?v=1786315349" alt="Session 11: Page 3: The Ambush & Hypnotic Shimmer" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page3.jpg?v=1786315677" alt="Session 11: Page 3: The Ambush & Hypnotic Shimmer" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page4.jpg?v=1786315349" alt="Session 11: Page 4: The Dreadful Massage" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page4.jpg?v=1786315677" alt="Session 11: Page 4: The Dreadful Massage" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page5.jpg?v=1786315349" alt="Session 11: Page 5: Flame-Forged Vine" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page5.jpg?v=1786315677" alt="Session 11: Page 5: Flame-Forged Vine" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page6.jpg?v=1786315349" alt="Session 11: Page 6: The Kazy Boy Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page6.jpg?v=1786315677" alt="Session 11: Page 6: The Kazy Boy Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page7.jpg?v=1786315349" alt="Session 11: Page 7: Snatched in Mid-Air!" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page7.jpg?v=1786315677" alt="Session 11: Page 7: Snatched in Mid-Air!" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page8.jpg?v=1786315349" alt="Session 11: Page 8: The Ethereal Wall" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page8.jpg?v=1786315677" alt="Session 11: Page 8: The Ethereal Wall" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page9.jpg?v=1786315349" alt="Session 11: Page 9: Bacon Biscuit Rescue & The Apex Jaguars" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page9.jpg?v=1786315677" alt="Session 11: Page 9: Bacon Biscuit Rescue & The Apex Jaguars" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page10.jpg?v=1786315349" alt="Session 11: Page 10: Pony-Tail Snatch & Overload" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page10.jpg?v=1786315677" alt="Session 11: Page 10: Pony-Tail Snatch & Overload" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page11.jpg?v=1786315349" alt="Session 11: Page 11: The Tree Igloo Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page11.jpg?v=1786315677" alt="Session 11: Page 11: The Tree Igloo Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page12.jpg?v=1786315349" alt="Session 11: Page 12: Storytime & The Battleship" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page12.jpg?v=1786315677" alt="Session 11: Page 12: Storytime & The Battleship" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page13.jpg?v=1786315349" alt="Session 11: Page 13: Flight of Ember Wings" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page13.jpg?v=1786315677" alt="Session 11: Page 13: Flight of Ember Wings" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
     <section class="panel-section p-0 m-0">
         <div class="comic-panel p-0 m-0">
-            <img src="images/vumbua/s11_page14.jpg?v=1786315349" alt="Session 11: Page 14: The Raft Plunge Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+            <img src="images/vumbua/s11_page14.jpg?v=1786315677" alt="Session 11: Page 14: The Raft Plunge Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
     </section>
     
@@ -2405,7 +2405,7 @@
         <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
     </footer>
 
-    <script src="image-feedback.js?v=1786315349"></script>
+    <script src="image-feedback.js?v=1786315677"></script>
     <script>
     // ── Inline sync data (no fetch needed) ──────────────────────────────────
     const SYNC_DATA = [{"id": 1, "startMs": 0, "endMs": 1410}, {"id": 2, "startMs": 1410, "endMs": 14654}, {"id": 3, "startMs": 14654, "endMs": 36728}, {"id": 4, "startMs": 36728, "endMs": 42866}, {"id": 5, "startMs": 42866, "endMs": 53838}, {"id": 6, "startMs": 53838, "endMs": 67082}, {"id": 7, "startMs": 67082, "endMs": 83069}, {"id": 8, "startMs": 83069, "endMs": 93309}, {"id": 9, "startMs": 93309, "endMs": 104228}, {"id": 10, "startMs": 104228, "endMs": 121469}, {"id": 11, "startMs": 121469, "endMs": 132257}, {"id": 12, "startMs": 132257, "endMs": 142550}, {"id": 13, "startMs": 142550, "endMs": 147435}, {"id": 14, "startMs": 147435, "endMs": 160679}, {"id": 15, "startMs": 160679, "endMs": 173923}, {"id": 16, "startMs": 173923, "endMs": 193436}, {"id": 17, "startMs": 193436, "endMs": 201351}, {"id": 18, "startMs": 201351, "endMs": 215614}, {"id": 19, "startMs": 215614, "endMs": 217443}, {"id": 20, "startMs": 217443, "endMs": 228754}, {"id": 21, "startMs": 228754, "endMs": 231784}, {"id": 22, "startMs": 231784, "endMs": 241031}, {"id": 23, "startMs": 241031, "endMs": 256052}, {"id": 24, "startMs": 256052, "endMs": 261511}, {"id": 25, "startMs": 261511, "endMs": 266631}, {"id": 26, "startMs": 266631, "endMs": 272091}, {"id": 27, "startMs": 272091, "endMs": 288365}, {"id": 28, "startMs": 288365, "endMs": 290795}, {"id": 29, "startMs": 290795, "endMs": 295262}, {"id": 30, "startMs": 295262, "endMs": 300068}, {"id": 31, "startMs": 300068, "endMs": 307461}, {"id": 32, "startMs": 307461, "endMs": 311666}, {"id": 33, "startMs": 311666, "endMs": 332068}, {"id": 34, "startMs": 332068, "endMs": 337946}, {"id": 35, "startMs": 337946, "endMs": 354716}, {"id": 36, "startMs": 354716, "endMs": 361560}, {"id": 37, "startMs": 361560, "endMs": 365113}, {"id": 38, "startMs": 365113, "endMs": 385933}, {"id": 39, "startMs": 385933, "endMs": 396251}, {"id": 40, "startMs": 396251, "endMs": 401893}, {"id": 41, "startMs": 401893, "endMs": 410958}, {"id": 42, "startMs": 410958, "endMs": 415346}, {"id": 43, "startMs": 415346, "endMs": 422713}, {"id": 44, "startMs": 422713, "endMs": 431960}, {"id": 45, "startMs": 431960, "endMs": 436767}, {"id": 46, "startMs": 436767, "endMs": 454426}, {"id": 47, "startMs": 454426, "endMs": 466337}, {"id": 48, "startMs": 466337, "endMs": 479686}, {"id": 49, "startMs": 479686, "endMs": 486243}, {"id": 50, "startMs": 486243, "endMs": 493792}, {"id": 51, "startMs": 493792, "endMs": 502961}, {"id": 52, "startMs": 502961, "endMs": 504973}, {"id": 53, "startMs": 504973, "endMs": 511164}, {"id": 54, "startMs": 511164, "endMs": 516153}, {"id": 55, "startMs": 516153, "endMs": 519366}, {"id": 56, "startMs": 519366, "endMs": 524721}, {"id": 57, "startMs": 524721, "endMs": 530076}, {"id": 58, "startMs": 530076, "endMs": 536973}, {"id": 59, "startMs": 536973, "endMs": 544182}, {"id": 60, "startMs": 544182, "endMs": 546664}, {"id": 61, "startMs": 546664, "endMs": 556303}, {"id": 62, "startMs": 556303, "endMs": 560822}, {"id": 63, "startMs": 560822, "endMs": 566726}, {"id": 64, "startMs": 566726, "endMs": 577750}, {"id": 65, "startMs": 577750, "endMs": 604003}, {"id": 66, "startMs": 604003, "endMs": 606772}, {"id": 67, "startMs": 606772, "endMs": 621087}, {"id": 68, "startMs": 621087, "endMs": 625110}, {"id": 69, "startMs": 625110, "endMs": 636682}, {"id": 70, "startMs": 636682, "endMs": 648437}, {"id": 71, "startMs": 648437, "endMs": 657920}, {"id": 72, "startMs": 657920, "endMs": 664633}, {"id": 73, "startMs": 664633, "endMs": 680437}, {"id": 74, "startMs": 680437, "endMs": 699036}, {"id": 75, "startMs": 699036, "endMs": 704626}, {"id": 76, "startMs": 704626, "endMs": 713195}, {"id": 77, "startMs": 713195, "endMs": 718001}, {"id": 78, "startMs": 718001, "endMs": 732186}, {"id": 79, "startMs": 732186, "endMs": 738507}, {"id": 80, "startMs": 738507, "endMs": 748982}, {"id": 81, "startMs": 748982, "endMs": 769201}, {"id": 82, "startMs": 769201, "endMs": 774426}, {"id": 83, "startMs": 774426, "endMs": 782942}, {"id": 84, "startMs": 782942, "endMs": 787330}, {"id": 85, "startMs": 787330, "endMs": 792372}, {"id": 86, "startMs": 792372, "endMs": 804649}, {"id": 87, "startMs": 804649, "endMs": 814001}, {"id": 88, "startMs": 814001, "endMs": 827297}, {"id": 89, "startMs": 827297, "endMs": 836519}, {"id": 90, "startMs": 836519, "endMs": 848509}, {"id": 91, "startMs": 848509, "endMs": 858749}, {"id": 92, "startMs": 858749, "endMs": 862484}, {"id": 93, "startMs": 862484, "endMs": 871183}, {"id": 94, "startMs": 871183, "endMs": 884767}, {"id": 95, "startMs": 884767, "endMs": 890357}, {"id": 96, "startMs": 890357, "endMs": 894798}, {"id": 97, "startMs": 894798, "endMs": 899448}, {"id": 98, "startMs": 899448, "endMs": 904672}, {"id": 99, "startMs": 904672, "endMs": 914076}, {"id": 100, "startMs": 914076, "endMs": 931369}, {"id": 101, "startMs": 931369, "endMs": 947408}, {"id": 102, "startMs": 947408, "endMs": 951640}, {"id": 103, "startMs": 951640, "endMs": 964519}, {"id": 104, "startMs": 964519, "endMs": 972146}, {"id": 105, "startMs": 972146, "endMs": 982857}, {"id": 106, "startMs": 982857, "endMs": 987010}, {"id": 107, "startMs": 987010, "endMs": 990641}, {"id": 108, "startMs": 990641, "endMs": 1007568}, {"id": 109, "startMs": 1007568, "endMs": 1009946}, {"id": 110, "startMs": 1009946, "endMs": 1014831}, {"id": 111, "startMs": 1014831, "endMs": 1019062}, {"id": 112, "startMs": 1019062, "endMs": 1026873}, {"id": 113, "startMs": 1026873, "endMs": 1038968}, {"id": 114, "startMs": 1038968, "endMs": 1042050}, {"id": 115, "startMs": 1042050, "endMs": 1045786}, {"id": 116, "startMs": 1045786, "endMs": 1050827}, {"id": 117, "startMs": 1050827, "endMs": 1061146}, {"id": 118, "startMs": 1061146, "endMs": 1063105}, {"id": 119, "startMs": 1063105, "endMs": 1075382}, {"id": 120, "startMs": 1075382, "endMs": 1084682}, {"id": 121, "startMs": 1084682, "endMs": 1092075}, {"id": 122, "startMs": 1092075, "endMs": 1104065}, {"id": 123, "startMs": 1104065, "endMs": 1109237}, {"id": 124, "startMs": 1109237, "endMs": 1119320}, {"id": 125, "startMs": 1119320, "endMs": 1129978}, {"id": 126, "startMs": 1129978, "endMs": 1137345}, {"id": 127, "startMs": 1137345, "endMs": 1146044}, {"id": 128, "startMs": 1146044, "endMs": 1150432}, {"id": 129, "startMs": 1150432, "endMs": 1176685}, {"id": 130, "startMs": 1176685, "endMs": 1188597}, {"id": 131, "startMs": 1188597, "endMs": 1192620}, {"id": 132, "startMs": 1192620, "endMs": 1200848}, {"id": 133, "startMs": 1200848, "endMs": 1203565}, {"id": 134, "startMs": 1203565, "endMs": 1207066}, {"id": 135, "startMs": 1207066, "endMs": 1215399}, {"id": 136, "startMs": 1215399, "endMs": 1217593}, {"id": 137, "startMs": 1217593, "endMs": 1222530}, {"id": 138, "startMs": 1222530, "endMs": 1235774}, {"id": 139, "startMs": 1235774, "endMs": 1237603}, {"id": 140, "startMs": 1237603, "endMs": 1238831}, {"id": 141, "startMs": 1238831, "endMs": 1251395}, {"id": 142, "startMs": 1251395, "endMs": 1254008}, {"id": 143, "startMs": 1254008, "endMs": 1256254}, {"id": 144, "startMs": 1256254, "endMs": 1259937}, {"id": 145, "startMs": 1259937, "endMs": 1262471}, {"id": 146, "startMs": 1262471, "endMs": 1268610}, {"id": 147, "startMs": 1268610, "endMs": 1280600}, {"id": 148, "startMs": 1280600, "endMs": 1290057}, {"id": 149, "startMs": 1290057, "endMs": 1298703}];
