@@ -6,7 +6,6 @@
     <title>Vumbua Academy — Session 12 Intro: Apex Broadcast (Night of Embers)</title>
     <meta name="description" content="Session 12 Intro broadcast: Valerius Sterling & Professor Kante live from Apex Arena Ops center with audio sync & auto-scroll.">
     
-    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,7 +25,6 @@
         h1, h2, h3 { font-family: 'Cinzel', serif; }
         .font-ebook { font-family: 'Merriweather', serif; }
 
-        /* SPOTIFY-STYLE ACTIVE LYRIC HIGHLIGHT */
         .sync-para.active-lyric {
             border-left-color: #f59e0b !important;
             background-color: rgba(245, 158, 11, 0.15) !important;
@@ -40,10 +38,8 @@
 </head>
 <body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
 
-    <!-- Hidden HTML5 Audio Element -->
-    <audio id="audioElement" preload="metadata" src="audio/pre-s12.mp3?v=1786311957"></audio>
+    <audio id="audioElement" preload="metadata" src="audio/pre-s12.mp3?v=1786312135"></audio>
 
-    <!-- Global Loading Overlay -->
     <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
         <div class="flex flex-col items-center gap-3">
             <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
@@ -51,7 +47,6 @@
         </div>
     </div>
 
-    <!-- Top Sticky Navigation -->
     <nav id="top-nav" class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
         <div class="max-w-4xl mx-auto px-4 py-3 relative flex items-center justify-between">
             <a href="index.html" title="Go to Homepage" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors group">
@@ -70,7 +65,6 @@
             </div>
         </div>
 
-        <!-- TAB BAR SWITCHER -->
         <div class="bg-slate-900 border-t border-slate-800/80 px-2 py-1.5 flex justify-center items-center gap-2 text-xs sm:text-sm font-semibold select-none">
             <button id="tabBtnAudio" class="tab-btn px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 transition-all">
                 <span>📻</span> Live Broadcast Sync
@@ -81,9 +75,7 @@
         </div>
     </nav>
 
-    <!-- VIEW 1: LIVE BROADCAST AUDIO & SYNC -->
     <div id="view-audio" class="medium-view max-w-2xl mx-auto px-4 py-6">
-        <!-- Floating Sticky Media Control Bar -->
         <div id="mediaPlayerBar" class="sticky top-[108px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-2xl mb-6">
             <div class="flex items-center justify-between gap-3 mb-2">
                 <div class="flex items-center gap-2">
@@ -107,11 +99,9 @@
                     <span id="timeDisplay" class="text-xs font-mono text-slate-400 w-20 text-right">00:00 / 00:00</span>
                 </div>
             </div>
-            <!-- Scrubber Progress Bar -->
             <input type="range" id="audioScrubber" min="0" max="100" value="0" step="0.1" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
         </div>
 
-        <!-- Header Announcement -->
         <div class="text-center py-4 mb-4 bg-slate-950 border border-amber-500/20 rounded-2xl p-4">
             <h2 class="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-sky-400 to-amber-400 font-serif">THE NIGHT OF EMBERS</h2>
             <h3 class="text-xs text-slate-400 tracking-widest uppercase mt-1">Apex Arena Radio Special Broadcast</h3>
@@ -120,12 +110,10 @@
             </p>
         </div>
 
-        <!-- Sync Instructions -->
         <div class="text-center text-xs text-slate-500 mb-4 italic">
             💡 Tap any statement below to jump the broadcast directly to that line!
         </div>
 
-        <!-- Transcript Content -->
         <div class="sync-transcript-container space-y-3">
             
     <div class="sync-para group my-3 p-4 rounded-xl bg-slate-900/80 border-l-4 border-slate-700 hover:border-amber-400 cursor-pointer transition-all duration-300 shadow-md backdrop-blur-sm" data-timestamp="0.0">
@@ -313,7 +301,6 @@
         </div>
     </div>
 
-    <!-- VIEW 2: READABLE TRANSCRIPT -->
     <div id="view-ebook" class="medium-view hidden max-w-2xl mx-auto px-4 py-8">
         <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
             <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold">
@@ -447,12 +434,11 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="py-8 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950 relative z-10">
         <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
     </footer>
 
-    <script src="image-feedback.js?v=1786311957"></script>
+    <script src="image-feedback.js?v=1786312135"></script>
     <script>
         const tabBtnAudio = document.getElementById('tabBtnAudio');
         const tabBtnEbook = document.getElementById('tabBtnEbook');
@@ -565,12 +551,35 @@
             audio.currentTime = scrubber.value;
         });
 
-        syncParas.forEach(el => {
-            el.addEventListener('click', () => {
-                const ts = parseFloat(el.dataset.timestamp || '0');
-                audio.currentTime = ts;
-                audio.play();
+        function seekToTime(tsSec) {
+            if (isNaN(tsSec) || tsSec === null) return;
+            const maxDuration = audio.duration || 99999;
+            const targetTime = Math.max(0, Math.min(maxDuration, tsSec));
+            
+            if (audio.readyState >= 1) {
+                audio.currentTime = targetTime;
+                audio.play().catch(err => console.log('Audio play catch:', err));
                 playBtn.textContent = '⏸';
+            } else {
+                const onLoaded = () => {
+                    audio.currentTime = targetTime;
+                    audio.play().catch(err => console.log('Audio play catch:', err));
+                    playBtn.textContent = '⏸';
+                    audio.removeEventListener('loadedmetadata', onLoaded);
+                };
+                audio.addEventListener('loadedmetadata', onLoaded);
+                audio.load();
+            }
+        }
+
+        syncParas.forEach(el => {
+            el.addEventListener('click', (e) => {
+                const targetEl = e.currentTarget;
+                const rawTs = targetEl.getAttribute('data-timestamp');
+                const ts = parseFloat(rawTs);
+                if (!isNaN(ts)) {
+                    seekToTime(ts);
+                }
             });
         });
 
