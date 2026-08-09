@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vumbua Academy — Session 12 Intro: Apex Broadcast (Night of Embers)</title>
+    <meta name="description" content="Session 12 Intro broadcast: Valerius Sterling & Professor Kante live from Apex Arena Ops center with audio sync & auto-scroll.">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#090d16' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Cinzel:ital,wght@0,400;0,700;0,900;1,600;1,800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #090d16; color: #f8fafc; margin: 0 !important; padding: 0 !important; overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Cinzel', serif; }
+        .font-ebook { font-family: 'Merriweather', serif; }
+
+        /* SPOTIFY-STYLE ACTIVE LYRIC HIGHLIGHT */
+        .sync-para.active-lyric {
+            border-left-color: #f59e0b !important;
+            background-color: rgba(245, 158, 11, 0.15) !important;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2) !important;
+        }
+        .sync-para.active-lyric p {
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
+
+    <!-- Hidden HTML5 Audio Element -->
+    <audio id="audioElement" preload="metadata" src="audio/pre-s12.mp3?v=1786310719"></audio>
+
+    <!-- Global Loading Overlay -->
+    <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
+        <div class="flex flex-col items-center gap-3">
+            <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs text-amber-500 tracking-widest uppercase font-semibold">Loading Broadcast...</span>
+        </div>
+    </div>
+
+    <!-- Top Sticky Navigation -->
+    <nav id="top-nav" class="bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 shadow-lg border-b border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 py-3 relative flex items-center justify-between">
+            <a href="index.html" title="Go to Homepage" class="flex items-center text-slate-400 hover:text-amber-400 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+                <span class="hidden sm:inline font-semibold">Campaigns</span>
+            </a>
+            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-amber-400 truncate max-w-[50%] sm:max-w-none text-center">Session 12: Apex Arena Broadcast</h1>
+            <div class="flex items-center gap-2">
+                <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share page" aria-label="Share page">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186l5.302-2.548a2.25 2.25 0 1 1 .74 1.49L7.95 11.07m0 1.86l5.302 2.548a2.25 2.25 0 1 1-.74 1.49l-5.302-2.548M13.5 5.25a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0zm0 13.5a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB BAR SWITCHER -->
+        <div class="bg-slate-900 border-t border-slate-800/80 px-2 py-1.5 flex justify-center items-center gap-2 text-xs sm:text-sm font-semibold select-none">
+            <button id="tabBtnAudio" class="tab-btn px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 transition-all">
+                <span>📻</span> Live Broadcast Sync
+            </button>
+            <button id="tabBtnEbook" class="tab-btn px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all">
+                <span>📄</span> Broadcast Transcript
+            </button>
+        </div>
+    </nav>
+
+    <!-- VIEW 1: LIVE BROADCAST AUDIO & SYNC -->
+    <div id="view-audio" class="medium-view max-w-2xl mx-auto px-4 py-6">
+        <!-- Floating Sticky Media Control Bar -->
+        <div id="mediaPlayerBar" class="sticky top-[108px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-2xl mb-6">
+            <div class="flex items-center justify-between gap-3 mb-2">
+                <div class="flex items-center gap-2">
+                    <button id="playBtn" class="w-10 h-10 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/30">
+                        ▶
+                    </button>
+                    <button id="skipBackBtn" class="text-xs text-slate-400 hover:text-amber-400 p-1.5 rounded bg-slate-800 border border-slate-700">
+                        ⏪ 15s
+                    </button>
+                    <button id="skipFwdBtn" class="text-xs text-slate-400 hover:text-amber-400 p-1.5 rounded bg-slate-800 border border-slate-700">
+                        15s ⏩
+                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- AUTO-SCROLL TOGGLE BUTTON -->
+                    <button id="autoScrollToggle" class="text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 transition-all flex items-center gap-1">
+                        <span id="scrollIcon">📜</span> Auto-Scroll: ON
+                    </button>
+                    <button id="speedBtn" class="text-xs font-mono font-bold text-amber-400 bg-slate-800 border border-slate-700 px-2.5 py-1.5 rounded-lg hover:bg-slate-700 transition-colors">
+                        1.0x
+                    </button>
+                    <span id="timeDisplay" class="text-xs font-mono text-slate-400 w-20 text-right">00:00 / 00:00</span>
+                </div>
+            </div>
+            <!-- Scrubber Progress Bar -->
+            <input type="range" id="audioScrubber" min="0" max="100" value="0" step="0.1" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+        </div>
+
+        <!-- Header Announcement -->
+        <div class="text-center py-4 mb-4 bg-slate-950 border border-amber-500/20 rounded-2xl p-4">
+            <h2 class="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-sky-400 to-amber-400 font-serif">THE NIGHT OF EMBERS</h2>
+            <h3 class="text-xs text-slate-400 tracking-widest uppercase mt-1">Apex Arena Radio Special Broadcast</h3>
+            <p class="text-xs text-slate-400 italic max-w-md mx-auto mt-2">
+                Valerius Sterling reports live alongside Vumbua Harmonics Expert Professor Kante following the catastrophic sector barrier drop.
+            </p>
+        </div>
+
+        <!-- Sync Instructions -->
+        <div class="text-center text-xs text-slate-500 mb-4 italic">
+            💡 Tap any statement below to jump the broadcast directly to that line!
+        </div>
+
+        <!-- Transcript Content -->
+        <div class="sync-transcript-container space-y-3">
+            
+        <div class="sync-para group my-3 p-4 rounded-xl bg-slate-900/80 border-l-4 border-slate-700 hover:border-amber-400 cursor-pointer transition-all duration-300 shadow-md backdrop-blur-sm" data-timestamp="0">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-serif font-bold tracking-widest uppercase text-amber-400">
+                    🎙️ VALERIUS STERLING
+                </span>
+                <span class="text-[10px] font-mono text-slate-500 group-hover:text-slate-300">
+                    ▶ Jump to timestamp
+                </span>
+            </div>
+            <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                And we are BACK! Power is finally restored across Vumbua! Valerius Sterling here, coming to you live from the recovered Ops center of the Apex Arena—and while our technicians were frantically kicking the resonators back to life, reports have been flooding in from every sector in Harmony about strange little power blips. People are already calling it The Night of Embers—well, at least I am. remember listeners, if that catches on: you heard it here first!
+            </p>
+        </div>
+        
+        <div class="sync-para group my-3 p-4 rounded-xl bg-slate-900/80 border-l-4 border-slate-700 hover:border-amber-400 cursor-pointer transition-all duration-300 shadow-md backdrop-blur-sm" data-timestamp="29">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-serif font-bold tracking-widest uppercase text-teal-400">
+                    🔬 PROFESSOR KANTE
+                </span>
+                <span class="text-[10px] font-mono text-slate-500 group-hover:text-slate-300">
+                    ▶ Jump to timestamp
+                </span>
+            </div>
+            <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                Thank you Valerious. You see the main grid capacitors were ramped up to increase resonance resistance and dampen repulsor output for the beast-entry phase; however, when the umber crystal resistors were cycled back down, the planned replacement resonance failed to materialize. This triggered a systemic harmonic desynchronization across the panda 5 cell array, as demand surged over supply, resulting in a total localized drop of the sector barrier.
+            </p>
+        </div>
+        
+        <div class="sync-para group my-3 p-4 rounded-xl bg-slate-900/80 border-l-4 border-slate-700 hover:border-amber-400 cursor-pointer transition-all duration-300 shadow-md backdrop-blur-sm" data-timestamp="55">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-serif font-bold tracking-widest uppercase text-amber-400">
+                    🎙️ VALERIUS STERLING
+                </span>
+                <span class="text-[10px] font-mono text-slate-500 group-hover:text-slate-300">
+                    ▶ Jump to timestamp
+                </span>
+            </div>
+            <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                Uh huh. I'll be honest listeners, I may need you to tell me what that means, because I’ll tell ya—I haven't got the foggiest!
+            </p>
+        </div>
+        
+        <div class="sync-para group my-3 p-4 rounded-xl bg-slate-900/80 border-l-4 border-slate-700 hover:border-amber-400 cursor-pointer transition-all duration-300 shadow-md backdrop-blur-sm" data-timestamp="64">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-serif font-bold tracking-widest uppercase text-teal-400">
+                    🔬 PROFESSOR KANTE
+                </span>
+                <span class="text-[10px] font-mono text-slate-500 group-hover:text-slate-300">
+                    ▶ Jump to timestamp
+                </span>
+            </div>
+            <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                Bottom Line, Valerius? There was a temporary lapse in the amount of resonance required to run the Vumbua shield.
+            </p>
+        </div>
+        
+        <div class="sync-para group my-3 p-4 rounded-xl bg-slate-900/80 border-l-4 border-slate-700 hover:border-amber-400 cursor-pointer transition-all duration-300 shadow-md backdrop-blur-sm" data-timestamp="71">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-serif font-bold tracking-widest uppercase text-amber-400">
+                    🎙️ VALERIUS STERLING
+                </span>
+                <span class="text-[10px] font-mono text-slate-500 group-hover:text-slate-300">
+                    ▶ Jump to timestamp
+                </span>
+            </div>
+            <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                ...Well that sounds... scary. What does this mean for the regular Harmony citizen? Are we in danger of these repeating?
+            </p>
+        </div>
+        
+        <div class="sync-para group my-3 p-4 rounded-xl bg-slate-900/80 border-l-4 border-slate-700 hover:border-amber-400 cursor-pointer transition-all duration-300 shadow-md backdrop-blur-sm" data-timestamp="78">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-serif font-bold tracking-widest uppercase text-teal-400">
+                    🔬 PROFESSOR KANTE
+                </span>
+                <span class="text-[10px] font-mono text-slate-500 group-hover:text-slate-300">
+                    ▶ Jump to timestamp
+                </span>
+            </div>
+            <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                For now, it will mean very little. Large resonance consumers like Resonance Race Arenas will need to carefully monitor any cycling or consider more continuous draw. But for the average citizen, you will not experience anything different. Citizens need not worry, I have great faith in our faculty Vumbua has accelerated the Ventures. They will find the answers to this! I am particularly excited about what Professor Ink has in mind, but I should not say any more here. Rest assured, Vumbua will move forward.
+            </p>
+        </div>
+        
+        <div class="sync-para group my-3 p-4 rounded-xl bg-slate-900/80 border-l-4 border-slate-700 hover:border-amber-400 cursor-pointer transition-all duration-300 shadow-md backdrop-blur-sm" data-timestamp="110">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-serif font-bold tracking-widest uppercase text-amber-400">
+                    🎙️ VALERIUS STERLING
+                </span>
+                <span class="text-[10px] font-mono text-slate-500 group-hover:text-slate-300">
+                    ▶ Jump to timestamp
+                </span>
+            </div>
+            <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                Well you certainly are a comfort and a bit of a tease, Professor! In any case, thank you for translating for the layman here. We look forward to reporting on what happens next!
+            </p>
+        </div>
+        
+        </div>
+    </div>
+
+    <!-- VIEW 2: READABLE TRANSCRIPT -->
+    <div id="view-ebook" class="medium-view hidden max-w-2xl mx-auto px-4 py-8">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+            <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold">
+                Apex Arena Ops Center Official Transcript
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="fontDown" class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 hover:text-white border border-slate-700">A-</button>
+                <button id="fontUp" class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 hover:text-white border border-slate-700">A+</button>
+            </div>
+        </div>
+
+        <div id="ebookTextContainer" class="font-ebook space-y-4">
+            
+        <div class="ebook-card my-4 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg">
+            <div class="text-xs font-serif font-bold tracking-widest uppercase text-amber-400 mb-2">
+                🎙️ VALERIUS STERLING
+            </div>
+            <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                And we are BACK! Power is finally restored across Vumbua! Valerius Sterling here, coming to you live from the recovered Ops center of the Apex Arena—and while our technicians were frantically kicking the resonators back to life, reports have been flooding in from every sector in Harmony about strange little power blips. People are already calling it The Night of Embers—well, at least I am. remember listeners, if that catches on: you heard it here first!
+            </p>
+        </div>
+        
+        <div class="ebook-card my-4 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg">
+            <div class="text-xs font-serif font-bold tracking-widest uppercase text-teal-400 mb-2">
+                🔬 PROFESSOR KANTE
+            </div>
+            <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                Thank you Valerious. You see the main grid capacitors were ramped up to increase resonance resistance and dampen repulsor output for the beast-entry phase; however, when the umber crystal resistors were cycled back down, the planned replacement resonance failed to materialize. This triggered a systemic harmonic desynchronization across the panda 5 cell array, as demand surged over supply, resulting in a total localized drop of the sector barrier.
+            </p>
+        </div>
+        
+        <div class="ebook-card my-4 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg">
+            <div class="text-xs font-serif font-bold tracking-widest uppercase text-amber-400 mb-2">
+                🎙️ VALERIUS STERLING
+            </div>
+            <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                Uh huh. I'll be honest listeners, I may need you to tell me what that means, because I’ll tell ya—I haven't got the foggiest!
+            </p>
+        </div>
+        
+        <div class="ebook-card my-4 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg">
+            <div class="text-xs font-serif font-bold tracking-widest uppercase text-teal-400 mb-2">
+                🔬 PROFESSOR KANTE
+            </div>
+            <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                Bottom Line, Valerius? There was a temporary lapse in the amount of resonance required to run the Vumbua shield.
+            </p>
+        </div>
+        
+        <div class="ebook-card my-4 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg">
+            <div class="text-xs font-serif font-bold tracking-widest uppercase text-amber-400 mb-2">
+                🎙️ VALERIUS STERLING
+            </div>
+            <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                ...Well that sounds... scary. What does this mean for the regular Harmony citizen? Are we in danger of these repeating?
+            </p>
+        </div>
+        
+        <div class="ebook-card my-4 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg">
+            <div class="text-xs font-serif font-bold tracking-widest uppercase text-teal-400 mb-2">
+                🔬 PROFESSOR KANTE
+            </div>
+            <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                For now, it will mean very little. Large resonance consumers like Resonance Race Arenas will need to carefully monitor any cycling or consider more continuous draw. But for the average citizen, you will not experience anything different. Citizens need not worry, I have great faith in our faculty Vumbua has accelerated the Ventures. They will find the answers to this! I am particularly excited about what Professor Ink has in mind, but I should not say any more here. Rest assured, Vumbua will move forward.
+            </p>
+        </div>
+        
+        <div class="ebook-card my-4 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg">
+            <div class="text-xs font-serif font-bold tracking-widest uppercase text-amber-400 mb-2">
+                🎙️ VALERIUS STERLING
+            </div>
+            <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                Well you certainly are a comfort and a bit of a tease, Professor! In any case, thank you for translating for the layman here. We look forward to reporting on what happens next!
+            </p>
+        </div>
+        
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950 relative z-10">
+        <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
+    </footer>
+
+    <script src="image-feedback.js?v=1786310719"></script>
+    <script>
+        // TAB SWITCHER LOGIC
+        const tabBtnAudio = document.getElementById('tabBtnAudio');
+        const tabBtnEbook = document.getElementById('tabBtnEbook');
+        const viewAudio = document.getElementById('view-audio');
+        const viewEbook = document.getElementById('view-ebook');
+
+        function setTab(activeTab) {
+            viewAudio.classList.add('hidden');
+            viewEbook.classList.add('hidden');
+
+            [tabBtnAudio, tabBtnEbook].forEach(btn => {
+                btn.className = 'tab-btn px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all';
+            });
+
+            if(activeTab === 'audio') {
+                viewAudio.classList.remove('hidden');
+                tabBtnAudio.className = 'tab-btn px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 transition-all';
+            } else {
+                viewEbook.classList.remove('hidden');
+                tabBtnEbook.className = 'tab-btn px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 transition-all';
+            }
+        }
+
+        tabBtnAudio.addEventListener('click', () => setTab('audio'));
+        tabBtnEbook.addEventListener('click', () => setTab('ebook'));
+
+        // AUDIO CONTROLLER, SPEED & AUTO-SCROLL LOGIC
+        const audio = document.getElementById('audioElement');
+        const playBtn = document.getElementById('playBtn');
+        const skipBackBtn = document.getElementById('skipBackBtn');
+        const skipFwdBtn = document.getElementById('skipFwdBtn');
+        const speedBtn = document.getElementById('speedBtn');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const scrubber = document.getElementById('audioScrubber');
+        const autoScrollToggle = document.getElementById('autoScrollToggle');
+        const syncParas = document.querySelectorAll('.sync-para');
+
+        let autoScrollEnabled = true;
+        let lastScrolledEl = null;
+
+        autoScrollToggle.addEventListener('click', () => {
+            autoScrollEnabled = !autoScrollEnabled;
+            if(autoScrollEnabled) {
+                autoScrollToggle.className = 'text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 transition-all flex items-center gap-1';
+                autoScrollToggle.innerHTML = '<span>📜</span> Auto-Scroll: ON';
+            } else {
+                autoScrollToggle.className = 'text-xs font-semibold text-slate-400 bg-slate-800 border border-slate-700 px-2.5 py-1.5 rounded-lg hover:bg-slate-700 transition-all flex items-center gap-1';
+                autoScrollToggle.innerHTML = '<span>📜</span> Auto-Scroll: OFF';
+            }
+        });
+
+        const speeds = [1.0, 1.25, 1.5, 1.75, 2.0];
+        let speedIdx = 0;
+
+        speedBtn.addEventListener('click', () => {
+            speedIdx = (speedIdx + 1) % speeds.length;
+            const newSpeed = speeds[speedIdx];
+            audio.playbackRate = newSpeed;
+            speedBtn.textContent = newSpeed.toFixed(2).replace('.00', '.0') + 'x';
+        });
+
+        playBtn.addEventListener('click', () => {
+            if(audio.paused) {
+                audio.play();
+                playBtn.textContent = '⏸';
+            } else {
+                audio.pause();
+                playBtn.textContent = '▶';
+            }
+        });
+
+        skipBackBtn.addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
+        skipFwdBtn.addEventListener('click', () => { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 15); });
+
+        function formatTime(sec) {
+            if(isNaN(sec)) return "00:00";
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        audio.addEventListener('loadedmetadata', () => {
+            scrubber.max = audio.duration;
+            timeDisplay.textContent = `${formatTime(0)} / ${formatTime(audio.duration)}`;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const cur = audio.currentTime;
+            scrubber.value = cur;
+            timeDisplay.textContent = `${formatTime(cur)} / ${formatTime(audio.duration)}`;
+
+            let activeEl = null;
+            syncParas.forEach(el => {
+                const ts = parseFloat(el.dataset.timestamp || '0');
+                if(cur >= ts) {
+                    activeEl = el;
+                }
+            });
+
+            syncParas.forEach(el => el.classList.remove('active-lyric'));
+            if(activeEl) {
+                activeEl.classList.add('active-lyric');
+                if(autoScrollEnabled && activeEl !== lastScrolledEl) {
+                    activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    lastScrolledEl = activeEl;
+                }
+            }
+        });
+
+        scrubber.addEventListener('input', () => {
+            audio.currentTime = scrubber.value;
+        });
+
+        syncParas.forEach(el => {
+            el.addEventListener('click', () => {
+                const ts = parseFloat(el.dataset.timestamp || '0');
+                audio.currentTime = ts;
+                audio.play();
+                playBtn.textContent = '⏸';
+            });
+        });
+
+        // EBOOK FONT CONTROLS
+        const fontDown = document.getElementById('fontDown');
+        const fontUp = document.getElementById('fontUp');
+        const ebookContainer = document.getElementById('ebookTextContainer');
+        let currentFontSize = 16;
+
+        fontDown.addEventListener('click', () => {
+            currentFontSize = Math.max(13, currentFontSize - 1);
+            ebookContainer.style.fontSize = currentFontSize + 'px';
+        });
+
+        fontUp.addEventListener('click', () => {
+            currentFontSize = Math.min(24, currentFontSize + 1);
+            ebookContainer.style.fontSize = currentFontSize + 'px';
+        });
+
+        // Hide loading overlay on load
+        window.addEventListener('load', () => {
+            const l = document.getElementById('globalLoadingOverlayChapter');
+            if(l) l.style.opacity = '0', setTimeout(() => l.style.display = 'none', 300);
+        });
+    </script>
+</body>
+</html>
