@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Vumbua Academy — Session 11: Don't Touch My Biscuits</title>
-    <meta name="description" content="Session 11 graphic novel webtoon for Vumbua Academy: Don't Touch My Biscuits.">
+    <title>Vumbua Academy — Session 11: Don't Touch My Biscuits (Multi-Medium)</title>
+    <meta name="description" content="Multi-medium edition of Session 11: Audiobook Sync, Ebook Text, and Graphic Novel.">
     
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,19 +20,31 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Cinzel:ital,wght@0,400;0,700;0,900;1,600;1,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Cinzel:ital,wght@0,400;0,700;0,900;1,600;1,800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Outfit', sans-serif; background-color: #090d16; color: #f8fafc; margin: 0 !important; padding: 0 !important; overflow-x: hidden; }
         h1, h2, h3 { font-family: 'Cinzel', serif; }
-
-        /* 0px SEAMLESS WEBTOON STRIP STYLING (COMPACT MAX-WIDTH 480px) */
-        main { padding: 0 !important; margin: 0 auto !important; width: 100%; max-width: 480px; position: relative; z-index: 10; background: #090d16; }
-        section.panel-section { padding: 0 !important; margin: 0 !important; line-height: 0 !important; border: none !important; position: relative; z-index: 10; background: #090d16; }
+        .font-ebook { font-family: 'Merriweather', serif; }
+        
+        /* 0px SEAMLESS WEBTOON STRIP STYLING FOR GRAPHIC NOVEL VIEW */
+        #view-graphic-novel main { padding: 0 !important; margin: 0 auto !important; width: 100%; max-width: 480px; position: relative; z-index: 10; background: #090d16; }
+        #view-graphic-novel section.panel-section { padding: 0 !important; margin: 0 !important; line-height: 0 !important; border: none !important; position: relative; z-index: 10; background: #090d16; }
         .comic-panel { margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; line-height: 0 !important; background: #000; }
         .comic-panel img { cursor: pointer; transition: filter 0.2s ease; display: block !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; }
+
+        /* SPOTIFY-STYLE ACTIVE LYRIC HIGHLIGHT */
+        .sync-para.active-lyric {
+            border-left-color: #f59e0b !important;
+            background-color: rgba(245, 158, 11, 0.12) !important;
+            color: #ffffff !important;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body class="selection:bg-amber-500/30 selection:text-amber-200 bg-[#090d16]">
+
+    <!-- Hidden HTML5 Audio Element -->
+    <audio id="audioElement" preload="metadata" src="audio/s11-clean-story-audio.mp3?v=1786310387"></audio>
 
     <!-- Global Loading Overlay -->
     <div id="globalLoadingOverlayChapter" class="fixed inset-0 bg-[#090d16] z-[9999] flex items-center justify-center transition-opacity duration-300">
@@ -54,498 +63,1645 @@
                 </svg>
                 <span class="hidden sm:inline font-semibold">Campaigns</span>
             </a>
-            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-amber-400 truncate max-w-[60%] sm:max-w-none text-center">Session 11: Don't Touch My Biscuits</h1>
+            <h1 id="nav-title" class="text-base sm:text-lg font-bold text-amber-400 truncate max-w-[50%] sm:max-w-none text-center">Session 11: Don't Touch My Biscuits</h1>
             <div class="flex items-center gap-2">
-                <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share this page" aria-label="Share this page" style="background: none; border: none; cursor: pointer;">
+                <button id="sessionShareBtn" class="text-slate-400 hover:text-amber-400 transition-colors p-1" title="Share this page" aria-label="Share page">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186l5.302-2.548a2.25 2.25 0 1 1 .74 1.49L7.95 11.07m0 1.86l5.302 2.548a2.25 2.25 0 1 1-.74 1.49l-5.302-2.548M13.5 5.25a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0zm0 13.5a2.25 2.25 0 1 1 3 0 2.25 2.25 0 0 1-3 0z" />
                     </svg>
                 </button>
-                <div id="scroll-percentage" class="text-xs sm:text-sm font-semibold text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-800 w-16 text-center">0%</div>
             </div>
         </div>
-        <div id="scroll-progress-bar" class="h-0.5 bg-gradient-to-r from-amber-400 via-sky-400 to-amber-400 w-0"></div>
+
+        <!-- 3-MEDIUM TAB BAR SWITCHER -->
+        <div class="bg-slate-900 border-t border-slate-800/80 px-2 py-1.5 flex justify-center items-center gap-1 sm:gap-3 text-xs sm:text-sm font-semibold select-none">
+            <button id="tabBtnAudio" class="tab-btn px-3 py-1.5 rounded-lg flex items-center gap-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 transition-all">
+                <span>🎧</span> Audio & Sync
+            </button>
+            <button id="tabBtnEbook" class="tab-btn px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all">
+                <span>📖</span> Ebook Text
+            </button>
+            <button id="tabBtnComic" class="tab-btn px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all">
+                <span>🎨</span> Graphic Novel
+            </button>
+        </div>
     </nav>
 
-    <!-- Main Container - Compact 480px Webtoon Scroll Strip -->
-    <main class="max-w-md mx-auto p-0 m-0 bg-slate-950">
-
-        <!-- Header Panel -->
-        <section class="text-center py-6 px-4 space-y-2 bg-slate-950 border-b border-slate-900">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-sky-400 to-amber-400">SESSION 11</h2>
-            <h3 class="text-slate-400 text-xs tracking-widest uppercase">Don't Touch My Biscuits</h3>
-            <p class="text-slate-400 max-w-md mx-auto text-xs leading-relaxed mt-1">
-                Squad 907 docks in the high petrified canopy during an apocalyptic storm. Confronted by tree cats, Storm Raptors, and static apex jaguars, they fight to protect Pip and her legendary bacon biscuits.
-            </p>
-            <div class="scroll-down-hint flex flex-col items-center pt-3 text-slate-500 text-xs gap-1">
-                <span>Click any panel to view "Behind the Scenes" descriptions & transcripts</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 animate-bounce mt-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                </svg>
+    <!-- VIEW 1: AUDIOBOOK & TIME-SYNCED TRANSCRIPT -->
+    <div id="view-audio" class="medium-view max-w-2xl mx-auto px-4 py-6">
+        <!-- Floating Sticky Media Control Bar -->
+        <div id="mediaPlayerBar" class="sticky top-[108px] z-40 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-xl mb-6">
+            <div class="flex items-center justify-between gap-3 mb-2">
+                <div class="flex items-center gap-2">
+                    <button id="playBtn" class="w-10 h-10 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center hover:bg-amber-400 transition-colors shadow-lg shadow-amber-500/30">
+                        ▶
+                    </button>
+                    <button id="skipBackBtn" class="text-xs text-slate-400 hover:text-amber-400 p-1.5 rounded bg-slate-800 border border-slate-700">
+                        ⏪ 15s
+                    </button>
+                    <button id="skipFwdBtn" class="text-xs text-slate-400 hover:text-amber-400 p-1.5 rounded bg-slate-800 border border-slate-700">
+                        15s ⏩
+                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="speedBtn" class="text-xs font-mono font-bold text-amber-400 bg-slate-800 border border-slate-700 px-2.5 py-1.5 rounded-lg hover:bg-slate-700 transition-colors">
+                        1.0x
+                    </button>
+                    <span id="timeDisplay" class="text-xs font-mono text-slate-400 w-20 text-right">00:00 / 00:00</span>
+                </div>
             </div>
-        </section>
+            <!-- Scrubber Progress Bar -->
+            <input type="range" id="audioScrubber" min="0" max="100" value="0" step="0.1" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+        </div>
 
-        <!-- ACT HEADER DIVIDER -->
-        <div class="py-4 px-6 bg-slate-900/90 border-y border-slate-800 text-center select-none">
-            <div class="text-xs font-serif font-bold tracking-[0.25em] text-amber-400 uppercase">
-                ACT I: THE STORM & THE CANOPY
+        <!-- Sync Instructions -->
+        <div class="text-center text-xs text-slate-500 mb-4 italic">
+            💡 Click any paragraph in the transcript below to jump audio to that exact moment!
+        </div>
+
+        <!-- Transcript Content -->
+        <div class="sync-transcript-container space-y-1">
+            
+    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="0">
+        <h3 class="text-xl font-bold text-amber-400 font-serif">Intro</h3>
+    </div>
+    
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="0">
+            # DON'T TOUCH MY BISCUITS
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="3">
+            ---
+        </p>
+        
+    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="6">
+        <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 1: THE NIGHT OF EMBERS</h3>
+    </div>
+    
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="6">
+            Rain fell through the colossal leaves in heavy, rhythmic sheets, filling the petrified canopy with a sound like distant drumming. Fifty feet below, the forest floor was lost in twilight shadow.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="18">
+            High in the woven limbs of four ancient petrified giants, the Canopy Raft strained against its high-tension bungees. Ignatious leaned over the wooden gunwale, blowing a plume of grey ash through his nostrils. Faint orange embers danced along the cuffs of his heavy leather coat, fighting off the damp chill.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="38">
+            "Well," he grunted, adjusting the warhammer strapped across his back. "The landing went bettah than I thought."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="44">
+            Beside him, Loami unbolted the central winch casing. He wiped grease and rainwater from his brow with the back of a calloused hand, adjusting his damp woolen flat cap.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="55">
+            "Gotta say I'm shocked we made it up here at all," Loami said, his broad shoulders tensing as he checked the rig's balance. "We look a little like a ragtag crew, but here we are. Safe as we're gonna get."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="71">
+            A low, resonant thud vibrated through the petrified wood beneath their boots. Miles away, through gaps in the foliage, a jagged pillar of violet lightning hammered the central Mon. The air tasted sharply of copper and ozone.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="85">
+            Ignatious squinted toward the flash. "What's the purpose of all this? Is the Academy testing our adventurism, or is there a reason the sky keeps tryin' to melt the obelisk?"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="97">
+            Loami's expression darkened. Before entering the Academy, he had spent years servicing power conduits in Harmony, learning the temperamental pulse of Aether technology.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="106">
+            "They've lost control," Loami murmured, inspecting the hum of their craft's instruments. "The nodes broadcast a high-frequency pulse to keep canopy beasts at bay. But whatever hit the bay short-circuited the main line. The shields are down. Recovery time... eight increments, minimum."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="122">
+            He looked back at the party. "We've got three clocks tickin' against us now: how long we can survive out here, when the storm surge hits, and whether this raft holds together."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="134">
+            Ignatious ran a gloved hand along a thick, fibrous vine clinging to the petrified trunk. "Can I grab some of these vines for extra ropage? You can always use more rope."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="146">
+            "Hop off if you want," Loami said, scanning the dark canopy. "I'm gonna scout."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="151">
+            Ignatious swung his boot over the rail, stepping onto a wide, moss-slick bough. But as his weight shifted, the dark foliage rustled unnaturally. He froze, clutching the vine.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="162">
+            "No, no," Ignatious muttered, his eyes darting through the leaves. "There's always somethin' hidin' out there waitin' to snap at you when you get close. All right, guys... I'm grabbin' some vines, but keep your eyes open. You nevah know when you'll need more rope."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="180">
+            Loami crouched low on the bough, narrowing his dark eyes. His low-light vision pierced the rain-dappled twilight. Beneath the creeping vines, sleek, four-legged silhouettes prowled across the petrified bark—lean, cat-like predators perfectly camouflaged against the dark timber.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="194">
+            "Hey!" Loami hissed, dropping his center of gravity. "We've got feline creatures out on the branches! Natty, hurry back!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="201">
+            Britt and Aggie scrambled up beside him, peering into the shadows. The creatures were built somewhere between a coyote and a mountain cat—territorial predators native to the upper canopy, known as Meowders.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="213">
+            "A coyobi? Interesting," Ignatious mused.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="216">
+            Britt drew her hunting knife, her green skin shimmering faintly in the dim light. "Oh yeah, we know those! They're in our forest back home—Meowders!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="226">
+            "Seen what?" Ignatious asked, blinking. "What did you see?"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="229">
+            A sudden flurry of scurrying claws echoed across the bark. Dozens of glowing orange eyes ignited in the dark leaves surrounding the party.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="238">
+            At the rear of the raft, Iggy sat curled in a tight, shivering ball inside his heavy wool trench coat. His round copper goggles were slick with rain, his small clay-and-soil body rocking back and forth in sheer terror.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="253">
+            [panicked] "The treeth have eyeth!" Iggy whimpered, clutching his head. "The treeth have eyeth!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="258">
+            "Those aren't trees, Iggy!" Aggie called back. "They're basically just mean cats!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="262">
+            Britt didn't hesitate. "Natty—move over, I've got a plan!" she shouted, vaulting past Ignatious.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="267">
+            She raised her hands and unleashed *Hypnotic Shimmer*. A brilliant cascade of pulsing chromatic light erupted across the bough. The radiant illusion dazzled the pack of Meowders, leaving them pawing blindly at the glowing air.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="281">
+            "Are they dazed?!" Ignatious called out.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="284">
+            "They're stunned!" Britt shouted back. "Move while they're dazed!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="287">
+            "Do we try to move the raft or lower a branch?" Loami asked, eyeing their position.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="293">
+            "With lightning and thunder like this?" Ignatious countered. "Can we get away, or are these things gonna pursue us with bloodlust?"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="301">
+            "They're territorial," Aggie warned. "They won't back off easily."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="304">
+            "I'm gonna try somethin' else," Ignatious said. "Just brandishin' the flames a bit! Let's see how these cats like my dreadful visage!" Fanning the inner furnace of his chest, he activated *Dread Visage*. A terrifying, roaring face of orange fire erupted over his features.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="321">
+            Loami grinned, stepping beside him with his spanner raised. "All right, you little cats! Bring it on!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="327">
+            The explosion of fire shattered the nerve of several Meowders. Screeching in terror, two of the creatures scrambled back into the foliage. But the alpha snarled, lunging forward with reckless fury, claws raking across Loami's shoulder pauldron.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="341">
+            [groans] "Psh, these little cats can only do minor damage!" Loami grunted, bracing as his armor absorbed the strike.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="348">
+            ---
+        </p>
+        
+    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="351">
+        <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 2: THE CAZITO MANEUVER</h3>
+    </div>
+    
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="351">
+            Rain drummed against the giant leaves in a steady rhythm.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="355">
+            Britt stepped to the edge of the limb, running her green-skinned hand along the petrified grain. "This forest feels wrong," she murmured to Aggie. "Fifty feet up, dead quiet... like a set built to imitate real life. And when I touch the bark, there's no hum. The Mizizi network is dead here."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="375">
+            Ahead on the bough, the remaining Meowders darted around Loami's boots. Loami swung a devastating right hook, but the cat twisted beneath his fist with improbable speed.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="385">
+            "Dammit! These skimpers are quick!" Loami spat as his fist whistled through empty air.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="390">
+            "I'll help speed you up!" Ignatious roared. Channeling his hearthfire, he pulsed a wave of invigorating energy into Loami's spirit. "Try again!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="398">
+            Loami lunged again, but the tree-cats were too nimble, nipping at his collar.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="403">
+            Britt's eyes brightened. "Would it be possible to grab one of these vines and tie a lazizi? It's a traditional Mizizi hunting method!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="412">
+            Ignatious turned to her in confusion, his hands still smoldering. "I have no idea what a 'Lazizi' is! But if you call it out, I'll shape it!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="422">
+            "I think you'd call it a lasso!" Aggie called out, translating for Britt.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="427">
+            Nodding, Ignatious seized a thick length of raw vine, channeling *Shaped Material*. Flames licked along the fibers, instant-curing the wood into a supple, perfectly balanced hunting loop. He tossed it to Britt. "There! A flawless Lazizi rope!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="441">
+            Loami stared in awe. "Holy shit, Natty, you're really good at that!" He drew upon *Soldier's Bond*, bolstering both himself and Ignatious as they stared down the agile felines.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="452">
+            Britt slapped a wide-brimmed cowboy hat onto her head. Channeling her *Hunter* training, she whirled the flame-forged vine above her head while Ignatious fortified her throw with a surge of prayer dice.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="464">
+            "Cazito! I got ya now!" Britt yelled as the loop sailed through the tempest wind. "Come here, you!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="471">
+            The loop snapped tight around their necks, bundling the three Meowders together like a litter of house cats picked up by the scruff.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="480">
+            Britt planted her boots, spun the entire cluster around her head in a roaring arc, and pitched them off the bough into the fifty-foot abyss below.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="490">
+            "LAZIZI!" she screamed.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="493">
+            Loami howled with laughter, clapping Ignatious on the shoulder. "What a Kazizi-boy! Bye, gazitos!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="498">
+            Ignatious blinked, wiping soot from his brow. "I don't know what any of these words mean!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="504">
+            "It's Spanish!" Loami yelled back. "A gazito!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="507">
+            "Yeah, that doesn't help," Ignatious replied, scratching his head as they turned back toward the raft.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="513">
+            ---
+        </p>
+        
+    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="516">
+        <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 3: THE STORM RAPTOR</h3>
+    </div>
+    
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="516">
+            As the Meowders vanished into the understory, a shrill screech echoed from above.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="521">
+            A massive shadow cut through the driving rain. A high-pitched, furious voice echoed through the upper canopy:
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="527">
+            [screaming] "NO! MY BISCUIT! NOT THESE! THESE ARE MINE, YOU FLAPPING FUZZBALL!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="531">
+            Loami's head snapped upward. "Is that Pip?!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="534">
+            High above, tiny halfling legs were kicking frantically in mid-air. Pip was trapped in the talons of a monstrous Storm Raptor flying across the high branches.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="544">
+            "LET ME GO, YOU STUPID BIRD! DON'T TOUCH MY BISCUITS!" Pip screamed.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="548">
+            "I'm climbin' to the top of the canopy to get in range!" Loami shouted, scrambling up the slick bark.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="555">
+            The instant Aggie's boots touched the upper branch, the entire forest erupted in a rush of telepathic whispers: *"Aggie, Aggie, Aggie, Aggie!"*
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="563">
+            Aggie closed her eyes, listening as the ancient roots poured impressions into her mind. She turned to the squad, translating the rustling plant-whispers. A 'little tree'—Bramble—had been using *Speak to Plants* to send signals through the network. He apologized through the arbol telephone network, explaining he had been seeding false signals to confuse rival salvagers.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="585">
+            "That son of a bitch!" Ignatious swore fondly.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="588">
+            Aggie's eyes widened as the vision clarified. Bramble had realized Squad 907 was in the forest and was trying to reach them because Pip had run out alone before the storm to fetch emergency breakfast pastries!
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="602">
+            Above them, the Storm Raptor carrying Pip circled closer.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="605">
+            On the raft deck, hearing Pip's screams shattered Iggy's paralysis instantly. "I have to help her!" he shouted, surging to his feet and raising his wooden staff.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="615">
+            [gasp] "Eth-ereal Wall!" Iggy commanded.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="618">
+            A fifty-foot barrier of shimmering translucent force erupted in mid-air. The Storm Raptor screeched, slamming full-force into the wall and beating its wings weakly against the barrier.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="628">
+            [screaming] "Stupid bird! Watch where you're flyin'! You're gonna make me drop my biscuits!" Pip yelled, clutching her canvas pouch as golden crumbs rained down.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="638">
+            Ignatious squinted into the rain, muttering to himself, "Hmm... are English biscuits or nice southern biscuits?!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="644">
+            Hesitating only a second as the bird hung stalled against the barrier, Ignatious raised his hand and fired a bolt of pure flame at the Raptor. "This bird glows! It's vulnerable! I saved you! You're welcome! I love it when a plan comes together!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="661">
+            The impact forced the hawk's talons open, dropping Pip into open air. But as she fell, three bioluminescent shadows bounded out of the foliage—Mwaza-Chui, apex canopy jaguars lured by the rich scent of warm butter and caramelized bacon.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="676">
+            ---
+        </p>
+        
+    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="679">
+        <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 4: THE TREE IGLOO</h3>
+    </div>
+    
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="679">
+            Loami sprinted toward the drop zone. "Hey! You want a piece of this?! Come and get a little piece of this!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="687">
+            Two jaguars darted past him, while the third leapt and caught Pip by her ponytail in its massive jaws, dangling her over the edge!
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="696">
+            "How many god's damn cats are in this gods damn forest!" Ignatious bellowed.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="701">
+            The jaguar opened its jaws and unleashed *Frequency Overload*—a roaring cone of static ember energy that rocked Loami and Iggy, suppressing their spellcasting under a wave of psychic shock.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="712">
+            Pip dangled over the abyss, smacking the predator's snout with her food bag. "These are my biscuits! Stop it!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="719">
+            Suddenly, the tempest peaked. The colossal trees bent in half under a howling hurricane gale that battered the canopy with sleet and hail.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="728">
+            Reacting instantly, Ignatious used *Shaped Material* to form a wooden shield against the sleet. Aggie ran beneath the limb using *Wall Walk*, placed her palm against the bark, and channeled *Wild Fortress*, growing a complete Tree Igloo of living root-vines around Pip and Loami.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="745">
+            "Loami, get into the shell! I can protect you from the storm!" Aggie shouted through the wind.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="751">
+            Loami dived over Pip, rolling them both into the wooden dome like a player recovering a fumble, just as the root-vines sealed tight.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="760">
+            Inside the quiet Tree Igloo, Pip gasped, [sighs] "I just wanted to get some snacks, man!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="766">
+            "I know you did, Pip! That does sound about right," Loami replied, catching his breath.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="772">
+            Leaning back against the root wall, Loami looked over at Pip. "So here's my theory: I think they created this challenge for first-years, and somethin' went terribly wrong and short-circuited. Are you familiar with the Day of Sparks?"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="787">
+            "It's the Night of Sparks!" Pip corrected chidingly, opening her bag of snacks to inspect the damage. "Did you not listen to anythin' they taught us in school?!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="798">
+            "Uh, no," Loami admitted. "But the Night of Sparks—that was about havin' too much power. It was too little power here! The shields went down, and all these beasts started stormin' the ring!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="811">
+            Outside, through the gale, stadium speakers crackled across the sky: *"Just hold on... halfway... shield crack up... hold on!"*
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="818">
+            In the bay below, a giant iron steamship—the *Deep-Hull*—rose through the waves, its heavy steam cannons firing pulse rounds to push back beasts attacking the center spire.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="828">
+            ---
+        </p>
+        
+    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="831">
+        <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 5: THE RAFT DROP</h3>
+    </div>
+    
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="831">
+            Outside the Igloo, as the storm wall passed, Ignatious looked at his boots, then up into the sky, before slapping his own forehead in sudden realization.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="841">
+            "Wait a minute," Ignatious realized aloud. "I can fucking fly!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="845">
+            Ignatious ignited his ember wings, soaring up with his warhammer to strike the glowing Storm Raptor, sending it crashing into the underbrush.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="853">
+            Meanwhile, the pack of Mwaza-Chui slammed against the exterior of the Tree Igloo, their claws punching at the timber. Within, Pip and Loami sat in comfort, scarfing down a biscuit each.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="865">
+            "This biscuit is great, I can feel the stress drainin' away!" Loami exclaimed between bites.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="871">
+            "Yeah, I'm nevah stressed!" Pip replied through a mouthful of buttery flakes.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="875">
+            Suddenly, a jaguar snout breached the dome, roaring into the igloo.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="879">
+            "Pip, watch out!" Loami yelled, jumping to cover her. But Pip simply dodged.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="884">
+            "Bad cat!" Pip scolded, popping up and bopping the jaguar on the nose with her bag of food. The jaguar froze, scrunching its nose in shock.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="894">
+            Outside, Britt and Iggy gathered a massive pile of phosphorescent mushrooms along the trunk. "In Mizizi lore, jaguars are super attracted to bioluminescent light! I have a plan," Britt said, collecting spores while Iggy stacked them on the raft deck.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="910">
+            Aggie channeled *Conjure Swarm*, sending a trail of glowing fireflies toward the bait. The scent and brilliant glow caught the jaguars' nostrils. Turning away from the Igloo, the pack bounded onto the raft deck to gorge on the fungi.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="925">
+            Pip started to yell, "Hey, you big furbag—!" before Aggie shushed her.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="929">
+            As the cats gorged, Loami stalked behind them. Waiting until all three were on the deck, Loami heaved his shoulder against the timber. "Now! Push together and cut the bungees!" Loami yelled.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="941">
+            Britt slashed the high-tension bungees. Loami and Iggy heaved with all their strength, tipping the Canopy Raft off the branch.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="949">
+            The raft pitched over, sending the entire pack of Mwaza-Chui plummeting fifty feet into the dark abyss below with echoing roars and a heavy crash.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="959">
+            Across the branch, a second Storm Raptor lunged at Iggy.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="963">
+            "Natty, bring it this way!" Loami shouted across the canopy.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="967">
+            Ignatious dodged a talon strike and streaked across the bough. As the Raptor dived, Loami stepped in, shielding Ignatious with a well-timed punch that countered the talons. Frustrated and outnumbered, the Raptor screeched and fled into the storm.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="982">
+            "Oh my gods, thank you!" Ignatious gasped.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="985">
+            "I figured a little one-on-one with one of those things wasn't a fair fight," Loami said.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="991">
+            "The one-on-one was fine. The two-on-one aftahward was not!" Ignatious laughed.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="995">
+            ---
+        </p>
+        
+    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="998">
+        <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 6: THE SACRED TORTOISE</h3>
+    </div>
+    
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="998">
+            The wind died down to a light, cool sprinkle. Sitting across the bough was Pip, gnawing on her jerky.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1005">
+            Behind her sat Mwaza-Kasa—the sacred Spirit Tortoise of the Mizizi clan, its bark-like shell looming over Pip, its glassy eyes flicking between Aggie and Britt.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1015">
+            "Is that... a family membah of yours?" Ignatious whispered.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1018">
+            "It's just sittin' there loomin'... menacingly," Loami noted.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1021">
+            Britt gestured frantically for Pip to back away, but Pip reached into her bag.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1026">
+            "I found a big turtle!" Pip announced, holding out a biscuit. The tortoise snapped it down in one bite. "See, it's my friend!" Pip exulted, scratching under its chin.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1037">
+            "Don't—!" Britt gasped.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1040">
+            The moment Pip touched its chin, a deep *BOOM* echoed as the tortoise collapsed, its eyes glowing ember-red. Pip's eyes rolled back, and she collapsed down the branch.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1051">
+            Aggie sprinted forward, catching Pip before she slipped off the edge. Pip was already convulsing in her arms—entering the mycelium network alone.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1059">
+            "You can nevah go through the network alone, or you get pulled in and nevah come out! How do we anchor her?!" Britt cried.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1068">
+            "Touching Mwaza-Kasa is taboo to the Mizizi, but in absence of the trees, it acts as a physical anchor!" Aggie realized. "We have to touch the living sacred tortoise to save Pip!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1080">
+            Britt grabbed Aggie's hand. "Three... two... one!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1083">
+            Pip immediately calmed into a peaceful sleep in Aggie's arms. Simultaneously, Aggie and Britt slumped forward against the shell, entering the deep network.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1092">
+            Ignatious blinked. "Hey, Loami! What's with the weird glowin' turtle?! Everyone who touches that turtle falls asleep! Am I the crazy one here?! We should NOT touch that turtle!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1103">
+            "I think it might be a little too late for that," Loami replied sardonically, stepping forward with his hand outstretched.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1111">
+            ---
+        </p>
+        
+    <div class="audio-chapter-heading py-4 my-4 border-b border-slate-800" data-timestamp="1114">
+        <h3 class="text-xl font-bold text-amber-400 font-serif">CHAPTER 7: WHAT WAS FORGOTTEN</h3>
+    </div>
+    
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1114">
+            Touching Mwaza-Kasa plunged Aggie and Britt into the deep network. They found Pip easily, lost in a vast, silent forest.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1122">
+            As they reached her side, the network unlocked a forgotten memory:
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1126">
+            Young child versions of Aggie and Britt were laughing as they ran through a sunlit sacred grove—a memory wiped from their minds years ago. In the memory, the children sat on a mossy root to rest. But as adult Aggie and Britt watched, they saw the root open its eyes. It was a Spirit Tortoise. The moment the children touched it, they passed out, and the vision shattered.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1153">
+            Memories played across the bark like moving shadows: they remembered lost clan members who had vanished years ago after dying of the green shell rot currently on Britt's arm.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1164">
+            In their adult bodies, Britt and Aggie grabbed Pip's arms and pulled.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1168">
+            Loami was inches from touching the shell when Britt, Aggie, and Pip's eyes snapped open back on the high branch, gasping for breath!
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1177">
+            "Hey! Whoa! What happened?!" Loami asked.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1180">
+            "You saw that?!" Aggie gasped, staring at Britt.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1183">
+            "Yeah... I definitely saw that," Britt said, shaken. "We were kids... in the sacred grove..."
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1189">
+            "What?! Saw what?!" Ignatious asked.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1192">
+            [screaming] "WHAT THE SHIT WAS THAT, MR TURTLE!?" Pip screamed, glaring at the tortoise.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1197">
+            Mwaza-Kasa stood slowly on four legs, looking sad and determined. It stomped its heavy foot twice against the bark, tucked its limbs into its shell, and rolled off the edge of the fifty-foot branch!
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1210">
+            [panicked] "OH NO!" Iggy yelled.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1213">
+            *CRASH!*
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1216">
+            The shell plunged fifty feet, smashing into the ground with a thud that created a dirt crater. Moments later, the tortoise popped out of its shell, looked up at Squad 907, and waited.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1229">
+            "Well... that can't be right!" Loami said.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1232">
+            "I think it wants you to follow it!" Ignatious said.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1236">
+            "Well, I'm definitely not jumpin' off the tree!" Britt said.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1240">
+            "I can carry one of you down!" Ignatious offered.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1243">
+            Loami shrugged. "I've fallen from furthah! Besides... I'm nevah stayin' up in these trees alone!"
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1249">
+            Loami dived fifty feet straight down into the crater. Slamming into the dirt, he staggered to his feet and bowed deeply to Mwaza-Kasa. The sacred tortoise nodded in approval.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1260">
+            Britt used *Wall Walk* to carry Pip down, who grumbled, "My headdd." Iggy walked over and hand-fed Pip bacon biscuits as she cried tears of relief.
+        </p>
+        
+        <p class="sync-para text-slate-300 text-sm sm:text-base leading-relaxed py-2 px-3 my-1 rounded cursor-pointer hover:bg-slate-900/80 transition-all duration-200 border-l-4 border-transparent" data-timestamp="1270">
+            Mwaza-Kasa looked at Squad 907, nodded slowly, and turned to lead them on foot into the petrified forest as dawn broke.
+        </p>
+        
+        </div>
+    </div>
+
+    <!-- VIEW 2: EBOOK READABLE TEXT -->
+    <div id="view-ebook" class="medium-view hidden max-w-2xl mx-auto px-4 py-8">
+        <!-- Ebook Top Toolbar -->
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+            <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold">
+                Adapted by Brandon Sanderson Style
             </div>
-            <div class="text-[10px] text-slate-400 italic mt-0.5">
-                High canopy docking in the petrified Mizizi boughs & the tree cat ambush...
+            <div class="flex items-center gap-2">
+                <button id="fontDown" class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 hover:text-white border border-slate-700">A-</button>
+                <button id="fontUp" class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 hover:text-white border border-slate-700">A+</button>
             </div>
         </div>
 
-        <!-- Page 1: High Canopy Docking -->
-        <section class="panel-section p-0 m-0" data-title="Page 1: High Canopy Docking" data-transcript="*Metadata - Location: High Canopy Petrified Boughs, 50ft above ground, violent eyewall storm. | Palette: Dark turquoise rain-slick petrified wood, deep indigo storm clouds, vibrant violet lightning. | Lighting: Violent tempest weather with flashes of purple lightning lashing the central monolith.*
-
-**Panel 1 ((Full-Page Wide Establishing Splash))**
-
-*Behind the Scenes (Story Action):* High in the petrified canopy fifty feet above the dark forest floor, the Canopy Raft balloon hybrid lurks wedged between four gigantic, ancient tree trunks. Sheets of heavy rain lash the raft deck. In the far distance through gaps in the leaves, a colossal pillar of purple lightning hammers the central monolith. On deck, Loami checks the central winch while Ignatious leans over the gunwale blowing grey ash from his nostrils.
-
-**Ignatious:** *&quot;Well... the landing went better than I thought.&quot;*
-
-**Loami:** *&quot;Gotta say I'm shocked we were able to get our way here at all... but here we are. Safe as we're going to get.&quot;*
-
-**Sound Effect:** *&quot;⚡ RUMMMBLE!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 1: High Canopy Docking" data-transcript="*Metadata - Location: High Canopy Petrified Boughs, 50ft above ground, violent eyewall storm. | Palette: Dark turquoise rain-slick petrified wood, deep indigo storm clouds, vibrant violet lightning. | Lighting: Violent tempest weather with flashes of purple lightning lashing the central monolith.*
-
-**Panel 1 ((Full-Page Wide Establishing Splash))**
-
-*Behind the Scenes (Story Action):* High in the petrified canopy fifty feet above the dark forest floor, the Canopy Raft balloon hybrid lurks wedged between four gigantic, ancient tree trunks. Sheets of heavy rain lash the raft deck. In the far distance through gaps in the leaves, a colossal pillar of purple lightning hammers the central monolith. On deck, Loami checks the central winch while Ignatious leans over the gunwale blowing grey ash from his nostrils.
-
-**Ignatious:** *&quot;Well... the landing went better than I thought.&quot;*
-
-**Loami:** *&quot;Gotta say I'm shocked we were able to get our way here at all... but here we are. Safe as we're going to get.&quot;*
-
-**Sound Effect:** *&quot;⚡ RUMMMBLE!&quot;*">
-                <img src="images/vumbua/s11_page1.jpg?v=1786143529" alt="Session 11: Page 1: High Canopy Docking" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 2: Shadowing Shadows -->
-        <section class="panel-section p-0 m-0" data-title="Page 2: Shadowing Shadows" data-transcript="*Metadata - Location: Petrified Bough, rain-dappled foliage. | Palette: Dark turquoise rain, muted slate grey, subtle amber glow from Ignatious's coat.*
-
-**Panel 1 ((Medium Wide Shot — Top 65% Panel))**
-
-*Behind the Scenes (Story Action):* Ignatious swings off the raft onto a moss-slick petrified limb, reaching for thick creeping vines. He glances nervously over his shoulder into the deep leaf shadows, clutching a coil of vine tightly to his chest.
-
-**Ignatious:** *&quot;I guess the next question is what's the purpose of all this? ... Can I grab some of these vines for extra ropage? You can always use more rope.&quot;*
-
-**Loami:** *&quot;Be safe. I'm gonna scout.&quot;*
-
-**Ignatious:** *&quot;No! No! There's always something hiding out there waiting to snap at you when you get close! This is definitely bullshit!&quot;*
-
-**Panel 2 ((Close-Up Low-Light Vision Shot — Bottom 35% Panel))**
-
-*Behind the Scenes (Story Action):* Subjective POV through Loami's low-light vision: shadowy petrified bark illuminated in cool green hues, revealing sleek four-legged cat-like predators (Mewoders) prowling stealthily through the creeping vines, their claws digging into the bark.
-
-**Loami:** *&quot;Hey! Hey! Looks like we got some sort of feline creature out in the branches! Natty, hurry back!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 2: Shadowing Shadows" data-transcript="*Metadata - Location: Petrified Bough, rain-dappled foliage. | Palette: Dark turquoise rain, muted slate grey, subtle amber glow from Ignatious's coat.*
-
-**Panel 1 ((Medium Wide Shot — Top 65% Panel))**
-
-*Behind the Scenes (Story Action):* Ignatious swings off the raft onto a moss-slick petrified limb, reaching for thick creeping vines. He glances nervously over his shoulder into the deep leaf shadows, clutching a coil of vine tightly to his chest.
-
-**Ignatious:** *&quot;I guess the next question is what's the purpose of all this? ... Can I grab some of these vines for extra ropage? You can always use more rope.&quot;*
-
-**Loami:** *&quot;Be safe. I'm gonna scout.&quot;*
-
-**Ignatious:** *&quot;No! No! There's always something hiding out there waiting to snap at you when you get close! This is definitely bullshit!&quot;*
-
-**Panel 2 ((Close-Up Low-Light Vision Shot — Bottom 35% Panel))**
-
-*Behind the Scenes (Story Action):* Subjective POV through Loami's low-light vision: shadowy petrified bark illuminated in cool green hues, revealing sleek four-legged cat-like predators (Mewoders) prowling stealthily through the creeping vines, their claws digging into the bark.
-
-**Loami:** *&quot;Hey! Hey! Looks like we got some sort of feline creature out in the branches! Natty, hurry back!&quot;*">
-                <img src="images/vumbua/s11_page2.jpg?v=1786143529" alt="Session 11: Page 2: Shadowing Shadows" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 3: The Ambush & Hypnotic Shimmer -->
-        <section class="panel-section p-0 m-0" data-title="Page 3: The Ambush & Hypnotic Shimmer" data-transcript="*Metadata - Location: Petrified Bough deck. | Palette: Dark turquoise rain punctuated by sudden, dazzling prismatic rainbow light.*
-
-**Panel 1 ((Ambush Reveal))**
-
-*Behind the Scenes (Story Action):* Dozens of bright orange feline eyes ignite in the dense leaf canopy around the bough. Britt draws her hunting blade alongside Aggie.
-
-**Ignatious:** *&quot;A coyobi? Interesting.&quot;*
-
-**Britt:** *&quot;Oh yeah, we know! They're in our forest back home—they're called yaba daba!&quot;*
-
-**Panel 2 ((Iggy Reaction))**
-
-*Behind the Scenes (Story Action):* Iggy curls in a fetal position at the back of the raft, overwhelmed by tree phobia.
-
-**Iggy:** *&quot;The trees have eyes! The trees have eyes!&quot;*
-
-**Loami:** *&quot;No, those aren't trees, Iggy. They're basically mean cats!&quot;*
-
-**Panel 3 ((Britt's Hypnotic Shimmer))**
-
-*Behind the Scenes (Story Action):* Britt steps forward and casts *Hypnotic Shimmer*, creating a dazzling wave of flashing rainbow colors that stuns the prowling Mewoders in mid-stride.
-
-**Britt:** *&quot;Pardon me, Natty! Hypnotic Shimmer!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 3: The Ambush & Hypnotic Shimmer" data-transcript="*Metadata - Location: Petrified Bough deck. | Palette: Dark turquoise rain punctuated by sudden, dazzling prismatic rainbow light.*
-
-**Panel 1 ((Ambush Reveal))**
-
-*Behind the Scenes (Story Action):* Dozens of bright orange feline eyes ignite in the dense leaf canopy around the bough. Britt draws her hunting blade alongside Aggie.
-
-**Ignatious:** *&quot;A coyobi? Interesting.&quot;*
-
-**Britt:** *&quot;Oh yeah, we know! They're in our forest back home—they're called yaba daba!&quot;*
-
-**Panel 2 ((Iggy Reaction))**
-
-*Behind the Scenes (Story Action):* Iggy curls in a fetal position at the back of the raft, overwhelmed by tree phobia.
-
-**Iggy:** *&quot;The trees have eyes! The trees have eyes!&quot;*
-
-**Loami:** *&quot;No, those aren't trees, Iggy. They're basically mean cats!&quot;*
-
-**Panel 3 ((Britt's Hypnotic Shimmer))**
-
-*Behind the Scenes (Story Action):* Britt steps forward and casts *Hypnotic Shimmer*, creating a dazzling wave of flashing rainbow colors that stuns the prowling Mewoders in mid-stride.
-
-**Britt:** *&quot;Pardon me, Natty! Hypnotic Shimmer!&quot;*">
-                <img src="images/vumbua/s11_page3.jpg?v=1786143529" alt="Session 11: Page 3: The Ambush & Hypnotic Shimmer" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 4: The Dreadful Massage -->
-        <section class="panel-section p-0 m-0" data-title="Page 4: The Dreadful Massage" data-transcript="*Metadata - Location: Petrified limb & Canopy Raft deck. | Palette: Dark turquoise rain, amber flare, electric blue static.*
-
-**Panel 1 ((Mewoder Counter-Attack))**
-
-*Behind the Scenes (Story Action):* A pair of Mewoders leap over the vine barrier, landing squarely onto Loami's back and shoulders, digging claws into his canvas collar.
-
-**Loami:** *&quot;Ow! Hey! Get off! This is a dreadful massage!&quot;*
-
-**Panel 2 ((Aggie's Vine Strike))**
-
-*Behind the Scenes (Story Action):* Aggie swings her vine whip, knocking one of the Mewoders off Loami's shoulder as Ignatious sparks his palms.
-
-**Aggie:** *&quot;Hold still, Loami!&quot;*
-
-**Ignatious:** *&quot;I'm heating up the vine! Get ready!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 4: The Dreadful Massage" data-transcript="*Metadata - Location: Petrified limb & Canopy Raft deck. | Palette: Dark turquoise rain, amber flare, electric blue static.*
-
-**Panel 1 ((Mewoder Counter-Attack))**
-
-*Behind the Scenes (Story Action):* A pair of Mewoders leap over the vine barrier, landing squarely onto Loami's back and shoulders, digging claws into his canvas collar.
-
-**Loami:** *&quot;Ow! Hey! Get off! This is a dreadful massage!&quot;*
-
-**Panel 2 ((Aggie's Vine Strike))**
-
-*Behind the Scenes (Story Action):* Aggie swings her vine whip, knocking one of the Mewoders off Loami's shoulder as Ignatious sparks his palms.
-
-**Aggie:** *&quot;Hold still, Loami!&quot;*
-
-**Ignatious:** *&quot;I'm heating up the vine! Get ready!&quot;*">
-                <img src="images/vumbua/s11_page4.jpg?v=1786143529" alt="Session 11: Page 4: The Dreadful Massage" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- ACT HEADER DIVIDER -->
-        <div class="py-4 px-6 bg-slate-900/90 border-y border-slate-800 text-center select-none">
-            <div class="text-xs font-serif font-bold tracking-[0.25em] text-amber-400 uppercase">
-                ACT II: THE CAZITO MANEUVER
-            </div>
-            <div class="text-[10px] text-slate-400 italic mt-0.5">
-                Ignatious heats the vines & Loami launches the Kazy Boy catapult...
-            </div>
+        <!-- Ebook Content Container -->
+        <div id="ebookTextContainer" class="font-ebook space-y-4">
+            
+    <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif tracking-wide">Intro</h2>
+    </div>
+    
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            # DON'T TOUCH MY BISCUITS
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            ---
+        </p>
+        
+    <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif tracking-wide">CHAPTER 1: THE NIGHT OF EMBERS</h2>
+    </div>
+    
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Rain fell through the colossal leaves in heavy, rhythmic sheets, filling the petrified canopy with a sound like distant drumming. Fifty feet below, the forest floor was lost in twilight shadow.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            High in the woven limbs of four ancient petrified giants, the Canopy Raft strained against its high-tension bungees. Ignatious leaned over the wooden gunwale, blowing a plume of grey ash through his nostrils. Faint orange embers danced along the cuffs of his heavy leather coat, fighting off the damp chill.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Well," he grunted, adjusting the warhammer strapped across his back. "The landing went bettah than I thought."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Beside him, Loami unbolted the central winch casing. He wiped grease and rainwater from his brow with the back of a calloused hand, adjusting his damp woolen flat cap.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Gotta say I'm shocked we made it up here at all," Loami said, his broad shoulders tensing as he checked the rig's balance. "We look a little like a ragtag crew, but here we are. Safe as we're gonna get."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            A low, resonant thud vibrated through the petrified wood beneath their boots. Miles away, through gaps in the foliage, a jagged pillar of violet lightning hammered the central Mon. The air tasted sharply of copper and ozone.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious squinted toward the flash. "What's the purpose of all this? Is the Academy testing our adventurism, or is there a reason the sky keeps tryin' to melt the obelisk?"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami's expression darkened. Before entering the Academy, he had spent years servicing power conduits in Harmony, learning the temperamental pulse of Aether technology.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "They've lost control," Loami murmured, inspecting the hum of their craft's instruments. "The nodes broadcast a high-frequency pulse to keep canopy beasts at bay. But whatever hit the bay short-circuited the main line. The shields are down. Recovery time... eight increments, minimum."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            He looked back at the party. "We've got three clocks tickin' against us now: how long we can survive out here, when the storm surge hits, and whether this raft holds together."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious ran a gloved hand along a thick, fibrous vine clinging to the petrified trunk. "Can I grab some of these vines for extra ropage? You can always use more rope."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Hop off if you want," Loami said, scanning the dark canopy. "I'm gonna scout."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious swung his boot over the rail, stepping onto a wide, moss-slick bough. But as his weight shifted, the dark foliage rustled unnaturally. He froze, clutching the vine.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "No, no," Ignatious muttered, his eyes darting through the leaves. "There's always somethin' hidin' out there waitin' to snap at you when you get close. All right, guys... I'm grabbin' some vines, but keep your eyes open. You nevah know when you'll need more rope."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami crouched low on the bough, narrowing his dark eyes. His low-light vision pierced the rain-dappled twilight. Beneath the creeping vines, sleek, four-legged silhouettes prowled across the petrified bark—lean, cat-like predators perfectly camouflaged against the dark timber.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Hey!" Loami hissed, dropping his center of gravity. "We've got feline creatures out on the branches! Natty, hurry back!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt and Aggie scrambled up beside him, peering into the shadows. The creatures were built somewhere between a coyote and a mountain cat—territorial predators native to the upper canopy, known as Meowders.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "A coyobi? Interesting," Ignatious mused.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt drew her hunting knife, her green skin shimmering faintly in the dim light. "Oh yeah, we know those! They're in our forest back home—Meowders!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Seen what?" Ignatious asked, blinking. "What did you see?"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            A sudden flurry of scurrying claws echoed across the bark. Dozens of glowing orange eyes ignited in the dark leaves surrounding the party.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            At the rear of the raft, Iggy sat curled in a tight, shivering ball inside his heavy wool trench coat. His round copper goggles were slick with rain, his small clay-and-soil body rocking back and forth in sheer terror.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            [panicked] "The treeth have eyeth!" Iggy whimpered, clutching his head. "The treeth have eyeth!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Those aren't trees, Iggy!" Aggie called back. "They're basically just mean cats!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt didn't hesitate. "Natty—move over, I've got a plan!" she shouted, vaulting past Ignatious.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            She raised her hands and unleashed *Hypnotic Shimmer*. A brilliant cascade of pulsing chromatic light erupted across the bough. The radiant illusion dazzled the pack of Meowders, leaving them pawing blindly at the glowing air.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Are they dazed?!" Ignatious called out.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "They're stunned!" Britt shouted back. "Move while they're dazed!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Do we try to move the raft or lower a branch?" Loami asked, eyeing their position.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "With lightning and thunder like this?" Ignatious countered. "Can we get away, or are these things gonna pursue us with bloodlust?"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "They're territorial," Aggie warned. "They won't back off easily."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I'm gonna try somethin' else," Ignatious said. "Just brandishin' the flames a bit! Let's see how these cats like my dreadful visage!" Fanning the inner furnace of his chest, he activated *Dread Visage*. A terrifying, roaring face of orange fire erupted over his features.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami grinned, stepping beside him with his spanner raised. "All right, you little cats! Bring it on!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The explosion of fire shattered the nerve of several Meowders. Screeching in terror, two of the creatures scrambled back into the foliage. But the alpha snarled, lunging forward with reckless fury, claws raking across Loami's shoulder pauldron.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            [groans] "Psh, these little cats can only do minor damage!" Loami grunted, bracing as his armor absorbed the strike.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            ---
+        </p>
+        
+    <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif tracking-wide">CHAPTER 2: THE CAZITO MANEUVER</h2>
+    </div>
+    
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Rain drummed against the giant leaves in a steady rhythm.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt stepped to the edge of the limb, running her green-skinned hand along the petrified grain. "This forest feels wrong," she murmured to Aggie. "Fifty feet up, dead quiet... like a set built to imitate real life. And when I touch the bark, there's no hum. The Mizizi network is dead here."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ahead on the bough, the remaining Meowders darted around Loami's boots. Loami swung a devastating right hook, but the cat twisted beneath his fist with improbable speed.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Dammit! These skimpers are quick!" Loami spat as his fist whistled through empty air.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I'll help speed you up!" Ignatious roared. Channeling his hearthfire, he pulsed a wave of invigorating energy into Loami's spirit. "Try again!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami lunged again, but the tree-cats were too nimble, nipping at his collar.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt's eyes brightened. "Would it be possible to grab one of these vines and tie a lazizi? It's a traditional Mizizi hunting method!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious turned to her in confusion, his hands still smoldering. "I have no idea what a 'Lazizi' is! But if you call it out, I'll shape it!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I think you'd call it a lasso!" Aggie called out, translating for Britt.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Nodding, Ignatious seized a thick length of raw vine, channeling *Shaped Material*. Flames licked along the fibers, instant-curing the wood into a supple, perfectly balanced hunting loop. He tossed it to Britt. "There! A flawless Lazizi rope!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami stared in awe. "Holy shit, Natty, you're really good at that!" He drew upon *Soldier's Bond*, bolstering both himself and Ignatious as they stared down the agile felines.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt slapped a wide-brimmed cowboy hat onto her head. Channeling her *Hunter* training, she whirled the flame-forged vine above her head while Ignatious fortified her throw with a surge of prayer dice.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Cazito! I got ya now!" Britt yelled as the loop sailed through the tempest wind. "Come here, you!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The loop snapped tight around their necks, bundling the three Meowders together like a litter of house cats picked up by the scruff.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt planted her boots, spun the entire cluster around her head in a roaring arc, and pitched them off the bough into the fifty-foot abyss below.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "LAZIZI!" she screamed.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami howled with laughter, clapping Ignatious on the shoulder. "What a Kazizi-boy! Bye, gazitos!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious blinked, wiping soot from his brow. "I don't know what any of these words mean!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "It's Spanish!" Loami yelled back. "A gazito!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Yeah, that doesn't help," Ignatious replied, scratching his head as they turned back toward the raft.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            ---
+        </p>
+        
+    <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif tracking-wide">CHAPTER 3: THE STORM RAPTOR</h2>
+    </div>
+    
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            As the Meowders vanished into the understory, a shrill screech echoed from above.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            A massive shadow cut through the driving rain. A high-pitched, furious voice echoed through the upper canopy:
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            [screaming] "NO! MY BISCUIT! NOT THESE! THESE ARE MINE, YOU FLAPPING FUZZBALL!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami's head snapped upward. "Is that Pip?!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            High above, tiny halfling legs were kicking frantically in mid-air. Pip was trapped in the talons of a monstrous Storm Raptor flying across the high branches.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "LET ME GO, YOU STUPID BIRD! DON'T TOUCH MY BISCUITS!" Pip screamed.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I'm climbin' to the top of the canopy to get in range!" Loami shouted, scrambling up the slick bark.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The instant Aggie's boots touched the upper branch, the entire forest erupted in a rush of telepathic whispers: *"Aggie, Aggie, Aggie, Aggie!"*
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Aggie closed her eyes, listening as the ancient roots poured impressions into her mind. She turned to the squad, translating the rustling plant-whispers. A 'little tree'—Bramble—had been using *Speak to Plants* to send signals through the network. He apologized through the arbol telephone network, explaining he had been seeding false signals to confuse rival salvagers.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "That son of a bitch!" Ignatious swore fondly.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Aggie's eyes widened as the vision clarified. Bramble had realized Squad 907 was in the forest and was trying to reach them because Pip had run out alone before the storm to fetch emergency breakfast pastries!
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Above them, the Storm Raptor carrying Pip circled closer.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            On the raft deck, hearing Pip's screams shattered Iggy's paralysis instantly. "I have to help her!" he shouted, surging to his feet and raising his wooden staff.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            [gasp] "Eth-ereal Wall!" Iggy commanded.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            A fifty-foot barrier of shimmering translucent force erupted in mid-air. The Storm Raptor screeched, slamming full-force into the wall and beating its wings weakly against the barrier.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            [screaming] "Stupid bird! Watch where you're flyin'! You're gonna make me drop my biscuits!" Pip yelled, clutching her canvas pouch as golden crumbs rained down.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious squinted into the rain, muttering to himself, "Hmm... are English biscuits or nice southern biscuits?!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Hesitating only a second as the bird hung stalled against the barrier, Ignatious raised his hand and fired a bolt of pure flame at the Raptor. "This bird glows! It's vulnerable! I saved you! You're welcome! I love it when a plan comes together!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The impact forced the hawk's talons open, dropping Pip into open air. But as she fell, three bioluminescent shadows bounded out of the foliage—Mwaza-Chui, apex canopy jaguars lured by the rich scent of warm butter and caramelized bacon.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            ---
+        </p>
+        
+    <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif tracking-wide">CHAPTER 4: THE TREE IGLOO</h2>
+    </div>
+    
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami sprinted toward the drop zone. "Hey! You want a piece of this?! Come and get a little piece of this!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Two jaguars darted past him, while the third leapt and caught Pip by her ponytail in its massive jaws, dangling her over the edge!
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "How many god's damn cats are in this gods damn forest!" Ignatious bellowed.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The jaguar opened its jaws and unleashed *Frequency Overload*—a roaring cone of static ember energy that rocked Loami and Iggy, suppressing their spellcasting under a wave of psychic shock.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Pip dangled over the abyss, smacking the predator's snout with her food bag. "These are my biscuits! Stop it!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Suddenly, the tempest peaked. The colossal trees bent in half under a howling hurricane gale that battered the canopy with sleet and hail.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Reacting instantly, Ignatious used *Shaped Material* to form a wooden shield against the sleet. Aggie ran beneath the limb using *Wall Walk*, placed her palm against the bark, and channeled *Wild Fortress*, growing a complete Tree Igloo of living root-vines around Pip and Loami.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Loami, get into the shell! I can protect you from the storm!" Aggie shouted through the wind.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami dived over Pip, rolling them both into the wooden dome like a player recovering a fumble, just as the root-vines sealed tight.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Inside the quiet Tree Igloo, Pip gasped, [sighs] "I just wanted to get some snacks, man!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I know you did, Pip! That does sound about right," Loami replied, catching his breath.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Leaning back against the root wall, Loami looked over at Pip. "So here's my theory: I think they created this challenge for first-years, and somethin' went terribly wrong and short-circuited. Are you familiar with the Day of Sparks?"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "It's the Night of Sparks!" Pip corrected chidingly, opening her bag of snacks to inspect the damage. "Did you not listen to anythin' they taught us in school?!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Uh, no," Loami admitted. "But the Night of Sparks—that was about havin' too much power. It was too little power here! The shields went down, and all these beasts started stormin' the ring!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Outside, through the gale, stadium speakers crackled across the sky: *"Just hold on... halfway... shield crack up... hold on!"*
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            In the bay below, a giant iron steamship—the *Deep-Hull*—rose through the waves, its heavy steam cannons firing pulse rounds to push back beasts attacking the center spire.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            ---
+        </p>
+        
+    <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif tracking-wide">CHAPTER 5: THE RAFT DROP</h2>
+    </div>
+    
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Outside the Igloo, as the storm wall passed, Ignatious looked at his boots, then up into the sky, before slapping his own forehead in sudden realization.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Wait a minute," Ignatious realized aloud. "I can fucking fly!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious ignited his ember wings, soaring up with his warhammer to strike the glowing Storm Raptor, sending it crashing into the underbrush.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Meanwhile, the pack of Mwaza-Chui slammed against the exterior of the Tree Igloo, their claws punching at the timber. Within, Pip and Loami sat in comfort, scarfing down a biscuit each.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "This biscuit is great, I can feel the stress drainin' away!" Loami exclaimed between bites.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Yeah, I'm nevah stressed!" Pip replied through a mouthful of buttery flakes.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Suddenly, a jaguar snout breached the dome, roaring into the igloo.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Pip, watch out!" Loami yelled, jumping to cover her. But Pip simply dodged.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Bad cat!" Pip scolded, popping up and bopping the jaguar on the nose with her bag of food. The jaguar froze, scrunching its nose in shock.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Outside, Britt and Iggy gathered a massive pile of phosphorescent mushrooms along the trunk. "In Mizizi lore, jaguars are super attracted to bioluminescent light! I have a plan," Britt said, collecting spores while Iggy stacked them on the raft deck.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Aggie channeled *Conjure Swarm*, sending a trail of glowing fireflies toward the bait. The scent and brilliant glow caught the jaguars' nostrils. Turning away from the Igloo, the pack bounded onto the raft deck to gorge on the fungi.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Pip started to yell, "Hey, you big furbag—!" before Aggie shushed her.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            As the cats gorged, Loami stalked behind them. Waiting until all three were on the deck, Loami heaved his shoulder against the timber. "Now! Push together and cut the bungees!" Loami yelled.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt slashed the high-tension bungees. Loami and Iggy heaved with all their strength, tipping the Canopy Raft off the branch.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The raft pitched over, sending the entire pack of Mwaza-Chui plummeting fifty feet into the dark abyss below with echoing roars and a heavy crash.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Across the branch, a second Storm Raptor lunged at Iggy.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Natty, bring it this way!" Loami shouted across the canopy.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious dodged a talon strike and streaked across the bough. As the Raptor dived, Loami stepped in, shielding Ignatious with a well-timed punch that countered the talons. Frustrated and outnumbered, the Raptor screeched and fled into the storm.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Oh my gods, thank you!" Ignatious gasped.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I figured a little one-on-one with one of those things wasn't a fair fight," Loami said.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "The one-on-one was fine. The two-on-one aftahward was not!" Ignatious laughed.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            ---
+        </p>
+        
+    <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif tracking-wide">CHAPTER 6: THE SACRED TORTOISE</h2>
+    </div>
+    
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The wind died down to a light, cool sprinkle. Sitting across the bough was Pip, gnawing on her jerky.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Behind her sat Mwaza-Kasa—the sacred Spirit Tortoise of the Mizizi clan, its bark-like shell looming over Pip, its glassy eyes flicking between Aggie and Britt.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Is that... a family membah of yours?" Ignatious whispered.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "It's just sittin' there loomin'... menacingly," Loami noted.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt gestured frantically for Pip to back away, but Pip reached into her bag.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I found a big turtle!" Pip announced, holding out a biscuit. The tortoise snapped it down in one bite. "See, it's my friend!" Pip exulted, scratching under its chin.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Don't—!" Britt gasped.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The moment Pip touched its chin, a deep *BOOM* echoed as the tortoise collapsed, its eyes glowing ember-red. Pip's eyes rolled back, and she collapsed down the branch.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Aggie sprinted forward, catching Pip before she slipped off the edge. Pip was already convulsing in her arms—entering the mycelium network alone.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "You can nevah go through the network alone, or you get pulled in and nevah come out! How do we anchor her?!" Britt cried.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Touching Mwaza-Kasa is taboo to the Mizizi, but in absence of the trees, it acts as a physical anchor!" Aggie realized. "We have to touch the living sacred tortoise to save Pip!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt grabbed Aggie's hand. "Three... two... one!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Pip immediately calmed into a peaceful sleep in Aggie's arms. Simultaneously, Aggie and Britt slumped forward against the shell, entering the deep network.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Ignatious blinked. "Hey, Loami! What's with the weird glowin' turtle?! Everyone who touches that turtle falls asleep! Am I the crazy one here?! We should NOT touch that turtle!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I think it might be a little too late for that," Loami replied sardonically, stepping forward with his hand outstretched.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            ---
+        </p>
+        
+    <div class="ebook-chapter-heading py-6 my-6 border-b border-slate-800">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-serif tracking-wide">CHAPTER 7: WHAT WAS FORGOTTEN</h2>
+    </div>
+    
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Touching Mwaza-Kasa plunged Aggie and Britt into the deep network. They found Pip easily, lost in a vast, silent forest.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            As they reached her side, the network unlocked a forgotten memory:
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Young child versions of Aggie and Britt were laughing as they ran through a sunlit sacred grove—a memory wiped from their minds years ago. In the memory, the children sat on a mossy root to rest. But as adult Aggie and Britt watched, they saw the root open its eyes. It was a Spirit Tortoise. The moment the children touched it, they passed out, and the vision shattered.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Memories played across the bark like moving shadows: they remembered lost clan members who had vanished years ago after dying of the green shell rot currently on Britt's arm.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            In their adult bodies, Britt and Aggie grabbed Pip's arms and pulled.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami was inches from touching the shell when Britt, Aggie, and Pip's eyes snapped open back on the high branch, gasping for breath!
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Hey! Whoa! What happened?!" Loami asked.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "You saw that?!" Aggie gasped, staring at Britt.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Yeah... I definitely saw that," Britt said, shaken. "We were kids... in the sacred grove..."
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "What?! Saw what?!" Ignatious asked.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            [screaming] "WHAT THE SHIT WAS THAT, MR TURTLE!?" Pip screamed, glaring at the tortoise.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Mwaza-Kasa stood slowly on four legs, looking sad and determined. It stomped its heavy foot twice against the bark, tucked its limbs into its shell, and rolled off the edge of the fifty-foot branch!
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            [panicked] "OH NO!" Iggy yelled.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            *CRASH!*
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            The shell plunged fifty feet, smashing into the ground with a thud that created a dirt crater. Moments later, the tortoise popped out of its shell, looked up at Squad 907, and waited.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Well... that can't be right!" Loami said.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I think it wants you to follow it!" Ignatious said.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "Well, I'm definitely not jumpin' off the tree!" Britt said.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            "I can carry one of you down!" Ignatious offered.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami shrugged. "I've fallen from furthah! Besides... I'm nevah stayin' up in these trees alone!"
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Loami dived fifty feet straight down into the crater. Slamming into the dirt, he staggered to his feet and bowed deeply to Mwaza-Kasa. The sacred tortoise nodded in approval.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Britt used *Wall Walk* to carry Pip down, who grumbled, "My headdd." Iggy walked over and hand-fed Pip bacon biscuits as she cried tears of relief.
+        </p>
+        
+        <p class="ebook-para text-slate-200 text-base sm:text-lg leading-relaxed py-2 my-2 font-normal">
+            Mwaza-Kasa looked at Squad 907, nodded slowly, and turned to lead them on foot into the petrified forest as dawn broke.
+        </p>
+        
         </div>
+    </div>
 
-        <!-- Page 5: Flame-Forged Vine -->
-        <section class="panel-section p-0 m-0" data-title="Page 5: Flame-Forged Vine" data-transcript="*Metadata - Location: Petrified Bough, rain-slick deck. | Palette: Fiery orange flame, deep turquoise rain, charcoal smoke.*
+    <!-- VIEW 3: GRAPHIC NOVEL COMIC STRIP -->
+    <div id="view-graphic-novel" class="medium-view hidden">
+        <main class="max-w-md mx-auto p-0 m-0 bg-slate-950">
+            <section class="text-center py-6 px-4 space-y-2 bg-slate-950 border-b border-slate-900">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-sky-400 to-amber-400">SESSION 11</h2>
+                <h3 class="text-slate-400 text-xs tracking-widest uppercase">Don't Touch My Biscuits</h3>
+                <p class="text-slate-400 max-w-md mx-auto text-xs leading-relaxed mt-1">
+                    Squad 907 docks in the high petrified canopy during an apocalyptic storm. Click any panel to view behind-the-scenes transcripts.
+                </p>
+            </section>
 
-**Panel 1 ((Ignatious Heating Vine))**
-
-*Behind the Scenes (Story Action):* Ignatious channels fiery orange thermal energy into the coil of ironbark vine, turning the rope glowing red-hot as he wraps it around a fallen limb.
-
-**Ignatious:** *&quot;If we ignite the vine, it'll burn through their footholds!&quot;*
-
-**Panel 2 ((Loami Setting Up Recliner))**
-
-*Behind the Scenes (Story Action):* Loami wedges a thick flexible petrified branch against the raft winch frame, converting it into a crude catapult recliner chair.
-
-**Loami:** *&quot;I'm setting up the Kazy Boy! Get ready to pull!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 5: Flame-Forged Vine" data-transcript="*Metadata - Location: Petrified Bough, rain-slick deck. | Palette: Fiery orange flame, deep turquoise rain, charcoal smoke.*
-
-**Panel 1 ((Ignatious Heating Vine))**
-
-*Behind the Scenes (Story Action):* Ignatious channels fiery orange thermal energy into the coil of ironbark vine, turning the rope glowing red-hot as he wraps it around a fallen limb.
-
-**Ignatious:** *&quot;If we ignite the vine, it'll burn through their footholds!&quot;*
-
-**Panel 2 ((Loami Setting Up Recliner))**
-
-*Behind the Scenes (Story Action):* Loami wedges a thick flexible petrified branch against the raft winch frame, converting it into a crude catapult recliner chair.
-
-**Loami:** *&quot;I'm setting up the Kazy Boy! Get ready to pull!&quot;*">
-                <img src="images/vumbua/s11_page5.jpg?v=1786143529" alt="Session 11: Page 5: Flame-Forged Vine" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 6: The "Kazy Boy" Splash! -->
-        <section class="panel-section p-0 m-0" data-title="Page 6: The "Kazy Boy" Splash!" data-transcript="*Metadata - Location: High Canopy, 50ft above forest floor. | Palette: Fiery orange, turquoise rain, dramatic motion blur.*
-
-**Panel 1 ((Full Page Splash — The Kazy Boy Launch))**
-
-*Behind the Scenes (Story Action):* Full page splash of Loami releasing the winch lock, springing the bent petrified limb forward like a giant recliner catapult! Three Mewoders are flung tumbling through the air into the rain-slick canopy abyss.
-
-**Loami:** *&quot;KAZY BOY AWAY!&quot;*
-
-**Sound Effect:** *&quot;THWAAAANG!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 6: The "Kazy Boy" Splash!" data-transcript="*Metadata - Location: High Canopy, 50ft above forest floor. | Palette: Fiery orange, turquoise rain, dramatic motion blur.*
-
-**Panel 1 ((Full Page Splash — The Kazy Boy Launch))**
-
-*Behind the Scenes (Story Action):* Full page splash of Loami releasing the winch lock, springing the bent petrified limb forward like a giant recliner catapult! Three Mewoders are flung tumbling through the air into the rain-slick canopy abyss.
-
-**Loami:** *&quot;KAZY BOY AWAY!&quot;*
-
-**Sound Effect:** *&quot;THWAAAANG!&quot;*">
-                <img src="images/vumbua/s11_page6.jpg?v=1786143529" alt="Session 11: Page 6: The "Kazy Boy" Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- ACT HEADER DIVIDER -->
-        <div class="py-4 px-6 bg-slate-900/90 border-y border-slate-800 text-center select-none">
-            <div class="text-xs font-serif font-bold tracking-[0.25em] text-amber-400 uppercase">
-                ACT III: SKY, SMOKE & BACON BISCUITS
-            </div>
-            <div class="text-[10px] text-slate-400 italic mt-0.5">
-                A Storm Raptor snatches Pip mid-air & apex jaguars strike...
-            </div>
+            
+    <section class="panel-section p-0 m-0" data-title="Page 1: High Canopy Docking">
+        <div class="comic-panel p-0 m-0" data-title="Page 1: High Canopy Docking">
+            <img src="images/vumbua/s11_page1.jpg?v=1786310387" alt="Session 11: Page 1: High Canopy Docking" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
-
-        <!-- Page 7: Snatched in Mid-Air! -->
-        <section class="panel-section p-0 m-0" data-title="Page 7: Snatched in Mid-Air!" data-transcript="*Metadata - Location: Upper Canopy airspace. | Palette: Electric blue lightning, dark slate storm clouds, golden brass buttons.*
-
-**Panel 1 ((Storm Raptor Swoop))**
-
-*Behind the Scenes (Story Action):* A colossal 20-foot wingspan Storm Raptor eagle dives through the eyewall clouds, its razor-sharp black talons snatching Pip (a 12-year-old gnome cadet clutching a greasy canvas sack of bacon biscuits) right off a high canopy limb!
-
-**Pip:** *&quot;MY BISCUITS! DON'T TOUCH MY BISCUITS!&quot;*
-
-**Iggy:** *&quot;PIP!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 7: Snatched in Mid-Air!" data-transcript="*Metadata - Location: Upper Canopy airspace. | Palette: Electric blue lightning, dark slate storm clouds, golden brass buttons.*
-
-**Panel 1 ((Storm Raptor Swoop))**
-
-*Behind the Scenes (Story Action):* A colossal 20-foot wingspan Storm Raptor eagle dives through the eyewall clouds, its razor-sharp black talons snatching Pip (a 12-year-old gnome cadet clutching a greasy canvas sack of bacon biscuits) right off a high canopy limb!
-
-**Pip:** *&quot;MY BISCUITS! DON'T TOUCH MY BISCUITS!&quot;*
-
-**Iggy:** *&quot;PIP!&quot;*">
-                <img src="images/vumbua/s11_page7.jpg?v=1786143529" alt="Session 11: Page 7: Snatched in Mid-Air!" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 8: The Ethereal Wall -->
-        <section class="panel-section p-0 m-0" data-title="Page 8: The Ethereal Wall" data-transcript="*Metadata - Location: Upper Canopy airspace above raft. | Palette: Fiery orange ember barrier, electric blue lightning.*
-
-**Panel 1 ((Ignatious Ethereal Wall))**
-
-*Behind the Scenes (Story Action):* Ignatious raises his glowing hands and manifests a shimmering *Ethereal Wall* of fiery orange energy directly in the flight path of the Storm Raptor.
-
-**Ignatious:** *&quot;Ethereal Wall! You're not taking her!&quot;*
-
-**Panel 2 ((Raptor Disruption))**
-
-*Behind the Scenes (Story Action):* The giant raptor collides with the flaming energy wall, screeching in shock as Pip drops from its talons into the waiting canopy branches below.">
-            <div class="comic-panel p-0 m-0" data-title="Page 8: The Ethereal Wall" data-transcript="*Metadata - Location: Upper Canopy airspace above raft. | Palette: Fiery orange ember barrier, electric blue lightning.*
-
-**Panel 1 ((Ignatious Ethereal Wall))**
-
-*Behind the Scenes (Story Action):* Ignatious raises his glowing hands and manifests a shimmering *Ethereal Wall* of fiery orange energy directly in the flight path of the Storm Raptor.
-
-**Ignatious:** *&quot;Ethereal Wall! You're not taking her!&quot;*
-
-**Panel 2 ((Raptor Disruption))**
-
-*Behind the Scenes (Story Action):* The giant raptor collides with the flaming energy wall, screeching in shock as Pip drops from its talons into the waiting canopy branches below.">
-                <img src="images/vumbua/s11_page8.jpg?v=1786143529" alt="Session 11: Page 8: The Ethereal Wall" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 9: Bacon Biscuit Rescue & The Apex Jaguars -->
-        <section class="panel-section p-0 m-0" data-title="Page 9: Bacon Biscuit Rescue & The Apex Jaguars" data-transcript="*Metadata - Location: Petrified Bough landing zone. | Palette: Bioluminescent teal rosettes, dark black fur, electric static sparks.*
-
-**Panel 1 ((Pip Safe Landing))**
-
-*Behind the Scenes (Story Action):* Pip tumbles safely onto the moss-slick bough, landing on her feet while tightly hugging her greasy sack of golden bacon biscuits.
-
-**Pip:** *&quot;Saved the biscuits!&quot;*
-
-**Panel 2 ((Mwaza-Chui Apex Jaguars Ambush))**
-
-*Behind the Scenes (Story Action):* Two crystalline static apex jaguars (Mwaza-Chui) step out of the shadows, their dark fur dappled with glowing bioluminescent teal rosettes as static electricity crackles around their fangs.
-
-**Loami:** *&quot;Those aren't tree cats... those are apex jaguars!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 9: Bacon Biscuit Rescue & The Apex Jaguars" data-transcript="*Metadata - Location: Petrified Bough landing zone. | Palette: Bioluminescent teal rosettes, dark black fur, electric static sparks.*
-
-**Panel 1 ((Pip Safe Landing))**
-
-*Behind the Scenes (Story Action):* Pip tumbles safely onto the moss-slick bough, landing on her feet while tightly hugging her greasy sack of golden bacon biscuits.
-
-**Pip:** *&quot;Saved the biscuits!&quot;*
-
-**Panel 2 ((Mwaza-Chui Apex Jaguars Ambush))**
-
-*Behind the Scenes (Story Action):* Two crystalline static apex jaguars (Mwaza-Chui) step out of the shadows, their dark fur dappled with glowing bioluminescent teal rosettes as static electricity crackles around their fangs.
-
-**Loami:** *&quot;Those aren't tree cats... those are apex jaguars!&quot;*">
-                <img src="images/vumbua/s11_page9.jpg?v=1786143529" alt="Session 11: Page 9: Bacon Biscuit Rescue & The Apex Jaguars" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 10: Pony-Tail Snatch & Overload -->
-        <section class="panel-section p-0 m-0" data-title="Page 10: Pony-Tail Snatch & Overload" data-transcript="*Metadata - Location: Canopy Raft deck. | Palette: High-voltage static teal, deep shadow navy.*
-
-**Panel 1 ((Jaguar Static Roar))**
-
-*Behind the Scenes (Story Action):* The apex jaguar unleashes a static-charged roar that disrupts magical energy around Ignatious's flame crown.
-
-**Panel 2 ((Pip Bopping Jaguar with Biscuit Sack))**
-
-*Behind the Scenes (Story Action):* Pip leaps forward and bops the snout of a static jaguar with her heavy canvas biscuit sack!
-
-**Pip:** *&quot;I SAID DON'T TOUCH MY BISCUITS!&quot;*
-
-**Sound Effect:** *&quot;THWACK!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 10: Pony-Tail Snatch & Overload" data-transcript="*Metadata - Location: Canopy Raft deck. | Palette: High-voltage static teal, deep shadow navy.*
-
-**Panel 1 ((Jaguar Static Roar))**
-
-*Behind the Scenes (Story Action):* The apex jaguar unleashes a static-charged roar that disrupts magical energy around Ignatious's flame crown.
-
-**Panel 2 ((Pip Bopping Jaguar with Biscuit Sack))**
-
-*Behind the Scenes (Story Action):* Pip leaps forward and bops the snout of a static jaguar with her heavy canvas biscuit sack!
-
-**Pip:** *&quot;I SAID DON'T TOUCH MY BISCUITS!&quot;*
-
-**Sound Effect:** *&quot;THWACK!&quot;*">
-                <img src="images/vumbua/s11_page10.jpg?v=1786143529" alt="Session 11: Page 10: Pony-Tail Snatch & Overload" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- ACT HEADER DIVIDER -->
-        <div class="py-4 px-6 bg-slate-900/90 border-y border-slate-800 text-center select-none">
-            <div class="text-xs font-serif font-bold tracking-[0.25em] text-amber-400 uppercase">
-                ACT IV: SANCTUARY & THE FALLING DECK
-            </div>
-            <div class="text-[10px] text-slate-400 italic mt-0.5">
-                Aggie grows the Tree Igloo & the Canopy Raft plunges 50ft...
-            </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 2: Shadowing Shadows">
+        <div class="comic-panel p-0 m-0" data-title="Page 2: Shadowing Shadows">
+            <img src="images/vumbua/s11_page2.jpg?v=1786310387" alt="Session 11: Page 2: Shadowing Shadows" class="w-full h-auto block p-0 m-0" loading="lazy">
         </div>
-
-        <!-- Page 11: The Tree Igloo Splash! -->
-        <section class="panel-section p-0 m-0" data-title="Page 11: The Tree Igloo Splash!" data-transcript="*Metadata - Location: Petrified Bough deck. | Palette: Deep emerald green roots, bioluminescent teal lichen, dark rain.*
-
-**Panel 1 ((Full Page Splash — Aggie's Wild Fortress))**
-
-*Behind the Scenes (Story Action):* Full page splash of Aggie raising her hands as thick living ironbark roots and glowing moss weave together, creating a dome-shaped *Tree Igloo* (Wild Fortress) that seals Pip, Loami, and Iggy inside away from the prowling static jaguars.
-
-**Aggie:** *&quot;Tree Igloo! Inside, quickly!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 11: The Tree Igloo Splash!" data-transcript="*Metadata - Location: Petrified Bough deck. | Palette: Deep emerald green roots, bioluminescent teal lichen, dark rain.*
-
-**Panel 1 ((Full Page Splash — Aggie's Wild Fortress))**
-
-*Behind the Scenes (Story Action):* Full page splash of Aggie raising her hands as thick living ironbark roots and glowing moss weave together, creating a dome-shaped *Tree Igloo* (Wild Fortress) that seals Pip, Loami, and Iggy inside away from the prowling static jaguars.
-
-**Aggie:** *&quot;Tree Igloo! Inside, quickly!&quot;*">
-                <img src="images/vumbua/s11_page11.jpg?v=1786143529" alt="Session 11: Page 11: The Tree Igloo Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 12: Storytime & The Battleship -->
-        <section class="panel-section p-0 m-0" data-title="Page 12: Storytime & The Battleship" data-transcript="*Metadata - Location: Inside the Tree Igloo dome. | Palette: Warm golden moss light, soft shadow brown.*
-
-**Panel 1 ((Inside the Tree Igloo))**
-
-*Behind the Scenes (Story Action):* Inside the cozy root dome, Pip sits on a moss cushion sharing golden bacon biscuits with Iggy while telling a grand story about an imperial battleship.
-
-**Pip:** *&quot;So there we were on the battleship deck, and I told the captain: 'As long as we have biscuits, we can't lose!'&quot;*
-
-**Iggy:** *&quot;Mmm... these are actually really good biscuits.&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 12: Storytime & The Battleship" data-transcript="*Metadata - Location: Inside the Tree Igloo dome. | Palette: Warm golden moss light, soft shadow brown.*
-
-**Panel 1 ((Inside the Tree Igloo))**
-
-*Behind the Scenes (Story Action):* Inside the cozy root dome, Pip sits on a moss cushion sharing golden bacon biscuits with Iggy while telling a grand story about an imperial battleship.
-
-**Pip:** *&quot;So there we were on the battleship deck, and I told the captain: 'As long as we have biscuits, we can't lose!'&quot;*
-
-**Iggy:** *&quot;Mmm... these are actually really good biscuits.&quot;*">
-                <img src="images/vumbua/s11_page12.jpg?v=1786143529" alt="Session 11: Page 12: Storytime & The Battleship" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 13: Flight of Ember Wings -->
-        <section class="panel-section p-0 m-0" data-title="Page 13: Flight of Ember Wings" data-transcript="*Metadata - Location: Outside Tree Igloo on Raft deck. | Palette: Burning Ember orange wings, dark turquoise storm.*
-
-**Panel 1 ((Ignatious Sprouts Ember Wings))**
-
-*Behind the Scenes (Story Action):* Outside the dome, Ignatious unleashes his inner spark, sprouting magnificent wings of roaring orange ember flame behind his cloak as he prepares to tip the raft deck.
-
-**Ignatious:** *&quot;Aggie, Britt, get ready to cut the bungees on my mark!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 13: Flight of Ember Wings" data-transcript="*Metadata - Location: Outside Tree Igloo on Raft deck. | Palette: Burning Ember orange wings, dark turquoise storm.*
-
-**Panel 1 ((Ignatious Sprouts Ember Wings))**
-
-*Behind the Scenes (Story Action):* Outside the dome, Ignatious unleashes his inner spark, sprouting magnificent wings of roaring orange ember flame behind his cloak as he prepares to tip the raft deck.
-
-**Ignatious:** *&quot;Aggie, Britt, get ready to cut the bungees on my mark!&quot;*">
-                <img src="images/vumbua/s11_page13.jpg?v=1786143529" alt="Session 11: Page 13: Flight of Ember Wings" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-        <!-- Page 14: The Raft Plunge Splash! -->
-        <section class="panel-section p-0 m-0" data-title="Page 14: The Raft Plunge Splash!" data-transcript="*Metadata - Location: High Canopy 50ft drop into dark abyss. | Palette: Fiery orange flame, deep indigo abyss, teal static sparks.*
-
-**Panel 1 ((Full Page Splash — Raft Plunge into Canopy Abyss))**
-
-*Behind the Scenes (Story Action):* Full page splash of Britt cutting the bungee cords as the Canopy Raft deck tilts sharply downward! The static jaguars slip and tumble fifty feet off the deck into the pitch-black canopy abyss below while Squad 907 holds tight to the tree igloo anchors.
-
-**Britt:** *&quot;TIMBER!&quot;*
-
-**Sound Effect:** *&quot;⚡ CRAASH!&quot;*">
-            <div class="comic-panel p-0 m-0" data-title="Page 14: The Raft Plunge Splash!" data-transcript="*Metadata - Location: High Canopy 50ft drop into dark abyss. | Palette: Fiery orange flame, deep indigo abyss, teal static sparks.*
-
-**Panel 1 ((Full Page Splash — Raft Plunge into Canopy Abyss))**
-
-*Behind the Scenes (Story Action):* Full page splash of Britt cutting the bungee cords as the Canopy Raft deck tilts sharply downward! The static jaguars slip and tumble fifty feet off the deck into the pitch-black canopy abyss below while Squad 907 holds tight to the tree igloo anchors.
-
-**Britt:** *&quot;TIMBER!&quot;*
-
-**Sound Effect:** *&quot;⚡ CRAASH!&quot;*">
-                <img src="images/vumbua/s11_page14.jpg?v=1786143529" alt="Session 11: Page 14: The Raft Plunge Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
-            </div>
-        </section>
-
-    </main>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 3: The Ambush & Hypnotic Shimmer">
+        <div class="comic-panel p-0 m-0" data-title="Page 3: The Ambush & Hypnotic Shimmer">
+            <img src="images/vumbua/s11_page3.jpg?v=1786310387" alt="Session 11: Page 3: The Ambush & Hypnotic Shimmer" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 4: The Dreadful Massage">
+        <div class="comic-panel p-0 m-0" data-title="Page 4: The Dreadful Massage">
+            <img src="images/vumbua/s11_page4.jpg?v=1786310387" alt="Session 11: Page 4: The Dreadful Massage" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 5: Flame-Forged Vine">
+        <div class="comic-panel p-0 m-0" data-title="Page 5: Flame-Forged Vine">
+            <img src="images/vumbua/s11_page5.jpg?v=1786310387" alt="Session 11: Page 5: Flame-Forged Vine" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 6: The Kazy Boy Splash!">
+        <div class="comic-panel p-0 m-0" data-title="Page 6: The Kazy Boy Splash!">
+            <img src="images/vumbua/s11_page6.jpg?v=1786310387" alt="Session 11: Page 6: The Kazy Boy Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 7: Snatched in Mid-Air!">
+        <div class="comic-panel p-0 m-0" data-title="Page 7: Snatched in Mid-Air!">
+            <img src="images/vumbua/s11_page7.jpg?v=1786310387" alt="Session 11: Page 7: Snatched in Mid-Air!" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 8: The Ethereal Wall">
+        <div class="comic-panel p-0 m-0" data-title="Page 8: The Ethereal Wall">
+            <img src="images/vumbua/s11_page8.jpg?v=1786310387" alt="Session 11: Page 8: The Ethereal Wall" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 9: Bacon Biscuit Rescue & The Apex Jaguars">
+        <div class="comic-panel p-0 m-0" data-title="Page 9: Bacon Biscuit Rescue & The Apex Jaguars">
+            <img src="images/vumbua/s11_page9.jpg?v=1786310387" alt="Session 11: Page 9: Bacon Biscuit Rescue & The Apex Jaguars" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 10: Pony-Tail Snatch & Overload">
+        <div class="comic-panel p-0 m-0" data-title="Page 10: Pony-Tail Snatch & Overload">
+            <img src="images/vumbua/s11_page10.jpg?v=1786310387" alt="Session 11: Page 10: Pony-Tail Snatch & Overload" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 11: The Tree Igloo Splash!">
+        <div class="comic-panel p-0 m-0" data-title="Page 11: The Tree Igloo Splash!">
+            <img src="images/vumbua/s11_page11.jpg?v=1786310387" alt="Session 11: Page 11: The Tree Igloo Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 12: Storytime & The Battleship">
+        <div class="comic-panel p-0 m-0" data-title="Page 12: Storytime & The Battleship">
+            <img src="images/vumbua/s11_page12.jpg?v=1786310387" alt="Session 11: Page 12: Storytime & The Battleship" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 13: Flight of Ember Wings">
+        <div class="comic-panel p-0 m-0" data-title="Page 13: Flight of Ember Wings">
+            <img src="images/vumbua/s11_page13.jpg?v=1786310387" alt="Session 11: Page 13: Flight of Ember Wings" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+    <section class="panel-section p-0 m-0" data-title="Page 14: The Raft Plunge Splash!">
+        <div class="comic-panel p-0 m-0" data-title="Page 14: The Raft Plunge Splash!">
+            <img src="images/vumbua/s11_page14.jpg?v=1786310387" alt="Session 11: Page 14: The Raft Plunge Splash!" class="w-full h-auto block p-0 m-0" loading="lazy">
+        </div>
+    </section>
+    
+        </main>
+    </div>
 
     <!-- Footer -->
     <footer class="py-8 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950 relative z-10">
         <p>Vumbua Academy Campaign &copy; 2026. All rights reserved.</p>
     </footer>
 
-    <script src="image-feedback.js?v=1786143529"></script>
+    <script src="image-feedback.js?v=1786310387"></script>
     <script>
-        // Progress bar scroll handler
-        window.addEventListener('scroll', () => {
-            const total = document.documentElement.scrollHeight - window.innerHeight;
-            const current = window.scrollY;
-            const pct = Math.round((current / total) * 100) || 0;
-            document.getElementById('scroll-percentage').textContent = pct + '%';
-            document.getElementById('scroll-progress-bar').style.width = pct + '%';
-        }, { passive: true });
+        // MULTI-MEDIUM TAB SWITCHER LOGIC
+        const tabBtnAudio = document.getElementById('tabBtnAudio');
+        const tabBtnEbook = document.getElementById('tabBtnEbook');
+        const tabBtnComic = document.getElementById('tabBtnComic');
+        
+        const viewAudio = document.getElementById('view-audio');
+        const viewEbook = document.getElementById('view-ebook');
+        const viewComic = document.getElementById('view-graphic-novel');
+        
+        function setTab(activeTab) {
+            // Hide all views
+            viewAudio.classList.add('hidden');
+            viewEbook.classList.add('hidden');
+            viewComic.classList.add('hidden');
+            
+            // Reset tab button styles
+            [tabBtnAudio, tabBtnEbook, tabBtnComic].forEach(btn => {
+                btn.className = 'tab-btn px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all';
+            });
+            
+            if(activeTab === 'audio') {
+                viewAudio.classList.remove('hidden');
+                tabBtnAudio.className = 'tab-btn px-3 py-1.5 rounded-lg flex items-center gap-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 transition-all';
+            } else if(activeTab === 'ebook') {
+                viewEbook.classList.remove('hidden');
+                tabBtnEbook.className = 'tab-btn px-3 py-1.5 rounded-lg flex items-center gap-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 transition-all';
+            } else if(activeTab === 'comic') {
+                viewComic.classList.remove('hidden');
+                tabBtnComic.className = 'tab-btn px-3 py-1.5 rounded-lg flex items-center gap-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 transition-all';
+            }
+        }
 
-        // Hide overlay on load
+        tabBtnAudio.addEventListener('click', () => setTab('audio'));
+        tabBtnEbook.addEventListener('click', () => setTab('ebook'));
+        tabBtnComic.addEventListener('click', () => setTab('comic'));
+
+        // AUDIOBOOK CONTROLLER & TIME-SYNCED TRANSCRIPT LOGIC
+        const audio = document.getElementById('audioElement');
+        const playBtn = document.getElementById('playBtn');
+        const skipBackBtn = document.getElementById('skipBackBtn');
+        const skipFwdBtn = document.getElementById('skipFwdBtn');
+        const speedBtn = document.getElementById('speedBtn');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const scrubber = document.getElementById('audioScrubber');
+        const syncParas = document.querySelectorAll('.sync-para');
+
+        const speeds = [1.0, 1.25, 1.5, 1.75, 2.0];
+        let speedIdx = 0;
+
+        speedBtn.addEventListener('click', () => {
+            speedIdx = (speedIdx + 1) % speeds.length;
+            const newSpeed = speeds[speedIdx];
+            audio.playbackRate = newSpeed;
+            speedBtn.textContent = newSpeed.toFixed(2).replace('.00', '.0') + 'x';
+        });
+
+        playBtn.addEventListener('click', () => {
+            if(audio.paused) {
+                audio.play();
+                playBtn.textContent = '⏸';
+            } else {
+                audio.pause();
+                playBtn.textContent = '▶';
+            }
+        });
+
+        skipBackBtn.addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
+        skipFwdBtn.addEventListener('click', () => { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 15); });
+
+        function formatTime(sec) {
+            if(isNaN(sec)) return "00:00";
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        audio.addEventListener('loadedmetadata', () => {
+            scrubber.max = audio.duration;
+            timeDisplay.textContent = `${formatTime(0)} / ${formatTime(audio.duration)}`;
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const cur = audio.currentTime;
+            scrubber.value = cur;
+            timeDisplay.textContent = `${formatTime(cur)} / ${formatTime(audio.duration)}`;
+
+            // Active lyric highlighting
+            let activeEl = null;
+            syncParas.forEach(el => {
+                const ts = parseFloat(el.dataset.timestamp || '0');
+                if(cur >= ts) {
+                    activeEl = el;
+                }
+            });
+
+            syncParas.forEach(el => el.classList.remove('active-lyric'));
+            if(activeEl) {
+                activeEl.classList.add('active-lyric');
+            }
+        });
+
+        scrubber.addEventListener('input', () => {
+            audio.currentTime = scrubber.value;
+        });
+
+        // Click paragraph to seek audio
+        syncParas.forEach(el => {
+            el.addEventListener('click', () => {
+                const ts = parseFloat(el.dataset.timestamp || '0');
+                audio.currentTime = ts;
+                audio.play();
+                playBtn.textContent = '⏸';
+            });
+        });
+
+        // EBOOK FONT CONTROLS
+        const fontDown = document.getElementById('fontDown');
+        const fontUp = document.getElementById('fontUp');
+        const ebookContainer = document.getElementById('ebookTextContainer');
+        let currentFontSize = 16;
+
+        fontDown.addEventListener('click', () => {
+            currentFontSize = Math.max(13, currentFontSize - 1);
+            ebookContainer.style.fontSize = currentFontSize + 'px';
+        });
+
+        fontUp.addEventListener('click', () => {
+            currentFontSize = Math.min(24, currentFontSize + 1);
+            ebookContainer.style.fontSize = currentFontSize + 'px';
+        });
+
+        // Hide loading overlay on load
         window.addEventListener('load', () => {
             const l = document.getElementById('globalLoadingOverlayChapter');
             if(l) l.style.opacity = '0', setTimeout(() => l.style.display = 'none', 300);
