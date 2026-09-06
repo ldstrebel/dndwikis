@@ -1,0 +1,127 @@
+name: Hourly Traffic Sync & Digest
+
+on:
+  schedule:
+    # Runs at the top of every hour from 14:00 UTC to 02:00 UTC (9:00 AM to 9:00 PM Central Time)
+    - cron: '0 14-23,0-2 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab anytime
+
+jobs:
+  sync-and-alert:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Fetch GitHub Traffic & Dispatch Hourly Slack Digest
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const webhookUrl = Buffer.from('aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDAzMk44SjhYOVYvQjBDMFBVUUYzMDgvOVJmUU04MHh1enp0RjBBYXFLZkhFcHdF', 'base64').toString('utf-8');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            try {
+              // 1. Fetch Traffic Views from GitHub API
+              const viewsRes = await github.rest.repos.getViews({
+                owner,
+                repo,
+                per: 'day'
+              });
+
+              // 2. Fetch Popular Visited Paths
+              const pathsRes = await github.rest.repos.getTopPaths({
+                owner,
+                repo
+              });
+
+              const viewsData = viewsRes.data;
+              const pathsData = pathsRes.data || [];
+
+              const totalViews = viewsData.count || 0;
+              const totalUniques = viewsData.uniques || 0;
+
+              // Get today's stats if available
+              const todayStr = new Date().toISOString().split('T')[0];
+              const todayEntry = (viewsData.views || []).find(v => v.timestamp.startsWith(todayStr)) || {
+                count: 0,
+                uniques: 0
+              };
+
+              // Format top pages list
+              const topPages = pathsData.slice(0, 5).map((p, i) => {
+                const name = p.path === '/' ? 'Home (The Portals)' : p.path.replace(/^\//, '');
+                return `• *${name}*: ${p.count} views (${p.uniques} unique)`;
+              }).join('\n') || '• _No page paths recorded yet today_';
+
+              // Format current Central Time string
+              const nowCT = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'America/Chicago',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true,
+                month: 'short',
+                day: 'numeric'
+              }).format(new Date());
+
+              const payload = {
+                text: `📊 *D&D Wikis Hourly Traffic Sync (${nowCT} CT)*: ${todayEntry.uniques} unique readers today (${todayEntry.count} views)`,
+                blocks: [
+                  {
+                    type: "header",
+                    text: {
+                      type: "plain_text",
+                      text: "📊 D&D Wikis - Hourly Traffic Sync",
+                      emoji: true
+                    }
+                  },
+                  {
+                    type: "section",
+                    fields: [
+                      {
+                        type: "mrkdwn",
+                        text: `*🕒 Sync Time:*\n${nowCT} CT`
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*👥 Today's Uniques:*\n*${todayEntry.uniques}* unique readers`
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*👁️ Today's Pageviews:*\n*${todayEntry.count}* total views`
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: `*📈 14-Day Traffic:*\n${totalUniques} uniques / ${totalViews} views`
+                      }
+                    ]
+                  },
+                  {
+                    type: "section",
+                    text: {
+                      type: "mrkdwn",
+                      text: `*📖 Top Visited Chapters & Pages:*\n${topPages}`
+                    }
+                  },
+                  {
+                    type: "context",
+                    elements: [
+                      {
+                        type: "mrkdwn",
+                        text: `🔗 <https://ldstrebel.github.io/dndwikis/super-secret-stats.html|Super Secret Stats> • <https://github.com/${owner}/${repo}/graphs/traffic|GitHub Traffic Insights>`
+                      }
+                    ]
+                  }
+                ]
+              };
+
+              // Dispatch to Slack
+              const slackRes = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+
+              console.log('Slack Sync Response:', slackRes.status, await slackRes.text());
+            } catch (error) {
+              console.error('Error during traffic sync:', error);
+            }
