@@ -123,22 +123,23 @@ button {
 header {
     background-color: var(--logo-dark-element); /* Darker element background */
     color: var(--logo-light-text);
-    padding: 15px 20px;
+    padding: 10px 20px;
     box-shadow: 0 2px 8px rgba(var(--logo-teal-rgb), 0.2); /* Teal shadow */
     border-bottom: 2px solid var(--logo-teal);
 }
 
 .header-top {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
 }
 
 .site-identity h1 {
-    font-size: 2.2em;
+    font-size: 1.9em;
     margin: 0;
     color: var(--logo-bright-teal); /* Bright teal for site title */
+    text-align: center;
 }
 
 .menu-toggle {
@@ -194,32 +195,36 @@ nav#main-nav ul li a.active {
 
 .header-description {
     text-align: center;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(var(--logo-light-text-rgb, 0.3)); /* Use light text with alpha */
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(var(--logo-light-text-rgb), 0.2);
 }
 
 .site-motto {
     font-family: var(--font-secondary);
-    font-size: 1.3em;
-    margin-bottom: 5px;
+    font-size: 1.05em;
+    margin-bottom: 0;
     color: var(--logo-light-text);
 }
 
 .tagline {
     font-family: var(--font-primary);
-    font-size: 1em;
+    font-size: 0.9em;
     color: var(--logo-teal); /* Teal for tagline */
 }
 
 /* Main Content */
 main {
-    padding: 15px;
+    padding: 8px 15px;
     max-width: 1200px;
-    margin: 20px auto;
+    margin: 8px auto 0 auto;
     flex: 1;
     margin-bottom: 0;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
 }
 
 
@@ -228,7 +233,7 @@ main {
 /* View Toggle Controls */
 .view-toggle-controls {
     text-align: center;
-    margin: 10px 0;
+    margin: 4px 0;
     padding: 0 10px;
 }
 
@@ -284,39 +289,44 @@ main {
 /* Campaign Showcase & Cards */
 .campaign-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 15px;
+    padding: 8px 4px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .campaign-card {
     background-color: var(--logo-dark-element);
-    border: 3px solid var(--logo-teal); /* Teal border for cards */
+    border: 2px solid var(--logo-teal); /* Teal border for cards */
     border-radius: 10px;
-    box-shadow: 5px 5px 15px rgba(var(--logo-dark-background), 0.5); /* Darker shadow */
+    box-shadow: 4px 4px 12px rgba(var(--logo-dark-background), 0.5); /* Darker shadow */
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    aspect-ratio: 2.75 / 4.75; /* Preserving tarot card aspect ratio */
+    aspect-ratio: 2.75 / 4.2; /* Slightly more compact card aspect ratio */
+    max-height: 380px;
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     font-family: var(--font-primary);
 }
 
 .campaign-card:hover {
-    transform: translateY(-5px) scale(1.03);
+    transform: translateY(-4px) scale(1.02);
     border-color: var(--logo-bright-teal); /* Brighter teal border on hover */
-    box-shadow: 0px 8px 25px rgba(var(--logo-teal-rgb), 0.3); /* Teal glow on hover */
+    box-shadow: 0px 6px 20px rgba(var(--logo-teal-rgb), 0.3); /* Teal glow on hover */
 }
 
 .tarot-art-container {
     flex-grow: 1;
-    padding: 15px;
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--logo-dark-background); /* Darkest bg for art contrast */
     border-bottom: 2px solid var(--logo-teal);
+    min-height: 0;
 }
 
 .campaign-card .campaign-poster {
@@ -327,10 +337,10 @@ main {
 }
 
 .tarot-info-container {
-    padding: 10px 15px;
+    padding: 8px 12px;
     text-align: center;
     background-color: var(--logo-dark-element);
-    min-height: 60px;
+    min-height: 48px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -338,7 +348,7 @@ main {
 
 .campaign-card .campaign-title {
     font-family: var(--font-secondary);
-    font-size: 1.2em;
+    font-size: 1.15em;
     color: var(--logo-bright-teal); /* Bright teal for card titles */
     margin: 0;
     line-height: 1.2;
@@ -555,22 +565,27 @@ main {
 
 /* Dice Roller Styles */
 .dice-roller {
-    margin: 25px auto 0 auto;
+    margin: 8px auto 0 auto;
     text-align: center;
     background-color: var(--logo-dark-element);
-    padding: 15px;
+    padding: 6px 18px;
     border-radius: 8px;
-    border: 2px solid var(--logo-teal);
+    border: 1px solid var(--logo-teal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    align-self: center;
     margin-bottom: 0;
 }
 #rollDiceBtn {
-    font-size: 1.2em;
-    padding: 10px 24px;
-    border-radius: 8px;
+    font-size: 0.95em;
+    padding: 6px 16px;
+    border-radius: 6px;
     background: var(--logo-magenta);
     color: var(--logo-light-text);
     border: none;
-    margin-bottom: 12px;
+    margin-bottom: 0;
     transition: background 0.2s;
     font-family: var(--font-secondary);
 }
@@ -578,9 +593,10 @@ main {
     background: var(--logo-bright-magenta);
 }
 .dice-result {
-    font-size: 2.5em;
-    min-height: 1.5em;
-    margin-top: 10px;
+    font-size: 1.5em;
+    min-height: auto;
+    margin-top: 0;
+    line-height: 1;
     transition: transform 0.2s;
     color: var(--logo-bright-teal);
     font-family: var(--font-secondary);
@@ -600,8 +616,8 @@ main {
 /* Footer */
 footer {
     text-align: center;
-    padding: 12px 15px;
-    margin-top: 25px;
+    padding: 8px 15px;
+    margin-top: 8px;
     background-color: var(--logo-dark-element);
     color: var(--logo-light-text);
     font-size: 0.75em;
