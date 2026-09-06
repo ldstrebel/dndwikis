@@ -413,30 +413,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- DICE ROLLER ---
+    // --- DICE ROLLER WITH PHYSICS ---
     const rollDiceBtn = document.getElementById('rollDiceBtn');
     const diceResult = document.getElementById('diceResult');
     if (rollDiceBtn && diceResult) {
         diceResult.textContent = '🎲'; // Initial dice symbol
 
         rollDiceBtn.addEventListener('click', () => {
-            let frame = 0;
-            const maxFrames = 15 + Math.floor(Math.random() * 10); // Duration of spin
-            diceResult.classList.add('dice-rolling');
-
-            function animateRoll() {
-                if (frame < maxFrames) {
-                    diceResult.textContent = String(Math.floor(Math.random() * 20) + 1);
-                    frame++;
-                    // Animation speed: faster at start, slower at end
-                    let delay = 25 + frame * (50 / maxFrames);
-                    setTimeout(animateRoll, delay);
-                } else {
-                    diceResult.textContent = String(Math.floor(Math.random() * 20) + 1); // Final result
+            if (typeof window.rollD20Physics === 'function') {
+                diceResult.textContent = '🎲...';
+                diceResult.classList.add('dice-rolling');
+                window.rollD20Physics((finalValue) => {
                     diceResult.classList.remove('dice-rolling');
+                    diceResult.textContent = String(finalValue);
+                    if (finalValue === 20) {
+                        diceResult.style.color = '#fde047';
+                    } else if (finalValue === 1) {
+                        diceResult.style.color = '#ef4444';
+                    } else {
+                        diceResult.style.color = '';
+                    }
+                });
+            } else {
+                // Fallback basic roll
+                let frame = 0;
+                const maxFrames = 15;
+                diceResult.classList.add('dice-rolling');
+                function animateRoll() {
+                    if (frame < maxFrames) {
+                        diceResult.textContent = String(Math.floor(Math.random() * 20) + 1);
+                        frame++;
+                        setTimeout(animateRoll, 40);
+                    } else {
+                        diceResult.textContent = String(Math.floor(Math.random() * 20) + 1);
+                        diceResult.classList.remove('dice-rolling');
+                    }
                 }
+                animateRoll();
             }
-            animateRoll();
         });
     }
 
