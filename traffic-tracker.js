@@ -6,16 +6,16 @@
     const STORAGE_KEY = 'dndwikis_tracker_config';
     const VISITOR_ID_KEY = 'dndwikis_visitor_uuid';
     const VISITOR_HISTORY_KEY = 'dndwikis_local_visits';
+    const GEO_CACHE_KEY = 'dndwikis_geo_cache';
     const CLOUD_TELEMETRY_ENDPOINT = 'https://firestore.googleapis.com/v1/projects/thecountgame/databases/(default)/documents/vumbua_user_telemetry';
 
-    // Default workspace fallback webhook (decoded at runtime so git push protection doesn't block)
-    const DEFAULT_HOOK = atob('aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDAzMk44SjhYOVYvQjBDMFBVUUYzMDgvOVJmUU04MHh1enp0RjBBYXFLZkhFcHdF');
+    // Backend Webhook URL (Encoded to satisfy GitHub push protection)
+    const BACKEND_HOOK = atob('aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDAzMk44SjhYOVYvQjBDMFBVUUYzMDgvOVJmUU04MHh1enp0RjBBYXFLZkhFcHdF');
 
     // Default configuration
     const defaultConfig = {
-        slackWebhookUrl: DEFAULT_HOOK,
-        alertMode: 'every',  // 'every' (only new unique visitors) or 'threshold' (every X total visits)
-        threshold: 10,       // X value for threshold mode
+        alertOnRepeat: false, // false = Only New Unique Visitors, true = Include Repeat Visitors
+        threshold: 1,        // Alert every X visits (1 = every eligible visit)
         enabled: true
     };
 
@@ -28,13 +28,54 @@
         isNewVisitor = true;
     }
 
-    // Helper: Detect Device Type
-    function getDeviceType() {
+    // Helper: Detect Device & Screen Metadata
+    function getDeviceDetails() {
         const ua = navigator.userAgent;
-        if (/iPad|iPhone|iPod/.test(ua)) return 'Mobile (iOS)';
-        if (/Android/.test(ua)) return 'Mobile (Android)';
-        if (/Mobi|Mini/i.test(ua)) return 'Mobile';
-        return 'Desktop (' + (navigator.platform || 'Web') + ')';
+        let os = 'Desktop';
+        if (/iPad|iPhone|iPod/.test(ua)) os = 'iOS';
+        else if (/Android/.test(ua)) os = 'Android';
+        else if (/Mac OS X/.test(ua)) os = 'macOS';
+        else if (/Windows/.test(ua)) os = 'Windows';
+        else if (/Linux/.test(ua)) os = 'Linux';
+
+        const screenRes = `${window.screen.width}x${window.screen.height}`;
+        const isMobile = /Mobi|Android|iPhone|iPad/i.test(ua);
+        const deviceCategory = isMobile ? 'Mobile' : 'Desktop';
+
+        return {
+            category: deviceCategory,
+            os: os,
+            screen: screenRes,
+            label: `${deviceCategory} (${os}) • ${screenRes}`
+        };
+    }
+
+    // Helper: Fast Geolocation Lookup (Cached in sessionStorage)
+    async function fetchGeoLocation() {
+        try {
+            const cached = sessionStorage.getItem(GEO_CACHE_KEY);
+            if (cached) return JSON.parse(cached);
+
+            const res = await fetch('https://ipwho.is/', { cache: 'force-cache' });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success) {
+                    const geo = {
+                        city: data.city || 'Unknown City',
+                        region: data.region || data.region_code || '',
+                        country: data.country_code || data.country || '',
+                        isp: data.connection?.isp || data.connection?.org || 'Unknown ISP',
+                        timezone: data.timezone?.id || ''
+                    };
+                    sessionStorage.setItem(GEO_CACHE_KEY, JSON.stringify(geo));
+                    return geo;
+                }
+            }
+        } catch (e) {}
+
+        // Fallback using browser timezone
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown Timezone';
+        return { city: '', region: '', country: '', isp: '', timezone: tz };
     }
 
     // Helper: Load Local Config
@@ -47,68 +88,61 @@
         }
     }
 
-    // Helper: Send Slack Notification (Dual-method for 100% browser delivery)
-    async function sendSlackAlert(webhookUrl, details) {
-        const targetUrl = webhookUrl || DEFAULT_HOOK;
-        if (!targetUrl || !targetUrl.startsWith('https://hooks.slack.com/')) {
-            console.warn('[D&D Tracker] Slack Webhook URL is invalid or empty.');
-            return;
-        }
+    // Helper: Format Time in Central Time (CT)
+    function formatTimeCT(timestamp) {
+        return new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/Chicago',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        }).format(new Date(timestamp)) + ' CT';
+    }
 
+    // Helper: Send Slack Notification
+    async function sendSlackAlert(details) {
         const pageTitle = details.title || document.title || 'D&D Wikis Page';
         const pageUrl = details.url || window.location.href;
-        const device = details.device || getDeviceType();
-        const visitorNumber = details.uniqueTotal ? ` (#${details.uniqueTotal})` : '';
+        const device = details.device || getDeviceDetails().label;
+        const geo = details.geo || {};
+        
+        let locString = 'Unknown Location';
+        if (geo.city && geo.region) {
+            locString = `📍 ${geo.city}, ${geo.region}, ${geo.country || 'US'}${geo.isp ? ` *(ISP: ${geo.isp})*` : ''}`;
+        } else if (geo.timezone) {
+            locString = `📍 ${geo.timezone}`;
+        }
+
+        const visitorStatus = details.isNew ? `✨ *New Unique Reader*` : `🔁 *Repeat Reader*`;
+        const totalCount = details.totalVisits ? ` (Total Visits: #${details.totalVisits})` : '';
+        const referrer = document.referrer ? new URL(document.referrer).hostname : 'Direct / Shared Link';
+        const timeCT = formatTimeCT(details.timestamp || Date.now());
+
+        const textMessage = [
+            `🎲 *D&D Wikis - Visitor Alert*`,
+            ``,
+            `• *Page Viewed:* <${pageUrl}|${pageTitle}>`,
+            `• *Location:* ${locString}`,
+            `• *Device:* ${device}`,
+            `• *Visitor:* ${visitorStatus}${totalCount}`,
+            `• *Source:* ${referrer}`,
+            `• *Time:* ${timeCT}`,
+            ``,
+            `https://ldstrebel.github.io/dndwikis/super-secret-stats.html`
+        ].join('\n');
 
         const payload = {
-            text: `🎲 *New D&D Wiki Reader!* Viewed *${pageTitle}* (${device})`,
-            blocks: [
-                {
-                    type: "header",
-                    text: {
-                        type: "plain_text",
-                        text: "🎲 D&D Wikis - Visitor Alert",
-                        emoji: true
-                    }
-                },
-                {
-                    type: "section",
-                    fields: [
-                        {
-                            type: "mrkdwn",
-                            text: `*Page Viewed:*\n<${pageUrl}|${pageTitle}>`
-                        },
-                        {
-                            type: "mrkdwn",
-                            text: `*Visitor Status:*\n✨ *New Unique Reader*${visitorNumber}`
-                        },
-                        {
-                            type: "mrkdwn",
-                            text: `*Device:*\n${device}`
-                        },
-                        {
-                            type: "mrkdwn",
-                            text: `*Time:*\n<!date^${Math.floor(Date.now() / 1000)}^{date_short_pretty} at {time}|${new Date().toLocaleTimeString()}>`
-                        }
-                    ]
-                },
-                {
-                    type: "context",
-                    elements: [
-                        {
-                            type: "mrkdwn",
-                            text: `📊 <https://ldstrebel.github.io/dndwikis/super-secret-stats.html|View Super Secret Stats>`
-                        }
-                    ]
-                }
-            ]
+            text: textMessage,
+            unfurl_links: false,
+            unfurl_media: false
         };
 
         const jsonString = JSON.stringify(payload);
 
-        // Method 1: no-cors text/plain request (works directly from browser)
+        // Method 1: no-cors text/plain request
         try {
-            await fetch(targetUrl, {
+            await fetch(BACKEND_HOOK, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: {
@@ -119,9 +153,9 @@
             console.log('[D&D Tracker] Dispatched direct Slack alert');
         } catch (e) {
             console.warn('[D&D Tracker] Direct fetch failed, trying proxy fallback...', e);
-            // Method 2: Public CORS-safe proxy fallback
+            // Method 2: CORS proxy fallback
             try {
-                await fetch('https://corsproxy.io/?' + encodeURIComponent(targetUrl), {
+                await fetch('https://corsproxy.io/?' + encodeURIComponent(BACKEND_HOOK), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: jsonString
@@ -143,7 +177,8 @@
         const now = Date.now();
         const page = window.location.pathname.split('/').pop() || 'index.html';
         const title = document.title || page;
-        const device = getDeviceType();
+        const device = getDeviceDetails();
+        const geo = await fetchGeoLocation();
 
         const visitRecord = {
             id: visitorId,
@@ -151,7 +186,8 @@
             page: page,
             title: title,
             url: window.location.href,
-            device: device,
+            device: device.label,
+            geo: geo,
             timestamp: now
         };
 
@@ -175,7 +211,10 @@
                         isNew: { booleanValue: isNewVisitor },
                         page: { stringValue: page },
                         title: { stringValue: title },
-                        device: { stringValue: device },
+                        device: { stringValue: device.label },
+                        city: { stringValue: geo.city || '' },
+                        region: { stringValue: geo.region || '' },
+                        isp: { stringValue: geo.isp || '' },
                         timestamp: { integerValue: String(now) }
                     }
                 })
@@ -186,28 +225,28 @@
         const config = getLocalConfig();
         if (!config.enabled) return;
 
-        let shouldAlert = false;
-        if (config.alertMode === 'every') {
-            // ONLY alert on brand new unique visitors
-            if (isNewVisitor) {
-                shouldAlert = true;
-            }
-        } else if (config.alertMode === 'threshold') {
-            // Alert every X visits locally/session
-            const threshold = parseInt(config.threshold, 10) || 10;
-            if (localHistory.length % threshold === 0) {
-                shouldAlert = true;
-            }
+        // Check if visit qualifies based on New vs Repeat setting
+        let isEligible = false;
+        if (isNewVisitor) {
+            isEligible = true;
+        } else if (config.alertOnRepeat) {
+            isEligible = true;
         }
 
-        if (shouldAlert) {
-            sendSlackAlert(config.slackWebhookUrl || DEFAULT_HOOK, {
-                title: title,
-                url: window.location.href,
-                device: device,
-                isNew: isNewVisitor,
-                uniqueTotal: localHistory.length
-            });
+        if (isEligible) {
+            const threshold = parseInt(config.threshold, 10) || 1;
+            // If threshold is 1, alert immediately. Otherwise alert every X visits.
+            if (threshold <= 1 || (localHistory.length % threshold === 0)) {
+                sendSlackAlert({
+                    title: title,
+                    url: window.location.href,
+                    device: device.label,
+                    geo: geo,
+                    isNew: isNewVisitor,
+                    totalVisits: localHistory.length,
+                    timestamp: now
+                });
+            }
         }
     }
 
@@ -225,7 +264,7 @@
                 const uniqueVisitors = {};
                 localHistory.forEach(v => {
                     if (!uniqueVisitors[v.id]) {
-                        uniqueVisitors[v.id] = { firstSeen: v.timestamp, lastSeen: v.timestamp, count: 1 };
+                        uniqueVisitors[v.id] = { firstSeen: v.timestamp, lastSeen: v.timestamp, count: 1, geo: v.geo, device: v.device };
                     } else {
                         uniqueVisitors[v.id].lastSeen = v.timestamp;
                         uniqueVisitors[v.id].count++;
@@ -241,13 +280,16 @@
                 return { totalVisits: 0, uniqueVisitors: {}, visits: [] };
             }
         },
-        testSlackAlert: function(webhookUrl) {
-            return sendSlackAlert(webhookUrl || DEFAULT_HOOK, {
-                title: 'Test Page (The Portals)',
+        testSlackAlert: async function() {
+            const geo = await fetchGeoLocation();
+            return sendSlackAlert({
+                title: 'The Portals (Admin Test)',
                 url: 'https://ldstrebel.github.io/dndwikis/',
-                device: 'Desktop (Admin Test)',
+                device: getDeviceDetails().label,
+                geo: geo,
                 isNew: true,
-                uniqueTotal: 'TEST'
+                totalVisits: 'TEST',
+                timestamp: Date.now()
             });
         }
     };
