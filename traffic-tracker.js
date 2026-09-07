@@ -50,6 +50,16 @@
         };
     }
 
+    // Helper: Clean path starting at dndwikis/ (removes https://ldstrebel.github.io/)
+    function getCleanDndPath(url) {
+        if (!url) return 'dndwikis/index.html';
+        if (url.includes('dndwikis/')) {
+            return 'dndwikis/' + url.substring(url.indexOf('dndwikis/') + 9);
+        }
+        const lastPart = url.substring(url.lastIndexOf('/') + 1) || 'index.html';
+        return 'dndwikis/' + lastPart;
+    }
+
     // Helper: Fast Geolocation Lookup (Cached in sessionStorage)
     async function fetchGeoLocation() {
         try {
@@ -73,7 +83,6 @@
             }
         } catch (e) {}
 
-        // Fallback using browser timezone
         const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown Timezone';
         return { city: '', region: '', country: '', isp: '', timezone: tz };
     }
@@ -104,6 +113,7 @@
     async function sendSlackAlert(details) {
         const pageTitle = details.title || document.title || 'D&D Wikis Page';
         const pageUrl = details.url || window.location.href;
+        const cleanPath = getCleanDndPath(pageUrl);
         const device = details.device || getDeviceDetails().label;
         const geo = details.geo || {};
         
@@ -122,7 +132,7 @@
         const textMessage = [
             `🎲 *D&D Wikis - Visitor Alert*`,
             ``,
-            `• *Page Viewed:* <${pageUrl}|${pageTitle}>`,
+            `• *Page Viewed:* <${pageUrl}|${cleanPath}> — ${pageTitle}`,
             `• *Location:* ${locString}`,
             `• *Device:* ${device}`,
             `• *Visitor:* ${visitorStatus}${totalCount}`,
@@ -169,7 +179,6 @@
 
     // Main tracking workflow
     async function recordVisit() {
-        // Skip tracking when viewing the stats page itself
         if (window.location.pathname.includes('super-secret-stats.html')) {
             return;
         }
@@ -179,12 +188,14 @@
         const title = document.title || page;
         const device = getDeviceDetails();
         const geo = await fetchGeoLocation();
+        const cleanPath = getCleanDndPath(window.location.href);
 
         const visitRecord = {
             id: visitorId,
             isNew: isNewVisitor,
             page: page,
             title: title,
+            cleanPath: cleanPath,
             url: window.location.href,
             device: device.label,
             geo: geo,
@@ -210,6 +221,7 @@
                         visitorId: { stringValue: visitorId },
                         isNew: { booleanValue: isNewVisitor },
                         page: { stringValue: page },
+                        cleanPath: { stringValue: cleanPath },
                         title: { stringValue: title },
                         device: { stringValue: device.label },
                         city: { stringValue: geo.city || '' },
@@ -225,7 +237,6 @@
         const config = getLocalConfig();
         if (!config.enabled) return;
 
-        // Check if visit qualifies based on New vs Repeat setting
         let isEligible = false;
         if (isNewVisitor) {
             isEligible = true;
@@ -235,7 +246,6 @@
 
         if (isEligible) {
             const threshold = parseInt(config.threshold, 10) || 1;
-            // If threshold is 1, alert immediately. Otherwise alert every X visits.
             if (threshold <= 1 || (localHistory.length % threshold === 0)) {
                 sendSlackAlert({
                     title: title,
