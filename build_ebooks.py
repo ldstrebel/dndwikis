@@ -189,29 +189,28 @@ def load_session_source_mapping(session_num: int) -> dict:
                 b = blocks[block_idx]
                 b_id = b["id"]
 
-                primary_line = None
                 bundled = []
+                is_synthesis = False
 
                 if l_markers:
                     primary_line = l_markers[0]
                     for lm in l_markers:
                         if lm in raw_lines:
                             bundled.append(raw_lines[lm])
-                elif last_line_num is not None and last_line_num <= e_line:
-                    primary_line = last_line_num
+                    primary_info = raw_lines.get(primary_line, {
+                        "line": primary_line,
+                        "speaker": "Table Voice",
+                        "text": f"Table scene line (Line {primary_line})"
+                    })
                 else:
-                    primary_line = s_line
-
-                if last_line_num and primary_line and primary_line > last_line_num + 1:
-                    for mid_l in range(last_line_num + 1, min(primary_line, last_line_num + 10)):
-                        if mid_l in raw_lines and mid_l not in [x["line"] for x in bundled]:
-                            bundled.append(raw_lines[mid_l])
-
-                primary_info = raw_lines.get(primary_line, {
-                    "line": primary_line,
-                    "speaker": "Table GM/Player",
-                    "text": f"Table scene context (Lines {s_line}–{e_line})"
-                })
+                    is_synthesis = True
+                    primary_line = None
+                    primary_info = {
+                        "line": None,
+                        "speaker": "Narrative Synthesis",
+                        "text": f"Artistic narrative adaptation & scene setting bridging tabletop action (Scene Range: Lines {s_line}–{e_line}).",
+                        "isSynthesis": True
+                    }
 
                 final_bundled = [x for x in bundled if x["line"] != primary_line]
 
@@ -223,11 +222,9 @@ def load_session_source_mapping(session_num: int) -> dict:
                     "text": b.get("text", ""),
                     "primaryLine": primary_info,
                     "bundledLines": final_bundled,
-                    "lineRange": [s_line, e_line]
+                    "lineRange": [s_line, e_line],
+                    "isSynthesis": is_synthesis
                 }
-
-                if primary_line:
-                    last_line_num = primary_line
                 block_idx += 1
 
     return block_map
@@ -966,64 +963,64 @@ def build_diff_inspector_html(session_num: int) -> str:
     <div id="diffInspectorOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col opacity-0 pointer-events-none transition-opacity duration-200 box-border">
         
         <!-- Inspector Top Header Bar -->
-        <header class="flex-shrink-0 bg-slate-900/95 border-b border-slate-800 px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 shadow-md">
-            <div class="flex items-center gap-2 min-w-0">
-                <span class="text-base sm:text-lg flex-shrink-0">⚖️</span>
+        <header class="flex-shrink-0 bg-slate-900/98 border-b border-slate-800 px-3 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-3 shadow-md">
+            <div class="flex items-center gap-2 min-w-0 flex-1">
+                <span class="text-lg sm:text-xl flex-shrink-0">⚖️</span>
                 <div class="min-w-0">
                     <div class="flex items-center gap-2">
                         <h2 class="text-xs sm:text-sm font-bold text-amber-400 truncate tracking-wide">Diff Inspector</h2>
-                        <span id="diffHeaderTargetBadge" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 truncate max-w-[140px] sm:max-w-xs">Select Passage</span>
+                        <span id="diffHeaderTargetBadge" class="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 truncate max-w-[110px] xs:max-w-[150px] sm:max-w-xs">Select Passage</span>
                     </div>
                     <p class="text-[10px] text-slate-400 hidden sm:block">Session {session_num} · Synchronized Narrative Prose vs. Tabletop Source</p>
                 </div>
             </div>
 
             <!-- Controls: Layout Mode Toggle, Sync Scroll Toggle, Close Button -->
-            <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                <!-- Layout Toggle (Hamburger vs Hotdog) -->
-                <button id="diffLayoutToggleBtn" type="button" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm" title="Toggle between Hamburger (stacked 50/50) and Hotdog (side-by-side 50/50)">
-                    <span id="diffLayoutToggleIcon">⬍</span>
-                    <span id="diffLayoutToggleLabel" class="text-[11px]">Hamburger</span>
+            <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
+                <!-- Layout Toggle (Side-by-Side vs Stacked) -->
+                <button id="diffLayoutToggleBtn" type="button" class="min-h-[42px] px-3 sm:px-3.5 py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm" title="Toggle between Side-by-Side (Hotdog) and Stacked (Hamburger)">
+                    <span id="diffLayoutToggleIcon">⬌</span>
+                    <span id="diffLayoutToggleLabel" class="text-[11px] font-mono">Side-by-Side</span>
                 </button>
 
                 <!-- Sync Scroll Toggle -->
-                <button id="diffSyncToggleBtn" type="button" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all shadow-sm" title="Toggle Synchronized Scrolling">
+                <button id="diffSyncToggleBtn" type="button" class="min-h-[42px] px-2.5 sm:px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 rounded-xl text-xs font-semibold flex items-center gap-1 transition-all shadow-sm" title="Toggle Synchronized Scrolling">
                     <span id="diffSyncToggleIcon">🔗</span>
                     <span id="diffSyncToggleLabel" class="hidden md:inline text-[11px]">Sync: ON</span>
                 </button>
 
-                <!-- Close / Exit Inspector -->
-                <button id="closeDiffInspectorBtn" type="button" class="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 text-lg leading-none transition-colors" title="Close Diff Inspector" aria-label="Close Diff Inspector">
+                <!-- Close / Exit Inspector (Generous 44x44px Touch Target) -->
+                <button id="closeDiffInspectorBtn" type="button" class="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 hover:text-white flex items-center justify-center text-xl font-bold transition-all shadow-sm ml-1 mr-0.5 sm:mr-0 flex-shrink-0" title="Close Diff Inspector" aria-label="Close Diff Inspector">
                     &times;
                 </button>
             </div>
         </header>
 
-        <!-- Dual Panes Container (layout-hamburger vs layout-hotdog) -->
-        <div id="diffPanesContainer" class="flex-1 min-h-0 relative layout-hamburger">
+        <!-- Dual Panes Container (default layout-hotdog per user preference) -->
+        <div id="diffPanesContainer" class="flex-1 min-h-0 relative layout-hotdog">
             <!-- Narrative Left / Top Pane -->
-            <div id="diffNarrativePane" class="diff-pane overflow-y-auto p-3 sm:p-5 space-y-3 custom-scrollbar">
+            <div id="diffNarrativePane" class="diff-pane overflow-y-auto p-2.5 sm:p-5 space-y-3 custom-scrollbar">
                 <!-- Populated dynamically by initDiffInspector() -->
             </div>
 
             <!-- Tabletop Source Right / Bottom Pane -->
-            <div id="diffSourcePane" class="diff-pane overflow-y-auto p-3 sm:p-5 space-y-3 custom-scrollbar">
+            <div id="diffSourcePane" class="diff-pane overflow-y-auto p-2.5 sm:p-5 space-y-3 custom-scrollbar">
                 <!-- Populated dynamically by initDiffInspector() -->
             </div>
         </div>
 
         <!-- Inspector Bottom Action Bar -->
-        <footer id="diffFooterBar" class="flex-shrink-0 bg-slate-900/95 border-t border-slate-800 px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 shadow-2xl">
-            <button id="diffClearCloseBtn" type="button" class="px-3 sm:px-4 py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-300 hover:text-slate-100 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all">
-                <span>✕</span> <span>Clear & Exit</span>
+        <footer id="diffFooterBar" class="flex-shrink-0 bg-slate-900/98 border-t border-slate-800 px-3 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-2 shadow-2xl">
+            <button id="diffClearCloseBtn" type="button" class="min-h-[44px] px-3.5 sm:px-5 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 hover:text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all shadow-sm flex-shrink-0">
+                <span>✕</span> <span class="hidden xs:inline">Clear &</span> <span>Exit</span>
             </button>
 
-            <div id="diffActiveTargetBadge" class="text-[11px] sm:text-xs text-slate-300 font-mono truncate px-2 text-center flex-1 max-w-md">
+            <div id="diffActiveTargetBadge" class="text-[11px] sm:text-xs text-slate-300 font-mono truncate px-2.5 py-1.5 rounded-lg bg-slate-950/70 border border-slate-800 text-center flex-1 max-w-sm sm:max-w-md mx-1">
                 Select a passage or source line to anchor feedback
             </div>
 
-            <button id="diffSubmitFeedbackBtn" type="button" class="px-3.5 sm:px-5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-amber-500/20 flex items-center gap-1.5 active:scale-95 transition-all">
-                <span>✍️</span> <span class="hidden sm:inline">Provide</span> <span>Feedback</span>
+            <button id="diffSubmitFeedbackBtn" type="button" class="min-h-[44px] px-4 sm:px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm shadow-lg shadow-amber-500/25 flex items-center gap-2 active:scale-95 transition-all flex-shrink-0">
+                <span>✍️</span> <span class="hidden xs:inline">Provide</span> <span>Feedback</span>
             </button>
         </footer>
     </div>
@@ -2496,7 +2493,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const diffHeaderTargetBadge = document.getElementById('diffHeaderTargetBadge');
             const diffSubmitFeedbackBtn = document.getElementById('diffSubmitFeedbackBtn');
 
-            let currentDiffLayout = (window.innerWidth < 768) ? "hamburger" : "hotdog";
+            let currentDiffLayout = "hotdog";
             let syncScrollEnabled = true;
             let isProgrammaticScroll = false;
             let selectedSourceLine = null;
@@ -2540,14 +2537,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     diffPanesContainer.classList.remove('layout-hotdog');
                     diffPanesContainer.classList.add('layout-hamburger');
                     if (diffLayoutToggleIcon) diffLayoutToggleIcon.textContent = '⬍';
-                    if (diffLayoutToggleLabel) diffLayoutToggleLabel.textContent = 'Hamburger';
-                    if (diffLayoutToggleBtn) diffLayoutToggleBtn.title = 'Current: Hamburger (Stacked 50/50) — Tap to switch to Hotdog (Side-by-Side)';
+                    if (diffLayoutToggleLabel) diffLayoutToggleLabel.textContent = 'Stacked';
+                    if (diffLayoutToggleBtn) diffLayoutToggleBtn.title = 'Current: Stacked (Top/Bottom) — Tap to switch to Side-by-Side';
                 }} else {{
                     diffPanesContainer.classList.remove('layout-hamburger');
                     diffPanesContainer.classList.add('layout-hotdog');
                     if (diffLayoutToggleIcon) diffLayoutToggleIcon.textContent = '⬌';
-                    if (diffLayoutToggleLabel) diffLayoutToggleLabel.textContent = 'Hotdog';
-                    if (diffLayoutToggleBtn) diffLayoutToggleBtn.title = 'Current: Hotdog (Side-by-Side 50/50) — Tap to switch to Hamburger (Stacked)';
+                    if (diffLayoutToggleLabel) diffLayoutToggleLabel.textContent = 'Side-by-Side';
+                    if (diffLayoutToggleBtn) diffLayoutToggleBtn.title = 'Current: Side-by-Side (Vertical split) — Tap to switch to Stacked';
                 }}
             }}
 
@@ -2731,13 +2728,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     const bundled = (mapData && mapData.bundledLines) ? mapData.bundledLines : [];
 
                     narrativeCardsHtml += `
-                        <div class="diff-narrative-card diff-card p-3 sm:p-4 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/90 transition-all cursor-pointer relative" data-block-id="${{bId}}" data-index="${{idx}}">
-                            <div class="flex items-center justify-between mb-2 text-xs">
+                        <div class="diff-narrative-card diff-card p-2.5 sm:p-4 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/90 transition-all cursor-pointer relative" data-block-id="${{bId}}" data-index="${{idx}}">
+                            <div class="flex items-center justify-between mb-2 text-xs gap-1">
                                 <div class="flex items-center gap-1.5 min-w-0">
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono truncate" style="background-color: ${{spColor}}25; color: ${{spColor}}; border: 1px solid ${{spColor}}50">${{spName}}</span>
-                                    <span class="text-slate-400 font-mono text-[10px]">#${{idx + 1}}</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono truncate max-w-[90px] xs:max-w-[130px] sm:max-w-none" style="background-color: ${{spColor}}25; color: ${{spColor}}; border: 1px solid ${{spColor}}50">${{spName}}</span>
+                                    <span class="text-slate-400 font-mono text-[10px] flex-shrink-0">#${{idx + 1}}</span>
                                 </div>
-                                ${{lineRangeText ? `<div class="text-[10px] font-mono text-slate-500">${{lineRangeText}}</div>` : ''}}
+                                ${{lineRangeText ? `<div class="text-[10px] font-mono text-slate-500 whitespace-nowrap flex-shrink-0">${{lineRangeText}}</div>` : ''}}
                             </div>
                             <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif">${{escapeHtml(text)}}</p>
                         </div>
@@ -2752,7 +2749,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                                     <div class="flex items-center gap-1.5 text-[10px] font-mono mb-1">
                                         <span class="text-amber-400 font-bold">L${{bLine.line}}</span>
                                         <span class="text-slate-500">·</span>
-                                        <span class="text-slate-300 font-semibold truncate">${{escapeHtml(bLine.speaker)}}</span>
+                                        <span class="text-slate-300 font-semibold truncate max-w-[110px] sm:max-w-none">${{escapeHtml(bLine.speaker)}}</span>
                                     </div>
                                     <div class="text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap">${{escapeHtml(bLine.text)}}</div>
                                 </div>
@@ -2775,25 +2772,43 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         `;
                     }}
 
-                    sourceCardsHtml += `
-                        <div class="diff-source-card diff-card p-3 sm:p-4 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/90 transition-all relative" data-block-id="${{bId}}" data-index="${{idx}}">
-                            <div class="flex items-center justify-between mb-2 text-xs">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800">Source #${{idx + 1}}</span>
-                                    ${{lineRangeText ? `<span class="text-[10px] font-mono text-slate-400">${{lineRangeText}}</span>` : ''}}
+                    const isSynth = primary.isSynthesis || !primary.line;
+                    let primaryTurnHtml = "";
+                    if (isSynth) {{
+                        primaryTurnHtml = `
+                            <div class="diff-source-line synthesis-source-line p-2 sm:p-2.5 rounded-lg bg-indigo-950/40 border border-indigo-500/30 hover:border-indigo-500/60 cursor-pointer transition-colors" data-block-id="${{bId}}" data-index="${{idx}}" data-line-num="" data-speaker="Narrative Synthesis" data-text="${{escapeHtml(primary.text)}}">
+                                <div class="flex items-center gap-1.5 text-[10px] font-mono mb-1">
+                                    <span class="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/40">🔮 Narrative Synthesis</span>
+                                    <span class="ml-auto text-[9px] text-indigo-400 font-mono tracking-wider">Scene Bridge</span>
                                 </div>
+                                <div class="text-indigo-200 font-sans text-[11px] sm:text-xs leading-relaxed italic">${{escapeHtml(primary.text)}}</div>
                             </div>
-                            
-                            <!-- Primary Source Turn -->
+                        `;
+                    }} else {{
+                        primaryTurnHtml = `
                             <div class="diff-source-line primary-source-line p-2 sm:p-2.5 rounded-lg bg-slate-950/80 border border-slate-800/90 hover:border-amber-500/50 cursor-pointer transition-colors" data-block-id="${{bId}}" data-index="${{idx}}" data-line-num="${{primary.line}}" data-speaker="${{escapeHtml(primary.speaker)}}" data-text="${{escapeHtml(primary.text)}}">
                                 <div class="flex items-center gap-1.5 text-[10px] font-mono mb-1">
                                     <span class="text-amber-400 font-bold">L${{primary.line}}</span>
                                     <span class="text-slate-500">·</span>
-                                    <span class="text-slate-300 font-semibold truncate">${{escapeHtml(primary.speaker)}}</span>
-                                    <span class="ml-auto text-[9px] text-amber-500/80 uppercase font-mono tracking-wider">Primary</span>
+                                    <span class="text-slate-300 font-semibold truncate max-w-[110px] sm:max-w-none">${{escapeHtml(primary.speaker)}}</span>
+                                    <span class="ml-auto text-[9px] text-amber-500/80 uppercase font-mono tracking-wider flex-shrink-0">Primary</span>
                                 </div>
                                 <div class="text-slate-200 font-mono text-[11px] sm:text-xs leading-relaxed whitespace-pre-wrap">${{escapeHtml(primary.text)}}</div>
                             </div>
+                        `;
+                    }}
+
+                    sourceCardsHtml += `
+                        <div class="diff-source-card diff-card p-2.5 sm:p-4 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/90 transition-all relative" data-block-id="${{bId}}" data-index="${{idx}}">
+                            <div class="flex items-center justify-between mb-2 text-xs gap-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800 flex-shrink-0">Source #${{idx + 1}}</span>
+                                </div>
+                                ${{lineRangeText ? `<span class="text-[10px] font-mono text-slate-400 whitespace-nowrap flex-shrink-0">${{lineRangeText}}</span>` : ''}}
+                            </div>
+                            
+                            <!-- Primary Source Turn or Synthesis Card -->
+                            ${{primaryTurnHtml}}
 
                             ${{bundledSectionHtml}}
                         </div>

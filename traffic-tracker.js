@@ -11,6 +11,9 @@
     // Backend Webhook URL (Encoded to satisfy GitHub push protection)
     const BACKEND_HOOK = atob('aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDAzMk44SjhYOVYvQjBDMFBVUUYzMDgvOVJmUU04MHh1enp0RjBBYXFLZkhFcHdF');
 
+    // Global telemetry feature flag (paused pending dedicated Firebase deployment)
+    const TELEMETRY_ENABLED = false;
+
     // Default configuration
     const defaultConfig = {
         alertOnRepeat: false, // false = Only New Unique Visitors, true = Include Repeat Visitors
@@ -212,7 +215,8 @@
             localStorage.setItem(VISITOR_HISTORY_KEY, JSON.stringify(localHistory));
         } catch (e) {}
 
-        // 3. Evaluate alert triggers
+        // 3. Evaluate alert triggers (guarded by feature flag)
+        if (!TELEMETRY_ENABLED) return;
         const config = getLocalConfig();
         if (!config.enabled) return;
 
@@ -256,6 +260,7 @@
 
     // Expose Global Helper for the Stats Page
     window.DndWikiTracker = {
+        isTelemetryEnabled: function() { return TELEMETRY_ENABLED; },
         getConfig: getLocalConfig,
         saveConfig: async function(newConfig) {
             const merged = { ...getLocalConfig(), ...newConfig };
