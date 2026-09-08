@@ -20,34 +20,47 @@ from cryptography.hazmat.primitives import serialization
 
 MANIFEST_DIR = Path("d:/Code/dnd-scribe/sessions/data/index")
 OUTPUT_DIR = Path("d:/Code/dndwikis-main/dndwikis-main")
-SECRETS_DIR = Path("d:/Code/dnd-scribe/.secrets")
-APP_CONFIG_PATH = SECRETS_DIR / "app_config.json"
-PEM_KEY_PATH = SECRETS_DIR / "dnd-scribe-bot.2026-09-07.private-key.pem"
+# Search possible secrets directory locations
+SECRETS_DIRS = [
+    Path("d:/Code/dnd-scribe/.secrets"),
+    Path(__file__).parent / ".secrets",
+    Path(__file__).parent.parent / ".secrets",
+    Path(".secrets"),
+    Path("d:/Code/dndwikis-main/.secrets"),
+]
 
 BOT_APP_ID = "4866708"
 BOT_INSTALLATION_ID = "159911323"
 BOT_PKCS8_B64 = ""
 
-if APP_CONFIG_PATH.exists():
-    try:
-        cfg = json.loads(APP_CONFIG_PATH.read_text(encoding="utf-8"))
-        BOT_APP_ID = str(cfg.get("app_id", BOT_APP_ID))
-        BOT_INSTALLATION_ID = str(cfg.get("installation_id", BOT_INSTALLATION_ID))
-    except Exception as e:
-        print("[WARN] Could not load app_config.json:", e)
-
-if PEM_KEY_PATH.exists():
-    try:
-        pk = serialization.load_pem_private_key(PEM_KEY_PATH.read_bytes(), password=None)
-        pkcs8_der = pk.private_bytes(
-            encoding=serialization.Encoding.DER,
-            format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption()
-        )
-        BOT_PKCS8_B64 = base64.b64encode(pkcs8_der).decode("ascii")
-        print(f"[OK] Loaded Bot PEM private key (PKCS8 length: {len(BOT_PKCS8_B64)})")
-    except Exception as e:
-        print("[WARN] Could not parse PEM key:", e)
+for s_dir in SECRETS_DIRS:
+    if s_dir.exists() and s_dir.is_dir():
+        app_cfg = s_dir / "app_config.json"
+        if app_cfg.exists():
+            try:
+                cfg = json.loads(app_cfg.read_text(encoding="utf-8"))
+                BOT_APP_ID = str(cfg.get("app_id", BOT_APP_ID))
+                BOT_INSTALLATION_ID = str(cfg.get("installation_id", BOT_INSTALLATION_ID))
+                print(f"[OK] Loaded App Config from {app_cfg}")
+            except Exception as e:
+                print(f"[WARN] Could not load {app_cfg}:", e)
+        
+        pem_files = list(s_dir.glob("*.pem"))
+        for p_file in pem_files:
+            try:
+                pk = serialization.load_pem_private_key(p_file.read_bytes(), password=None)
+                pkcs8_der = pk.private_bytes(
+                    encoding=serialization.Encoding.DER,
+                    format=serialization.PrivateFormat.PKCS8,
+                    encryption_algorithm=serialization.NoEncryption()
+                )
+                BOT_PKCS8_B64 = base64.b64encode(pkcs8_der).decode("ascii")
+                print(f"[OK] Loaded Bot PEM key from {p_file.name} (PKCS8 length: {len(BOT_PKCS8_B64)})")
+                break
+            except Exception as e:
+                print(f"[WARN] Could not parse PEM key {p_file}:", e)
+        if BOT_PKCS8_B64:
+            break
 
 PC_COLORS = {
     "pierre": "#3b82f6",     # Blue
