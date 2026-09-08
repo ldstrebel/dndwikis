@@ -7,7 +7,6 @@
     const VISITOR_ID_KEY = 'dndwikis_visitor_uuid';
     const VISITOR_HISTORY_KEY = 'dndwikis_local_visits';
     const GEO_CACHE_KEY = 'dndwikis_geo_cache';
-    const CLOUD_TELEMETRY_ENDPOINT = 'https://firestore.googleapis.com/v1/projects/thecountgame/databases/(default)/documents/vumbua_user_telemetry';
 
     // Backend Webhook URL (Encoded to satisfy GitHub push protection)
     const BACKEND_HOOK = atob('aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDAzMk44SjhYOVYvQjBDMFBVUUYzMDgvOVJmUU04MHh1enp0RjBBYXFLZkhFcHdF');
@@ -211,28 +210,6 @@
             localHistory.push(visitRecord);
             if (localHistory.length > 50) localHistory.shift();
             localStorage.setItem(VISITOR_HISTORY_KEY, JSON.stringify(localHistory));
-        } catch (e) {}
-
-        // 2. Telemetry to Firestore REST endpoint
-        try {
-            fetch(CLOUD_TELEMETRY_ENDPOINT, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    fields: {
-                        visitorId: { stringValue: visitorId },
-                        isNew: { booleanValue: isNewVisitor },
-                        page: { stringValue: page },
-                        cleanPath: { stringValue: cleanPath },
-                        title: { stringValue: title },
-                        device: { stringValue: device.label },
-                        city: { stringValue: geo.city || '' },
-                        region: { stringValue: geo.region || '' },
-                        isp: { stringValue: geo.isp || '' },
-                        timestamp: { integerValue: String(now) }
-                    }
-                })
-            }).catch(() => {});
         } catch (e) {}
 
         // 3. Evaluate alert triggers
