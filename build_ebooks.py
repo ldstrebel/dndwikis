@@ -1,14 +1,213 @@
-"""Builds interactive Schema 2.0 HTML EBooks from dnd-scribe manifest files.
+"""Builds interactive Schema 2.0 HTML EBooks from dnd-scribe manifest files with
+streamlined diagnostics, NPC unified red styling, clean character badges,
+dedicated chapter separation banners, and a visual journey momentum TOC.
 """
 
 import json
+import re
 from pathlib import Path
 
 MANIFEST_DIR = Path("d:/Code/dnd-scribe/sessions/data/index")
 OUTPUT_DIR = Path("d:/Code/dndwikis-main/dndwikis-main")
-IMAGES_DIR = OUTPUT_DIR / "images"
 
-TEMPLATE_HEAD = """<!DOCTYPE html>
+# Color Scheme
+PC_COLORS = {
+    "pierre": "#3b82f6",     # Blue
+    "dravin": "#8b5cf6",     # Violet
+    "eusacles": "#f59e0b",   # Amber / Gold
+    "alfie": "#10b981",      # Emerald
+    "doug": "#f59e0b",       # Amber
+    "mara": "#06b6d4",       # Cyan
+    "kael": "#10b981",       # Emerald
+    "narrator": "#94a3b8"    # Slate
+}
+NPC_COLOR = "#f87171"        # Low-intensity red for all NPCs on dark mode
+
+def get_speaker_color(speaker_id: str, char_info: dict) -> str:
+    sp_id = speaker_id.lower().strip()
+    if sp_id in PC_COLORS:
+        return PC_COLORS[sp_id]
+    if char_info.get("type") == "narrator":
+        return "#94a3b8"
+    return NPC_COLOR
+
+def generate_html_for_session(manifest_path: Path, output_path: Path):
+    with open(manifest_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    campaign = data.get("campaign", {})
+    session = data.get("session", {})
+    characters = data.get("characters", {})
+    stats = data.get("stats", {})
+    blocks = data.get("blocks", [])
+
+    campaign_name = campaign.get("name", "UNERASEABLE").upper()
+    session_num = session.get("number", 1)
+    session_title = session.get("title", f"Session {session_num}")
+    session_synopsis = session.get("synopsis", "")
+
+    # Stats
+    word_count = stats.get("wordCount", len(blocks) * 15)
+    read_mins = stats.get("estimatedReadMinutes", round(word_count / 250))
+    book_pages = stats.get("estimatedBookPages", round(word_count / 250, 1))
+    diag_ratio = stats.get("dialogueRatio", {})
+    spoken_pct = diag_ratio.get("spokenPct", 45)
+    narrative_pct = diag_ratio.get("narrativePct", 55)
+    speaker_dist = stats.get("speakerDistribution", [])
+    writing_metrics = stats.get("writingMetrics", {})
+    sensory = writing_metrics.get("sensoryRegisters", {})
+
+    # Re-map speaker colors in distribution
+    for sp in speaker_dist:
+        sp_id = sp.get("id", "").lower()
+        sp["color"] = get_speaker_color(sp_id, characters.get(sp_id, {}))
+
+    # Generate progress bar HTML
+    prog_bar_segments = ""
+    for sp in speaker_dist:
+        pct = sp.get("sharePct", 10)
+        color = sp.get("color", "#94a3b8")
+        name = sp.get("name", "Unknown")
+        prog_bar_segments += f'<div style="width: {pct}%; background-color: {color}" class="h-full" title="{name}: {pct}%"></div>\n'
+
+    speaker_chips = ""
+    for sp in speaker_dist:
+        pct = sp.get("sharePct", 10)
+        color = sp.get("color", "#94a3b8")
+        name = sp.get("name", "Unknown")
+        speaker_chips += f"""
+            <div class="flex items-center gap-1.5 text-xs text-slate-300">
+                <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {color}"></span>
+                <span class="font-medium truncate">{name}:</span>
+                <span class="font-mono font-bold ml-auto" style="color: {color}">{pct}%</span>
+            </div>
+        """
+
+    # Group Blocks by Chapter/Scene for TOC & Divider construction
+    chapters = []
+    current_chapter_title = ""
+    current_chapter_blocks = []
+
+    for b in blocks:
+        scene = b.get("scene", "").strip() or "Prologue"
+        if scene != current_chapter_title:
+            if current_chapter_blocks:
+                chapters.append({
+                    "title": current_chapter_title,
+                    "blocks": current_chapter_blocks,
+                    "word_count": sum(len(blk.get("text", "").split()) for blk in current_chapter_blocks)
+                })
+            current_chapter_title = scene
+            current_chapter_blocks = [b]
+        else:
+            current_chapter_blocks.append(b)
+
+    if current_chapter_blocks:
+        chapters.append({
+            "title": current_chapter_title,
+            "blocks": current_chapter_blocks,
+            "word_count": sum(len(blk.get("text", "").split()) for blk in current_chapter_blocks)
+        })
+
+    # Build TOC / Journey Momentum Bar HTML
+    toc_cards_html = ""
+    for idx, ch in enumerate(chapters, 1):
+        ch_title = ch["title"]
+        # Clean title (remove redundant 'CHAPTER X:' prefix for neat display if needed)
+        clean_ch_title = re.sub(r"^CHAPTER\s*\d+\s*:\s*", "", ch_title, flags=re.IGNORECASE)
+        ch_words = ch["word_count"]
+        ch_pct = round((ch_words / max(word_count, 1)) * 100)
+        ch_mins = max(1, round(ch_words / 250))
+        anchor_id = f"chapter-{idx}"
+
+        toc_cards_html += f"""
+        <a href="#{anchor_id}" class="group flex-1 min-w-[200px] bg-slate-900/90 hover:bg-slate-800/90 border border-slate-800 hover:border-amber-500/50 p-3 rounded-xl transition-all shadow-md">
+            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                <span class="font-bold text-amber-400 font-mono tracking-wider">Part {idx}</span>
+                <span class="font-mono">{ch_pct}% · ~{ch_mins}m</span>
+            </div>
+            <div class="text-xs font-semibold text-slate-200 group-hover:text-amber-300 transition-colors line-clamp-1">
+                {clean_ch_title}
+            </div>
+            <div class="w-full bg-slate-800 h-1 rounded-full mt-2 overflow-hidden">
+                <div class="bg-amber-400 h-full rounded-full" style="width: {ch_pct}%"></div>
+            </div>
+        </a>
+        """
+
+    # Generate Blocks HTML with Dedicated Chapter Dividers
+    blocks_html = ""
+    chapter_index = 0
+
+    for ch in chapters:
+        chapter_index += 1
+        ch_title = ch["title"]
+        ch_words = ch["word_count"]
+        ch_pct = round((ch_words / max(word_count, 1)) * 100)
+        ch_mins = max(1, round(ch_words / 250))
+        anchor_id = f"chapter-{chapter_index}"
+
+        # Dedicated Chapter Divider
+        blocks_html += f"""
+        <!-- CHAPTER DIVIDER {chapter_index} -->
+        <section id="{anchor_id}" class="pt-8 pb-4 my-6 border-b border-slate-800/80 scroll-mt-20">
+            <div class="flex items-center gap-3">
+                <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
+                <div class="text-center px-3">
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part {chapter_index} · {ch_pct}% of Session (~{ch_mins}m read)</span>
+                    <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">{ch_title}</h3>
+                </div>
+                <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
+            </div>
+        </section>
+        """
+
+        for b in ch["blocks"]:
+            b_id = b.get("id", "block")
+            b_idx = b.get("index", 1)
+            sp_id = b.get("speakerId", "narrator").lower().strip()
+            sp_info = characters.get(sp_id, {"name": sp_id.title(), "type": "narrator"})
+            sp_name = sp_info.get("name", sp_id.title())
+            sp_color = get_speaker_color(sp_id, sp_info)
+            text = b.get("text", "")
+
+            is_narrator = (sp_info.get("type") == "narrator" or sp_id == "narrator")
+
+            if is_narrator:
+                blocks_html += f"""
+                <!-- Block {b_idx} (Narrator) -->
+                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
+                     data-block-id="{b_id}"
+                     data-speaker="{sp_id}"
+                     data-speaker-name="{sp_name}"
+                     data-speaker-color="{sp_color}">
+                    <div class="flex justify-end mb-1">
+                        <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
+                    </div>
+                    <p class="text-slate-300 leading-relaxed text-base sm:text-lg">{text}</p>
+                </div>
+                """
+            else:
+                blocks_html += f"""
+                <!-- Block {b_idx} ({sp_name}) -->
+                <div class="story-block p-4 rounded-r-xl"
+                     style="border-left: 3.5px solid {sp_color}; background: linear-gradient(90deg, {sp_color}14 0%, {sp_color}02 100%);"
+                     data-block-id="{b_id}"
+                     data-speaker="{sp_id}"
+                     data-speaker-name="{sp_name}"
+                     data-speaker-color="{sp_color}">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: {sp_color}"></span>
+                        <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: {sp_color}">{sp_name}</span>
+                        <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
+                    </div>
+                    <p class="text-slate-100 font-medium leading-relaxed text-base sm:text-lg">{text}</p>
+                </div>
+                """
+
+    # Assemble Full Document
+    full_html = f"""<!DOCTYPE html>
 <html lang="en" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -86,14 +285,10 @@ TEMPLATE_HEAD = """<!DOCTYPE html>
         }}
 
         #sessionStatsSection {{
-            transition: max-height 0.4s ease, opacity 0.3s ease, margin-bottom 0.3s ease;
+            transition: all 0.3s ease;
         }}
         #sessionStatsSection.collapsed {{
-            max-height: 0px !important;
-            opacity: 0 !important;
-            margin-bottom: 0 !important;
-            overflow: hidden;
-            pointer-events: none;
+            display: none !important;
         }}
 
         #critiqueModalOverlay {{
@@ -114,7 +309,7 @@ TEMPLATE_HEAD = """<!DOCTYPE html>
 <body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
 
     <!-- STICKY TOP APP BAR -->
-    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-2.5">
         <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
                 <a href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center text-sm font-semibold gap-1">
@@ -130,13 +325,13 @@ TEMPLATE_HEAD = """<!DOCTYPE html>
             <!-- Header Action Controls -->
             <div class="flex items-center gap-2 flex-shrink-0">
                 <!-- Stats Toggle Button -->
-                <button id="toggleStatsBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center gap-1.5 transition-all">
+                <button id="toggleStatsBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center gap-1.5 transition-all" title="Toggle session diagnostics drawer">
                     <span>📊</span>
-                    <span class="hidden md:inline">Session Stats</span>
+                    <span id="toggleStatsBtnLabel">Hide Stats</span>
                 </button>
 
                 <!-- Reader / Critique Mode Switcher -->
-                <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
+                <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5" title="Switch reading mode">
                     <button id="modeReaderBtn" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1">
                         <span>📖</span> <span class="hidden sm:inline">Read</span>
                     </button>
@@ -145,10 +340,11 @@ TEMPLATE_HEAD = """<!DOCTYPE html>
                     </button>
                 </div>
 
-                <!-- Export Critiques Trigger -->
-                <button id="exportCritiquesBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 text-slate-950 flex items-center gap-1 shadow-sm">
-                    <span>💾</span>
-                    <span id="exportBadgeCount" class="bg-sky-950 text-sky-200 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+                <!-- Export / PR Trigger -->
+                <button id="exportCritiquesBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 flex items-center gap-1.5 shadow-sm" title="Submit review notes as a GitHub PR">
+                    <span>🐙</span>
+                    <span>Submit PR</span>
+                    <span id="exportBadgeCount" class="bg-slate-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-0.5">0</span>
                 </button>
             </div>
         </div>
@@ -156,162 +352,55 @@ TEMPLATE_HEAD = """<!DOCTYPE html>
 
     <!-- WRAPPER -->
     <div class="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
-"""
 
-def generate_html_for_session(manifest_path: Path, output_path: Path):
-    with open(manifest_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    campaign = data.get("campaign", {})
-    session = data.get("session", {})
-    characters = data.get("characters", {})
-    stats = data.get("stats", {})
-    blocks = data.get("blocks", [])
-
-    campaign_name = campaign.get("name", "UNERASEABLE").upper()
-    session_num = session.get("number", 1)
-    session_title = session.get("title", f"Session {session_num}")
-    session_synopsis = session.get("synopsis", "")
-
-    # Stats
-    word_count = stats.get("wordCount", len(blocks) * 15)
-    read_mins = stats.get("estimatedReadMinutes", round(word_count / 250))
-    book_pages = stats.get("estimatedBookPages", round(word_count / 250, 1))
-    diag_ratio = stats.get("dialogueRatio", {})
-    spoken_pct = diag_ratio.get("spokenPct", 45)
-    narrative_pct = diag_ratio.get("narrativePct", 55)
-    speaker_dist = stats.get("speakerDistribution", [])
-    writing_metrics = stats.get("writingMetrics", {})
-    pacing_std = writing_metrics.get("pacingStdDev", 8.2)
-    sensory = writing_metrics.get("sensoryRegisters", {})
-
-    # Generate progress bar HTML
-    prog_bar_segments = ""
-    for sp in speaker_dist:
-        pct = sp.get("sharePct", 10)
-        color = sp.get("color", "#94a3b8")
-        name = sp.get("name", "Unknown")
-        prog_bar_segments += f'<div style="width: {pct}%; background-color: {color}" class="h-full" title="{name}: {pct}%"></div>\n'
-
-    speaker_chips = ""
-    for sp in speaker_dist:
-        pct = sp.get("sharePct", 10)
-        color = sp.get("color", "#94a3b8")
-        name = sp.get("name", "Unknown")
-        speaker_chips += f"""
-            <div class="flex items-center gap-1.5 text-xs text-slate-300">
-                <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {color}"></span>
-                <span class="font-medium truncate">{name}:</span>
-                <span class="font-mono font-bold ml-auto" style="color: {color}">{pct}%</span>
-            </div>
-        """
-
-    # Generate Blocks HTML
-    blocks_html = ""
-    for b in blocks:
-        b_id = b.get("id", "block")
-        b_idx = b.get("index", 1)
-        sp_id = b.get("speakerId", "narrator")
-        sp_info = characters.get(sp_id, {"name": sp_id.title(), "type": "narrator", "color": "#94a3b8"})
-        sp_name = sp_info.get("name", sp_id.title())
-        sp_color = sp_info.get("color", "#94a3b8")
-        sp_role = sp_info.get("role", "")
-        text = b.get("text", "")
-        scene = b.get("scene", "")
-
-        is_narrator = (sp_info.get("type") == "narrator" or sp_id == "narrator")
-        
-        scene_header = f'<div class="flex items-center justify-between mb-1.5"><span class="text-xs font-semibold uppercase tracking-wider text-slate-400">{scene}</span><span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span></div>' if scene else '<div class="flex justify-end"><span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span></div>'
-
-        if is_narrator:
-            blocks_html += f"""
-            <!-- Block {b_idx} -->
-            <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
-                 style="border-left: 3px solid rgba(148, 163, 184, 0.25);"
-                 data-block-id="{b_id}"
-                 data-speaker="{sp_id}"
-                 data-speaker-name="{sp_name}"
-                 data-speaker-color="{sp_color}">
-                {scene_header}
-                <p class="text-slate-300 leading-relaxed">{text}</p>
-            </div>
-            """
-        else:
-            blocks_html += f"""
-            <!-- Block {b_idx} -->
-            <div class="story-block p-4 rounded-r-xl"
-                 style="border-left: 3.5px solid {sp_color}; background: linear-gradient(90deg, {sp_color}14 0%, {sp_color}02 100%);"
-                 data-block-id="{b_id}"
-                 data-speaker="{sp_id}"
-                 data-speaker-name="{sp_name}"
-                 data-speaker-color="{sp_color}">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: {sp_color}"></span>
-                    <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: {sp_color}">{sp_name}</span>
-                    <span class="text-[11px] text-slate-500 font-sans">{sp_role}</span>
-                    <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
-                </div>
-                <p class="text-slate-100 font-medium leading-relaxed">{text}</p>
-            </div>
-            """
-
-    # Assemble Full Document
-    full_html = TEMPLATE_HEAD.format(
-        campaign_name=campaign_name,
-        session_num=session_num,
-        session_title=session_title
-    )
-
-    full_html += f"""
         <!-- ========================================================= -->
-        <!-- TOP STATS & WRITING TEST AUDIT DRAWER -->
+        <!-- TOP STATS DRAWER (Streamlined & Responsive) -->
         <!-- ========================================================= -->
-        <section id="sessionStatsSection" class="mb-8 overflow-hidden transition-all duration-300">
+        <section id="sessionStatsSection" class="mb-8">
             <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-sm">
                 
                 <!-- Drawer Header -->
                 <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
                     <div class="flex items-center gap-2">
                         <span class="text-lg">📊</span>
-                        <h2 class="text-sm font-bold tracking-wider uppercase text-amber-400">Session {session_num} Diagnostics & Writing Metrics</h2>
+                        <h2 class="text-sm font-bold tracking-wider uppercase text-amber-400">Session {session_num} Metrics & Diagnostics</h2>
                     </div>
-                    <button id="minimizeStatsBtn" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1">
-                        <span>Hide Stats</span> <span>▲</span>
+                    <button id="minimizeStatsBtn" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
+                        <span>Hide Stats ▲</span>
                     </button>
                 </div>
 
-                <!-- KPI Metric Grid -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                <!-- Streamlined 3-Column Metric Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                     <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                        <div class="text-[11px] text-slate-400 font-medium">Word & Page Count</div>
-                        <div class="text-lg font-bold text-slate-100 mt-0.5 font-mono">{word_count:,} <span class="text-xs text-slate-500 font-normal">w</span></div>
-                        <div class="text-[10px] text-emerald-400 mt-0.5">~{book_pages} Book Pages · {read_mins}m Read</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Story Length & Reading Time</div>
+                        <div class="text-lg font-bold text-slate-100 mt-0.5 font-mono">{word_count:,} <span class="text-xs text-slate-500 font-normal">words</span></div>
+                        <div class="text-[11px] text-emerald-400 mt-0.5">~{book_pages} Book Pages · {read_mins}m Read</div>
                     </div>
 
                     <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
                         <div class="text-[11px] text-slate-400 font-medium">Dialogue Ratio</div>
                         <div class="text-lg font-bold text-amber-400 mt-0.5 font-mono">{spoken_pct}% <span class="text-xs text-slate-500 font-normal">spoken</span></div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">{narrative_pct}% Narrative Prose</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">{narrative_pct}% Narrative Prose</div>
                     </div>
 
                     <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                        <div class="text-[11px] text-slate-400 font-medium">Pacing Dynamic (StdDev)</div>
-                        <div class="text-lg font-bold text-sky-400 mt-0.5 font-mono">{pacing_std} <span class="text-xs text-emerald-400">✓ Dynamic</span></div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">Punchy vs Expansive Flow</div>
-                    </div>
-
-                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                        <div class="text-[11px] text-slate-400 font-medium">Writing Test Status</div>
-                        <div class="text-lg font-bold text-emerald-400 mt-0.5 font-mono">5/5 PASS</div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">0 Leaks · 0 Echo Loops</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Sensory Coverage ({sensory.get("registersCovered", 5)}/5 Registers)</div>
+                        <div class="flex flex-wrap gap-1 mt-1.5">
+                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👁️ Visual: <strong class="text-amber-400">{sensory.get("visual", 30)}</strong></span>
+                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👂 Auditory: <strong class="text-sky-400">{sensory.get("auditory", 15)}</strong></span>
+                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">✋ Tactile: <strong class="text-emerald-400">{sensory.get("tactile", 20)}</strong></span>
+                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👃 Scent: <strong class="text-rose-400">{sensory.get("olfactory", 10)}</strong></span>
+                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">⚡ Ambient: <strong class="text-amber-300">{sensory.get("atmospheric", 15)}</strong></span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Character Dialogue Breakdown -->
-                <div class="space-y-2 mb-5 bg-slate-950/40 p-3.5 rounded-xl border border-slate-800/60">
+                <!-- Character Dialogue Breakdown (11Labs Multi-Voice Split Bar) -->
+                <div class="space-y-2 bg-slate-950/40 p-3.5 rounded-xl border border-slate-800/60">
                     <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-1">
                         <span>🎙️ Speaker Line Share & Dialogue Distribution</span>
-                        <span class="text-[11px] text-slate-400">{len(speaker_dist)} Active Speakers</span>
+                        <span class="text-[11px] text-slate-400">{len(speaker_dist)} Active Voices</span>
                     </div>
 
                     <!-- Multi-color split progress bar -->
@@ -325,86 +414,54 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     </div>
                 </div>
 
-                <!-- Writing Tests & Sensory Palette Quality Checks -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
-                        <div class="font-semibold text-slate-300 mb-2 flex items-center justify-between">
-                            <span>🌿 Sensory Palette Coverage</span>
-                            <span class="text-emerald-400 font-bold">{sensory.get("registersCovered", 5)} / 5 Covered</span>
-                        </div>
-                        <div class="flex flex-wrap gap-1.5">
-                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">👁️ Visual: <strong class="text-amber-400">{sensory.get("visual", 35)}</strong></span>
-                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">👂 Auditory: <strong class="text-sky-400">{sensory.get("auditory", 22)}</strong></span>
-                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">✋ Tactile: <strong class="text-emerald-400">{sensory.get("tactile", 18)}</strong></span>
-                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">👃 Olfactory: <strong class="text-purple-400">{sensory.get("olfactory", 10)}</strong></span>
-                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">⚡ Atmospheric: <strong class="text-amber-300">{sensory.get("atmospheric", 14)}</strong></span>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
-                        <div class="font-semibold text-slate-300 mb-2 flex items-center justify-between">
-                            <span>🛡️ Automated Writing Guard Audits</span>
-                            <span class="text-emerald-400 font-bold">Verified</span>
-                        </div>
-                        <div class="space-y-1 text-[11px] text-slate-300">
-                            <div class="flex justify-between">
-                                <span class="text-slate-400">Leak Detector (OOC/Meta Terms):</span>
-                                <span class="text-emerald-400 font-bold">0 Leaks (PASS)</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-400">Echo Detector (Crutch Words):</span>
-                                <span class="text-emerald-400 font-bold">0 Loops (PASS)</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-400">Adverb Dialogue Tag Check:</span>
-                                <span class="text-emerald-400 font-bold">0 Adverb Tags (PASS)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
         <!-- EBOOK COVER & INTRO HEADER -->
-        <div class="mb-10 text-center">
-            <div class="w-48 sm:w-56 mx-auto mb-4 rounded-xl overflow-hidden shadow-2xl border border-slate-800 ring-1 ring-amber-500/20">
+        <div class="mb-8 text-center">
+            <div class="w-44 sm:w-52 mx-auto mb-4 rounded-xl overflow-hidden shadow-2xl border border-slate-800 ring-1 ring-amber-500/20">
                 <img src="images/uneraseable-cover.jpg" alt="Uneraseable Cover by Doug N Masters" class="w-full h-auto object-cover">
             </div>
-            <span class="text-xs uppercase tracking-widest text-amber-500 font-bold">Campaign Premiere</span>
+            <span class="text-xs uppercase tracking-widest text-amber-500 font-bold font-mono">Session {session_num} · Interactive Edition</span>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100 font-serif mt-1 tracking-wide">{session_title}</h2>
-            <p class="text-sm text-slate-400 mt-1 font-serif italic">{session_synopsis}</p>
-            <div class="mt-3 flex items-center justify-center gap-2 text-xs text-slate-500">
-                <span>Session {session_num}</span>
-                <span>•</span>
-                <span>Schema 2.0 Indexed</span>
-                <span>•</span>
-                <span class="text-amber-400/80 font-medium">Tap any section in Critique Mode to comment</span>
+            <p class="text-sm text-slate-400 mt-2 font-serif italic max-w-xl mx-auto">{session_synopsis}</p>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- SESSION JOURNEY & MOMENTUM TRACK (TOC) -->
+        <!-- ========================================================= -->
+        <div class="mb-10 bg-slate-950/70 p-4 rounded-2xl border border-slate-800/90 shadow-lg">
+            <div class="flex items-center gap-2 mb-3 text-xs font-bold text-amber-400 uppercase tracking-wider">
+                <span>📍</span>
+                <span>Session Arc & Location Momentum Track</span>
+            </div>
+            <div class="flex flex-wrap sm:flex-nowrap gap-2.5 overflow-x-auto pb-1">
+                {toc_cards_html}
             </div>
         </div>
 
         <!-- ========================================================= -->
         <!-- 11LABS-STYLE STORY BLOCKS CONTAINER -->
         <!-- ========================================================= -->
-        <main id="storyContentContainer" class="space-y-4 text-base sm:text-lg leading-relaxed">
+        <main id="storyContentContainer" class="space-y-4">
             {blocks_html}
         </main>
 
         <!-- Bottom Page Controls & Review Summary -->
         <footer class="mt-16 pt-8 border-t border-slate-800 text-center space-y-4">
-            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 max-w-md mx-auto">
-                <h3 class="text-sm font-bold text-amber-400 mb-1">Session Review Progress</h3>
-                <p class="text-xs text-slate-400 mb-3">All notes and edits sync to the story generation critique harness.</p>
+            <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 max-w-md mx-auto shadow-lg">
+                <h3 class="text-sm font-bold text-amber-400 mb-1">Session Review & Critique Submission</h3>
+                <p class="text-xs text-slate-400 mb-3">Submit your feedback directly to the dnd-scribe agent pipeline.</p>
                 <div class="flex gap-2 justify-center">
-                    <button id="footerExportBtn" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition-colors shadow">
-                        Export Critiques for Agent Pipeline
+                    <button id="footerExportBtn" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5">
+                        <span>🐙</span> <span>Submit Review PR to GitHub</span>
                     </button>
-                    <button id="clearCritiquesBtn" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                    <button id="clearCritiquesBtn" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl transition-colors">
                         Clear All
                     </button>
                 </div>
             </div>
-            <p class="text-xs text-slate-600">UNERASEABLE © D&D Scribe Engine · All stories indexed.</p>
+            <p class="text-xs text-slate-600">UNERASEABLE © D&D Scribe Engine · Schema 2.0 Indexed.</p>
         </footer>
 
     </div>
@@ -439,7 +496,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
                 <div>
                     <label for="critiqueTextInput" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Critique / Revision Directive</label>
-                    <textarea id="critiqueTextInput" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500" placeholder="E.g. Make Pierre sound more cautious here..."></textarea>
+                    <textarea id="critiqueTextInput" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500" placeholder="E.g. Make this interaction sharper, emphasize the tension..."></textarea>
                 </div>
                 <div>
                     <label for="suggestedRewriteInput" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Direct Suggested Rewrite <span class="text-slate-600 font-normal lowercase">(optional)</span></label>
@@ -473,6 +530,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             const statsSection = document.getElementById('sessionStatsSection');
             const toggleStatsBtn = document.getElementById('toggleStatsBtn');
+            const toggleStatsBtnLabel = document.getElementById('toggleStatsBtnLabel');
             const minimizeStatsBtn = document.getElementById('minimizeStatsBtn');
             const modeReaderBtn = document.getElementById('modeReaderBtn');
             const modeCritiqueBtn = document.getElementById('modeCritiqueBtn');
@@ -512,25 +570,17 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }});
             }}
 
-            window.addEventListener('scroll', () => {{
-                if (window.scrollY > 120 && !statsSection.classList.contains('collapsed') && !statsSection.dataset.userPinned) {{
-                    statsSection.classList.add('collapsed');
-                }}
-            }}, {{ passive: true }});
-
-            toggleStatsBtn.addEventListener('click', () => {{
-                statsSection.classList.toggle('collapsed');
-                if (!statsSection.classList.contains('collapsed')) {{
-                    statsSection.dataset.userPinned = "true";
+            function toggleStats() {{
+                const isCollapsed = statsSection.classList.toggle('collapsed');
+                if (isCollapsed) {{
+                    toggleStatsBtnLabel.textContent = "Show Stats";
                 }} else {{
-                    delete statsSection.dataset.userPinned;
+                    toggleStatsBtnLabel.textContent = "Hide Stats";
                 }}
-            }});
+            }}
 
-            minimizeStatsBtn.addEventListener('click', () => {{
-                statsSection.classList.add('collapsed');
-                delete statsSection.dataset.userPinned;
-            }});
+            toggleStatsBtn.addEventListener('click', toggleStats);
+            minimizeStatsBtn.addEventListener('click', toggleStats);
 
             modeReaderBtn.addEventListener('click', () => {{
                 document.body.classList.remove('mode-critique');
@@ -665,7 +715,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     <div class="space-y-3 text-xs">
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
                             <div class="flex justify-between text-slate-400"><span>Target Repository:</span><span class="font-mono text-slate-200">ldstrebel/dnd-scribe</span></div>
-                            <div class="flex justify-between text-slate-400"><span>Target Base Branch:</span><span class="font-mono text-amber-400">Uneraseable</span></div>
+                            <div class="flex justify-between text-slate-400"><span>Target Base Branch:</span><span class="font-mono text-amber-400">uneraseable</span></div>
                             <div class="flex justify-between text-slate-400"><span>Critiques in Batch:</span><span class="font-mono text-emerald-400 font-bold" id="ghCritiqueCountDisplay">0 notes</span></div>
                         </div>
 
@@ -747,7 +797,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 ghSubmitPrBtn.disabled = true;
 
                 const REPO = "ldstrebel/dnd-scribe";
-                const BASE_BRANCH = "Uneraseable";
+                const BASE_BRANCH = "uneraseable";
                 const safeName = reviewer.toLowerCase().replace(/[^a-z0-9]/g, '-');
                 const timestamp = Date.now().toString().slice(-6);
                 const NEW_BRANCH = `critique/${{CAMPAIGN_ID}}-${{CHAPTER_ID}}-${{safeName}}-${{timestamp}}`;
@@ -815,7 +865,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     </script>
 </body>
 </html>
-    """
+"""
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(full_html)
