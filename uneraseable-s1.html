@@ -4061,12 +4061,15 @@
                 }
             } catch(e) {}
 
-            // 1. First-time unique reader registration
+            // 1. First-time unique reader registration with permanent reader number
             if (!localTelemetry.hasOpened) {
                 localTelemetry.hasOpened = true;
                 localTelemetry.maxDepth = 0;
                 globalTelemetry.readers += 1;
                 globalTelemetry.incompleteCount += 1;
+                localTelemetry.readerNumber = globalTelemetry.readers;
+            } else if (!localTelemetry.readerNumber) {
+                localTelemetry.readerNumber = Math.max(1, globalTelemetry.readers || 1);
             }
 
             // 2. Session-scoped open counting (prevents reload inflation)
@@ -4089,6 +4092,56 @@
             saveTelemetryState();
 
             const MOTIVATIONAL_BLURBS = {
+                easterEggs: {
+                    1: {
+                        initial: "👑 <strong>Pioneer Alert!</strong> You're Reader #1 — set the pace and forge the benchmark for everyone who follows!",
+                        inProgress: "👑 <strong>Trailblazer in Action:</strong> As Reader #1 ({depth}% depth), you are charting uncharted waters for Session {s}!",
+                        pastDropoff: "👑 <strong>Pioneer Momentum:</strong> Reader #1 is blazing past the ~{dropoff}% mark! Set the inaugural completion record.",
+                        completed: "👑 <strong>The Founding Finisher!</strong> You are Reader #1 and the very first traveler in history to conquer Session {s}!"
+                    },
+                    2: {
+                        initial: "🥈 <strong>Vanguard #2:</strong> You're the 2nd reader to discover Session {s}. The ink is fresh—can you catch the pioneer?",
+                        inProgress: "🥈 <strong>Hot on the Trail:</strong> Reader #2 is pushing through at {depth}% depth. Keep up the pace!",
+                        pastDropoff: "🥈 <strong>Second Wave:</strong> Past the ~{dropoff}% drop-off! You're racing toward the top 2 finisher spots.",
+                        completed: "🥈 <strong>Silver Finisher!</strong> You are the 2nd traveler in history to complete Session {s}!"
+                    },
+                    3: {
+                        initial: "🥉 <strong>Adventuring Party Formed!</strong> You're Reader #3. Three is a party in D&D—venture into the deep weave!",
+                        inProgress: "🥉 <strong>Party of Three:</strong> Reader #3 is at {depth}% depth. The party's campaign is in full swing.",
+                        pastDropoff: "🥉 <strong>Party Vanguard:</strong> Surpassed the ~{dropoff}% mark! Finish the session to immortalize the founding trio.",
+                        completed: "🥉 <strong>Founding Trio Complete!</strong> Reader #3 crosses the finish line. The adventuring party stands victorious!"
+                    },
+                    7: {
+                        initial: "🎲 <strong>Lucky 7!</strong> Fortune smiles upon Reader #7. Roll high and start exploring!",
+                        inProgress: "🎲 <strong>Lucky Streak:</strong> Reader #7 is rolling through at {depth}% depth!",
+                        pastDropoff: "🎲 <strong>Critical Momentum:</strong> Reader #7 breaks past the ~{dropoff}% mark. Lady Luck is on your side!",
+                        completed: "🎲 <strong>Jackpot!</strong> Reader #7 completes the adventure with pure style."
+                    },
+                    13: {
+                        initial: "🔮 <strong>Reader #13:</strong> An ominous thread in the Weave... Defy superstition and conquer Session {s}!",
+                        inProgress: "🔮 <strong>Defying the Curse:</strong> Reader #13 is slicing through at {depth}% depth!",
+                        pastDropoff: "🔮 <strong>Superstition Broken:</strong> Reader #13 surges past ~{dropoff}%! The finish line is yours.",
+                        completed: "🔮 <strong>Fate Rewritten!</strong> Reader #13 conquers Session {s} and rewrites destiny."
+                    },
+                    20: {
+                        initial: "🌟 <strong>NATURAL 20!</strong> You rolled a Nat 20 just by showing up as Reader #20. Critical reading momentum!",
+                        inProgress: "🌟 <strong>Natural 20 Energy:</strong> Cruising at {depth}% with max advantage on story comprehension.",
+                        pastDropoff: "🌟 <strong>Critical Success:</strong> Past the ~{dropoff}% threshold with the power of a Nat 20!",
+                        completed: "🌟 <strong>Critical Finisher!</strong> Reader #20 completes Session {s} on a legendary Nat 20 roll!"
+                    },
+                    42: {
+                        initial: "🌌 <strong>Reader #42:</strong> The ultimate answer to the universe, life, and D&D storyboards.",
+                        inProgress: "🌌 <strong>Universal Truth:</strong> Reader #42 deciphering the lore at {depth}% depth.",
+                        pastDropoff: "🌌 <strong>Deep Answer:</strong> Reader #42 outlasting the drop-offs at {depth}%!",
+                        completed: "🌌 <strong>The Ultimate Answer:</strong> Reader #42 finishes the entire cosmic journey!"
+                    },
+                    100: {
+                        initial: "💯 <strong>Centurion Milestone!</strong> You are Reader #100! A landmark moment for Session {s}.",
+                        inProgress: "💯 <strong>Centurion in Motion:</strong> Reader #100 powering through at {depth}% depth.",
+                        pastDropoff: "💯 <strong>Centurion Surge:</strong> Past the ~{dropoff}% line—lead the 100th cohort to the finish!",
+                        completed: "💯 <strong>Centurion Champion:</strong> Reader #100 finishes Session {s} in triumph!"
+                    }
+                },
                 completed: [
                     "🏆 <strong>Session {s} Complete!</strong> You finished the entire story and earned your badge in the Finisher Circle ({c}/{r} readers).",
                     "✨ <strong>Legend Achieved!</strong> You journeyed through all chapters of Session {s} to the final word. The Margin remembers your tale.",
@@ -4114,18 +4167,43 @@
                     "⏳ <strong>Building Momentum:</strong> At {depth}%, the character interactions are hitting their stride. Keep scrolling!"
                 ],
                 early: [
-                    "🌿 <strong>Stepping into The Margin:</strong> You're at {depth}% depth. Settle in and follow the dialogue!",
-                    "🗝️ <strong>The Portal Opens:</strong> You've begun Session {s}. Follow the party's journey as the plot takes shape.",
+                    "🌿 <strong>Stepping into The Margin:</strong> You're at {depth}% depth as Reader #{rnum}. Settle in and follow the dialogue!",
+                    "🗝️ <strong>The Portal Opens:</strong> Reader #{rnum} has begun Session {s}. Follow the party's journey as the plot takes shape.",
                     "✨ <strong>The Adventure Begins:</strong> Scroll through the passages to build your reading progress and unlock the lore.",
                     "🗺️ <strong>Charting New Ground:</strong> You've started reading Session {s}. Keep scrolling to advance your track!"
                 ],
                 initial: [
-                    "📖 <strong>Begin your reading journey:</strong> Scroll through the story blocks below to build your progress and join the Finisher Circle!",
+                    "📖 <strong>Welcome Reader #{rnum}!</strong> Scroll through the story blocks below to build your progress and join the Finisher Circle!",
                     "✨ <strong>Welcome to Session {s}:</strong> Start scrolling to track your reading depth against the readership base."
                 ]
             };
 
-            function getMotivationalBlurb(depth, avgDropoff, isCompleted, cCount, rCount, sNum) {
+            function getMotivationalBlurb(depth, avgDropoff, isCompleted, cCount, rCount, sNum, rNum) {
+                // Check if an Easter egg exists for this specific reader number
+                const egg = MOTIVATIONAL_BLURBS.easterEggs[rNum];
+                if (egg) {
+                    let eggStr = "";
+                    if (isCompleted) {
+                        eggStr = egg.completed || egg.inProgress || egg.initial;
+                    } else if (depth > 0 && depth >= avgDropoff && avgDropoff > 0) {
+                        eggStr = egg.pastDropoff || egg.inProgress || egg.initial;
+                    } else if (depth > 0) {
+                        eggStr = egg.inProgress || egg.initial;
+                    } else {
+                        eggStr = egg.initial;
+                    }
+                    if (eggStr) {
+                        return eggStr
+                            .replaceAll('{depth}', depth)
+                            .replaceAll('{dropoff}', avgDropoff || 45)
+                            .replaceAll('{remaining}', Math.max(1, 100 - depth))
+                            .replaceAll('{c}', cCount)
+                            .replaceAll('{r}', rCount)
+                            .replaceAll('{s}', sNum)
+                            .replaceAll('{rnum}', rNum);
+                    }
+                }
+
                 let pool = [];
                 if (isCompleted) {
                     pool = MOTIVATIONAL_BLURBS.completed;
@@ -4147,7 +4225,8 @@
                     .replaceAll('{remaining}', Math.max(1, 100 - depth))
                     .replaceAll('{c}', cCount)
                     .replaceAll('{r}', rCount)
-                    .replaceAll('{s}', sNum);
+                    .replaceAll('{s}', sNum)
+                    .replaceAll('{rnum}', rNum);
             }
 
             function updateTelemetryUI() {
@@ -4176,6 +4255,7 @@
                 const avgDropoffPct = incCount > 0 ? Math.min(99, Math.max(0, Math.round(incSum / incCount))) : 0;
                 const myDepth = localTelemetry.maxDepth || 0;
                 const isCompleted = localTelemetry.completed || myDepth >= 95;
+                const myReaderNum = localTelemetry.readerNumber || 1;
 
                 if (uniqueEl) uniqueEl.textContent = globalTelemetry.readers.toLocaleString();
                 if (opensEl) opensEl.textContent = globalTelemetry.opens.toLocaleString();
@@ -4212,9 +4292,17 @@
                     }
                 }
 
-                // Motivational Guidance Banner via rich blurb library
+                // Motivational Guidance Banner via rich blurb library with Easter eggs
                 if (motivationText && motivationBanner) {
-                    motivationText.innerHTML = getMotivationalBlurb(myDepth, avgDropoffPct, isCompleted, cCount, rCount, 1);
+                    motivationText.innerHTML = getMotivationalBlurb(myDepth, avgDropoffPct, isCompleted, cCount, rCount, 1, myReaderNum);
+                    if (isCompleted) {
+                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 leading-normal flex items-center gap-2 shadow-inner";
+                    } else if (myDepth > 0 && myDepth >= avgDropoffPct && avgDropoffPct > 0) {
+                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-amber-950/60 border border-amber-800 text-amber-200 leading-normal flex items-center gap-2 shadow-inner";
+                    } else {
+                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2";
+                    }
+                }
                     if (isCompleted) {
                         motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 leading-normal flex items-center gap-2 shadow-inner";
                     } else if (myDepth > 0 && myDepth >= avgDropoffPct && avgDropoffPct > 0) {
