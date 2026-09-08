@@ -254,755 +254,433 @@
                     </div>
                 </div>
 
-                <!-- 2-Column Mobile-Friendly Dialogue Momentum & Character Line Navigator -->
-                <div class="bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/60 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <div class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                            <span>📈</span>
-                            <span>Dialogue Momentum (Tap to Jump to Line)</span>
+                <!-- ========================================================= -->
+                <!-- SINGLE-SPOT DIALOGUE MOMENTUM & VELOCITY (Zero Horizontal Scroll) -->
+                <!-- ========================================================= -->
+                <div class="bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/60 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-sm">📈</span>
+                            <span class="text-xs font-bold text-amber-400">Dialogue Momentum & Velocity</span>
                         </div>
-                        <span class="text-[10px] text-slate-500 font-mono">46 spoken turns</span>
+
+                        <!-- 3-Way Mode Switcher -->
+                        <div class="flex bg-slate-900 border border-slate-800 rounded-lg p-0.5" id="chartTabSwitcher">
+                            <button id="chartTabHistogramBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('histogram')">
+                                <span>📊</span> <span>Session Histogram</span>
+                            </button>
+                            <button id="chartTabLineBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('line')">
+                                <span>📈</span> <span>Line Velocity</span>
+                            </button>
+                            <button id="chartTabCampaignBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('campaign')">
+                                <span>🌐</span> <span>Campaign Whole</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- 2-Column Dense Grid with Horizontal Volume Bars & Touch Targets -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                    <!-- View 1: Stacked Histogram by Chapter (Zero Horizontal Scroll) -->
+                    <div id="chartViewHistogram" class="w-full">
                         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b002')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
+    <div class="w-full space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+            <span>Peak Chapter: <strong class="text-amber-400 font-mono">229 dialogue words</strong></span>
+            <span class="text-[10px] text-slate-500 font-mono">Chapters 1–10 (Tap to jump)</span>
+        </div>
+        <div class="h-36 sm:h-40 w-full flex items-end gap-1 sm:gap-2 px-1 pt-3 pb-1 border-b border-slate-800 bg-slate-950/60 rounded-xl">
+            
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-1')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 23: ARRIVAL IN RALEIGH</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">229 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f59e0b"></span><span class="truncate text-slate-300">Eusacles</span></span><strong class="font-mono text-slate-100 flex-shrink-0">79w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#8b5cf6"></span><span class="truncate text-slate-300">Prof. Edward Dravin</span></span><strong class="font-mono text-slate-100 flex-shrink-0">60w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">57w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#10b981"></span><span class="truncate text-slate-300">Alfie</span></span><strong class="font-mono text-slate-100 flex-shrink-0">33w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#2 · 23w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 43%; background-color: #3b82f6"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 100%;">
+                <div style="height: 34.5%; background-color: #f59e0b;" class="w-full border-t border-slate-900/30" title="Eusacles: 79w"></div><div style="height: 26.2%; background-color: #8b5cf6;" class="w-full border-t border-slate-900/30" title="Dravin: 60w"></div><div style="height: 24.9%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 57w"></div><div style="height: 14.4%; background-color: #10b981;" class="w-full border-t border-slate-900/30" title="Alfie: 33w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Pierre adjusted his beret, peering through the windshie..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                23
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b003')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #10b981">Alfie</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-2')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 24: RECONNAISSANCE IN THE MEDITERRANEAN WING</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">167 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#8b5cf6"></span><span class="truncate text-slate-300">Prof. Edward Dravin</span></span><strong class="font-mono text-slate-100 flex-shrink-0">71w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">63w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f59e0b"></span><span class="truncate text-slate-300">Eusacles</span></span><strong class="font-mono text-slate-100 flex-shrink-0">33w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#3 · 33w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 61%; background-color: #10b981"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 73%;">
+                <div style="height: 42.5%; background-color: #8b5cf6;" class="w-full border-t border-slate-900/30" title="Dravin: 71w"></div><div style="height: 37.7%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 63w"></div><div style="height: 19.8%; background-color: #f59e0b;" class="w-full border-t border-slate-900/30" title="Eusacles: 33w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Very famous,&quot; Alfie piped up from the dashboard, stand..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                24
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b004')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-3')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 25: THE FRACTURED STELE</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">68 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#8b5cf6"></span><span class="truncate text-slate-300">Prof. Edward Dravin</span></span><strong class="font-mono text-slate-100 flex-shrink-0">29w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">28w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f59e0b"></span><span class="truncate text-slate-300">Eusacles</span></span><strong class="font-mono text-slate-100 flex-shrink-0">11w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#4 · 31w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 57%; background-color: #8b5cf6"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 30%;">
+                <div style="height: 42.6%; background-color: #8b5cf6;" class="w-full border-t border-slate-900/30" title="Dravin: 29w"></div><div style="height: 41.2%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 28w"></div><div style="height: 16.2%; background-color: #f59e0b;" class="w-full border-t border-slate-900/30" title="Eusacles: 11w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;World famous,&quot; Dravin smiled from the passenger seat, ..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                25
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b005')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-4')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 26: THE SIX O'CLOCK BELL</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">93 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">30w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#8b5cf6"></span><span class="truncate text-slate-300">Prof. Edward Dravin</span></span><strong class="font-mono text-slate-100 flex-shrink-0">26w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f59e0b"></span><span class="truncate text-slate-300">Eusacles</span></span><strong class="font-mono text-slate-100 flex-shrink-0">19w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f87171"></span><span class="truncate text-slate-300">Thomas (Guard)</span></span><strong class="font-mono text-slate-100 flex-shrink-0">18w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#5 · 54w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 100%; background-color: #f59e0b"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 41%;">
+                <div style="height: 32.3%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 30w"></div><div style="height: 28.0%; background-color: #8b5cf6;" class="w-full border-t border-slate-900/30" title="Dravin: 26w"></div><div style="height: 20.4%; background-color: #f59e0b;" class="w-full border-t border-slate-900/30" title="Eusacles: 19w"></div><div style="height: 19.4%; background-color: #f87171;" class="w-full border-t border-slate-900/30" title="Thomas: 18w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Eusacles parallel parked the rusted farm truck in a pub..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                26
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b006')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-5')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 27: ALFIE'S SPECTRAL LIVESTOCK</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">35 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">21w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#10b981"></span><span class="truncate text-slate-300">Alfie</span></span><strong class="font-mono text-slate-100 flex-shrink-0">14w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#6 · 29w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 54%; background-color: #8b5cf6"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 15%;">
+                <div style="height: 60.0%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 21w"></div><div style="height: 40.0%; background-color: #10b981;" class="w-full border-t border-slate-900/30" title="Alfie: 14w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;We buy tickets like civilized scholars,&quot; Dravin advise..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                27
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b007')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-6')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 28: BADGES AND CORRIDORS</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">100 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#8b5cf6"></span><span class="truncate text-slate-300">Prof. Edward Dravin</span></span><strong class="font-mono text-slate-100 flex-shrink-0">44w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">38w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f59e0b"></span><span class="truncate text-slate-300">Eusacles</span></span><strong class="font-mono text-slate-100 flex-shrink-0">18w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#7 · 34w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 63%; background-color: #3b82f6"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 44%;">
+                <div style="height: 44.0%; background-color: #8b5cf6;" class="w-full border-t border-slate-900/30" title="Dravin: 44w"></div><div style="height: 38.0%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 38w"></div><div style="height: 18.0%; background-color: #f59e0b;" class="w-full border-t border-slate-900/30" title="Eusacles: 18w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Pierre pulled the three ancient scrolls deeper into his..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                28
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b008')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-7')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 29: THE FIRST-DAY INTERN</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">181 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">132w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#10b981"></span><span class="truncate text-slate-300">Alfie</span></span><strong class="font-mono text-slate-100 flex-shrink-0">19w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f59e0b"></span><span class="truncate text-slate-300">Eusacles</span></span><strong class="font-mono text-slate-100 flex-shrink-0">16w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f87171"></span><span class="truncate text-slate-300">Nancy (Guard)</span></span><strong class="font-mono text-slate-100 flex-shrink-0">14w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#8 · 25w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 46%; background-color: #f59e0b"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 79%;">
+                <div style="height: 72.9%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 132w"></div><div style="height: 10.5%; background-color: #10b981;" class="w-full border-t border-slate-900/30" title="Alfie: 19w"></div><div style="height: 8.8%; background-color: #f59e0b;" class="w-full border-t border-slate-900/30" title="Eusacles: 16w"></div><div style="height: 7.7%; background-color: #f87171;" class="w-full border-t border-slate-900/30" title="Nancy: 14w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;About the same chance that the Fates have a sense of h..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                29
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b013')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-8')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 30: THE TEMPERED GLASS CASE</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">89 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">43w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#10b981"></span><span class="truncate text-slate-300">Alfie</span></span><strong class="font-mono text-slate-100 flex-shrink-0">19w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#8b5cf6"></span><span class="truncate text-slate-300">Prof. Edward Dravin</span></span><strong class="font-mono text-slate-100 flex-shrink-0">19w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f59e0b"></span><span class="truncate text-slate-300">Eusacles</span></span><strong class="font-mono text-slate-100 flex-shrink-0">8w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#13 · 33w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 61%; background-color: #f59e0b"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 39%;">
+                <div style="height: 48.3%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 43w"></div><div style="height: 21.3%; background-color: #10b981;" class="w-full border-t border-slate-900/30" title="Alfie: 19w"></div><div style="height: 21.3%; background-color: #8b5cf6;" class="w-full border-t border-slate-900/30" title="Dravin: 19w"></div><div style="height: 9.0%; background-color: #f59e0b;" class="w-full border-t border-slate-900/30" title="Eusacles: 8w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Four guards on this floor,&quot; Eusacles whispered, leanin..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                30
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b014')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-9')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 31: THE SEAM OF THE STOLEN WEAVE</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">76 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#8b5cf6"></span><span class="truncate text-slate-300">Prof. Edward Dravin</span></span><strong class="font-mono text-slate-100 flex-shrink-0">28w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#10b981"></span><span class="truncate text-slate-300">Alfie</span></span><strong class="font-mono text-slate-100 flex-shrink-0">27w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#f59e0b"></span><span class="truncate text-slate-300">Eusacles</span></span><strong class="font-mono text-slate-100 flex-shrink-0">21w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#14 · 39w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 72%; background-color: #3b82f6"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 33%;">
+                <div style="height: 36.8%; background-color: #8b5cf6;" class="w-full border-t border-slate-900/30" title="Dravin: 28w"></div><div style="height: 35.5%; background-color: #10b981;" class="w-full border-t border-slate-900/30" title="Alfie: 27w"></div><div style="height: 27.6%; background-color: #f59e0b;" class="w-full border-t border-slate-900/30" title="Eusacles: 21w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Alfie peeked out from Pierre's breast pocket, his tiny ..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                31
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b015')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('chapter-10')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                <div class="font-bold text-amber-400 text-[11px] mb-1">Ch 32: THE RALEIGH GETAWAY</div><div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">75 words</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#3b82f6"></span><span class="truncate text-slate-300">Pierre</span></span><strong class="font-mono text-slate-100 flex-shrink-0">53w</strong></div><div class="flex justify-between items-center text-[10px] gap-2 py-0.5"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:#10b981"></span><span class="truncate text-slate-300">Alfie</span></span><strong class="font-mono text-slate-100 flex-shrink-0">22w</strong></div>
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#15 · 29w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 54%; background-color: #8b5cf6"></div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: 33%;">
+                <div style="height: 70.7%; background-color: #3b82f6;" class="w-full border-t border-slate-900/30" title="Pierre: 53w"></div><div style="height: 29.3%; background-color: #10b981;" class="w-full border-t border-slate-900/30" title="Alfie: 22w"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Dravin nodded thoughtfully, inspecting the promotional ..."</p>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                32
+            </span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b016')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#16 · 24w</span>
+        </div>
+    </div>
+    
+                    </div>
+
+                    <!-- View 2: Cumulative Dialogue Words Line Chart (SVG, Zero Horizontal Scroll) -->
+                    <div id="chartViewLine" class="w-full hidden">
+                        
+    <div class="w-full space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+            <span>Cumulative Dialogue Volume</span>
+            <span class="text-[10px] text-amber-400 font-mono">Session Total: 1,113 spoken words</span>
+        </div>
+        <div class="bg-slate-950/60 rounded-xl p-2.5 border border-slate-800">
+            <svg viewBox="0 0 500 145" class="w-full h-auto" style="overflow: visible;">
+                <defs>
+                    <linearGradient id="totGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <!-- Grid Lines -->
+                <line x1="25" y1="120.0" x2="475" y2="120.0" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                <line x1="25" y1="67.5" x2="475" y2="67.5" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                <line x1="25" y1="15.0" x2="475" y2="15.0" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                <path d="M 25.0,120.0 L 70.0,98.4 L 115.0,82.6 L 160.0,76.2 L 205.0,67.5 L 250.0,64.2 L 295.0,54.7 L 340.0,37.6 L 385.0,29.2 L 430.0,22.1 L 475.0,15.0 L 475.0,120.0 L 25.0,120.0 Z" fill="url(#totGrad)" opacity="0.18" /><path d="M 25.0,120.0 L 70.0,98.4 L 115.0,82.6 L 160.0,76.2 L 205.0,67.5 L 250.0,64.2 L 295.0,54.7 L 340.0,37.6 L 385.0,29.2 L 430.0,22.1 L 475.0,15.0" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /><path d="M 25.0,120.0 L 70.0,114.6 L 115.0,108.7 L 160.0,106.0 L 205.0,103.2 L 250.0,101.2 L 295.0,97.6 L 340.0,85.2 L 385.0,81.1 L 430.0,81.1 L 475.0,76.1" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.85" /><path d="M 25.0,120.0 L 70.0,114.3 L 115.0,107.6 L 160.0,104.9 L 205.0,102.5 L 250.0,102.5 L 295.0,98.3 L 340.0,98.3 L 385.0,96.5 L 430.0,93.9 L 475.0,93.9" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.85" /><path d="M 25.0,120.0 L 70.0,112.5 L 115.0,109.4 L 160.0,108.4 L 205.0,106.6 L 250.0,106.6 L 295.0,104.9 L 340.0,103.4 L 385.0,102.6 L 430.0,100.7 L 475.0,100.7" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.85" /><path d="M 25.0,120.0 L 70.0,116.9 L 115.0,116.9 L 160.0,116.9 L 205.0,116.9 L 250.0,115.6 L 295.0,115.6 L 340.0,113.8 L 385.0,112.0 L 430.0,109.4 L 475.0,107.4" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.85" /><path d="M 25.0,120.0 L 70.0,120.0 L 115.0,120.0 L 160.0,120.0 L 205.0,118.3 L 250.0,118.3 L 295.0,118.3 L 340.0,117.0 L 385.0,117.0 L 430.0,117.0 L 475.0,117.0" fill="none" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.85" />
+                <circle cx="70.0" cy="98.4" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="115.0" cy="82.6" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="160.0" cy="76.2" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="205.0" cy="67.5" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="250.0" cy="64.2" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="295.0" cy="54.7" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="340.0" cy="37.6" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="385.0" cy="29.2" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="430.0" cy="22.1" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" /><circle cx="475.0" cy="15.0" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" />
+                <text x="25.0" y="139" font-size="9" fill="#64748b" text-anchor="middle" font-family="monospace">Start</text><text x="160.0" y="139" font-size="9" fill="#64748b" text-anchor="middle" font-family="monospace">Ch 3</text><text x="295.0" y="139" font-size="9" fill="#64748b" text-anchor="middle" font-family="monospace">Ch 6</text><text x="430.0" y="139" font-size="9" fill="#64748b" text-anchor="middle" font-family="monospace">Ch 9</text><text x="475.0" y="139" font-size="9" fill="#64748b" text-anchor="middle" font-family="monospace">Ch 10</text>
+            </svg>
+            <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2 text-[10px] text-slate-400 border-t border-slate-800/80 mt-1">
+                <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-amber-400 rounded"></span><strong class="text-amber-300">Total</strong></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-blue-500 rounded"></span><span>Pierre</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-purple-500 rounded"></span><span>Dravin</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-yellow-400 rounded"></span><span>Eusacles</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-emerald-500 rounded"></span><span>Alfie</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-rose-400 rounded"></span><span>Named NPCs</span></span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 44%; background-color: #3b82f6"></div>
+        </div>
+    </div>
+    
+                    </div>
+
+                    <!-- View 3: Campaign Whole Comparison (Sessions 1-3) -->
+                    <div id="chartViewCampaign" class="w-full hidden">
+                        
+    <div class="w-full space-y-2.5">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+            <span>Campaign Totals (Sessions 1–3)</span>
+            <span class="text-[10px] text-amber-400 font-mono">9,263 Total Words · 2,472 Spoken (26.7%)</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+            
+        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 1</span>
+                <span class="text-[10px] font-mono text-slate-400">4,141w</span>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;The Greek tablet,&quot; Pierre murmured, his pulse quickeni..."</p>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">732 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">17.7% Dialogue</div>
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 17.7%;"></div>
+            </div>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b017')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#17 · 42w</span>
+        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 2</span>
+                <span class="text-[10px] font-mono text-slate-400">2,772w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 78%; background-color: #8b5cf6"></div>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">1,062 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">38.3% Dialogue</div>
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 38.3%;"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Because the grammar makes no sense to modern historian..."</p>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b020')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#20 · 11w</span>
+        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 3</span>
+                <span class="text-[10px] font-mono text-slate-400">2,350w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 20%; background-color: #f59e0b"></div>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">678 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">28.9% Dialogue</div>
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 28.9%;"></div>
             </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;There it is,&quot; Eusacles breathed, stepping closer to th..."</p>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b023')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#23 · 28w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 52%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;The stone matches the piece in my rucksack,&quot; Pierre wh..."</p>
+        </div>
+        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 space-y-1.5">
+            <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Campaign Cumulative Voice Share</div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6;"></span>
+                <span class="font-medium text-slate-300 truncate">Pierre</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">1,440w <span class="text-[9px] text-amber-400/90">(58.3%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b024')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#24 · 29w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 54%; background-color: #8b5cf6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;And the display case is wired with magnetic contact se..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6;"></span>
+                <span class="font-medium text-slate-300 truncate">Dravin</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">801w <span class="text-[9px] text-amber-400/90">(32.4%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b027')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#27 · 19w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 35%; background-color: #f59e0b"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Closing time,&quot; Eusacles muttered, drifting toward the ..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b;"></span>
+                <span class="font-medium text-slate-300 truncate">Eusacles</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">614w <span class="text-[9px] text-amber-400/90">(24.8%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b029')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f87171">Thomas (Guard)</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#29 · 18w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 33%; background-color: #f87171"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Excuse me, folks,&quot; Thomas announced, clapping his hand..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #10b981;"></span>
+                <span class="font-medium text-slate-300 truncate">Alfie</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">337w <span class="text-[9px] text-amber-400/90">(13.6%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b030')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#30 · 26w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 48%; background-color: #8b5cf6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Of course, officer,&quot; Dravin replied smoothly, taking a..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Theodore</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">277w <span class="text-[9px] text-amber-400/90">(11.2%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b031')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#31 · 30w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 56%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Alfie shifted in Pierre's pocket, whispering directly i..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Naomi</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">221w <span class="text-[9px] text-amber-400/90">(8.9%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b033')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #10b981">Alfie</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#33 · 14w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 26%; background-color: #10b981"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;I've got an idea,&quot; Alfie's voice echoed faintly throug..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Fates</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">48w <span class="text-[9px] text-amber-400/90">(1.9%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b039')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#39 · 12w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 22%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Pierre, now!&quot; Dravin hissed, grabbing the guard's drop..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Mike</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">24w <span class="text-[9px] text-amber-400/90">(1.0%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b041')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#41 · 9w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 17%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Got it!&quot; Pierre breathed, clutching the blue plastic k..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Thomas</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">18w <span class="text-[9px] text-amber-400/90">(0.7%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b045')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#45 · 18w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 33%; background-color: #f59e0b"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;What kind of American museum has this much security fo..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Rosa</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">14w <span class="text-[9px] text-amber-400/90">(0.6%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b046')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#46 · 21w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 39%; background-color: #8b5cf6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;When an artifact radiates anomalous energy,&quot; Dravin wh..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Nancy</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">14w <span class="text-[9px] text-amber-400/90">(0.6%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b047')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#47 · 32w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 59%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Alfie dropped down from the ceiling conduit, landing ne..."</p>
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Clerk</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">13w <span class="text-[9px] text-amber-400/90">(0.5%)</span></span>
         </div>
         
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b049')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#49 · 6w</span>
             </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 15%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Magnificent,&quot; Pierre grinned, pocketing the card."</p>
         </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b051')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#51 · 23w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 43%; background-color: #8b5cf6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;We have roughly ten minutes before Thomas calls the fr..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b053')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#53 · 9w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 17%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;How do I look?&quot; Pierre asked, adjusting his lapels."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b054')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#54 · 16w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 30%; background-color: #f59e0b"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Like a French intern who got lost on his way to the ca..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b055')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#55 · 27w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 50%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Dravin handed Pierre the wheeled archival tray. &quot;Walk w..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b056')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #10b981">Alfie</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#56 · 19w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 35%; background-color: #10b981"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Watch out for wet floors, mate,&quot; Alfie added, burrowin..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b058')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f87171">Nancy (Guard)</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#58 · 14w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 26%; background-color: #f87171"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Hey! What are you doing in the galleries after hours?&quot;..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b059')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#59 · 44w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 81%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Pierre offered a polite, apologetic bow, gesturing smoo..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b060')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#60 · 40w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 74%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Nancy blinked, looking between Pierre's earnest smile, ..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b061')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#61 · 12w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 22%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Merci beaucoup, Madame!&quot; Pierre beamed, continuing dow..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b063')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#63 · 17w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 31%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Alfie popped his driftwood head out of Pierre's coat. &quot;..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b067')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #10b981">Alfie</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#67 · 19w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 35%; background-color: #10b981"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Curator said this was dug up in Thessaly,&quot; Alfie whisp..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b069')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#69 · 26w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 48%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;It was never lost,&quot; Pierre realized with quiet awe. &quot;I..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b070')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#70 · 19w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 35%; background-color: #8b5cf6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;And now we mend the weave,&quot; Dravin said softly as he s..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b072')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#72 · 8w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 15%; background-color: #f59e0b"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Let's see what the truth says,&quot; Eusacles nodded."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b078')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #8b5cf6">Prof. Edward Dravin</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#78 · 28w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 52%; background-color: #8b5cf6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;The resonance is stabilizing,&quot; Dravin observed, watchi..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b079')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #f59e0b">Eusacles</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#79 · 21w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 39%; background-color: #f59e0b"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;And we've got ourselves our first real Fragment,&quot; Eusa..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b080')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #10b981">Alfie</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#80 · 27w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 50%; background-color: #10b981"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Alfie swung his needle rapier in a celebratory circle. ..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b083')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#83 · 22w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 41%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;Pierre, you were magnificent in that lab coat,&quot; Dravin..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b084')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #3b82f6">Pierre</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#84 · 31w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 57%; background-color: #3b82f6"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"&quot;I must admit, Monsieur,&quot; Pierre laughed, taking off hi..."</p>
-        </div>
-        
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('uneraseable_s03_b085')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: #10b981">Alfie</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#85 · 22w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: 41%; background-color: #10b981"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"Alfie perched proudly on the rearview mirror, swinging ..."</p>
-        </div>
-        
+    </div>
+    
                     </div>
                 </div>
 
@@ -2611,6 +2289,36 @@ ightarrow$ *Sheep*.</p>
             const modalSaveBtn = document.getElementById('modalSaveBtn');
             const modalDeleteBtn = document.getElementById('modalDeleteBtn');
             const categoryPills = Array.from(document.querySelectorAll('.category-pill'));
+
+            // Smooth Scroll Helper
+            window.scrollToAnchor = function(id) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            };
+
+            // Chart Tab Switcher
+            window.switchChartTab = function(tabName) {
+                const histView = document.getElementById('chartViewHistogram');
+                const lineView = document.getElementById('chartViewLine');
+                const campView = document.getElementById('chartViewCampaign');
+                
+                const histBtn = document.getElementById('chartTabHistogramBtn');
+                const lineBtn = document.getElementById('chartTabLineBtn');
+                const campBtn = document.getElementById('chartTabCampaignBtn');
+                
+                const activeClass = "px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1";
+                const inactiveClass = "px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1";
+                
+                if (histView) histView.classList.toggle('hidden', tabName !== 'histogram');
+                if (lineView) lineView.classList.toggle('hidden', tabName !== 'line');
+                if (campView) campView.classList.toggle('hidden', tabName !== 'campaign');
+                
+                if (histBtn) histBtn.className = (tabName === 'histogram') ? activeClass : inactiveClass;
+                if (lineBtn) lineBtn.className = (tabName === 'line') ? activeClass : inactiveClass;
+                if (campBtn) campBtn.className = (tabName === 'campaign') ? activeClass : inactiveClass;
+            };
 
             function refreshMarkers() {
                 const count = Object.keys(critiques).length;

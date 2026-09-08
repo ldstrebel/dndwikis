@@ -1,7 +1,10 @@
 """Builds interactive Schema 2.0 HTML EBooks with:
-1. Clean sticky top bar (removed top Submit PR button; Submit PR lives in review footer)
-2. All stats unified inside the collapsible top drawer
-3. Mobile-first 2-column Dialogue Momentum cards with horizontal volume bars & large tap targets
+1. Clean sticky top bar (uncluttered, PR submission in review footer)
+2. Consolidated Top Stats Drawer with Single-View Dialogue Momentum Visualizer (Zero Horizontal Scroll):
+   - Tab 1: Stacked Chapter Histogram (Interval bars with PC/NPC breakdown and tap-to-jump)
+   - Tab 2: Cumulative Dialogue Words Line Chart (SVG Velocity curve)
+   - Tab 3: Campaign Whole Analytics (Sessions 1-3 Comparison & Totals)
+3. Elevated Mobile Critique Modal (Shifted above keyboard, top passage navigation arrows, dynamic scroll)
 4. Natural prose flow for narration blocks
 5. Named NPCs in red (#f87171), clean PC names, fast scene jump pills
 """
@@ -25,13 +28,310 @@ PC_COLORS = {
 }
 NPC_COLOR = "#f87171"        # Low-intensity red for all NPCs on dark mode
 
-def get_speaker_color(speaker_id: str, char_info: dict) -> str:
+def get_speaker_color(speaker_id: str, char_info: dict = None) -> str:
     sp_id = speaker_id.lower().strip()
     if sp_id in PC_COLORS:
         return PC_COLORS[sp_id]
-    if char_info.get("type") == "narrator":
+    if char_info and char_info.get("type") == "narrator":
         return "#94a3b8"
     return NPC_COLOR
+
+# Preload all manifests for cross-session campaign analytics
+all_manifests = {}
+for s in [1, 2, 3]:
+    p = MANIFEST_DIR / f"s{s}-manifest-v2.json"
+    if p.exists():
+        try:
+            all_manifests[s] = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
+def build_session_histogram_html(chapters: list, characters: dict) -> str:
+    """Builds a responsive, zero-horizontal-scroll stacked bar histogram across all chapters."""
+    scene_data = []
+    for sc_idx, ch in enumerate(chapters, 1):
+        ch_title = ch["title"]
+        m = re.search(r"CHAPTER\s*(\d+)", ch_title, re.IGNORECASE)
+        ch_num = m.group(1) if m else str(sc_idx)
+        clean_title = re.sub(r"^CHAPTER\s*\d+\s*:\s*", "", ch_title, flags=re.IGNORECASE)
+
+        speaker_words = {}
+        for b in ch["blocks"]:
+            sp = b.get("speakerId", "narrator").lower().strip()
+            if sp != "narrator":
+                w = len(b.get("text", "").split())
+                speaker_words[sp] = speaker_words.get(sp, 0) + w
+
+        tot_dialogue = sum(speaker_words.values())
+        scene_data.append({
+            "chapter_num": ch_num,
+            "title": clean_title,
+            "anchor_id": f"chapter-{sc_idx}",
+            "total_words": tot_dialogue,
+            "speakers": speaker_words
+        })
+
+    max_words = max((sd["total_words"] for sd in scene_data), default=1)
+    if max_words == 0:
+        max_words = 1
+
+    bars_html = []
+    for sd in scene_data:
+        tot = sd["total_words"]
+        bar_height_pct = max(6, round((tot / max_words) * 100)) if tot > 0 else 4
+        
+        # Tooltip breakdown rows
+        tooltip_rows = []
+        for sp, w in sorted(sd["speakers"].items(), key=lambda x: -x[1]):
+            c_info = characters.get(sp, {})
+            sp_name = c_info.get("name", sp.title())
+            sp_col = get_speaker_color(sp, c_info)
+            tooltip_rows.append(
+                f'<div class="flex justify-between items-center text-[10px] gap-2 py-0.5">'
+                f'<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:{sp_col}"></span><span class="truncate text-slate-300">{sp_name}</span></span>'
+                f'<strong class="font-mono text-slate-100 flex-shrink-0">{w}w</strong>'
+                f'</div>'
+            )
+
+        tooltip_content = (
+            f'<div class="font-bold text-amber-400 text-[11px] mb-1">Ch {sd["chapter_num"]}: {sd["title"]}</div>'
+            f'<div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">{tot} words</strong></div>'
+            + (''.join(tooltip_rows) if tooltip_rows else '<div class="text-[10px] text-slate-500 italic">Pure narrative prose (0 spoken)</div>')
+        )
+
+        segments_html = []
+        if tot > 0:
+            for sp, w in sorted(sd["speakers"].items(), key=lambda x: -x[1]):
+                c_info = characters.get(sp, {})
+                sp_col = get_speaker_color(sp, c_info)
+                seg_h = round((w / tot) * 100, 1)
+                segments_html.append(f'<div style="height: {seg_h}%; background-color: {sp_col};" class="w-full border-t border-slate-900/30" title="{sp.title()}: {w}w"></div>')
+        else:
+            segments_html.append('<div class="w-full h-full bg-slate-800/40"></div>')
+
+        bar_item = f"""
+        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('{sd['anchor_id']}')">
+            <!-- Floating Tooltip on Hover/Focus -->
+            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
+                {tooltip_content}
+                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
+                    <span>↳</span> <span>Tap to jump to scene</span>
+                </div>
+            </div>
+
+            <!-- Stacked Bar Column -->
+            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: {bar_height_pct}%;">
+                {''.join(segments_html)}
+            </div>
+
+            <!-- Chapter Number Label on X-Axis -->
+            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
+                {sd['chapter_num']}
+            </span>
+        </div>
+        """
+        bars_html.append(bar_item)
+
+    return f"""
+    <div class="w-full space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+            <span>Peak Chapter: <strong class="text-amber-400 font-mono">{max_words} dialogue words</strong></span>
+            <span class="text-[10px] text-slate-500 font-mono">Chapters 1–{len(scene_data)} (Tap to jump)</span>
+        </div>
+        <div class="h-36 sm:h-40 w-full flex items-end gap-1 sm:gap-2 px-1 pt-3 pb-1 border-b border-slate-800 bg-slate-950/60 rounded-xl">
+            {''.join(bars_html)}
+        </div>
+    </div>
+    """
+
+def build_session_line_chart_svg(chapters: list) -> str:
+    """Builds a responsive SVG cumulative dialogue line chart."""
+    total_cum = [0]
+    pc_cum = {"pierre": [0], "dravin": [0], "eusacles": [0], "alfie": [0], "npcs": [0]}
+    
+    running_tot = 0
+    running_pc = {"pierre": 0, "dravin": 0, "eusacles": 0, "alfie": 0, "npcs": 0}
+
+    for ch in chapters:
+        for b in ch["blocks"]:
+            sp = b.get("speakerId", "narrator").lower().strip()
+            if sp != "narrator":
+                w = len(b.get("text", "").split())
+                running_tot += w
+                if sp in running_pc:
+                    running_pc[sp] += w
+                else:
+                    running_pc["npcs"] += w
+        total_cum.append(running_tot)
+        for k in pc_cum:
+            pc_cum[k].append(running_pc[k])
+
+    num_pts = len(total_cum)
+    max_cum = max(total_cum) if max(total_cum) > 0 else 1
+
+    svg_w, svg_h = 500, 145
+    pad_x, pad_top, pad_bot = 25, 15, 25
+    usable_w = svg_w - (pad_x * 2)
+    usable_h = svg_h - pad_top - pad_bot
+
+    def get_x(idx):
+        return pad_x + (idx / max(num_pts - 1, 1)) * usable_w
+
+    def get_y(val):
+        return pad_top + (1 - (val / max_cum)) * usable_h
+
+    def build_path(pts_list):
+        return " ".join([f"{'M' if i == 0 else 'L'} {get_x(i):.1f},{get_y(v):.1f}" for i, v in enumerate(pts_list)])
+
+    total_d = build_path(total_cum)
+    total_area_d = f"{total_d} L {get_x(num_pts-1):.1f},{get_y(0):.1f} L {get_x(0):.1f},{get_y(0):.1f} Z"
+
+    paths_html = []
+    # Area gradient under total curve
+    paths_html.append(f'<path d="{total_area_d}" fill="url(#totGrad)" opacity="0.18" />')
+    # Total dialogue line
+    paths_html.append(f'<path d="{total_d}" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />')
+
+    char_lines = [
+        ("pierre", "#3b82f6", "Pierre"),
+        ("dravin", "#8b5cf6", "Dravin"),
+        ("eusacles", "#f59e0b", "Eusacles"),
+        ("alfie", "#10b981", "Alfie"),
+        ("npcs", "#f87171", "NPCs")
+    ]
+
+    for key, col, name in char_lines:
+        if max(pc_cum[key]) > 0:
+            d = build_path(pc_cum[key])
+            paths_html.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.85" />')
+
+    # Data points on total line
+    dots_html = []
+    for i, v in enumerate(total_cum):
+        if i > 0:
+            cx, cy = get_x(i), get_y(v)
+            dots_html.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" />')
+
+    # X-axis markers
+    labels_html = []
+    for i in range(num_pts):
+        if i == 0 or i == (num_pts - 1) or i % 3 == 0:
+            lx = get_x(i)
+            labels_html.append(f'<text x="{lx:.1f}" y="{svg_h - 6}" font-size="9" fill="#64748b" text-anchor="middle" font-family="monospace">{"Start" if i == 0 else f"Ch {i}"}</text>')
+
+    return f"""
+    <div class="w-full space-y-1.5">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+            <span>Cumulative Dialogue Volume</span>
+            <span class="text-[10px] text-amber-400 font-mono">Session Total: {max_cum:,} spoken words</span>
+        </div>
+        <div class="bg-slate-950/60 rounded-xl p-2.5 border border-slate-800">
+            <svg viewBox="0 0 {svg_w} {svg_h}" class="w-full h-auto" style="overflow: visible;">
+                <defs>
+                    <linearGradient id="totGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <!-- Grid Lines -->
+                <line x1="{pad_x}" y1="{get_y(0)}" x2="{svg_w - pad_x}" y2="{get_y(0)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                <line x1="{pad_x}" y1="{get_y(max_cum/2)}" x2="{svg_w - pad_x}" y2="{get_y(max_cum/2)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                <line x1="{pad_x}" y1="{get_y(max_cum)}" x2="{svg_w - pad_x}" y2="{get_y(max_cum)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                {''.join(paths_html)}
+                {''.join(dots_html)}
+                {''.join(labels_html)}
+            </svg>
+            <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2 text-[10px] text-slate-400 border-t border-slate-800/80 mt-1">
+                <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-amber-400 rounded"></span><strong class="text-amber-300">Total</strong></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-blue-500 rounded"></span><span>Pierre</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-purple-500 rounded"></span><span>Dravin</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-yellow-400 rounded"></span><span>Eusacles</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-emerald-500 rounded"></span><span>Alfie</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-rose-400 rounded"></span><span>Named NPCs</span></span>
+            </div>
+        </div>
+    </div>
+    """
+
+def build_campaign_whole_html() -> str:
+    """Builds cross-session comparison across Sessions 1–3."""
+    s_stats = []
+    tot_camp_words = 0
+    tot_camp_spoken = 0
+    speaker_totals = {}
+
+    for s_num in [1, 2, 3]:
+        m = all_manifests.get(s_num, {})
+        st = m.get("stats", {})
+        wc = st.get("wordCount", 0)
+        dr = st.get("dialogueRatio", {})
+        spk = dr.get("spokenWords", 0)
+        pct = dr.get("spokenPct", 0)
+        tot_camp_words += wc
+        tot_camp_spoken += spk
+        s_stats.append({
+            "num": s_num,
+            "title": m.get("session", {}).get("title", f"Session {s_num}"),
+            "words": wc,
+            "spoken": spk,
+            "pct": pct
+        })
+        for sp in st.get("speakerDistribution", []):
+            sid = sp.get("id", "").lower().strip()
+            if sid != "narrator":
+                speaker_totals[sid] = speaker_totals.get(sid, 0) + sp.get("words", 0)
+
+    # Session summary cards
+    session_cards = ""
+    for ss in s_stats:
+        session_cards += f"""
+        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session {ss['num']}</span>
+                <span class="text-[10px] font-mono text-slate-400">{ss['words']:,}w</span>
+            </div>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">{ss['spoken']:,} <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">{ss['pct']}% Dialogue</div>
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: {ss['pct']}%;"></div>
+            </div>
+        </div>
+        """
+
+    # Whole Campaign Speaker Share
+    spk_chips = ""
+    for sid, words in sorted(speaker_totals.items(), key=lambda x: -x[1]):
+        pct = round((words / max(tot_camp_spoken, 1)) * 100, 1)
+        col = get_speaker_color(sid)
+        spk_chips += f"""
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {col};"></span>
+                <span class="font-medium text-slate-300 truncate">{sid.title()}</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">{words:,}w <span class="text-[9px] text-amber-400/90">({pct}%)</span></span>
+        </div>
+        """
+
+    camp_pct = round((tot_camp_spoken / max(tot_camp_words, 1)) * 100, 1)
+
+    return f"""
+    <div class="w-full space-y-2.5">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+            <span>Campaign Totals (Sessions 1–3)</span>
+            <span class="text-[10px] text-amber-400 font-mono">{tot_camp_words:,} Total Words · {tot_camp_spoken:,} Spoken ({camp_pct}%)</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+            {session_cards}
+        </div>
+        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 space-y-1.5">
+            <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Campaign Cumulative Voice Share</div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                {spk_chips}
+            </div>
+        </div>
+    </div>
+    """
 
 def generate_html_for_session(manifest_path: Path, output_path: Path):
     with open(manifest_path, "r", encoding="utf-8") as f:
@@ -146,41 +446,11 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         """
 
     # =========================================================================
-    # MOBILE-FIRST 2-COLUMN DIALOGUE MOMENTUM CARDS (Horizontal Volume Bars)
+    # SINGLE-VIEW DIALOGUE MOMENTUM CHARTS (No Horizontal Scroll)
     # =========================================================================
-    dialogue_blocks = [b for b in blocks if b.get("speakerId", "").lower() != "narrator"]
-    max_words = max((len(b.get("text", "").split()) for b in dialogue_blocks), default=50)
-    dialogue_cards_html = ""
-
-    for b in dialogue_blocks:
-        sp_id = b.get("speakerId", "").lower().strip()
-        b_id = b.get("id", "")
-        b_idx = b.get("index", 1)
-        text = b.get("text", "")
-        w_count = len(text.split())
-        sp_info = characters.get(sp_id, {"name": sp_id.title(), "type": "character"})
-        sp_name = sp_info.get("name", sp_id.title())
-        sp_color = get_speaker_color(sp_id, sp_info)
-        bar_pct = max(15, min(100, round((w_count / max(max_words, 1)) * 100)))
-        short_preview = text[:55].replace('"', '&quot;') + ("..." if len(text) > 55 else "")
-
-        dialogue_cards_html += f"""
-        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
-             onclick="document.getElementById('{b_id}')?.scrollIntoView({{behavior: 'smooth', block: 'center'}})">
-            <div class="flex items-center justify-between gap-1 mb-1">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {sp_color}"></span>
-                    <span class="text-[11px] font-bold truncate" style="color: {sp_color}">{sp_name}</span>
-                </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#{b_idx} · {w_count}w</span>
-            </div>
-            <!-- Horizontal Word Volume Bar -->
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
-                <div class="h-full rounded-full" style="width: {bar_pct}%; background-color: {sp_color}"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"{short_preview}"</p>
-        </div>
-        """
+    session_histogram_html = build_session_histogram_html(chapters, characters)
+    session_line_chart_svg = build_session_line_chart_svg(chapters)
+    campaign_whole_html = build_campaign_whole_html()
 
     # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
@@ -461,19 +731,43 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     </div>
                 </div>
 
-                <!-- 2-Column Mobile-Friendly Dialogue Momentum & Character Line Navigator -->
-                <div class="bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/60 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <div class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                            <span>📈</span>
-                            <span>Dialogue Momentum (Tap to Jump to Line)</span>
+                <!-- ========================================================= -->
+                <!-- SINGLE-SPOT DIALOGUE MOMENTUM & VELOCITY (Zero Horizontal Scroll) -->
+                <!-- ========================================================= -->
+                <div class="bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/60 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-sm">📈</span>
+                            <span class="text-xs font-bold text-amber-400">Dialogue Momentum & Velocity</span>
                         </div>
-                        <span class="text-[10px] text-slate-500 font-mono">{len(dialogue_blocks)} spoken turns</span>
+
+                        <!-- 3-Way Mode Switcher -->
+                        <div class="flex bg-slate-900 border border-slate-800 rounded-lg p-0.5" id="chartTabSwitcher">
+                            <button id="chartTabHistogramBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('histogram')">
+                                <span>📊</span> <span>Session Histogram</span>
+                            </button>
+                            <button id="chartTabLineBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('line')">
+                                <span>📈</span> <span>Line Velocity</span>
+                            </button>
+                            <button id="chartTabCampaignBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('campaign')">
+                                <span>🌐</span> <span>Campaign Whole</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- 2-Column Dense Grid with Horizontal Volume Bars & Touch Targets -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
-                        {dialogue_cards_html}
+                    <!-- View 1: Stacked Histogram by Chapter (Zero Horizontal Scroll) -->
+                    <div id="chartViewHistogram" class="w-full">
+                        {session_histogram_html}
+                    </div>
+
+                    <!-- View 2: Cumulative Dialogue Words Line Chart (SVG, Zero Horizontal Scroll) -->
+                    <div id="chartViewLine" class="w-full hidden">
+                        {session_line_chart_svg}
+                    </div>
+
+                    <!-- View 3: Campaign Whole Comparison (Sessions 1-3) -->
+                    <div id="chartViewCampaign" class="w-full hidden">
+                        {campaign_whole_html}
                     </div>
                 </div>
 
@@ -629,6 +923,36 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const modalSaveBtn = document.getElementById('modalSaveBtn');
             const modalDeleteBtn = document.getElementById('modalDeleteBtn');
             const categoryPills = Array.from(document.querySelectorAll('.category-pill'));
+
+            // Smooth Scroll Helper
+            window.scrollToAnchor = function(id) {{
+                const el = document.getElementById(id);
+                if (el) {{
+                    el.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+                }}
+            }};
+
+            // Chart Tab Switcher
+            window.switchChartTab = function(tabName) {{
+                const histView = document.getElementById('chartViewHistogram');
+                const lineView = document.getElementById('chartViewLine');
+                const campView = document.getElementById('chartViewCampaign');
+                
+                const histBtn = document.getElementById('chartTabHistogramBtn');
+                const lineBtn = document.getElementById('chartTabLineBtn');
+                const campBtn = document.getElementById('chartTabCampaignBtn');
+                
+                const activeClass = "px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1";
+                const inactiveClass = "px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1";
+                
+                if (histView) histView.classList.toggle('hidden', tabName !== 'histogram');
+                if (lineView) lineView.classList.toggle('hidden', tabName !== 'line');
+                if (campView) campView.classList.toggle('hidden', tabName !== 'campaign');
+                
+                if (histBtn) histBtn.className = (tabName === 'histogram') ? activeClass : inactiveClass;
+                if (lineBtn) lineBtn.className = (tabName === 'line') ? activeClass : inactiveClass;
+                if (campBtn) campBtn.className = (tabName === 'campaign') ? activeClass : inactiveClass;
+            }};
 
             function refreshMarkers() {{
                 const count = Object.keys(critiques).length;
