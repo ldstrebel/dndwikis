@@ -1394,30 +1394,23 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     pip.classList.toggle('hidden', !isComplete);
                 }}
 
-                // Update breadcrumb pips per chapter
+                // Update breadcrumb pips: Clean and hidden during first read, glowing green trail when completed
                 const breadcrumbs = document.querySelectorAll('#readingProgressBreadcrumbs [data-pct]');
                 breadcrumbs.forEach(dot => {{
                     const pct = parseFloat(dot.getAttribute('data-pct'));
-                    const isTraversed = isComplete || (maxDepth >= pct);
                     
-                    if (isTraversed) {{
-                        if (isComplete) {{
-                            // Finished: Exact interpolated Light Green -> Cyan Green color
-                            const col = getCompletionGradientColor(pct);
-                            dot.style.backgroundColor = col;
-                            dot.style.boxShadow = '0 0 4px ' + col;
-                            dot.style.opacity = '1';
-                        }} else {{
-                            // In-Progress: Exact interpolated Blue -> Sky -> Cyan color matching the bar at that point
-                            const col = getReadingGradientColor(pct);
-                            dot.style.backgroundColor = col;
-                            dot.style.boxShadow = '0 0 4px ' + col;
-                            dot.style.opacity = '0.95';
-                        }}
+                    if (isComplete) {{
+                        // Finished: Chapter pips glow in exact interpolated Light Green -> Cyan Green gradient
+                        const col = getCompletionGradientColor(pct);
+                        dot.style.backgroundColor = col;
+                        dot.style.boxShadow = '0 0 5px ' + col;
+                        dot.style.opacity = '1';
+                        dot.style.display = 'block';
                     }} else {{
-                        dot.style.backgroundColor = 'rgba(71, 85, 105, 0.45)';
+                        // In-Progress first read: Hidden for a sleek, clean reading bar
+                        dot.style.opacity = '0';
                         dot.style.boxShadow = 'none';
-                        dot.style.opacity = '0.35';
+                        dot.style.display = 'none';
                     }}
                 }});
 
