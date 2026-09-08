@@ -342,10 +342,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             pointer-events: auto;
         }}
         #critiqueBottomSheet {{
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+            transform: scale(0.96) translateY(-10px);
+            opacity: 0;
+            max-height: min(85vh, 85dvh);
         }}
         #critiqueModalOverlay.visible #critiqueBottomSheet {{
-            transform: translateY(0);
+            transform: scale(1) translateY(0);
+            opacity: 1;
         }}
 
         .custom-scrollbar::-webkit-scrollbar {{
@@ -523,22 +527,34 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     </div>
 
     <!-- ========================================================= -->
-    <!-- MOBILE BOTTOM SHEET & CRITIQUE MODAL -->
+    <!-- MOBILE CRITIQUE MODAL / PASSAGE EDITOR -->
     <!-- ========================================================= -->
-    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center opacity-0 pointer-events-none p-0 sm:p-4">
-        <div id="critiqueBottomSheet" class="w-full max-w-lg bg-slate-900 border-t sm:border border-slate-700 sm:rounded-2xl rounded-t-2xl p-5 shadow-2xl transform translate-y-full sm:translate-y-4 max-h-[90vh] flex flex-col">
-            <div class="w-12 h-1.5 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-                <div class="flex items-center gap-2">
-                    <span id="modalSpeakerPill" class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider font-mono"></span>
-                    <span id="modalBlockIndex" class="text-xs text-slate-400 font-mono"></span>
+    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto pt-5 sm:pt-4">
+        <div id="critiqueBottomSheet" class="w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[85vh] sm:max-h-[82vh]">
+            
+            <!-- Top Header with Speaker, Block ID, and Prev/Next Passage Navigation -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3 gap-2 flex-shrink-0">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span id="modalSpeakerPill" class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider font-mono truncate"></span>
+                    <span id="modalBlockIndex" class="text-xs text-slate-400 font-mono flex-shrink-0"></span>
                 </div>
-                <button id="modalCloseBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1">&times;</button>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <!-- Shifted Arrow Keys to Top for rapid passage jumping -->
+                    <button id="modalPrevBlockBtn" type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all" title="Previous passage">
+                        <span>◀</span> <span class="hidden xs:inline text-[11px]">Prev</span>
+                    </button>
+                    <button id="modalNextBlockBtn" type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all" title="Next passage">
+                        <span class="hidden xs:inline text-[11px]">Next</span> <span>▶</span>
+                    </button>
+                    <button id="modalCloseBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 ml-1 leading-none transition-colors" title="Close">&times;</button>
+                </div>
             </div>
-            <div class="overflow-y-auto space-y-4 pr-1 flex-1">
+
+            <!-- Scrollable Content Body (Expands & Scrolls Gracefully) -->
+            <div class="overflow-y-auto space-y-3.5 pr-1 flex-1 min-h-0 custom-scrollbar">
                 <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80">
-                    <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Target Passage:</div>
-                    <p id="modalPassageText" class="text-sm text-slate-200 italic leading-relaxed"></p>
+                    <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Target Passage:</div>
+                    <p id="modalPassageText" class="text-xs sm:text-sm text-slate-200 italic leading-relaxed max-h-28 overflow-y-auto custom-scrollbar"></p>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Category</label>
@@ -552,22 +568,23 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
                 <div>
                     <label for="critiqueTextInput" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Critique / Revision Directive</label>
-                    <textarea id="critiqueTextInput" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500" placeholder="E.g. Make this interaction sharper, emphasize the tension..."></textarea>
+                    <textarea id="critiqueTextInput" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500" placeholder="E.g. Make this interaction sharper, emphasize the tension..."></textarea>
                 </div>
                 <div>
                     <label for="suggestedRewriteInput" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Direct Suggested Rewrite <span class="text-slate-600 font-normal lowercase">(optional)</span></label>
-                    <textarea id="suggestedRewriteInput" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500" placeholder="Provide direct replacement line if desired..."></textarea>
+                    <textarea id="suggestedRewriteInput" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500" placeholder="Provide direct replacement line if desired..."></textarea>
                 </div>
             </div>
-            <div class="pt-3 mt-2 border-t border-slate-800 flex items-center justify-between gap-2">
-                <div class="flex gap-1.5">
-                    <button id="modalPrevBlockBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1"><span>◀</span> <span class="hidden sm:inline">Prev</span></button>
-                    <button id="modalNextBlockBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1"><span class="hidden sm:inline">Next</span> <span>▶</span></button>
-                </div>
-                <div class="flex gap-2">
-                    <button id="modalDeleteBtn" type="button" class="px-3 py-2 bg-rose-950/50 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded-lg text-xs font-bold transition-colors hidden">Delete</button>
-                    <button id="modalSaveBtn" type="button" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition-colors shadow-lg shadow-amber-500/20 flex items-center gap-1.5"><span>💾</span> <span>Save Critique</span></button>
-                </div>
+
+            <!-- Action Footer with Delete and Save Changes -->
+            <div class="pt-3 mt-2 border-t border-slate-800 flex items-center justify-between gap-2 flex-shrink-0">
+                <button id="modalDeleteBtn" type="button" class="px-3 py-2 bg-rose-950/50 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded-xl text-xs font-bold transition-colors hidden">
+                    🗑️ Delete Note
+                </button>
+                <div class="flex-1"></div>
+                <button id="modalSaveBtn" type="button" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5 active:scale-98">
+                    <span>💾</span> <span>Save Changes</span>
+                </button>
             </div>
         </div>
     </div>
@@ -700,10 +717,20 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     if (modalDeleteBtn) modalDeleteBtn.classList.add('hidden');
                 }}
 
-                if (modalPrevBlockBtn) modalPrevBlockBtn.disabled = (index === 0);
-                if (modalNextBlockBtn) modalNextBlockBtn.disabled = (index === blocks.length - 1);
+                if (modalPrevBlockBtn) {{
+                    modalPrevBlockBtn.disabled = (index === 0);
+                    modalPrevBlockBtn.style.opacity = (index === 0) ? "0.35" : "1";
+                    modalPrevBlockBtn.style.pointerEvents = (index === 0) ? "none" : "auto";
+                }}
+                if (modalNextBlockBtn) {{
+                    modalNextBlockBtn.disabled = (index === blocks.length - 1);
+                    modalNextBlockBtn.style.opacity = (index === blocks.length - 1) ? "0.35" : "1";
+                    modalNextBlockBtn.style.pointerEvents = (index === blocks.length - 1) ? "none" : "auto";
+                }}
                 if (modalOverlay) modalOverlay.classList.add('visible');
-                if (critiqueTextInput) critiqueTextInput.focus();
+                if (critiqueTextInput) {{
+                    setTimeout(() => critiqueTextInput.focus(), 50);
+                }}
             }}
 
             function closeModal() {{
@@ -724,6 +751,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             if (modalNextBlockBtn) modalNextBlockBtn.onclick = function() {{
                 if (activeBlockIndex < blocks.length - 1) openModalForBlock(activeBlockIndex + 1);
             }};
+
+            document.addEventListener('keydown', function(e) {{
+                if (!modalOverlay || !modalOverlay.classList.contains('visible')) return;
+                if (e.key === 'Escape') {{
+                    closeModal();
+                }} else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {{
+                    if (modalSaveBtn) modalSaveBtn.click();
+                }}
+            }});
 
             if (modalSaveBtn) modalSaveBtn.onclick = function() {{
                 const block = blocks[activeBlockIndex];
