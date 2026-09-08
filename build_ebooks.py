@@ -145,11 +145,8 @@ def build_session_histogram_html(chapters: list, characters: dict) -> str:
     """
 
 def build_session_line_chart_svg(chapters: list) -> str:
-    """Builds a responsive SVG cumulative dialogue line chart."""
-    total_cum = [0]
+    """Builds a responsive SVG cumulative dialogue line chart showing individual character trajectories."""
     pc_cum = {"pierre": [0], "dravin": [0], "eusacles": [0], "alfie": [0], "npcs": [0]}
-    
-    running_tot = 0
     running_pc = {"pierre": 0, "dravin": 0, "eusacles": 0, "alfie": 0, "npcs": 0}
 
     for ch in chapters:
@@ -157,17 +154,17 @@ def build_session_line_chart_svg(chapters: list) -> str:
             sp = b.get("speakerId", "narrator").lower().strip()
             if sp != "narrator":
                 w = len(b.get("text", "").split())
-                running_tot += w
                 if sp in running_pc:
                     running_pc[sp] += w
                 else:
                     running_pc["npcs"] += w
-        total_cum.append(running_tot)
         for k in pc_cum:
             pc_cum[k].append(running_pc[k])
 
-    num_pts = len(total_cum)
-    max_cum = max(total_cum) if max(total_cum) > 0 else 1
+    num_pts = len(pc_cum["pierre"])
+    max_char_val = max((max(pc_cum[k]) for k in pc_cum), default=1)
+    if max_char_val == 0:
+        max_char_val = 1
 
     svg_w, svg_h = 500, 145
     pad_x, pad_top, pad_bot = 25, 15, 25
@@ -178,39 +175,42 @@ def build_session_line_chart_svg(chapters: list) -> str:
         return pad_x + (idx / max(num_pts - 1, 1)) * usable_w
 
     def get_y(val):
-        return pad_top + (1 - (val / max_cum)) * usable_h
+        return pad_top + (1 - (val / max_char_val)) * usable_h
 
     def build_path(pts_list):
         return " ".join([f"{'M' if i == 0 else 'L'} {get_x(i):.1f},{get_y(v):.1f}" for i, v in enumerate(pts_list)])
-
-    total_d = build_path(total_cum)
-    total_area_d = f"{total_d} L {get_x(num_pts-1):.1f},{get_y(0):.1f} L {get_x(0):.1f},{get_y(0):.1f} Z"
-
-    paths_html = []
-    # Area gradient under total curve
-    paths_html.append(f'<path d="{total_area_d}" fill="url(#totGrad)" opacity="0.18" />')
-    # Total dialogue line
-    paths_html.append(f'<path d="{total_d}" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />')
 
     char_lines = [
         ("pierre", "#3b82f6", "Pierre"),
         ("dravin", "#8b5cf6", "Dravin"),
         ("eusacles", "#f59e0b", "Eusacles"),
         ("alfie", "#10b981", "Alfie"),
-        ("npcs", "#f87171", "NPCs")
+        ("npcs", "#f87171", "Named NPCs")
     ]
 
-    for key, col, name in char_lines:
-        if max(pc_cum[key]) > 0:
-            d = build_path(pc_cum[key])
-            paths_html.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.85" />')
-
-    # Data points on total line
+    paths_html = []
     dots_html = []
-    for i, v in enumerate(total_cum):
-        if i > 0:
-            cx, cy = get_x(i), get_y(v)
-            dots_html.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="3" fill="#f59e0b" stroke="#0f172a" stroke-width="1" />')
+    legend_items = []
+    leader_name = "Pierre"
+    leader_val = 0
+
+    for key, col, name in char_lines:
+        final_val = max(pc_cum[key])
+        if final_val > 0:
+            if final_val > leader_val:
+                leader_val = final_val
+                leader_name = name
+            d = build_path(pc_cum[key])
+            paths_html.append(f'<path d="{d}" fill="none" stroke="{col}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.95" />')
+            
+            for i, v in enumerate(pc_cum[key]):
+                if i > 0 and (i == num_pts - 1 or v != pc_cum[key][i-1]):
+                    cx, cy = get_x(i), get_y(v)
+                    dots_html.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="2.5" fill="{col}" stroke="#0f172a" stroke-width="1" />')
+
+            legend_items.append(
+                f'<span class="flex items-center gap-1"><span class="w-2.5 h-1 rounded" style="background-color: {col};"></span><span class="text-slate-300">{name}</span> <strong class="font-mono text-[9px] text-slate-400">({final_val}w)</strong></span>'
+            )
 
     # X-axis markers
     labels_html = []
@@ -222,32 +222,21 @@ def build_session_line_chart_svg(chapters: list) -> str:
     return f"""
     <div class="w-full space-y-1.5">
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-            <span>Cumulative Dialogue Volume</span>
-            <span class="text-[10px] text-amber-400 font-mono">Session Total: {max_cum:,} spoken words</span>
+            <span>Character Dialogue Progression</span>
+            <span class="text-[10px] text-amber-400 font-mono">Top Voice: {leader_name} ({leader_val:,}w)</span>
         </div>
         <div class="bg-slate-950/60 rounded-xl p-2.5 border border-slate-800">
             <svg viewBox="0 0 {svg_w} {svg_h}" class="w-full h-auto" style="overflow: visible;">
-                <defs>
-                    <linearGradient id="totGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
-                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
-                    </linearGradient>
-                </defs>
                 <!-- Grid Lines -->
                 <line x1="{pad_x}" y1="{get_y(0)}" x2="{svg_w - pad_x}" y2="{get_y(0)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
-                <line x1="{pad_x}" y1="{get_y(max_cum/2)}" x2="{svg_w - pad_x}" y2="{get_y(max_cum/2)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
-                <line x1="{pad_x}" y1="{get_y(max_cum)}" x2="{svg_w - pad_x}" y2="{get_y(max_cum)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                <line x1="{pad_x}" y1="{get_y(max_char_val/2)}" x2="{svg_w - pad_x}" y2="{get_y(max_char_val/2)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                <line x1="{pad_x}" y1="{get_y(max_char_val)}" x2="{svg_w - pad_x}" y2="{get_y(max_char_val)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
                 {''.join(paths_html)}
                 {''.join(dots_html)}
                 {''.join(labels_html)}
             </svg>
             <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2 text-[10px] text-slate-400 border-t border-slate-800/80 mt-1">
-                <span class="flex items-center gap-1"><span class="w-2.5 h-0.5 bg-amber-400 rounded"></span><strong class="text-amber-300">Total</strong></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-blue-500 rounded"></span><span>Pierre</span></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-purple-500 rounded"></span><span>Dravin</span></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-yellow-400 rounded"></span><span>Eusacles</span></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-emerald-500 rounded"></span><span>Alfie</span></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-0.5 bg-rose-400 rounded"></span><span>Named NPCs</span></span>
+                {''.join(legend_items)}
             </div>
         </div>
     </div>
