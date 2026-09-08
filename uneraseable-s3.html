@@ -94,7 +94,7 @@
         }
 
         /* ========================================================= */
-        /* COLOR THEMES (Light, Sepia, Dark) */
+        /* COMPREHENSIVE THEME SYSTEM (Light, Sepia, Dark) */
         /* ========================================================= */
         html.theme-light body {
             background-color: #f8fafc;
@@ -150,6 +150,47 @@
         html.theme-light #settingsModalCard p {
             color: #0f172a;
         }
+        html.theme-light .text-slate-400,
+        html.theme-light .text-slate-300,
+        html.theme-light .text-slate-200 {
+            color: #475569 !important;
+        }
+        html.theme-light .text-slate-500 {
+            color: #64748b !important;
+        }
+        html.theme-light .text-slate-100 {
+            color: #0f172a !important;
+        }
+        html.theme-light [class*="bg-slate-950"],
+        html.theme-light [class*="bg-slate-900"] {
+            background-color: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.theme-light .border-slate-800,
+        html.theme-light .border-slate-700 {
+            border-color: #e2e8f0 !important;
+        }
+        html.theme-light textarea,
+        html.theme-light input[type="text"] {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        html.theme-light textarea::placeholder,
+        html.theme-light input::placeholder {
+            color: #94a3b8 !important;
+        }
+        html.theme-light .category-pill:not(.active) {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #334155 !important;
+        }
+        html.theme-light .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9 !important;
+        }
+        html.theme-light .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1 !important;
+        }
 
         html.theme-sepia body {
             background-color: #f6f0e2;
@@ -158,6 +199,17 @@
         html.theme-sepia header {
             background-color: rgba(246, 240, 226, 0.95) !important;
             border-color: #e3d7bf !important;
+        }
+        html.theme-sepia header h1 {
+            color: #b45309 !important;
+        }
+        html.theme-sepia header p,
+        html.theme-sepia header a {
+            color: #786450 !important;
+        }
+        html.theme-sepia header a:hover {
+            color: #b45309 !important;
+            background-color: #ede3cb !important;
         }
         html.theme-sepia .story-block-narrator {
             color: #4a3d35 !important;
@@ -181,6 +233,47 @@
             background-color: #fdfbf7 !important;
             border-color: #ded1b8 !important;
             color: #2c221e !important;
+        }
+        html.theme-sepia .text-slate-400,
+        html.theme-sepia .text-slate-300,
+        html.theme-sepia .text-slate-200 {
+            color: #5c4b3c !important;
+        }
+        html.theme-sepia .text-slate-500 {
+            color: #7d6855 !important;
+        }
+        html.theme-sepia .text-slate-100 {
+            color: #2c221e !important;
+        }
+        html.theme-sepia [class*="bg-slate-950"],
+        html.theme-sepia [class*="bg-slate-900"] {
+            background-color: #ede3cb !important;
+            border-color: #ded1b8 !important;
+        }
+        html.theme-sepia .border-slate-800,
+        html.theme-sepia .border-slate-700 {
+            border-color: #ded1b8 !important;
+        }
+        html.theme-sepia textarea,
+        html.theme-sepia input[type="text"] {
+            background-color: #fffdf8 !important;
+            border-color: #d8c7a6 !important;
+            color: #2c221e !important;
+        }
+        html.theme-sepia textarea::placeholder,
+        html.theme-sepia input::placeholder {
+            color: #a08c76 !important;
+        }
+        html.theme-sepia .category-pill:not(.active) {
+            background-color: #ede3cb !important;
+            border-color: #d8c7a6 !important;
+            color: #4a3d35 !important;
+        }
+        html.theme-sepia .custom-scrollbar::-webkit-scrollbar-track {
+            background: #ede3cb !important;
+        }
+        html.theme-sepia .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d8c7a6 !important;
         }
 
         /* Overlay Transitions & Viewport Sizing */
