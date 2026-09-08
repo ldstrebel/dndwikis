@@ -2609,9 +2609,9 @@
             <!-- Scrollable Content Body -->
             <div class="overflow-y-auto space-y-3.5 pr-1 flex-1 min-h-0 custom-scrollbar">
                 
-                <!-- 1. STATS CHAPTER AT BEGINNING (Defaults to Collapsed, Darker Charcoal Gray Container) -->
-                <div class="bg-gray-950 border border-slate-700/80 rounded-xl overflow-hidden shadow-lg ring-1 ring-slate-800/60">
-                    <button id="toggleStatsAccordionBtn" type="button" class="w-full p-3 flex items-center justify-between text-left bg-gray-950 hover:bg-gray-900/90 transition-colors select-none">
+                <!-- 1. STATS ACCORDION (Clean Elevated Dark Panel) -->
+                <div class="bg-slate-950/80 border border-slate-800 rounded-xl overflow-hidden shadow-md">
+                    <button id="toggleStatsAccordionBtn" type="button" class="w-full p-3 flex items-center justify-between text-left bg-slate-950/90 hover:bg-slate-900 transition-colors select-none">
                         <div class="flex items-center gap-2.5">
                             <span class="px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/40 text-[10px] font-mono font-bold">Stats</span>
                             <div>
@@ -2624,9 +2624,8 @@
                         </span>
                     </button>
 
-                    <!-- Collapsed Body Content (Darker Gray Background) -->
-                    <!-- Collapsed Body Content (Darker Gray Background) -->
-                    <div id="statsAccordionBody" class="hidden p-3.5 pt-2 border-t border-slate-800/90 bg-gray-950/70 space-y-3">
+                    <!-- Collapsed Body Content -->
+                    <div id="statsAccordionBody" class="hidden p-3 sm:p-3.5 pt-2 border-t border-slate-800/80 bg-slate-950/60 space-y-3">
                         
                         <!-- Mode Switcher for Analytics Tabs -->
                         <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
@@ -2645,8 +2644,8 @@
                         <div id="chartViewSession" class="w-full space-y-3">
                             
                             <!-- 1. READERSHIP & ENGAGEMENT TELEMETRY (Leads the Session Stats) -->
-                            <div class="bg-slate-900/90 p-3.5 sm:p-4 rounded-xl border border-slate-800 shadow-md space-y-3">
-                                <div class="flex items-center justify-between text-xs font-semibold text-slate-300 border-b border-slate-800/80 pb-2.5">
+                            <div class="bg-slate-900/80 p-3.5 sm:p-4 rounded-xl border border-slate-800/90 shadow-sm space-y-3">
+                                <div class="flex items-center justify-between text-xs font-semibold text-slate-300 border-b border-slate-800/80 pb-2">
                                     <span class="flex items-center gap-2 text-indigo-300">
                                         <span class="p-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs">👥</span>
                                         <span class="uppercase tracking-wider font-mono text-[11px] font-bold text-slate-200">Reader Engagement & Progress Journey</span>
@@ -2658,41 +2657,45 @@
 
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
                                     <!-- 1. Unique Readers -->
-                                    <div class="bg-slate-950/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
+                                    <div class="bg-slate-950/70 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
                                         <div class="text-[10px] text-slate-400 font-medium truncate">Unique Readers</div>
                                         <div class="text-base sm:text-xl font-bold font-mono text-indigo-300 mt-0.5" id="telemetryUniqueReaders">--</div>
                                         <div class="text-[9px] text-slate-500 font-mono">distinct devices</div>
                                     </div>
 
                                     <!-- 2. Total Opens -->
-                                    <div class="bg-slate-950/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
+                                    <div class="bg-slate-950/70 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
                                         <div class="text-[10px] text-slate-400 font-medium truncate">Total Opens</div>
                                         <div class="text-base sm:text-xl font-bold font-mono text-amber-400 mt-0.5" id="telemetryTotalOpens">--</div>
                                         <div class="text-[9px] text-slate-500 font-mono">sessions</div>
                                     </div>
 
-                                    <!-- 3. Completion Rate -->
-                                    <div class="bg-slate-950/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
+                                    <!-- 3. Finisher Circle (2-Column Component: #/# | X%) -->
+                                    <div class="bg-slate-950/70 p-2 sm:p-2.5 rounded-lg border border-slate-800/80 flex flex-col justify-between">
                                         <div class="text-[10px] text-slate-400 font-medium truncate">Finisher Circle</div>
-                                        <div class="text-base sm:text-xl font-bold font-mono text-emerald-400 mt-0.5" id="telemetryCompletionRate">--%</div>
+                                        <div class="flex items-baseline justify-center gap-1.5 mt-0.5 font-mono">
+                                            <span class="text-xs font-bold text-slate-300" id="telemetryFinisherRatio">0/0</span>
+                                            <span class="text-slate-600 text-xs font-normal">|</span>
+                                            <span class="text-base sm:text-lg font-bold text-emerald-400" id="telemetryCompletionRate">0%</span>
+                                        </div>
                                         <div class="text-[9px] text-slate-500 font-mono">100% completed</div>
                                     </div>
 
-                                    <!-- 4. Avg Incomplete Drop-off Depth -->
-                                    <div class="bg-slate-950/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
+                                    <!-- 4. Avg Drop-off Depth (subtext: attention span) -->
+                                    <div class="bg-slate-950/70 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
                                         <div class="text-[10px] text-slate-400 font-medium truncate">Avg Drop-Off</div>
                                         <div class="text-base sm:text-xl font-bold font-mono text-rose-300 mt-0.5" id="telemetryDropoffDepth">--%</div>
-                                        <div class="text-[9px] text-slate-500 font-mono">unfinished reads</div>
+                                        <div class="text-[9px] text-slate-500 font-mono">attention span</div>
                                     </div>
                                 </div>
 
                                 <!-- Comparative Reading Journey & Benchmark Visualizer -->
-                                <div class="bg-slate-950/90 p-3 rounded-xl border border-slate-800/80 space-y-2.5">
+                                <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 space-y-2.5">
                                     <div class="flex items-center justify-between text-[11px] text-slate-300 font-medium">
                                         <span class="flex items-center gap-1.5 font-mono text-[10px] uppercase text-slate-400 tracking-wider">
                                             <span>📍</span> <span>Your Position vs. Reader Base</span>
                                         </span>
-                                        <span id="telemetryJourneyTargetText" class="text-[10px] font-mono text-emerald-400 font-semibold">Target: 100% Finisher Circle</span>
+                                        <span class="text-[10px] font-mono text-slate-500">Milestone Track</span>
                                     </div>
 
                                     <!-- Milestone Visual Track -->
@@ -2722,7 +2725,7 @@
                                     </div>
 
                                     <!-- Motivational Guidance Subtext -->
-                                    <div id="telemetryMotivationBanner" class="text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2">
+                                    <div id="telemetryMotivationBanner" class="text-[11px] p-2.5 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2">
                                         <span>✨</span> <span id="telemetryMotivationText">Scroll to read and advance your progress toward the 100% finisher mark!</span>
                                     </div>
                                 </div>
@@ -2732,7 +2735,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                                 
                                 <!-- Column 1: Overall Story Length & Reading Overview -->
-                                <div class="bg-slate-900/90 p-3 sm:p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-2.5 shadow-sm">
+                                <div class="bg-slate-900/80 p-3 sm:p-3.5 rounded-xl border border-slate-800/90 flex flex-col justify-between gap-2.5 shadow-sm">
                                     <div>
                                         <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
                                             <span class="uppercase font-mono text-[10px] tracking-wider text-slate-400">📖 Story Length & Reading Time</span>
@@ -2742,15 +2745,14 @@
                                             4,141 <span class="text-xs text-slate-400 font-sans font-normal">words</span>
                                         </div>
                                         <div class="text-xs text-slate-400 mt-0.5">
-                                            ~16.6 Book Pages (at ~250 wpp)
+                                            ~16.6 Book Pages
                                         </div>
                                     </div>
 
                                     <!-- Sensory Palette Registers -->
                                     <div class="pt-2 border-t border-slate-800">
-                                        <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex justify-between">
-                                            <span>Sensory Registers</span>
-                                            <span class="text-amber-400 font-mono">(5/5)</span>
+                                        <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                                            Sensory Palette Registers
                                         </div>
                                         <div class="grid grid-cols-2 gap-1.5">
                                             <span class="px-2 py-1 rounded bg-slate-950/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
@@ -2770,7 +2772,7 @@
                                 </div>
 
                                 <!-- Column 2: Dialogue Ratio Connected to Spoken Line Share -->
-                                <div class="bg-slate-900/90 p-3 sm:p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-2.5 shadow-sm">
+                                <div class="bg-slate-900/80 p-3 sm:p-3.5 rounded-xl border border-slate-800/90 flex flex-col justify-between gap-2.5 shadow-sm">
                                     <div>
                                         <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
                                             <span class="uppercase font-mono text-[10px] tracking-wider text-amber-400">🎙️ Dialogue Ratio & Voice Share</span>
@@ -4086,10 +4088,73 @@
             }
             saveTelemetryState();
 
+            const MOTIVATIONAL_BLURBS = {
+                completed: [
+                    "🏆 <strong>Session {s} Complete!</strong> You finished the entire story and earned your badge in the Finisher Circle ({c}/{r} readers).",
+                    "✨ <strong>Legend Achieved!</strong> You journeyed through all chapters of Session {s} to the final word. The Margin remembers your tale.",
+                    "📜 <strong>Chronicle Mastered!</strong> You are one of the dedicated readers ({c}/{r}) who experienced every scene.",
+                    "🎉 <strong>100% Story Mastery:</strong> You've reached the concluding sentinel of Session {s}! Feel free to review passages or leave critique notes."
+                ],
+                climax: [
+                    "⚡ <strong>The Climax Unfolds:</strong> You're at {depth}% depth—the major plot threads are converging! Push through to the finale.",
+                    "🔥 <strong>Final Stretch!</strong> Just ~{remaining}% left to finish Session {s}! The resolution is within reach.",
+                    "⚔️ <strong>The Crucible:</strong> You've navigated the deepest revelations. Don't stop now—join the Finisher Circle!",
+                    "🌟 <strong>Almost at the Summit:</strong> At {depth}%, you're in the final scenes of this session. Cross the finish line!"
+                ],
+                pastDropoff: [
+                    "🚀 <strong>High Momentum:</strong> You're at {depth}% depth, cruising past the average drop-off point (~{dropoff}%). Keep turning pages!",
+                    "🛡️ <strong>Beyond the Drop-Off:</strong> Most readers pause around ~{dropoff}%, but you're at {depth}%. The story is heating up!",
+                    "🔮 <strong>Timeline Unbroken:</strong> You've outlasted the ~{dropoff}% threshold. You're well on your way to 100% completion!",
+                    "🔥 <strong>Unstoppable Pace:</strong> You've surged past the ~{dropoff}% mark. Dive into the next scene to reach the finale!"
+                ],
+                approaching: [
+                    "🧭 <strong>Deep in the Weave:</strong> You're at {depth}% depth. Read past the ~{dropoff}% marker to unlock the major story turns!",
+                    "📖 <strong>The Mystery Deepens:</strong> You're at {depth}%. Push forward to discover what lies beyond the next chapter!",
+                    "🎲 <strong>Roll for Persistence:</strong> You're at {depth}%. The turning point of Session {s} is just ahead!",
+                    "⏳ <strong>Building Momentum:</strong> At {depth}%, the character interactions are hitting their stride. Keep scrolling!"
+                ],
+                early: [
+                    "🌿 <strong>Stepping into The Margin:</strong> You're at {depth}% depth. Settle in and follow the dialogue!",
+                    "🗝️ <strong>The Portal Opens:</strong> You've begun Session {s}. Follow the party's journey as the plot takes shape.",
+                    "✨ <strong>The Adventure Begins:</strong> Scroll through the passages to build your reading progress and unlock the lore.",
+                    "🗺️ <strong>Charting New Ground:</strong> You've started reading Session {s}. Keep scrolling to advance your track!"
+                ],
+                initial: [
+                    "📖 <strong>Begin your reading journey:</strong> Scroll through the story blocks below to build your progress and join the Finisher Circle!",
+                    "✨ <strong>Welcome to Session {s}:</strong> Start scrolling to track your reading depth against the readership base."
+                ]
+            };
+
+            function getMotivationalBlurb(depth, avgDropoff, isCompleted, cCount, rCount, sNum) {
+                let pool = [];
+                if (isCompleted) {
+                    pool = MOTIVATIONAL_BLURBS.completed;
+                } else if (depth >= 75) {
+                    pool = MOTIVATIONAL_BLURBS.climax;
+                } else if (depth > 0 && depth >= avgDropoff && avgDropoff > 0) {
+                    pool = MOTIVATIONAL_BLURBS.pastDropoff;
+                } else if (depth >= 30) {
+                    pool = MOTIVATIONAL_BLURBS.approaching;
+                } else if (depth > 0) {
+                    pool = MOTIVATIONAL_BLURBS.early;
+                } else {
+                    pool = MOTIVATIONAL_BLURBS.initial;
+                }
+                const idx = (depth + sNum + rCount) % pool.length;
+                return pool[idx]
+                    .replaceAll('{depth}', depth)
+                    .replaceAll('{dropoff}', avgDropoff || 45)
+                    .replaceAll('{remaining}', Math.max(1, 100 - depth))
+                    .replaceAll('{c}', cCount)
+                    .replaceAll('{r}', rCount)
+                    .replaceAll('{s}', sNum);
+            }
+
             function updateTelemetryUI() {
                 const uniqueEl = document.getElementById('telemetryUniqueReaders');
                 const opensEl = document.getElementById('telemetryTotalOpens');
                 const compEl = document.getElementById('telemetryCompletionRate');
+                const finisherRatioEl = document.getElementById('telemetryFinisherRatio');
                 const dropoffEl = document.getElementById('telemetryDropoffDepth');
                 const statusEl = document.getElementById('telemetryPersonalStatus');
                 
@@ -4100,7 +4165,6 @@
                 const userPinText = document.getElementById('telemetryUserPinText');
                 const motivationBanner = document.getElementById('telemetryMotivationBanner');
                 const motivationText = document.getElementById('telemetryMotivationText');
-                const targetText = document.getElementById('telemetryJourneyTargetText');
 
                 const rCount = Math.max(1, globalTelemetry.readers);
                 const oCount = Math.max(1, globalTelemetry.opens);
@@ -4115,6 +4179,7 @@
 
                 if (uniqueEl) uniqueEl.textContent = globalTelemetry.readers.toLocaleString();
                 if (opensEl) opensEl.textContent = globalTelemetry.opens.toLocaleString();
+                if (finisherRatioEl) finisherRatioEl.textContent = cCount + '/' + rCount;
                 if (compEl) compEl.textContent = compPct + '%';
                 if (dropoffEl) {
                     if (incCount > 0) {
@@ -4147,24 +4212,15 @@
                     }
                 }
 
-                if (targetText) {
-                    targetText.textContent = compPct + '% Finisher Rate (' + cCount + '/' + rCount + ' readers)';
-                }
-
-                // Motivational Guidance Banner
+                // Motivational Guidance Banner via rich blurb library
                 if (motivationText && motivationBanner) {
+                    motivationText.innerHTML = getMotivationalBlurb(myDepth, avgDropoffPct, isCompleted, cCount, rCount, 1);
                     if (isCompleted) {
                         motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 leading-normal flex items-center gap-2 shadow-inner";
-                        motivationText.innerHTML = '<strong>🏆 Book Completed!</strong> You are part of the ' + compPct + '% finisher circle (' + cCount + '/' + rCount + ' readers).';
                     } else if (myDepth > 0 && myDepth >= avgDropoffPct && avgDropoffPct > 0) {
                         motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-amber-950/60 border border-amber-800 text-amber-200 leading-normal flex items-center gap-2 shadow-inner";
-                        motivationText.innerHTML = '<strong>🔥 Great Momentum!</strong> You are at <strong>' + myDepth + '% depth</strong>, past the average drop-off point (~' + avgDropoffPct + '%). Push forward to finish!';
-                    } else if (myDepth > 0) {
-                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2";
-                        motivationText.innerHTML = '<strong>📖 Keep Reading:</strong> You are at ' + myDepth + '% depth. Read past the ~' + (avgDropoffPct || 45) + '% mark to join the ' + compPct + '% finisher circle!';
                     } else {
                         motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2";
-                        motivationText.textContent = 'Scroll through the story to advance your reading progress toward the 100% completion goal.';
                     }
                 }
 
