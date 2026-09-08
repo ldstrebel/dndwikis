@@ -3626,13 +3626,20 @@
                     pip.classList.toggle('hidden', !isFinishedBefore);
                 }
 
-                // Update glowing emerald breadcrumb milestones
+                // Update breadcrumb milestones matching the active gradient (Cyan in-progress -> Emerald on completion)
+                const isCompleted = (isFinishedBefore || progress >= 95);
                 const breadcrumbs = document.querySelectorAll('#readingProgressBreadcrumbs [data-pct]');
                 breadcrumbs.forEach(dot => {
                     const pct = parseInt(dot.getAttribute('data-pct'), 10);
-                    const isTraversed = (isFinishedBefore && pct <= 100) || (maxDepth >= pct);
+                    const isTraversed = (isCompleted && pct <= 100) || (maxDepth >= pct);
                     if (isTraversed) {
-                        dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.95)] transition-all duration-300 scale-110";
+                        if (isCompleted) {
+                            // Finished: Glowing Emerald matching completion gradient & pip
+                            dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.95)] transition-all duration-300 scale-110";
+                        } else {
+                            // In-Progress: Matches the initial blue-sky-cyan reading gradient
+                            dot.className = "w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_6px_rgba(103,232,249,0.95)] transition-all duration-300 scale-110";
+                        }
                     } else {
                         dot.className = "w-1 h-1 rounded-full bg-slate-800/80 transition-all duration-300";
                     }
