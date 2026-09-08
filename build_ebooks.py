@@ -1,12 +1,12 @@
 """Builds interactive Schema 2.0 HTML EBooks with:
-1. Clean sticky top bar (uncluttered, PR submission in review footer)
-2. Consolidated Top Stats Drawer with Single-View Dialogue Momentum Visualizer (Zero Horizontal Scroll):
-   - Tab 1: Stacked Chapter Histogram (Interval bars with PC/NPC breakdown and tap-to-jump)
-   - Tab 2: Cumulative Dialogue Words Line Chart (SVG Velocity curve)
-   - Tab 3: Campaign to Date Analytics (Current Session & Before: S1 for S1, S1-S2 for S2, S1-S3 for S3)
-3. Elevated Mobile Critique Modal (Shifted above keyboard, top passage navigation arrows, dynamic scroll)
-4. Natural prose flow for narration blocks
-5. Named NPCs in red (#f87171), clean PC names, fast scene jump pills
+1. Clean sticky top bar with "Chapters" button (replaces "Hide Stats")
+2. Chapters Drawer with Vertical Chapter List (Y-Axis) & Stacked Horizontal Speaker Bars (X-Axis):
+   - Each chapter displays chapter number, title, read time, and stacked horizontal bar of speakers (PC colors + red named NPCs)
+   - Tapping any chapter row scrolls smoothly to that scene in the story
+3. Secondary analytics (Character velocity line chart, KPIs, Campaign to date)
+4. Elevated Mobile Critique Modal (Shifted above keyboard, top passage navigation arrows, dynamic scroll)
+5. Natural prose flow for narration blocks
+6. Named NPCs in red (#f87171), clean PC names, fast scene jump pills
 """
 
 import json
@@ -46,14 +46,16 @@ for s in [1, 2, 3]:
         except Exception:
             pass
 
-def build_session_histogram_html(chapters: list, characters: dict) -> str:
-    """Builds a responsive, zero-horizontal-scroll stacked bar histogram across all chapters."""
-    scene_data = []
-    for sc_idx, ch in enumerate(chapters, 1):
+def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
+    """Builds a vertical chapter list (Y-Axis) with stacked horizontal speaker bars (X-Axis)."""
+    max_dialogue = 1
+    chapter_data = []
+
+    for idx, ch in enumerate(chapters, 1):
         ch_title = ch["title"]
-        m = re.search(r"CHAPTER\s*(\d+)", ch_title, re.IGNORECASE)
-        ch_num = m.group(1) if m else str(sc_idx)
         clean_title = re.sub(r"^CHAPTER\s*\d+\s*:\s*", "", ch_title, flags=re.IGNORECASE)
+        m = re.search(r"CHAPTER\s*(\d+)", ch_title, re.IGNORECASE)
+        ch_num = m.group(1) if m else str(idx)
 
         speaker_words = {}
         for b in ch["blocks"]:
@@ -63,83 +65,88 @@ def build_session_histogram_html(chapters: list, characters: dict) -> str:
                 speaker_words[sp] = speaker_words.get(sp, 0) + w
 
         tot_dialogue = sum(speaker_words.values())
-        scene_data.append({
-            "chapter_num": ch_num,
-            "title": clean_title,
-            "anchor_id": f"chapter-{sc_idx}",
-            "total_words": tot_dialogue,
-            "speakers": speaker_words
+        if tot_dialogue > max_dialogue:
+            max_dialogue = tot_dialogue
+
+        chapter_data.append({
+            "idx": idx,
+            "num": ch_num,
+            "clean_title": clean_title,
+            "full_title": ch_title,
+            "total_words": ch["word_count"],
+            "read_mins": max(1, round(ch["word_count"] / 250)),
+            "dialogue_words": tot_dialogue,
+            "speakers": speaker_words,
+            "anchor_id": f"chapter-{idx}"
         })
 
-    max_words = max((sd["total_words"] for sd in scene_data), default=1)
-    if max_words == 0:
-        max_words = 1
+    rows_html = []
+    for cd in chapter_data:
+        tot_d = cd["dialogue_words"]
+        bar_fill_pct = max(12, round((tot_d / max_dialogue) * 100)) if tot_d > 0 else 0
 
-    bars_html = []
-    for sd in scene_data:
-        tot = sd["total_words"]
-        bar_height_pct = max(6, round((tot / max_words) * 100)) if tot > 0 else 4
-        
-        # Tooltip breakdown rows
-        tooltip_rows = []
-        for sp, w in sorted(sd["speakers"].items(), key=lambda x: -x[1]):
-            c_info = characters.get(sp, {})
-            sp_name = c_info.get("name", sp.title())
-            sp_col = get_speaker_color(sp, c_info)
-            tooltip_rows.append(
-                f'<div class="flex justify-between items-center text-[10px] gap-2 py-0.5">'
-                f'<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color:{sp_col}"></span><span class="truncate text-slate-300">{sp_name}</span></span>'
-                f'<strong class="font-mono text-slate-100 flex-shrink-0">{w}w</strong>'
-                f'</div>'
-            )
-
-        tooltip_content = (
-            f'<div class="font-bold text-amber-400 text-[11px] mb-1">Ch {sd["chapter_num"]}: {sd["title"]}</div>'
-            f'<div class="text-[10px] text-slate-400 mb-1 border-b border-slate-700/60 pb-1">Total Dialogue: <strong class="text-slate-200 font-mono">{tot} words</strong></div>'
-            + (''.join(tooltip_rows) if tooltip_rows else '<div class="text-[10px] text-slate-500 italic">Pure narrative prose (0 spoken)</div>')
-        )
-
-        segments_html = []
-        if tot > 0:
-            for sp, w in sorted(sd["speakers"].items(), key=lambda x: -x[1]):
+        # Stacked horizontal bar segments
+        segments = []
+        speaker_legend_mini = []
+        if tot_d > 0:
+            for sp, w in sorted(cd["speakers"].items(), key=lambda x: -x[1]):
                 c_info = characters.get(sp, {})
-                sp_col = get_speaker_color(sp, c_info)
-                seg_h = round((w / tot) * 100, 1)
-                segments_html.append(f'<div style="height: {seg_h}%; background-color: {sp_col};" class="w-full border-t border-slate-900/30" title="{sp.title()}: {w}w"></div>')
+                sp_name = c_info.get("name", sp.title())
+                col = get_speaker_color(sp, c_info)
+                seg_pct = round((w / tot_d) * 100, 1)
+                segments.append(
+                    f'<div style="width: {seg_pct}%; background-color: {col};" class="h-full border-r border-slate-900/40" title="{sp_name}: {w}w ({seg_pct}%)"></div>'
+                )
+                speaker_legend_mini.append(
+                    f'<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: {col}"></span><span class="text-slate-300">{sp_name}</span> <strong class="font-mono text-slate-400 text-[9px]">{w}w</strong></span>'
+                )
         else:
-            segments_html.append('<div class="w-full h-full bg-slate-800/40"></div>')
+            segments.append('<div class="w-full h-full bg-slate-800/40" title="Narrative prose only"></div>')
 
-        bar_item = f"""
-        <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer select-none" onclick="scrollToAnchor('{sd['anchor_id']}')">
-            <!-- Floating Tooltip on Hover/Focus -->
-            <div class="absolute bottom-full mb-2 hidden group-hover:block group-active:block z-30 bg-slate-900/95 border border-slate-700 p-2.5 rounded-xl shadow-2xl pointer-events-none min-w-[170px] whitespace-normal backdrop-blur-md -translate-x-1/2 left-1/2">
-                {tooltip_content}
-                <div class="text-[9px] text-amber-500 mt-1.5 font-semibold flex items-center gap-1">
-                    <span>↳</span> <span>Tap to jump to scene</span>
+        row_item = f"""
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+             onclick="scrollToAnchor('{cd['anchor_id']}'); toggleChapters();">
+            
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        Ch {cd['num']}
+                    </span>
+                    <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
+                        {cd['clean_title']}
+                    </h4>
                 </div>
+                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">
+                    ~{cd['read_mins']}m · {cd['total_words']:,}w
+                </span>
             </div>
 
-            <!-- Stacked Bar Column -->
-            <div class="w-full max-w-[26px] rounded-t overflow-hidden flex flex-col-reverse shadow-md transition-all group-hover:scale-y-105 group-hover:brightness-125 border-t border-x border-slate-700/50" style="height: {bar_height_pct}%;">
-                {''.join(segments_html)}
+            <!-- X-Axis Stacked Dialogue Bar -->
+            <div class="flex items-center gap-2 pt-0.5">
+                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                    <div class="h-full flex rounded-full overflow-hidden" style="width: {bar_fill_pct}%;">
+                        {''.join(segments)}
+                    </div>
+                </div>
+                <span class="text-[10px] font-mono { 'text-amber-400 font-bold' if tot_d > 0 else 'text-slate-500 italic' } w-20 text-right flex-shrink-0">
+                    { f"{tot_d}w spoken" if tot_d > 0 else "Prose only" }
+                </span>
             </div>
 
-            <!-- Chapter Number Label on X-Axis -->
-            <span class="text-[10px] sm:text-[11px] font-mono text-slate-400 mt-1.5 group-hover:text-amber-400 group-hover:font-bold transition-colors">
-                {sd['chapter_num']}
-            </span>
+            <!-- Mini Speaker Breakdown -->
+            { f'<div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60">{"".join(speaker_legend_mini)}</div>' if speaker_legend_mini else '' }
         </div>
         """
-        bars_html.append(bar_item)
+        rows_html.append(row_item)
 
     return f"""
-    <div class="w-full space-y-1.5">
-        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-            <span>Peak Chapter: <strong class="text-amber-400 font-mono">{max_words} dialogue words</strong></span>
-            <span class="text-[10px] text-slate-500 font-mono">Chapters 1–{len(scene_data)} (Tap to jump)</span>
+    <div class="space-y-2">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1 mb-1">
+            <span>Chapter Index (Y-Axis)</span>
+            <span class="text-[10px] text-slate-500 font-mono">X-Axis: Speaker Share (Tap row to jump)</span>
         </div>
-        <div class="h-36 sm:h-40 w-full flex items-end gap-1 sm:gap-2 px-1 pt-3 pb-1 border-b border-slate-800 bg-slate-950/60 rounded-xl">
-            {''.join(bars_html)}
+        <div class="space-y-2 max-h-[65vh] overflow-y-auto pr-1 custom-scrollbar">
+            {''.join(rows_html)}
         </div>
     </div>
     """
@@ -222,7 +229,7 @@ def build_session_line_chart_svg(chapters: list) -> str:
     return f"""
     <div class="w-full space-y-1.5">
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-            <span>Character Dialogue Progression</span>
+            <span>Character Dialogue Velocity</span>
             <span class="text-[10px] text-amber-400 font-mono">Top Voice: {leader_name} ({leader_val:,}w)</span>
         </div>
         <div class="bg-slate-950/60 rounded-xl p-2.5 border border-slate-800">
@@ -270,7 +277,6 @@ def build_campaign_whole_html(current_session_num: int) -> str:
             if sid != "narrator":
                 speaker_totals[sid] = speaker_totals.get(sid, 0) + sp.get("words", 0)
 
-    # Grid columns based on number of sessions to date
     cols_class = "grid-cols-1" if current_session_num == 1 else ("grid-cols-2" if current_session_num == 2 else "grid-cols-3")
     session_cards = ""
     for ss in s_stats:
@@ -288,7 +294,6 @@ def build_campaign_whole_html(current_session_num: int) -> str:
         </div>
         """
 
-    # Cumulative Speaker Share to date
     spk_chips = ""
     for sid, words in sorted(speaker_totals.items(), key=lambda x: -x[1]):
         pct = round((words / max(tot_camp_spoken, 1)) * 100, 1)
@@ -437,9 +442,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         """
 
     # =========================================================================
-    # SINGLE-VIEW DIALOGUE MOMENTUM CHARTS (No Horizontal Scroll)
+    # CHAPTERS & ANALYTICS DRAWER HTML
     # =========================================================================
-    session_histogram_html = build_session_histogram_html(chapters, characters)
+    vertical_chapters_html = build_vertical_chapters_html(chapters, characters)
     session_line_chart_svg = build_session_line_chart_svg(chapters)
     campaign_whole_html = build_campaign_whole_html(session_num)
     camp_tab_label = "Campaign (S1)" if session_num == 1 else f"Campaign (S1–S{session_num})"
@@ -592,7 +597,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             display: inline-flex;
         }}
 
-        #sessionStatsSection.collapsed {{
+        #sessionChaptersSection.collapsed {{
             display: none !important;
         }}
 
@@ -630,7 +635,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
 
-    <!-- STICKY TOP APP BAR (Clean & Uncluttered) -->
+    <!-- STICKY TOP APP BAR (Clean & Content-Focused) -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-2.5">
         <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
@@ -644,11 +649,11 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
             </div>
 
-            <!-- Header Controls: Stats Toggle & Mode Switcher -->
+            <!-- Header Controls: Chapters Button & Reading Mode Switcher -->
             <div class="flex items-center gap-2 flex-shrink-0">
-                <button id="toggleStatsBtn" type="button" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center gap-1.5 transition-all" title="Toggle session diagnostics drawer">
-                    <span>📊</span>
-                    <span id="toggleStatsBtnLabel">Hide Stats</span>
+                <button id="toggleChaptersBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
+                    <span>📑</span>
+                    <span id="toggleChaptersBtnLabel">Chapters</span>
                 </button>
 
                 <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5" title="Switch reading mode">
@@ -667,79 +672,42 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     <div class="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
 
         <!-- ========================================================= -->
-        <!-- CONSOLIDATED TOP STATS DRAWER (All Diagnostics In One Place) -->
+        <!-- CHAPTERS & DIALOGUE BREAKDOWN DRAWER (Vertical Y-Axis List & Stacked X-Axis Bars) -->
         <!-- ========================================================= -->
-        <section id="sessionStatsSection" class="mb-8">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-sm space-y-4">
+        <section id="sessionChaptersSection" class="mb-8">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-sm space-y-4">
                 
                 <!-- Drawer Header -->
                 <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                     <div class="flex items-center gap-2">
-                        <span class="text-lg">📊</span>
-                        <h2 class="text-sm font-bold tracking-wider uppercase text-amber-400">Session {session_num} Metrics & Diagnostics</h2>
+                        <span class="text-lg">📑</span>
+                        <div>
+                            <h2 class="text-sm font-bold tracking-wider uppercase text-amber-400">Chapters & Dialogue Breakdown</h2>
+                            <p class="text-[11px] text-slate-400 font-mono">Session {session_num} · {len(chapters)} Chapters · {word_count:,} words (~{read_mins}m)</p>
+                        </div>
                     </div>
-                    <button id="minimizeStatsBtn" type="button" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
-                        <span>Hide Stats ▲</span>
+                    <button id="closeChaptersDrawerBtn" type="button" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-lg border border-slate-700 transition-colors">
+                        <span>Close ▲</span>
                     </button>
                 </div>
 
-                <!-- Single-Row Unified Metric Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                        <div class="text-[11px] text-slate-400 font-medium">Story Length & Read Time</div>
-                        <div class="text-lg font-bold text-slate-100 mt-0.5 font-mono">{word_count:,} <span class="text-xs text-slate-500 font-normal">words</span></div>
-                        <div class="text-[11px] text-emerald-400 mt-0.5">~{book_pages} Book Pages · {read_mins}m Read</div>
-                    </div>
-
-                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                        <div class="text-[11px] text-slate-400 font-medium">Dialogue Ratio</div>
-                        <div class="text-lg font-bold text-amber-400 mt-0.5 font-mono">{spoken_pct}% <span class="text-xs text-slate-500 font-normal">spoken</span></div>
-                        <div class="text-[11px] text-slate-400 mt-0.5">{narrative_pct}% Narrative Prose</div>
-                    </div>
-
-                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                        <div class="text-[11px] text-slate-400 font-medium mb-1.5">Sensory Palette ({sensory.get("registersCovered", 5)}/5 Registers)</div>
-                        <div class="flex flex-wrap gap-1">
-                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👁️ Visual: <strong class="text-amber-400">{sensory.get("visual", 30)}</strong></span>
-                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👂 Audio: <strong class="text-sky-400">{sensory.get("auditory", 15)}</strong></span>
-                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">✋ Tactile: <strong class="text-emerald-400">{sensory.get("tactile", 20)}</strong></span>
-                            <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">⚡ Ambient: <strong class="text-amber-300">{sensory.get("atmospheric", 15)}</strong></span>
-                        </div>
-                    </div>
+                <!-- Vertical Chapter List with Stacked Horizontal Dialogue Bars -->
+                <div class="w-full">
+                    {vertical_chapters_html}
                 </div>
 
-                <!-- Spoken Character & NPC Line Share -->
-                <div class="space-y-2 bg-slate-950/40 p-3.5 rounded-xl border border-slate-800/60">
-                    <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-1">
-                        <span>🎙️ Spoken Line Share ({total_spoken_words:,} spoken words across {len(spoken_speakers)} active voices)</span>
-                    </div>
-
-                    <div class="h-2.5 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
-                        {prog_bar_segments}
-                    </div>
-
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-                        {speaker_chips}
-                    </div>
-                </div>
-
-                <!-- ========================================================= -->
-                <!-- SINGLE-SPOT DIALOGUE MOMENTUM & VELOCITY (Zero Horizontal Scroll) -->
-                <!-- ========================================================= -->
-                <div class="bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/60 space-y-3">
-                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-sm">📈</span>
-                            <span class="text-xs font-bold text-amber-400">Dialogue Momentum & Velocity</span>
-                        </div>
-
-                        <!-- 3-Way Mode Switcher -->
-                        <div class="flex bg-slate-900 border border-slate-800 rounded-lg p-0.5" id="chartTabSwitcher">
-                            <button id="chartTabHistogramBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('histogram')">
-                                <span>📊</span> <span>Session Histogram</span>
+                <!-- Secondary Collapsible Analytics: Velocity Line Chart, KPIs & Campaign to Date -->
+                <div class="pt-3 border-t border-slate-800/80 space-y-3">
+                    
+                    <!-- Mode Switcher for Analytics Tabs -->
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">Analytics & Velocity</span>
+                        <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
+                            <button id="chartTabLineBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('line')">
+                                <span>📈</span> <span>Voice Velocity</span>
                             </button>
-                            <button id="chartTabLineBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('line')">
-                                <span>📈</span> <span>Line Velocity</span>
+                            <button id="chartTabStatsBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('stats')">
+                                <span>📊</span> <span>Session KPIs</span>
                             </button>
                             <button id="chartTabCampaignBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('campaign')">
                                 <span>🌐</span> <span>{camp_tab_label}</span>
@@ -747,20 +715,56 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         </div>
                     </div>
 
-                    <!-- View 1: Stacked Histogram by Chapter (Zero Horizontal Scroll) -->
-                    <div id="chartViewHistogram" class="w-full">
-                        {session_histogram_html}
+                    <!-- View 1: Character Velocity SVG Line Chart -->
+                    <div id="chartViewLine" class="w-full">
+                        {session_line_chart_svg}
                     </div>
 
-                    <!-- View 2: Cumulative Dialogue Words Line Chart (SVG, Zero Horizontal Scroll) -->
-                    <div id="chartViewLine" class="w-full hidden">
-                        {session_line_chart_svg}
+                    <!-- View 2: Unified KPIs & Sensory Palette -->
+                    <div id="chartViewStats" class="w-full hidden space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+                                <div class="text-[11px] text-slate-400 font-medium">Story Length & Read Time</div>
+                                <div class="text-lg font-bold text-slate-100 mt-0.5 font-mono">{word_count:,} <span class="text-xs text-slate-500 font-normal">words</span></div>
+                                <div class="text-[11px] text-emerald-400 mt-0.5">~{book_pages} Book Pages · {read_mins}m Read</div>
+                            </div>
+
+                            <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+                                <div class="text-[11px] text-slate-400 font-medium">Dialogue Ratio</div>
+                                <div class="text-lg font-bold text-amber-400 mt-0.5 font-mono">{spoken_pct}% <span class="text-xs text-slate-500 font-normal">spoken</span></div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">{narrative_pct}% Narrative Prose</div>
+                            </div>
+
+                            <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+                                <div class="text-[11px] text-slate-400 font-medium mb-1.5">Sensory Palette ({sensory.get("registersCovered", 5)}/5)</div>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👁️ <strong class="text-amber-400">{sensory.get("visual", 30)}</strong></span>
+                                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👂 <strong class="text-sky-400">{sensory.get("auditory", 15)}</strong></span>
+                                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">✋ <strong class="text-emerald-400">{sensory.get("tactile", 20)}</strong></span>
+                                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">⚡ <strong class="text-amber-300">{sensory.get("atmospheric", 15)}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Spoken Line Share Progress Bar & Legend -->
+                        <div class="space-y-2 bg-slate-950/40 p-3.5 rounded-xl border border-slate-800/60">
+                            <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-1">
+                                <span>🎙️ Spoken Line Share ({total_spoken_words:,} spoken words across {len(spoken_speakers)} active voices)</span>
+                            </div>
+                            <div class="h-2.5 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
+                                {prog_bar_segments}
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                                {speaker_chips}
+                            </div>
+                        </div>
                     </div>
 
                     <!-- View 3: Campaign Whole Comparison (Scoped to current session and before) -->
                     <div id="chartViewCampaign" class="w-full hidden">
                         {campaign_whole_html}
                     </div>
+
                 </div>
 
             </div>
@@ -893,10 +897,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             let selectedCategory = "tone";
             const blocks = Array.from(document.querySelectorAll('.story-block'));
 
-            const statsSection = document.getElementById('sessionStatsSection');
-            const toggleStatsBtn = document.getElementById('toggleStatsBtn');
-            const toggleStatsBtnLabel = document.getElementById('toggleStatsBtnLabel');
-            const minimizeStatsBtn = document.getElementById('minimizeStatsBtn');
+            const chaptersSection = document.getElementById('sessionChaptersSection');
+            const toggleChaptersBtn = document.getElementById('toggleChaptersBtn');
+            const closeChaptersDrawerBtn = document.getElementById('closeChaptersDrawerBtn');
             const modeReaderBtn = document.getElementById('modeReaderBtn');
             const modeCritiqueBtn = document.getElementById('modeCritiqueBtn');
             const footerExportBtn = document.getElementById('footerExportBtn');
@@ -924,25 +927,34 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
             }};
 
-            // Chart Tab Switcher
+            // Chapters Drawer Toggle
+            window.toggleChapters = function() {{
+                if (!chaptersSection) return;
+                chaptersSection.classList.toggle('collapsed');
+            }};
+
+            if (toggleChaptersBtn) toggleChaptersBtn.onclick = toggleChapters;
+            if (closeChaptersDrawerBtn) closeChaptersDrawerBtn.onclick = toggleChapters;
+
+            // Analytics Tab Switcher
             window.switchChartTab = function(tabName) {{
-                const histView = document.getElementById('chartViewHistogram');
                 const lineView = document.getElementById('chartViewLine');
+                const statsView = document.getElementById('chartViewStats');
                 const campView = document.getElementById('chartViewCampaign');
                 
-                const histBtn = document.getElementById('chartTabHistogramBtn');
                 const lineBtn = document.getElementById('chartTabLineBtn');
+                const statsBtn = document.getElementById('chartTabStatsBtn');
                 const campBtn = document.getElementById('chartTabCampaignBtn');
                 
                 const activeClass = "px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1";
                 const inactiveClass = "px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1";
                 
-                if (histView) histView.classList.toggle('hidden', tabName !== 'histogram');
                 if (lineView) lineView.classList.toggle('hidden', tabName !== 'line');
+                if (statsView) statsView.classList.toggle('hidden', tabName !== 'stats');
                 if (campView) campView.classList.toggle('hidden', tabName !== 'campaign');
                 
-                if (histBtn) histBtn.className = (tabName === 'histogram') ? activeClass : inactiveClass;
                 if (lineBtn) lineBtn.className = (tabName === 'line') ? activeClass : inactiveClass;
+                if (statsBtn) statsBtn.className = (tabName === 'stats') ? activeClass : inactiveClass;
                 if (campBtn) campBtn.className = (tabName === 'campaign') ? activeClass : inactiveClass;
             }};
 
@@ -962,17 +974,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     }}
                 }});
             }}
-
-            function toggleStats() {{
-                if (!statsSection) return;
-                const isCollapsed = statsSection.classList.toggle('collapsed');
-                if (toggleStatsBtnLabel) {{
-                    toggleStatsBtnLabel.textContent = isCollapsed ? "Show Stats" : "Hide Stats";
-                }}
-            }}
-
-            if (toggleStatsBtn) toggleStatsBtn.onclick = toggleStats;
-            if (minimizeStatsBtn) minimizeStatsBtn.onclick = toggleStats;
 
             if (modeReaderBtn && modeCritiqueBtn) {{
                 modeReaderBtn.onclick = function() {{
