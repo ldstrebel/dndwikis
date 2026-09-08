@@ -3301,6 +3301,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             refreshMarkers();
         }})();
     </script>
+    <!-- Lightweight Visitor & Navigation Tracker -->
+    <script src="traffic-tracker.js"></script>
 </body>
 </html>
 """

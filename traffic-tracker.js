@@ -124,13 +124,15 @@
             locString = `📍 ${geo.timezone}`;
         }
 
-        const visitorStatus = details.isNew ? `✨ *New Unique Reader*` : `🔁 *Repeat Reader*`;
+        const isSessionPage = pageUrl.includes('s1') || pageUrl.includes('s2') || pageUrl.includes('s3') || pageUrl.includes('session') || pageUrl.includes('ch') || pageUrl.includes('meryl') || pageUrl.includes('sigmar') || pageUrl.includes('vumbua');
+        const headerBadge = isSessionPage ? `📖 *D&D Wikis - Story Session Alert*` : `🎲 *D&D Wikis - Visitor Alert*`;
+        const visitorStatus = details.isNew ? `✨ *New Unique Reader*` : `🔁 *Active Reader Navigated*`;
         const totalCount = details.totalVisits ? ` (Total Visits: #${details.totalVisits})` : '';
         const referrer = document.referrer ? new URL(document.referrer).hostname : 'Direct / Shared Link';
         const timeCT = formatTimeCT(details.timestamp || Date.now());
 
         const textMessage = [
-            `🎲 *D&D Wikis - Visitor Alert*`,
+            headerBadge,
             ``,
             `• *Page Viewed:* <${pageUrl}|${cleanPath}> — ${pageTitle}`,
             `• *Location:* ${locString}`,
@@ -139,7 +141,7 @@
             `• *Source:* ${referrer}`,
             `• *Time:* ${timeCT}`,
             ``,
-            `https://ldstrebel.github.io/dndwikis/super-secret-stats.html`
+            `<https://ldstrebel.github.io/dndwikis/super-secret-stats.html|Super Secret Stats 📊>`
         ].join('\n');
 
         const payload = {
@@ -237,8 +239,23 @@
         const config = getLocalConfig();
         if (!config.enabled) return;
 
+        // Track per-session distinct page visits
+        const sessionPageTrackKey = 'dnd_session_alerted_' + (page || 'index');
+        let isFirstTimeOnThisPageInSession = false;
+        try {
+            if (!sessionStorage.getItem(sessionPageTrackKey)) {
+                sessionStorage.setItem(sessionPageTrackKey, 'true');
+                isFirstTimeOnThisPageInSession = true;
+            }
+        } catch(e) {
+            isFirstTimeOnThisPageInSession = true;
+        }
+
         let isEligible = false;
         if (isNewVisitor) {
+            isEligible = true;
+        } else if (isFirstTimeOnThisPageInSession && page !== 'index.html' && page !== '') {
+            // Distinct story session or chapter opened during current visit!
             isEligible = true;
         } else if (config.alertOnRepeat) {
             isEligible = true;
