@@ -172,14 +172,27 @@
                 <!-- Vertical Chapter List with Stacked Horizontal Dialogue Bars -->
                 <div class="w-full">
                     
-    <div class="space-y-2">
-        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1 mb-1">
+    <div class="space-y-2.5">
+        <!-- Global PC & NPC Color Key -->
+        <div class="flex flex-wrap items-center justify-between gap-2 p-2 bg-slate-950/80 rounded-xl border border-slate-800 text-[10px] text-slate-300">
+            <span class="font-semibold text-slate-400 uppercase tracking-wider font-mono">Key:</span>
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#3b82f6]"></span><span>Pierre</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#8b5cf6]"></span><span>Prof. Dravin</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f59e0b]"></span><span>Eusacles</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#10b981]"></span><span>Alfie</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f87171]"></span><span class="text-rose-300 font-semibold">Named NPCs</span></span>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
             <span>Chapter Index (Y-Axis)</span>
             <span class="text-[10px] text-slate-500 font-mono">X-Axis: Speaker Share (Tap row to jump)</span>
         </div>
+        
         <div class="space-y-2 max-h-[65vh] overflow-y-auto pr-1 custom-scrollbar">
             
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-1'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -208,11 +221,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">7w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(7w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-2'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -241,11 +259,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">50w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span class="text-slate-300">Prof. Edward Dravin</span> <strong class="font-mono text-slate-400 text-[9px]">45w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">36w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(50w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(45w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(36w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-3'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -274,11 +297,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span class="text-slate-300">Prof. Edward Dravin</span> <strong class="font-mono text-slate-400 text-[9px]">37w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">31w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">25w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f87171"></span><span class="text-slate-300">The Three Fates</span> <strong class="font-mono text-slate-400 text-[9px]">16w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 text-[10px] font-mono shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span><span>The Three Fates</span> <strong class="text-rose-200">(16w)</strong></span>
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(37w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(31w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(25w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-4'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -307,11 +335,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span class="text-slate-300">Prof. Edward Dravin</span> <strong class="font-mono text-slate-400 text-[9px]">15w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">13w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(15w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(13w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-5'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -340,11 +373,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">156w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">14w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(156w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(14w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-6'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -373,11 +411,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">26w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span class="text-slate-300">Prof. Edward Dravin</span> <strong class="font-mono text-slate-400 text-[9px]">9w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(26w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(9w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-7'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -406,11 +449,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">35w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">18w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(35w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(18w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-8'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -439,11 +487,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span class="text-slate-300">Prof. Edward Dravin</span> <strong class="font-mono text-slate-400 text-[9px]">29w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">21w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f87171"></span><span class="text-slate-300">The Three Fates</span> <strong class="font-mono text-slate-400 text-[9px]">20w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span class="text-slate-300">Alfie</span> <strong class="font-mono text-slate-400 text-[9px]">11w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 text-[10px] font-mono shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span><span>The Three Fates</span> <strong class="text-rose-200">(20w)</strong></span>
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(29w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(21w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[9px]">(11w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-9'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -472,11 +525,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">29w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f87171"></span><span class="text-slate-300">The Three Fates</span> <strong class="font-mono text-slate-400 text-[9px]">12w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 text-[10px] font-mono shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span><span>The Three Fates</span> <strong class="text-rose-200">(12w)</strong></span>
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(29w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-10'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -505,11 +563,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span class="text-slate-300">Prof. Edward Dravin</span> <strong class="font-mono text-slate-400 text-[9px]">61w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">51w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">38w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(61w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(51w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(38w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-11'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -538,11 +601,16 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">67w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span class="text-slate-300">Prof. Edward Dravin</span> <strong class="font-mono text-slate-400 text-[9px]">52w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span class="text-slate-300">Alfie</span> <strong class="font-mono text-slate-400 text-[9px]">22w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span class="text-slate-300">Eusacles</span> <strong class="font-mono text-slate-400 text-[9px]">6w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(67w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(52w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[9px]">(22w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(6w)</span></span>
+            </div>
+            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('chapter-12'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -571,8 +639,13 @@
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            <div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60"><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span class="text-slate-300">Alfie</span> <strong class="font-mono text-slate-400 text-[9px]">44w</strong></span><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span class="text-slate-300">Pierre</span> <strong class="font-mono text-slate-400 text-[9px]">36w</strong></span></div>
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                
+                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[9px]">(44w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(36w)</span></span>
+            </div>
+            
         </div>
         
         </div>

@@ -47,7 +47,7 @@ for s in [1, 2, 3]:
             pass
 
 def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
-    """Builds a vertical chapter list (Y-Axis) with stacked horizontal speaker bars (X-Axis)."""
+    """Builds a vertical chapter list (Y-Axis) with stacked horizontal speaker bars (X-Axis) and per-chapter NPC badges."""
     max_dialogue = 1
     chapter_data = []
 
@@ -87,24 +87,49 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
 
         # Stacked horizontal bar segments
         segments = []
-        speaker_legend_mini = []
+        npc_chips = []
+        pc_chips = []
+
         if tot_d > 0:
             for sp, w in sorted(cd["speakers"].items(), key=lambda x: -x[1]):
                 c_info = characters.get(sp, {})
                 sp_name = c_info.get("name", sp.title())
                 col = get_speaker_color(sp, c_info)
+                is_npc = (c_info.get("type") == "npc" or sp not in PC_COLORS)
                 seg_pct = round((w / tot_d) * 100, 1)
+                
                 segments.append(
                     f'<div style="width: {seg_pct}%; background-color: {col};" class="h-full border-r border-slate-900/40" title="{sp_name}: {w}w ({seg_pct}%)"></div>'
                 )
-                speaker_legend_mini.append(
-                    f'<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full" style="background-color: {col}"></span><span class="text-slate-300">{sp_name}</span> <strong class="font-mono text-slate-400 text-[9px]">{w}w</strong></span>'
-                )
+
+                if is_npc:
+                    npc_chips.append(
+                        f'<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 text-[10px] font-mono shadow-sm">'
+                        f'<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>'
+                        f'<span>{sp_name}</span> <strong class="text-rose-200">({w}w)</strong>'
+                        f'</span>'
+                    )
+                else:
+                    pc_chips.append(
+                        f'<span class="inline-flex items-center gap-1 text-[10px] text-slate-300">'
+                        f'<span class="w-1.5 h-1.5 rounded-full" style="background-color: {col}"></span>'
+                        f'<span>{sp_name.split()[0]}</span> <span class="font-mono text-slate-400 text-[9px]">({w}w)</span>'
+                        f'</span>'
+                    )
         else:
             segments.append('<div class="w-full h-full bg-slate-800/40" title="Narrative prose only"></div>')
 
+        chips_section = ""
+        if npc_chips or pc_chips:
+            chips_section = f"""
+            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
+                {''.join(npc_chips)}
+                {''.join(pc_chips)}
+            </div>
+            """
+
         row_item = f"""
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-2 select-none"
+        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
              onclick="scrollToAnchor('{cd['anchor_id']}'); toggleChapters();">
             
             <div class="flex items-center justify-between gap-2">
@@ -133,18 +158,31 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
                 </span>
             </div>
 
-            <!-- Mini Speaker Breakdown -->
-            { f'<div class="flex flex-wrap gap-2 text-[10px] text-slate-400 pt-0.5 border-t border-slate-900/60">{"".join(speaker_legend_mini)}</div>' if speaker_legend_mini else '' }
+            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
+            {chips_section}
         </div>
         """
         rows_html.append(row_item)
 
     return f"""
-    <div class="space-y-2">
-        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1 mb-1">
+    <div class="space-y-2.5">
+        <!-- Global PC & NPC Color Key -->
+        <div class="flex flex-wrap items-center justify-between gap-2 p-2 bg-slate-950/80 rounded-xl border border-slate-800 text-[10px] text-slate-300">
+            <span class="font-semibold text-slate-400 uppercase tracking-wider font-mono">Key:</span>
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#3b82f6]"></span><span>Pierre</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#8b5cf6]"></span><span>Prof. Dravin</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f59e0b]"></span><span>Eusacles</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#10b981]"></span><span>Alfie</span></span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f87171]"></span><span class="text-rose-300 font-semibold">Named NPCs</span></span>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
             <span>Chapter Index (Y-Axis)</span>
             <span class="text-[10px] text-slate-500 font-mono">X-Axis: Speaker Share (Tap row to jump)</span>
         </div>
+        
         <div class="space-y-2 max-h-[65vh] overflow-y-auto pr-1 custom-scrollbar">
             {''.join(rows_html)}
         </div>
