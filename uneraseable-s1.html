@@ -2609,23 +2609,23 @@
             <!-- Scrollable Content Body -->
             <div class="overflow-y-auto space-y-3.5 pr-1 flex-1 min-h-0 custom-scrollbar">
                 
-                <!-- 1. STATS CHAPTER AT BEGINNING (Defaults to Collapsed) -->
-                <div class="bg-slate-950/90 rounded-xl border border-slate-800 overflow-hidden shadow-sm">
-                    <button id="toggleStatsAccordionBtn" type="button" class="w-full p-3 flex items-center justify-between text-left hover:bg-slate-900/60 transition-colors select-none">
+                <!-- 1. STATS CHAPTER AT BEGINNING (Defaults to Collapsed, Darker Charcoal Gray Container) -->
+                <div class="bg-gray-950 border border-slate-700/80 rounded-xl overflow-hidden shadow-lg ring-1 ring-slate-800/60">
+                    <button id="toggleStatsAccordionBtn" type="button" class="w-full p-3 flex items-center justify-between text-left bg-gray-950 hover:bg-gray-900/90 transition-colors select-none">
                         <div class="flex items-center gap-2.5">
-                            <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 text-[10px] font-mono font-bold">Stats</span>
+                            <span class="px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/40 text-[10px] font-mono font-bold">Stats</span>
                             <div>
-                                <h4 class="text-xs sm:text-sm font-semibold text-slate-200">Session Stats & Voice Velocity</h4>
+                                <h4 class="text-xs sm:text-sm font-semibold text-slate-100">Session Stats & Voice Velocity</h4>
                                 <p class="text-[10px] text-slate-400 font-mono">Sensory registers, voice velocity curve & campaign stats</p>
                             </div>
                         </div>
-                        <span id="statsAccordionChevron" class="text-[11px] font-mono font-bold text-amber-400 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 flex items-center gap-1">
+                        <span id="statsAccordionChevron" class="text-[11px] font-mono font-bold text-amber-400 px-2.5 py-1 rounded bg-slate-900 border border-slate-700 flex items-center gap-1">
                             <span>▼</span> <span>Expand</span>
                         </span>
                     </button>
 
-                    <!-- Collapsed Body Content -->
-                    <div id="statsAccordionBody" class="hidden p-3 pt-1 border-t border-slate-800/80 space-y-3">
+                    <!-- Collapsed Body Content (Darker Gray Background) -->
+                    <div id="statsAccordionBody" class="hidden p-3.5 pt-2 border-t border-slate-800/90 bg-gray-950/70 space-y-3">
                         
                         <!-- Mode Switcher for Analytics Tabs -->
                         <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
