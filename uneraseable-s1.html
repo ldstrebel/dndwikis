@@ -3357,16 +3357,24 @@
             </p>
 
             <div class="space-y-2.5 text-xs text-slate-300">
-                <!-- 1. Critique Mode & Toggle -->
-                <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-amber-300 flex items-center gap-1.5">
-                            <span>✍️</span> <span>Critique Mode (Active by Default)</span>
+                <!-- 1. Critique Mode & Interactive Toggle Matching Header -->
+                <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="font-bold text-amber-300 flex items-center gap-1.5 text-xs">
+                            <span>✍️</span> <span>Reading & Critique Mode</span>
                         </span>
-                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">Default</span>
+                        <!-- Interactive Toggle component matching Header -->
+                        <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5 shadow-inner">
+                            <button id="onboardingModeReaderBtn" type="button" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1">
+                                <span>📖</span> <span>Read</span>
+                            </button>
+                            <button id="onboardingModeCritiqueBtn" type="button" class="px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1">
+                                <span>✍️</span> <span>Critique</span>
+                            </button>
+                        </div>
                     </div>
-                    <p class="text-[11px] text-slate-400 leading-normal">
-                        Click or tap any paragraph or dialogue block to add review notes, directives, or suggested rewrites. Toggle <strong>📖 Read</strong> in the top bar anytime for clean, uninterrupted reading.
+                    <p id="onboardingModeDesc" class="text-[11px] text-slate-300 leading-normal bg-slate-900/60 p-2 rounded-lg border border-slate-800/80">
+                        <strong>Critique Mode Active:</strong> Click or tap any passage to leave review notes, tone directives, or suggested rewrites.
                     </p>
                 </div>
 
@@ -3590,19 +3598,44 @@
                 });
             }
 
-            if (modeReaderBtn && modeCritiqueBtn) {
-                modeReaderBtn.onclick = function() {
-                    document.body.classList.remove('mode-critique');
-                    modeReaderBtn.className = "px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1";
-                    modeCritiqueBtn.className = "px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1";
-                };
+            const onbModeReaderBtn = document.getElementById('onboardingModeReaderBtn');
+            const onbModeCritiqueBtn = document.getElementById('onboardingModeCritiqueBtn');
+            const onbModeDesc = document.getElementById('onboardingModeDesc');
 
-                modeCritiqueBtn.onclick = function() {
+            window.setReadingMode = function(mode) {
+                const isCritique = (mode === 'critique');
+                if (isCritique) {
                     document.body.classList.add('mode-critique');
-                    modeCritiqueBtn.className = "px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1";
-                    modeReaderBtn.className = "px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1";
-                };
-            }
+                } else {
+                    document.body.classList.remove('mode-critique');
+                }
+                
+                const activeBtnClass = "px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1";
+                const inactiveBtnClass = "px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1";
+
+                if (modeReaderBtn && modeCritiqueBtn) {
+                    modeReaderBtn.className = !isCritique ? activeBtnClass : inactiveBtnClass;
+                    modeCritiqueBtn.className = isCritique ? activeBtnClass : inactiveBtnClass;
+                }
+
+                if (onbModeReaderBtn && onbModeCritiqueBtn) {
+                    onbModeReaderBtn.className = !isCritique ? activeBtnClass : inactiveBtnClass;
+                    onbModeCritiqueBtn.className = isCritique ? activeBtnClass : inactiveBtnClass;
+                }
+
+                if (onbModeDesc) {
+                    if (isCritique) {
+                        onbModeDesc.innerHTML = '<strong>Critique Mode Active:</strong> Click or tap any passage to leave review notes, tone directives, or suggested rewrites.';
+                    } else {
+                        onbModeDesc.innerHTML = '<strong>Read Mode Active:</strong> Story commenting is turned off for clean, uninterrupted reading flow.';
+                    }
+                }
+            };
+
+            if (modeReaderBtn) modeReaderBtn.onclick = () => window.setReadingMode('read');
+            if (modeCritiqueBtn) modeCritiqueBtn.onclick = () => window.setReadingMode('critique');
+            if (onbModeReaderBtn) onbModeReaderBtn.onclick = () => window.setReadingMode('read');
+            if (onbModeCritiqueBtn) onbModeCritiqueBtn.onclick = () => window.setReadingMode('critique');
 
             categoryPills.forEach(pill => {
                 pill.onclick = function() {
