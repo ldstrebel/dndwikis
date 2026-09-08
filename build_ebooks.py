@@ -387,6 +387,250 @@ def build_campaign_whole_html(current_session_num: int) -> str:
     </div>
     """
 
+
+def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words: int, spoken_pct: float, narrative_pct: float) -> str:
+    bot_review = editorial_forum.get("initialBotReview", {})
+    grade = bot_review.get("grade", "A-")
+    author = bot_review.get("author", "Adversarial Prose Critic (Bot)")
+    verdict = bot_review.get("verdict", "VERIFIED PRODUCTION-READY (ACTIVE TRADE-OFFS MONITORED)")
+    analysis = bot_review.get("ruthlessAnalysis", "")
+    if isinstance(analysis, dict):
+        analysis = analysis.get(session_num, str(analysis))
+    
+    compliance = bot_review.get("technicalCompliance", {})
+    earth_leaks = compliance.get("earthLeaks", 0)
+    dialogue_stutters = compliance.get("dialogueStutters", 0)
+    talking_heads = compliance.get("stagnantTalkingHeads", 0)
+    transcript_parity = compliance.get("transcriptParity", "100%")
+
+    trade_offs = bot_review.get("tradeOffs", [])
+    trade_offs_html = ""
+    for idx, to in enumerate(trade_offs, 1):
+        dim = to.get("dimension", "")
+        chosen = to.get("chosenStance", "")
+        counter = to.get("counterStance", "")
+        cost = to.get("tradeOffCost", "")
+        trade_offs_html += f"""
+        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between gap-2">
+                <span class="font-bold text-amber-300 font-mono">#{idx} {dim}</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 uppercase font-mono">Trade-Off Stance</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+                <div class="p-2 rounded-lg bg-emerald-950/40 border border-emerald-800/60">
+                    <span class="text-[9px] uppercase font-bold text-emerald-400 block tracking-wider">Active Choice:</span>
+                    <p class="text-slate-200 mt-0.5">{chosen}</p>
+                </div>
+                <div class="p-2 rounded-lg bg-rose-950/30 border border-rose-800/40">
+                    <span class="text-[9px] uppercase font-bold text-rose-400 block tracking-wider">Alternative Stance:</span>
+                    <p class="text-slate-300 mt-0.5">{counter}</p>
+                </div>
+            </div>
+            <p class="text-[11px] text-slate-400 italic pt-1 border-t border-slate-800/80"><strong class="text-slate-500 not-italic uppercase text-[9px] font-mono">Consequence:</strong> {cost}</p>
+        </div>
+        """
+
+    nearest_risks = bot_review.get("nearestRisks", [])
+    risks_html = ""
+    for r in nearest_risks:
+        title = r.get("title", "")
+        risk_text = r.get("risk", "")
+        mitigation = r.get("mitigation", "")
+        risks_html += f"""
+        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+            <div class="flex items-center gap-1.5 text-amber-400 font-bold">
+                <span>⚠️</span>
+                <span>{title}</span>
+            </div>
+            <p class="text-slate-300 leading-relaxed pl-4">{risk_text}</p>
+            <div class="pl-4 text-[11px] text-emerald-300/90 pt-1 flex items-start gap-1">
+                <span class="text-emerald-400 font-mono uppercase text-[9px] font-bold">Mitigation:</span>
+                <span>{mitigation}</span>
+            </div>
+        </div>
+        """
+
+    changelog = editorial_forum.get("changelog", [])
+    changelog_html = ""
+    for entry in changelog:
+        it = entry.get("iteration", "Merged PR")
+        rev = entry.get("reviewer", "Table Member")
+        summ = entry.get("summary", "")
+        changelog_html += f"""
+        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
+            <div class="flex items-center justify-between gap-2">
+                <span class="font-bold text-cyan-300 font-mono">{it}</span>
+                <span class="text-[10px] text-slate-400 font-mono">Reviewer: <strong>{rev}</strong></span>
+            </div>
+            <p class="text-slate-200 leading-relaxed mt-1">{summ}</p>
+        </div>
+        """
+
+    retcon_watchlist = editorial_forum.get("retconWatchlist", [])
+    retcon_html = ""
+    for item in retcon_watchlist:
+        rid = item.get("id", "")
+        anchor = item.get("anchor", "")
+        subj = item.get("subject", "")
+        note = item.get("note", "")
+        retcon_html += f"""
+        <div class="p-2.5 rounded-lg bg-purple-950/30 border border-purple-800/40 text-xs space-y-0.5">
+            <div class="flex items-center gap-2 font-mono">
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-purple-900 text-purple-200 font-bold">{rid}</span>
+                <span class="text-[10px] text-purple-400">{anchor}</span>
+                <strong class="text-slate-200">{subj}</strong>
+            </div>
+            <p class="text-[11px] text-slate-400 pl-1">{note}</p>
+        </div>
+        """
+    retcon_section = f"""
+    <div class="bg-slate-950/80 p-3 rounded-xl border border-purple-900/50 space-y-2">
+        <div class="flex items-center gap-1.5 text-purple-300 font-bold text-xs">
+            <span>🔮</span>
+            <span>Active Retcon & Rule Fidelity Watchlist</span>
+        </div>
+        <div class="space-y-1.5">
+            {retcon_html}
+        </div>
+    </div>
+    """ if retcon_html else ""
+
+    return f"""
+    <!-- ========================================================= -->
+    <!-- EDITORIAL CRITIC REVIEW & FORUM MODAL -->
+    <!-- ========================================================= -->
+    <div id="criticForumModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 transition-opacity duration-200">
+        <div id="criticForumModalCard" class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[90vh] sm:max-h-[90dvh] space-y-3.5">
+            
+            <!-- Modal Header with Rotten-Tomatoes Style Tomato Badge -->
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-shrink-0">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-2xl flex-shrink-0 shadow-inner">
+                        🍅
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Critic Review & Editorial Forum</h3>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Grade: {grade}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-mono">Session {session_num} · Adversarial Prose Audit & Open Community Forum</p>
+                    </div>
+                </div>
+                <button id="closeCriticForumBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 leading-none transition-colors" title="Close">&times;</button>
+            </div>
+
+            <!-- Scrollable Forum Content Stream -->
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1 min-h-0 custom-scrollbar">
+
+                <!-- POST #1: PINNED BOT EDITORIAL REVIEW -->
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 space-y-3 shadow-sm">
+                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse"></span>
+                            <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400">Pinned Lead Review · {author}</span>
+                        </div>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono font-bold">{verdict}</span>
+                    </div>
+
+                    <!-- Compliance Forensic Badges -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 font-mono text-[10px]">
+                        <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
+                            <span class="text-slate-400 block">Earth Leaks</span>
+                            <strong class="text-emerald-400 text-xs">{earth_leaks}</strong>
+                        </div>
+                        <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
+                            <span class="text-slate-400 block">Stutters</span>
+                            <strong class="text-emerald-400 text-xs">{dialogue_stutters}</strong>
+                        </div>
+                        <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
+                            <span class="text-slate-400 block">Talking Heads</span>
+                            <strong class="text-emerald-400 text-xs">{talking_heads}</strong>
+                        </div>
+                        <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
+                            <span class="text-slate-400 block">Audio Parity</span>
+                            <strong class="text-cyan-400 text-xs">{transcript_parity}</strong>
+                        </div>
+                    </div>
+
+                    <!-- Ruthless Analysis Prose -->
+                    <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
+                        <span class="text-[10px] font-bold font-mono uppercase tracking-wider text-amber-400 block">🔍 Ruthless Editorial Analysis</span>
+                        <p class="text-xs text-slate-200 leading-relaxed">{analysis}</p>
+                    </div>
+
+                    <!-- Collapsible Active Trade-Offs Matrix -->
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
+                            <span>⚖️</span> <span>Active Narrative Trade-Offs Matrix</span>
+                        </span>
+                        <div class="space-y-2">
+                            {trade_offs_html}
+                        </div>
+                    </div>
+
+                    <!-- Nearest Narrative Risks -->
+                    <div class="space-y-2 pt-1">
+                        <span class="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
+                            <span>⚠️</span> <span>Nearest Story Risks & Guardrails</span>
+                        </span>
+                        <div class="space-y-2">
+                            {risks_html}
+                        </div>
+                    </div>
+
+                    {retcon_section}
+                </div>
+
+                <!-- POST #2: SCRIBE PIPELINE CHANGELOG STREAM -->
+                <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span class="text-xs font-bold font-mono uppercase text-cyan-300 flex items-center gap-1.5">
+                            <span>📜</span> <span>Scribe PR Iterations & Revision Log</span>
+                        </span>
+                        <span class="text-[10px] font-mono text-slate-500">Pipeline History</span>
+                    </div>
+                    <div class="space-y-2">
+                        {changelog_html}
+                    </div>
+                </div>
+
+                <!-- POST #3: COMMUNITY FORUM DISCUSSION & CONTRIBUTION BOX -->
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div class="flex items-center gap-1.5">
+                            <span>💬</span>
+                            <h4 class="text-xs font-bold text-slate-200 font-mono uppercase">Join the Discussion & Contribute Feedback</h4>
+                        </div>
+                        <span class="text-[10px] font-mono text-amber-400">Open Community Scribe</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Have thoughts on this session's pacing, character voice, or narrative choices? Leave a comment below or use the in-line <strong>Critique Mode</strong> to annotate exact passages!
+                    </p>
+                    <div class="space-y-2">
+                        <textarea id="forumCommentInput" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500" placeholder="Share your take on the story, character balance, or suggestions for the GM/Scribe..."></textarea>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[10px] text-slate-500 font-mono">Submits directly to chronicle PR stream</span>
+                            <button id="submitForumCommentBtn" type="button" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5 active:scale-98">
+                                <span>🚀</span> <span>Post to Forum</span>
+                            </button>
+                        </div>
+                        <div id="forumStatusMsg" class="hidden p-2.5 rounded-xl text-xs"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="pt-2 border-t border-slate-800 flex justify-between items-center flex-shrink-0">
+                <span class="text-[10px] text-slate-500 font-mono">Schema 2.0 Editorial Transparency</span>
+                <button id="closeCriticForumFooterBtn" type="button" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-xs transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    """
+
 def generate_html_for_session(manifest_path: Path, output_path: Path):
     with open(manifest_path, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -396,6 +640,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     characters = data.get("characters", {})
     stats = data.get("stats", {})
     blocks = data.get("blocks", [])
+    editorial_forum = data.get("editorialForum", {})
 
     campaign_id = campaign.get("id", "uneraseable").lower()
     campaign_name = campaign.get("name", "UNERASEABLE").upper()
@@ -413,6 +658,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     raw_speaker_dist = stats.get("speakerDistribution", [])
     writing_metrics = stats.get("writingMetrics", {})
     sensory = writing_metrics.get("sensoryRegisters", {})
+    bot_grade = editorial_forum.get("initialBotReview", {}).get("grade", "A-")
 
     # Spoken characters & NPCs
     spoken_speakers = []
@@ -506,6 +752,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     session_line_chart_svg = build_session_line_chart_svg(chapters)
     campaign_whole_html = build_campaign_whole_html(session_num)
     camp_tab_label = "Campaign (S1)" if session_num == 1 else f"Campaign (S1–S{session_num})"
+    critic_forum_html = build_critic_forum_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct)
 
     # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
@@ -576,6 +823,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     <p class="text-slate-100 font-medium leading-relaxed text-base sm:text-lg">{text}</p>
                 </div>
                 """
+
+    critic_forum_html = build_critic_forum_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct)
 
     # Assemble Full Document
     full_html = f"""<!DOCTYPE html>
@@ -656,24 +905,25 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         }}
 
         /* Overlay Transitions & Viewport Sizing */
-        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay {{
+        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay {{
             transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
             height: 100vh;
             height: 100dvh;
         }}
-        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible {{
+        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible {{
             opacity: 1;
             pointer-events: auto;
         }}
 
-        #chaptersModalCard, #critiqueBottomSheet {{
+        #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard {{
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, max-height 0.2s ease;
             transform: scale(0.96) translateY(-10px);
             opacity: 0;
             max-height: min(88vh, 88dvh);
         }}
         #chaptersModalOverlay.visible #chaptersModalCard,
-        #critiqueModalOverlay.visible #critiqueBottomSheet {{
+        #critiqueModalOverlay.visible #critiqueBottomSheet,
+        #criticForumModalOverlay.visible #criticForumModalCard {{
             transform: scale(1) translateY(0);
             opacity: 1;
         }}
@@ -721,18 +971,24 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
             </div>
 
-            <!-- Header Controls: Chapters Button & Reading Mode Switcher -->
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <button id="toggleChaptersBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
+            <!-- Header Controls: Critic Button, Chapters Button & Reading Mode Switcher -->
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <button id="toggleCriticForumBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-950/60 hover:bg-rose-900/80 border border-rose-700/70 text-rose-200 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Editorial Critic Review & Forum">
+                    <span class="text-sm">🍅</span>
+                    <span class="font-bold font-mono text-rose-400">{bot_grade}</span>
+                    <span class="hidden md:inline text-rose-300 font-normal">Critic</span>
+                </button>
+
+                <button id="toggleChaptersBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
                     <span>📑</span>
-                    <span>Chapters</span>
+                    <span class="hidden xs:inline">Chapters</span>
                 </button>
 
                 <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5" title="Switch reading mode">
-                    <button id="modeReaderBtn" type="button" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1">
+                    <button id="modeReaderBtn" type="button" class="px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1">
                         <span>📖</span> <span class="hidden sm:inline">Read</span>
                     </button>
-                    <button id="modeCritiqueBtn" type="button" class="px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1">
+                    <button id="modeCritiqueBtn" type="button" class="px-2 sm:px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1">
                         <span>✍️</span> <span class="hidden sm:inline">Critique</span>
                     </button>
                 </div>
@@ -787,16 +1043,20 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 max-w-md mx-auto shadow-lg">
                 <div class="flex items-center justify-center gap-2 text-amber-400 mb-1">
                     <span class="text-lg">💬</span>
-                    <h3 class="text-sm font-bold">Feedback & Review Notes</h3>
+                    <h3 class="text-sm font-bold">Feedback & Editorial Forum</h3>
                 </div>
-                <p class="text-xs text-slate-400 mb-3">Review your collected notes, suggested rewrites, or submit feedback to the chronicle.</p>
-                <div class="flex gap-2 justify-center">
-                    <button id="footerExportBtn" type="button" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5">
+                <p class="text-xs text-slate-400 mb-3">Review your collected notes, inspect the autonomous critic review, or join the discussion forum.</p>
+                <div class="flex flex-wrap gap-2 justify-center">
+                    <button id="footerExportBtn" type="button" class="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5">
                         <span>📝</span> <span>Review Feedback</span>
                         <span id="exportBadgeCount" class="bg-slate-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1">0</span>
                     </button>
+                    <button id="footerCriticForumBtn" type="button" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-rose-800/60 hover:border-rose-700 text-rose-300 hover:text-rose-200 font-semibold rounded-xl text-xs transition-colors flex items-center gap-1.5 shadow-md">
+                        <span>🍅</span> <span>Critic & Forum</span>
+                        <span class="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 text-[10px] font-mono font-bold">{bot_grade}</span>
+                    </button>
                     <button id="clearCritiquesBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl transition-colors">
-                        Clear All
+                        Clear Notes
                     </button>
                 </div>
             </div>
@@ -1192,6 +1452,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         </div>
     </div>
 
+    {critic_forum_html}
+
     <!-- JAVASCRIPT CONTROLLER -->
     <script>
         (function() {{
@@ -1216,6 +1478,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const toggleStatsAccordionBtn = document.getElementById('toggleStatsAccordionBtn');
             const statsAccordionBody = document.getElementById('statsAccordionBody');
             const statsAccordionChevron = document.getElementById('statsAccordionChevron');
+
+            const toggleCriticForumBtn = document.getElementById('toggleCriticForumBtn');
+            const footerCriticForumBtn = document.getElementById('footerCriticForumBtn');
+            const criticForumModalOverlay = document.getElementById('criticForumModalOverlay');
+            const closeCriticForumBtn = document.getElementById('closeCriticForumBtn');
+            const closeCriticForumFooterBtn = document.getElementById('closeCriticForumFooterBtn');
+            const submitForumCommentBtn = document.getElementById('submitForumCommentBtn');
+            const forumCommentInput = document.getElementById('forumCommentInput');
+            const forumStatusMsg = document.getElementById('forumStatusMsg');
 
             const modeReaderBtn = document.getElementById('modeReaderBtn');
             const modeCritiqueBtn = document.getElementById('modeCritiqueBtn');
@@ -1248,6 +1519,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) ||
                         (modalOverlay && modalOverlay.classList.contains('visible')) ||
                         (onboardingOverlay && onboardingOverlay.classList.contains('visible')) ||
+                        (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) ||
                         (typeof ghModalOverlay !== 'undefined' && ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0'))
                     );
                     if (!isAnyModalOpen) {{
@@ -1618,6 +1890,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         modalOverlay,
                         chaptersModalOverlay,
                         onboardingOverlay,
+                        criticForumModalOverlay,
                         document.getElementById('ghModalOverlay')
                     ];
                     overlays.forEach(ov => {{
@@ -1659,6 +1932,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             document.addEventListener('keydown', function(e) {{
                 if (e.key === 'Escape') {{
+                    if (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) hideCriticForumModal();
                     if (modalOverlay && modalOverlay.classList.contains('visible')) closeModal();
                     if (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) closeChaptersModal();
                     if (ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0')) hideGhModal();
@@ -2192,6 +2466,78 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     }} finally {{
                         ghSubmitPrBtn.disabled = false;
                     }}
+                }};
+            }}
+
+            // =========================================================
+            // CRITIC & EDITORIAL FORUM CONTROLLER
+            // =========================================================
+            function showCriticForumModal() {{
+                if (criticForumModalOverlay) {{
+                    criticForumModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                    criticForumModalOverlay.classList.add('visible');
+                    if (window.visualViewport) {{
+                        criticForumModalOverlay.style.height = window.visualViewport.height + 'px';
+                        criticForumModalOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
+                    }}
+                    setBodyScrollLock(true);
+                }}
+            }}
+
+            function hideCriticForumModal() {{
+                if (criticForumModalOverlay) {{
+                    criticForumModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    criticForumModalOverlay.classList.remove('visible');
+                    criticForumModalOverlay.style.height = '';
+                    criticForumModalOverlay.style.transform = '';
+                    setBodyScrollLock(false);
+                }}
+            }}
+
+            if (toggleCriticForumBtn) toggleCriticForumBtn.onclick = showCriticForumModal;
+            if (footerCriticForumBtn) footerCriticForumBtn.onclick = showCriticForumModal;
+            if (closeCriticForumBtn) closeCriticForumBtn.onclick = hideCriticForumModal;
+            if (closeCriticForumFooterBtn) closeCriticForumFooterBtn.onclick = hideCriticForumModal;
+            if (criticForumModalOverlay) {{
+                criticForumModalOverlay.onclick = function(e) {{
+                    if (e.target === criticForumModalOverlay) hideCriticForumModal();
+                }};
+            }}
+
+            if (submitForumCommentBtn && forumCommentInput) {{
+                submitForumCommentBtn.onclick = function() {{
+                    const text = forumCommentInput.value.trim();
+                    if (!text) {{
+                        alert("Please type a comment or critique note before posting.");
+                        return;
+                    }}
+                    const reviewer = getOrInitReviewerName();
+                    const blockId = "forum_general_s{session_num}_" + Date.now().toString().slice(-4);
+                    critiques[blockId] = {{
+                        blockId: blockId,
+                        blockIndex: 1,
+                        speaker: "Editorial Forum Post (" + reviewer + ")",
+                        speakerColor: "#f43f5e",
+                        category: "general",
+                        quote: "Session {session_num} Community Discussion",
+                        comment: text,
+                        suggestedRewrite: "",
+                        updatedAt: new Date().toISOString()
+                    }};
+                    try {{ localStorage.setItem(STORAGE_KEY, JSON.stringify(critiques)); }} catch(e) {{}}
+                    refreshMarkers();
+                    renderFeedbackNotesList();
+                    if (exportBadgeCount) exportBadgeCount.textContent = Object.keys(critiques).length;
+
+                    forumCommentInput.value = "";
+                    if (forumStatusMsg) {{
+                        forumStatusMsg.className = "p-2.5 rounded-xl text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
+                        forumStatusMsg.innerHTML = "🎉 <strong>Comment added to Review queue!</strong><br>Opening feedback review drawer to submit...";
+                    }}
+                    setTimeout(() => {{
+                        hideCriticForumModal();
+                        showGhModal();
+                    }}, 1000);
                 }};
             }}
 
