@@ -1648,17 +1648,17 @@ ightarrow$ *Sheep*.</p>
             <span>✦ End of Session 3 ✦</span>
         </div>
 
-        <!-- Bottom Page Controls & Review Summary -->
+        <!-- Bottom Page Controls & Feedback Review Summary -->
         <footer class="mt-16 pt-8 border-t border-slate-800 text-center space-y-4">
             <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 max-w-md mx-auto shadow-lg">
                 <div class="flex items-center justify-center gap-2 text-amber-400 mb-1">
-                    <span class="text-lg">🐙</span>
-                    <h3 class="text-sm font-bold">Submit Review PR to GitHub</h3>
+                    <span class="text-lg">💬</span>
+                    <h3 class="text-sm font-bold">Feedback & Review Notes</h3>
                 </div>
-                <p class="text-xs text-slate-400 mb-3">Submit your feedback directly to the dnd-scribe agent pipeline.</p>
+                <p class="text-xs text-slate-400 mb-3">Review your collected notes, suggested rewrites, or submit feedback to the chronicle.</p>
                 <div class="flex gap-2 justify-center">
                     <button id="footerExportBtn" type="button" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5">
-                        <span>🚀</span> <span>Open Review PR</span>
+                        <span>📝</span> <span>Review Feedback</span>
                         <span id="exportBadgeCount" class="bg-slate-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1">0</span>
                     </button>
                     <button id="clearCritiquesBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl transition-colors">
@@ -2990,44 +2990,49 @@ ightarrow$ *Sheep*.</p>
             });
 
             // =========================================================
-            // GITHUB PR SUBMISSION MODAL
+            // REVIEW & SUBMIT FEEDBACK MODAL (User-Friendly, No GH Jargon)
             // =========================================================
             const ghModalOverlay = document.createElement('div');
             ghModalOverlay.id = "ghModalOverlay";
-            ghModalOverlay.className = "fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-4 transition-opacity duration-200";
+            ghModalOverlay.className = "fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 transition-opacity duration-200";
             ghModalOverlay.innerHTML = `
-                <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-4 sm:p-5 shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[85dvh] space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2.5 flex-shrink-0">
                         <div class="flex items-center gap-2">
-                            <span class="text-xl">🐙</span>
-                            <h3 class="text-amber-400 font-bold text-base">Submit Review PR to GitHub</h3>
+                            <span class="text-xl">📝</span>
+                            <div>
+                                <h3 class="text-amber-400 font-bold text-sm sm:text-base">Review & Submit Feedback</h3>
+                                <p class="text-[10px] text-slate-400 font-mono">Session 3 · <span id="feedbackModalNoteCount" class="text-emerald-400 font-semibold">0 notes</span> collected</p>
+                            </div>
                         </div>
-                        <button id="closeGhModal" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold">&times;</button>
+                        <button id="closeGhModal" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 leading-none transition-colors">&times;</button>
                     </div>
 
-                    <div class="space-y-3 text-xs">
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
-                            <div class="flex justify-between text-slate-400"><span>Target Repository:</span><span class="font-mono text-slate-200">ldstrebel/dnd-scribe</span></div>
-                            <div class="flex justify-between text-slate-400"><span>Target Base Branch:</span><span class="font-mono text-amber-400">uneraseable</span></div>
-                            <div class="flex justify-between text-slate-400"><span>Critiques in Batch:</span><span class="font-mono text-emerald-400 font-bold" id="ghCritiqueCountDisplay">0 notes</span></div>
-                        </div>
-
-                        <div>
-                            <label class="block font-semibold text-slate-300 mb-1">Reviewer Name / Player Handle</label>
-                            <input type="text" id="ghReviewerNameInput" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500" placeholder="e.g. Doug, Mara, Editor">
-                        </div>
-
-                        <div>
-                            <label class="block font-semibold text-slate-300 mb-1">GitHub Token (PAT / App Token)</label>
-                            <input type="password" id="ghTokenInput" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-100 placeholder-slate-600 font-mono text-xs focus:outline-none focus:border-amber-500" placeholder="ghs_... or github_pat_...">
-                        </div>
-
-                        <div id="ghStatusMsg" class="hidden p-2.5 rounded-lg text-xs"></div>
+                    <div class="flex-shrink-0">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name / Handle</label>
+                        <input type="text" id="ghReviewerNameInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500" placeholder="e.g. Luke, Doug, Mara, Anonymous">
                     </div>
 
-                    <div class="flex gap-2 pt-2 border-t border-slate-800">
-                        <button id="ghCopyJsonBtn" type="button" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg text-xs transition-colors">📋 Copy JSON</button>
-                        <button id="ghSubmitPrBtn" type="button" class="flex-1 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-lg text-xs transition-colors shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5"><span>🚀</span> <span>Open PR</span></button>
+                    <!-- Scrollable List of Collected Feedback Items -->
+                    <div class="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[140px] max-h-[42vh] custom-scrollbar" id="feedbackNotesContainer">
+                        <!-- Populated dynamically via renderFeedbackNotesList() -->
+                    </div>
+
+                    <div id="ghStatusMsg" class="hidden p-2.5 rounded-xl text-xs flex-shrink-0"></div>
+
+                    <!-- Action Footer -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800 flex-shrink-0">
+                        <div class="flex items-center gap-1.5">
+                            <button id="modalClearAllCritiquesBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-rose-950/60 hover:text-rose-300 hover:border-rose-800 border border-slate-700 text-slate-400 font-semibold rounded-xl text-xs transition-colors" title="Clear all recorded feedback">
+                                🗑️ Clear All
+                            </button>
+                            <button id="ghCopyJsonBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold rounded-xl text-xs transition-colors" title="Copy feedback summary">
+                                📋 Copy Notes
+                            </button>
+                        </div>
+                        <button id="ghSubmitPrBtn" type="button" class="flex-1 sm:flex-initial px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5 active:scale-98">
+                            <span>🚀</span> <span>Submit Feedback</span>
+                        </button>
                     </div>
                 </div>
             `;
@@ -3035,25 +3040,103 @@ ightarrow$ *Sheep*.</p>
 
             const closeGhModal = document.getElementById('closeGhModal');
             const ghReviewerNameInput = document.getElementById('ghReviewerNameInput');
-            const ghTokenInput = document.getElementById('ghTokenInput');
-            const ghCritiqueCountDisplay = document.getElementById('ghCritiqueCountDisplay');
             const ghSubmitPrBtn = document.getElementById('ghSubmitPrBtn');
             const ghCopyJsonBtn = document.getElementById('ghCopyJsonBtn');
+            const modalClearAllCritiquesBtn = document.getElementById('modalClearAllCritiquesBtn');
             const ghStatusMsg = document.getElementById('ghStatusMsg');
 
-            if (ghTokenInput) ghTokenInput.value = localStorage.getItem('dnd_scribe_gh_token') || '';
-            if (ghReviewerNameInput) ghReviewerNameInput.value = localStorage.getItem('dnd_scribe_reviewer_name') || 'Reviewer';
+            if (ghReviewerNameInput) ghReviewerNameInput.value = localStorage.getItem('dnd_scribe_reviewer_name') || 'Reader';
 
-            function showGhModal() {
-                const count = Object.keys(critiques).length;
-                if (count === 0) {
-                    alert("No review notes recorded yet! Click on any dialogue or narrator block to add notes first.");
+            function renderFeedbackNotesList() {
+                const container = document.getElementById('feedbackNotesContainer');
+                const noteCountDisplay = document.getElementById('feedbackModalNoteCount');
+                if (!container) return;
+
+                const items = Object.values(critiques);
+                if (noteCountDisplay) noteCountDisplay.textContent = items.length + " note" + (items.length === 1 ? "" : "s");
+
+                if (items.length === 0) {
+                    container.innerHTML = `
+                        <div class="h-32 flex flex-col items-center justify-center text-center p-4 border border-dashed border-slate-800 rounded-xl bg-slate-950/40 text-slate-500 space-y-1">
+                            <span class="text-2xl">💬</span>
+                            <p class="text-xs font-medium text-slate-400">No feedback notes recorded yet.</p>
+                            <p class="text-[10px] text-slate-600">Click or tap any passage while in Critique mode to leave review directives.</p>
+                        </div>
+                    `;
+                    if (ghSubmitPrBtn) {
+                        ghSubmitPrBtn.disabled = true;
+                        ghSubmitPrBtn.style.opacity = "0.5";
+                        ghSubmitPrBtn.style.pointerEvents = "none";
+                    }
                     return;
                 }
-                if (ghCritiqueCountDisplay) ghCritiqueCountDisplay.textContent = count + " critique(s)";
+
+                if (ghSubmitPrBtn) {
+                    ghSubmitPrBtn.disabled = false;
+                    ghSubmitPrBtn.style.opacity = "1";
+                    ghSubmitPrBtn.style.pointerEvents = "auto";
+                }
+
+                container.innerHTML = items.map((c, idx) => {
+                    const rewriteHtml = c.suggestedRewrite ? `
+                        <div class="mt-1.5 p-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] text-cyan-300 font-mono">
+                            <strong class="text-[9px] uppercase tracking-wider text-slate-500 block">Suggested Rewrite:</strong>
+                            ` + c.suggestedRewrite + `
+                        </div>
+                    ` : '';
+
+                    return `
+                        <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 relative group">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <span class="text-[10px] font-mono text-amber-400 font-bold">#` + (c.blockIndex || (idx + 1)) + `</span>
+                                    <span class="text-[10px] font-semibold text-slate-300 truncate">` + (c.speaker || 'Narrator') + `</span>
+                                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono uppercase">` + (c.category || 'General') + `</span>
+                                </div>
+                                <button type="button" class="text-slate-500 hover:text-rose-400 text-xs p-1 transition-colors" title="Delete this note" onclick="window.deleteCritiqueItem('` + c.blockId + `')">
+                                    🗑️
+                                </button>
+                            </div>
+                            ` + (c.quote ? `<p class="text-[11px] text-slate-400 italic line-clamp-2">"` + c.quote + `"</p>` : '') + `
+                            ` + (c.comment ? `<p class="text-xs text-slate-200 font-medium">` + c.comment + `</p>` : '') + `
+                            ` + rewriteHtml + `
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.deleteCritiqueItem = function(blockId) {
+                if (critiques[blockId]) {
+                    delete critiques[blockId];
+                    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(critiques)); } catch(e) {}
+                    refreshMarkers();
+                    renderFeedbackNotesList();
+                    const remainingCount = Object.keys(critiques).length;
+                    if (exportBadgeCount) exportBadgeCount.textContent = remainingCount;
+                }
+            };
+
+            if (modalClearAllCritiquesBtn) {
+                modalClearAllCritiquesBtn.onclick = function() {
+                    if (confirm("Are you sure you want to clear all feedback notes for this session?")) {
+                        critiques = {};
+                        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+                        refreshMarkers();
+                        renderFeedbackNotesList();
+                        if (exportBadgeCount) exportBadgeCount.textContent = "0";
+                    }
+                };
+            }
+
+            function showGhModal() {
+                renderFeedbackNotesList();
                 if (ghStatusMsg) ghStatusMsg.className = "hidden";
                 if (ghModalOverlay) {
                     ghModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                    if (window.visualViewport) {
+                        ghModalOverlay.style.height = window.visualViewport.height + 'px';
+                        ghModalOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
+                    }
                     setBodyScrollLock(true);
                 }
             }
@@ -3077,42 +3160,40 @@ ightarrow$ *Sheep*.</p>
             if (ghCopyJsonBtn) {
                 ghCopyJsonBtn.onclick = function() {
                     const count = Object.keys(critiques).length;
-                    const reviewer = ghReviewerNameInput ? ghReviewerNameInput.value.trim() : "Anonymous";
+                    const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : "Reader";
                     const exportPayload = {
                         campaign: CAMPAIGN_ID,
                         chapter: CHAPTER_ID,
                         title: "Uneraseable - THE MUSEUM HEIST IN NORTH CAROLINA",
-                        reviewer: reviewer || "Anonymous",
+                        reviewer: reviewer,
                         exportedAt: new Date().toISOString(),
                         totalCritiques: count,
                         critiques: Object.values(critiques)
                     };
                     navigator.clipboard.writeText(JSON.stringify(exportPayload, null, 2)).then(() => {
-                        alert("✨ Copied " + count + " critique(s) to clipboard!");
-                        hideGhModal();
+                        alert("✨ Copied " + count + " feedback note(s) to clipboard!");
                     });
                 };
             }
 
             if (ghSubmitPrBtn) {
                 ghSubmitPrBtn.onclick = async function() {
-                    const token = ghTokenInput ? ghTokenInput.value.trim() : "";
-                    const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : 'Reviewer';
+                    const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : 'Reader';
                     const count = Object.keys(critiques).length;
-                    if (!token) {
-                        alert("Please enter your GitHub token to submit.");
+                    if (count === 0) {
+                        alert("No feedback notes to submit.");
                         return;
                     }
 
-                    localStorage.setItem('dnd_scribe_gh_token', token);
                     localStorage.setItem('dnd_scribe_reviewer_name', reviewer);
 
                     if (ghStatusMsg) {
-                        ghStatusMsg.className = "p-2.5 rounded-lg text-xs bg-sky-950/60 border border-sky-800 text-sky-300 block";
-                        ghStatusMsg.textContent = "⏳ Contacting GitHub API to create critique branch...";
+                        ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-sky-950/60 border border-sky-800 text-sky-300 block";
+                        ghStatusMsg.innerHTML = "⏳ <strong>Submitting feedback...</strong> Sending review batch to the scribe pipeline.";
                     }
                     ghSubmitPrBtn.disabled = true;
 
+                    const token = localStorage.getItem('dnd_scribe_gh_token') || "";
                     const REPO = "ldstrebel/dnd-scribe";
                     const BASE_BRANCH = "uneraseable";
                     const safeName = reviewer.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -3130,12 +3211,22 @@ ightarrow$ *Sheep*.</p>
                     };
 
                     const markdownRows = Object.values(critiques).map(c => 
-                        "| `" + c.blockId + "` | **" + c.speaker + "** | `" + c.category + "` | " + c.comment.replace(/\|/g, '\\|') + " | " + (c.suggestedRewrite ? c.suggestedRewrite.replace(/\|/g, '\\|') : '-') + " |"
+                        "| `" + c.blockId + "` | **" + c.speaker + "** | `" + c.category + "` | " + (c.comment || '').replace(/\|/g, '\\|') + " | " + (c.suggestedRewrite ? c.suggestedRewrite.replace(/\|/g, '\\|') : '-') + " |"
                     ).join('\n');
 
-                    const prBody = "## 📝 Story Critique Batch: " + exportPayload.title + "\n**Reviewer:** " + reviewer + "\n**Total Notes:** " + count + "\n\n### 📋 Critique Items Table\n| Block ID | Speaker | Category | Critique / Directive | Suggested Rewrite |\n|---|---|---|---|---|\n" + markdownRows + "\n\n<details>\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\n\n```json\n" + JSON.stringify(exportPayload, null, 2) + "\n```\n</details>";
+                    const prBody = "## 📝 Story Feedback: " + exportPayload.title + "\n**Reviewer:** " + reviewer + "\n**Total Notes:** " + count + "\n\n### 📋 Feedback Items Table\n| Block ID | Speaker | Category | Critique / Directive | Suggested Rewrite |\n|---|---|---|---|---|\n" + markdownRows + "\n\n<details>\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\n\n```json\n" + JSON.stringify(exportPayload, null, 2) + "\n```\n</details>";
 
                     try {
+                        if (!token) {
+                            if (ghStatusMsg) {
+                                ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-amber-950/70 border border-amber-700 text-amber-200 block space-y-1";
+                                ghStatusMsg.innerHTML = "⚠️ <strong>Bot token connection pending.</strong><br>Your " + count + " feedback note(s) have been copied to your clipboard!";
+                            }
+                            navigator.clipboard.writeText(JSON.stringify(exportPayload, null, 2));
+                            ghSubmitPrBtn.disabled = false;
+                            return;
+                        }
+
                         const headers = {
                             "Authorization": "Bearer " + token,
                             "Accept": "application/vnd.github+json",
@@ -3144,18 +3235,16 @@ ightarrow$ *Sheep*.</p>
 
                         let baseRefRes = await fetch("https://api.github.com/repos/" + REPO + "/git/ref/heads/" + BASE_BRANCH, { headers });
                         if (!baseRefRes.ok) baseRefRes = await fetch("https://api.github.com/repos/" + REPO + "/git/ref/heads/main", { headers });
-                        if (!baseRefRes.ok) throw new Error("Could not find base branch on GitHub repo: " + baseRefRes.statusText);
+                        if (!baseRefRes.ok) throw new Error("Could not connect to scribe repository: " + baseRefRes.statusText);
                         const baseSha = (await baseRefRes.json()).object.sha;
 
-                        if (ghStatusMsg) ghStatusMsg.textContent = "⏳ Creating review branch: " + NEW_BRANCH;
                         const createBranchRes = await fetch("https://api.github.com/repos/" + REPO + "/git/refs", {
                             method: "POST",
                             headers: headers,
                             body: JSON.stringify({ ref: "refs/heads/" + NEW_BRANCH, sha: baseSha })
                         });
-                        if (!createBranchRes.ok) throw new Error("Failed to create critique branch: " + (await createBranchRes.text()));
+                        if (!createBranchRes.ok) throw new Error("Failed to create review branch: " + (await createBranchRes.text()));
 
-                        if (ghStatusMsg) ghStatusMsg.textContent = "⏳ Committing critique JSON payload...";
                         const filePath = "sessions/data/critiques/" + CAMPAIGN_ID + "-" + CHAPTER_ID + "-" + safeName + "-" + timestamp + ".json";
                         const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(exportPayload, null, 2))));
                         const commitRes = await fetch("https://api.github.com/repos/" + REPO + "/contents/" + filePath, {
@@ -3163,25 +3252,35 @@ ightarrow$ *Sheep*.</p>
                             headers: headers,
                             body: JSON.stringify({ message: "critique: " + reviewer + " review for " + CAMPAIGN_ID + " " + CHAPTER_ID, content: contentBase64, branch: NEW_BRANCH })
                         });
-                        if (!commitRes.ok) throw new Error("Failed to commit critique file: " + (await commitRes.text()));
+                        if (!commitRes.ok) throw new Error("Failed to upload feedback payload: " + (await commitRes.text()));
 
-                        if (ghStatusMsg) ghStatusMsg.textContent = "⏳ Opening Pull Request on GitHub...";
                         const prRes = await fetch("https://api.github.com/repos/" + REPO + "/pulls", {
                             method: "POST",
                             headers: headers,
                             body: JSON.stringify({ title: "📝 Review: " + CAMPAIGN_ID.toUpperCase() + " " + CHAPTER_ID.toUpperCase() + " by " + reviewer, head: NEW_BRANCH, base: BASE_BRANCH, body: prBody })
                         });
-                        if (!prRes.ok) throw new Error("Failed to open Pull Request: " + (await prRes.text()));
+                        if (!prRes.ok) throw new Error("Failed to register feedback: " + (await prRes.text()));
                         const prData = await prRes.json();
 
                         if (ghStatusMsg) {
-                            ghStatusMsg.className = "p-2.5 rounded-lg text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
-                            ghStatusMsg.innerHTML = '🎉 <strong>PR Opened Successfully!</strong><br><a href="' + prData.html_url + '" target="_blank" class="underline font-bold text-amber-300">View Pull Request #' + prData.number + '</a>';
+                            ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
+                            ghStatusMsg.innerHTML = '🎉 <strong>Feedback Submitted!</strong><br>Thank you, ' + reviewer + '! Your notes have been submitted to the scribe pipeline.';
                         }
+
+                        // Clear cache and refresh markers upon submission
+                        critiques = {};
+                        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+                        refreshMarkers();
+                        renderFeedbackNotesList();
+                        if (exportBadgeCount) exportBadgeCount.textContent = "0";
+
+                        setTimeout(() => {
+                            hideGhModal();
+                        }, 2200);
                     } catch (err) {
                         if (ghStatusMsg) {
-                            ghStatusMsg.className = "p-2.5 rounded-lg text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
-                            ghStatusMsg.textContent = "❌ Error: " + err.message;
+                            ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                            ghStatusMsg.textContent = "❌ Submission error: " + err.message;
                         }
                     } finally {
                         ghSubmitPrBtn.disabled = false;
@@ -3196,6 +3295,7 @@ ightarrow$ *Sheep*.</p>
                         critiques = {};
                         try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
                         refreshMarkers();
+                        if (exportBadgeCount) exportBadgeCount.textContent = "0";
                     }
                 };
             }
