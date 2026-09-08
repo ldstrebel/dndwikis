@@ -1692,9 +1692,6 @@
                                         <span class="p-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs">👥</span>
                                         <span class="uppercase tracking-wider font-mono text-[11px] font-bold text-slate-200">Reader Engagement & Progress Journey</span>
                                     </span>
-                                    <span id="telemetryPersonalStatus" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-400">
-                                        Reading...
-                                    </span>
                                 </div>
 
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
@@ -3305,7 +3302,6 @@
                 const compEl = document.getElementById('telemetryCompletionRate');
                 const finisherRatioEl = document.getElementById('telemetryFinisherRatio');
                 const dropoffEl = document.getElementById('telemetryDropoffDepth');
-                const statusEl = document.getElementById('telemetryPersonalStatus');
                 
                 const userProgressFill = document.getElementById('telemetryPersonalProgressFill');
                 const dropoffMarker = document.getElementById('telemetryDropoffMarker');
@@ -3371,22 +3367,6 @@
                         motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-amber-950/60 border border-amber-800 text-amber-200 leading-normal flex items-center gap-2 shadow-inner";
                     } else {
                         motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2";
-                    }
-                }
-                    if (isCompleted) {
-                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 leading-normal flex items-center gap-2 shadow-inner";
-                    } else if (myDepth > 0 && myDepth >= avgDropoffPct && avgDropoffPct > 0) {
-                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-amber-950/60 border border-amber-800 text-amber-200 leading-normal flex items-center gap-2 shadow-inner";
-                    } else {
-                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2";
-                    }
-                }
-
-                if (statusEl) {
-                    if (isCompleted) {
-                        statusEl.innerHTML = '<span class="text-emerald-400 font-bold">✨ Finisher</span>';
-                    } else {
-                        statusEl.innerHTML = '<span class="text-amber-400">📖 ' + myDepth + '% Read</span>';
                     }
                 }
             }
