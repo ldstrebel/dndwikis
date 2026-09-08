@@ -73,12 +73,35 @@ PC_COLORS = {
     "kael": "#10b981",       # Emerald
     "narrator": "#94a3b8"    # Slate
 }
-NPC_COLOR = "#f87171"        # Low-intensity red for all NPCs on dark mode
+CHARACTER_COLORS = {
+    "pierre": "#3b82f6",     # Blue
+    "dravin": "#8b5cf6",     # Violet
+    "eusacles": "#f59e0b",   # Amber / Gold
+    "alfie": "#10b981",      # Emerald
+    "theodore": "#d97706",   # Amber / Surveyor
+    "naomi": "#ec4899",      # Pink / Researcher
+    "rosa": "#f43f5e",       # Rose / Matron
+    "mike": "#64748b",       # Slate / Gatekeeper
+    "fates": "#a855f7",      # Purple / Loom Weavers
+    "clerk": "#78716c",      # Stone / Attendant
+    "thomas": "#0284c7",     # Sky / Watchman
+    "nancy": "#0ea5e9",      # Sky / Gallery Guard
+    "beast": "#e11d48",      # Crimson / Sphinx
+    "anchor": "#64748b",     # Slate / Radio Broadcaster
+    "passenger": "#71717a",  # Zinc / Commuter
+    "doug": "#f59e0b",       # Amber
+    "mara": "#06b6d4",       # Cyan
+    "kael": "#10b981",       # Emerald
+    "narrator": "#94a3b8"    # Slate
+}
+NPC_COLOR = "#f87171"        # Low-intensity red fallback for unmapped NPCs
 
 def get_speaker_color(speaker_id: str, char_info: dict = None) -> str:
     sp_id = speaker_id.lower().strip()
-    if sp_id in PC_COLORS:
-        return PC_COLORS[sp_id]
+    if sp_id in CHARACTER_COLORS:
+        return CHARACTER_COLORS[sp_id]
+    if char_info and char_info.get("color"):
+        return char_info["color"]
     if char_info and char_info.get("type") == "narrator":
         return "#94a3b8"
     return NPC_COLOR
@@ -1131,6 +1154,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     end_session_critic_card_html = build_end_session_critic_card_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct, sensory)
     source_mapping = load_session_source_mapping(session_num)
     source_mapping_json = json.dumps(source_mapping)
+    session_characters_json = json.dumps(characters)
     diff_inspector_html = build_diff_inspector_html(session_num)
 
     # Generate Story Blocks & Chapter Dividers
@@ -1378,7 +1402,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             border-color: #e2e8f0 !important;
         }}
         html.theme-light textarea,
-        html.theme-light input[type="text"] {{
+        html.theme-light input[type="text"],
+        html.theme-light select {{
             background-color: #ffffff !important;
             border-color: #cbd5e1 !important;
             color: #0f172a !important;
@@ -1522,7 +1547,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             border-color: #ded1b8 !important;
         }}
         html.theme-sepia textarea,
-        html.theme-sepia input[type="text"] {{
+        html.theme-sepia input[type="text"],
+        html.theme-sepia select {{
             background-color: #fffdf8 !important;
             border-color: #d8c7a6 !important;
             color: #2c221e !important;
@@ -2136,6 +2162,25 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     </div>
                     <p id="modalPassageText" class="text-xs sm:text-sm text-slate-200 italic leading-relaxed max-h-28 overflow-y-auto custom-scrollbar"></p>
                 </div>
+
+                <!-- Speaker Attribution & Voice Model Selector -->
+                <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80 box-border">
+                    <div class="flex items-center justify-between gap-2 mb-1.5">
+                        <label for="modalSpeakerSelect" class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                            <span>🎙️</span> <span>Speaker Attribution</span>
+                        </label>
+                        <span id="modalSpeakerChangedBadge" class="text-[10px] text-amber-400 font-mono hidden font-semibold">● Attribution Changed</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="modalSpeakerSelect" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500 font-mono box-border">
+                            <!-- Populated dynamically via openModalForBlock() -->
+                        </select>
+                        <button id="modalResetSpeakerBtn" type="button" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[10px] font-bold rounded-lg font-mono hidden transition-colors" title="Reset to original speaker">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Category</label>
                     <div class="grid grid-cols-3 sm:grid-cols-6 gap-1.5" id="categoryPillContainer">
@@ -2351,6 +2396,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     <!-- JAVASCRIPT CONTROLLER -->
     <script>
         window.SOURCE_TRANSCRIPT_MAP = {source_mapping_json};
+        window.SESSION_CHARACTERS = {session_characters_json};
         (function() {{
             const CAMPAIGN_ID = "uneraseable";
             const CHAPTER_ID = "s{session_num}";
@@ -2414,6 +2460,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const modalOverlay = document.getElementById('critiqueModalOverlay');
             const modalCloseBtn = document.getElementById('modalCloseBtn');
             const modalSpeakerPill = document.getElementById('modalSpeakerPill');
+            const modalSpeakerSelect = document.getElementById('modalSpeakerSelect');
+            const modalSpeakerChangedBadge = document.getElementById('modalSpeakerChangedBadge');
+            const modalResetSpeakerBtn = document.getElementById('modalResetSpeakerBtn');
             const modalBlockIndex = document.getElementById('modalBlockIndex');
             const modalPassageText = document.getElementById('modalPassageText');
             const modalSourceProvenance = document.getElementById('modalSourceProvenance');
@@ -3149,11 +3198,76 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 const p = block.querySelector('p');
                 const text = p ? p.innerText : "";
 
-                if (modalSpeakerPill) {{
-                    modalSpeakerPill.textContent = speakerName;
-                    modalSpeakerPill.style.backgroundColor = speakerColor + "25";
-                    modalSpeakerPill.style.borderColor = speakerColor;
-                    modalSpeakerPill.style.color = speakerColor;
+                const originalSpeakerId = (block.dataset.speaker || "narrator").toLowerCase().trim();
+                const originalSpeakerName = block.dataset.speakerName || "Narrator";
+                const originalSpeakerColor = block.dataset.speakerColor || "#94a3b8";
+
+                // Populate Speaker Attribution Selector
+                if (modalSpeakerSelect) {{
+                    modalSpeakerSelect.innerHTML = '';
+                    const chars = window.SESSION_CHARACTERS || {{}};
+
+                    if (!chars[originalSpeakerId]) {{
+                        chars[originalSpeakerId] = {{ name: originalSpeakerName, color: originalSpeakerColor, type: (originalSpeakerId === 'narrator' ? 'narrator' : 'npc') }};
+                    }}
+
+                    const sortedKeys = Object.keys(chars).sort((a, b) => {{
+                        const typeOrder = {{ 'character': 1, 'npc': 2, 'narrator': 3 }};
+                        const orderA = typeOrder[chars[a].type] || 2;
+                        const orderB = typeOrder[chars[b].type] || 2;
+                        if (orderA !== orderB) return orderA - orderB;
+                        return (chars[a].name || a).localeCompare(chars[b].name || b);
+                    }});
+
+                    sortedKeys.forEach(cid => {{
+                        const cdata = chars[cid];
+                        const opt = document.createElement('option');
+                        opt.value = cid;
+                        const typeTag = cdata.type === 'character' ? ' [PC]' : (cdata.type === 'narrator' ? ' [Narrator]' : ' [NPC]');
+                        opt.textContent = (cdata.name || cid) + typeTag;
+                        modalSpeakerSelect.appendChild(opt);
+                    }});
+
+                    const currentSuggested = (existing && existing.suggestedSpeaker) ? existing.suggestedSpeaker : originalSpeakerId;
+                    modalSpeakerSelect.value = currentSuggested;
+
+                    function updateSpeakerUi() {{
+                        const isChanged = (modalSpeakerSelect.value !== originalSpeakerId);
+                        if (modalSpeakerChangedBadge) {{
+                            if (isChanged) modalSpeakerChangedBadge.classList.remove('hidden');
+                            else modalSpeakerChangedBadge.classList.add('hidden');
+                        }}
+                        if (modalResetSpeakerBtn) {{
+                            if (isChanged) modalResetSpeakerBtn.classList.remove('hidden');
+                            else modalResetSpeakerBtn.classList.add('hidden');
+                        }}
+
+                        const activeCid = modalSpeakerSelect.value;
+                        const activeChar = chars[activeCid] || {{}};
+                        const activeName = activeChar.name || activeCid;
+                        const activeColor = activeChar.color || (activeCid === 'narrator' ? '#94a3b8' : '#f87171');
+
+                        if (modalSpeakerPill) {{
+                            modalSpeakerPill.textContent = activeName + (isChanged ? " (Proposed)" : "");
+                            modalSpeakerPill.style.backgroundColor = activeColor + "25";
+                            modalSpeakerPill.style.borderColor = activeColor;
+                            modalSpeakerPill.style.color = activeColor;
+                        }}
+                    }}
+
+                    modalSpeakerSelect.onchange = updateSpeakerUi;
+                    if (modalResetSpeakerBtn) {{
+                        modalResetSpeakerBtn.onclick = function() {{
+                            modalSpeakerSelect.value = originalSpeakerId;
+                            updateSpeakerUi();
+                        }};
+                    }}
+                    updateSpeakerUi();
+                }} else if (modalSpeakerPill) {{
+                    modalSpeakerPill.textContent = originalSpeakerName;
+                    modalSpeakerPill.style.backgroundColor = originalSpeakerColor + "25";
+                    modalSpeakerPill.style.borderColor = originalSpeakerColor;
+                    modalSpeakerPill.style.color = originalSpeakerColor;
                 }}
                 if (modalBlockIndex) modalBlockIndex.textContent = "#" + (index + 1) + " (" + blockId + ")";
                 if (modalPassageText) modalPassageText.textContent = '"' + text + '"';
@@ -3302,8 +3416,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 const rewrite = suggestedRewriteInput ? suggestedRewriteInput.value.trim() : "";
                 const p = block.querySelector('p');
 
-                if (!comment && !rewrite) {{
-                    alert("Please provide a critique note or suggested rewrite before saving.");
+                const originalSpeakerId = (block.dataset.speaker || "narrator").toLowerCase().trim();
+                const originalSpeakerName = block.dataset.speakerName || "Narrator";
+                const selectedSpeakerId = modalSpeakerSelect ? modalSpeakerSelect.value : originalSpeakerId;
+                const isSpeakerChanged = (selectedSpeakerId !== originalSpeakerId);
+                const chars = window.SESSION_CHARACTERS || {{}};
+                const selectedSpeakerName = (chars[selectedSpeakerId] && chars[selectedSpeakerId].name) ? chars[selectedSpeakerId].name : selectedSpeakerId;
+
+                if (!comment && !rewrite && !isSpeakerChanged) {{
+                    alert("Please provide a critique note, suggested rewrite, or speaker re-attribution before saving.");
                     return;
                 }}
 
@@ -3314,7 +3435,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 critiques[blockId] = {{
                     blockId: blockId,
                     blockIndex: activeBlockIndex + 1,
-                    speaker: block.dataset.speakerName,
+                    speaker: originalSpeakerName,
+                    speakerId: originalSpeakerId,
+                    suggestedSpeaker: isSpeakerChanged ? selectedSpeakerId : null,
+                    suggestedSpeakerName: isSpeakerChanged ? selectedSpeakerName : null,
                     speakerColor: block.dataset.speakerColor || "#94a3b8",
                     category: selectedCategory,
                     quote: p ? p.innerText : "",
@@ -3534,6 +3658,16 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         </div>
                     ` : '';
 
+                    const speakerChangeHtml = (c.suggestedSpeaker && c.suggestedSpeaker !== c.speakerId) ? `
+                        <div class="mt-1 p-1.5 rounded-lg bg-amber-950/40 border border-amber-800/60 text-[11px] text-amber-300 flex items-center gap-1.5 font-mono">
+                            <span>🎙️</span>
+                            <span class="font-bold">Re-attribute Voice:</span>
+                            <span class="line-through text-slate-400">` + (c.speaker || 'Narrator') + `</span>
+                            <span>➔</span>
+                            <span class="font-bold text-amber-200">` + (c.suggestedSpeakerName || c.suggestedSpeaker) + `</span>
+                        </div>
+                    ` : '';
+
                     return `
                         <div class="p-3 rounded-r-xl rounded-l-md border-y border-r border-slate-800 space-y-1.5 relative group shadow-sm transition-all" style="` + cardStyle + `">
                             <div class="flex items-center justify-between gap-2">
@@ -3548,6 +3682,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                                 </button>
                             </div>
                             ` + (c.quote ? `<p class="text-[11px] text-slate-300 italic line-clamp-2 pl-0.5">"` + c.quote + `"</p>` : '') + `
+                            ` + speakerChangeHtml + `
                             ` + (c.comment ? `<p class="text-xs text-slate-100 font-medium pl-0.5">` + c.comment + `</p>` : '') + `
                             ` + rewriteHtml + `
                         </div>
@@ -3747,9 +3882,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         critiques: Object.values(critiques)
                     }};
 
-                    const markdownRows = Object.values(critiques).map(c => 
-                        "| `" + c.blockId + "` | **" + c.speaker + "** | " + (c.sourceLine ? ("`L" + c.sourceLine + "`" + (c.sourceSpeaker ? " (" + c.sourceSpeaker + ")" : "")) : "-") + " | `" + c.category + "` | " + (c.comment || '').replace(/\\|/g, '\\\\|') + " | " + (c.suggestedRewrite ? c.suggestedRewrite.replace(/\\|/g, '\\\\|') : '-') + " |"
-                    ).join('\\n');
+                    const markdownRows = Object.values(critiques).map(c => {{
+                        const spkCol = (c.suggestedSpeaker && c.suggestedSpeaker !== c.speakerId)
+                            ? "**" + c.speaker + "** ➔ 🎙️ **" + (c.suggestedSpeakerName || c.suggestedSpeaker) + "**"
+                            : "**" + c.speaker + "**";
+                        return "| `" + c.blockId + "` | " + spkCol + " | " + (c.sourceLine ? ("`L" + c.sourceLine + "`" + (c.sourceSpeaker ? " (" + c.sourceSpeaker + ")" : "")) : "-") + " | `" + c.category + "` | " + (c.comment || '').replace(/\\|/g, '\\\\|') + " | " + (c.suggestedRewrite ? c.suggestedRewrite.replace(/\\|/g, '\\\\|') : '-') + " |";
+                    }}).join('\\n');
 
                     let reviewerSection = "**Reviewer:** `" + reviewer + "`";
                     if (isBankName && replacementName) {{
