@@ -858,16 +858,34 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cinzel:wght@500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
+        :root {{
+            --story-font-scale: 1;
+            --story-font-family: 'Outfit', sans-serif;
+        }}
+
         body {{
             background-color: #080c14;
             color: #f1f5f9;
-            font-family: 'Outfit', sans-serif;
+            font-family: var(--story-font-family);
             -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }}
 
         .story-block {{
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
+        }}
+
+        /* Responsive & Customizable Story Prose Scaling */
+        .story-block p {{
+            font-size: calc(1.0625rem * var(--story-font-scale, 1));
+            line-height: calc(1.75 * var(--story-font-scale, 1));
+            transition: font-size 0.15s ease, line-height 0.15s ease;
+        }}
+        @media (min-width: 640px) {{
+            .story-block p {{
+                font-size: calc(1.125rem * var(--story-font-scale, 1));
+            }}
         }}
 
         body.mode-critique .story-block {{
@@ -904,18 +922,108 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             display: inline-flex;
         }}
 
+        /* ========================================================= */
+        /* COLOR THEMES (Light, Sepia, Dark) */
+        /* ========================================================= */
+        html.theme-light body {{
+            background-color: #f8fafc;
+            color: #0f172a;
+        }}
+        html.theme-light header {{
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            border-color: #e2e8f0 !important;
+        }}
+        html.theme-light header h1 {{
+            color: #d97706 !important;
+        }}
+        html.theme-light header p,
+        html.theme-light header a {{
+            color: #64748b !important;
+        }}
+        html.theme-light header a:hover {{
+            color: #d97706 !important;
+            background-color: #f1f5f9 !important;
+        }}
+        html.theme-light .story-block-narrator {{
+            color: #334155 !important;
+        }}
+        html.theme-light .story-block-narrator:hover {{
+            background-color: rgba(226, 232, 240, 0.6) !important;
+        }}
+        html.theme-light .story-block-dialogue {{
+            background: #ffffff !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+            border-color: #e2e8f0;
+        }}
+        html.theme-light .story-block-dialogue p {{
+            color: #0f172a !important;
+        }}
+        html.theme-light #chaptersModalCard,
+        html.theme-light #critiqueBottomSheet,
+        html.theme-light #criticForumModalCard,
+        html.theme-light #onboardingModalCard,
+        html.theme-light #settingsModalCard,
+        html.theme-light #ghModalCard {{
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }}
+        html.theme-light #chaptersModalCard h2,
+        html.theme-light #chaptersModalCard h3,
+        html.theme-light #chaptersModalCard p,
+        html.theme-light #criticForumModalCard h3,
+        html.theme-light #criticForumModalCard p,
+        html.theme-light #onboardingModalCard h3,
+        html.theme-light #onboardingModalCard p,
+        html.theme-light #settingsModalCard h3,
+        html.theme-light #settingsModalCard p {{
+            color: #0f172a;
+        }}
+
+        html.theme-sepia body {{
+            background-color: #f6f0e2;
+            color: #2c221e;
+        }}
+        html.theme-sepia header {{
+            background-color: rgba(246, 240, 226, 0.95) !important;
+            border-color: #e3d7bf !important;
+        }}
+        html.theme-sepia .story-block-narrator {{
+            color: #4a3d35 !important;
+        }}
+        html.theme-sepia .story-block-narrator:hover {{
+            background-color: rgba(227, 215, 191, 0.4) !important;
+        }}
+        html.theme-sepia .story-block-dialogue {{
+            background: #fffdf8 !important;
+            box-shadow: 0 1px 4px rgba(60,40,20,0.06) !important;
+        }}
+        html.theme-sepia .story-block-dialogue p {{
+            color: #2c221e !important;
+        }}
+        html.theme-sepia #chaptersModalCard,
+        html.theme-sepia #critiqueBottomSheet,
+        html.theme-sepia #criticForumModalCard,
+        html.theme-sepia #onboardingModalCard,
+        html.theme-sepia #settingsModalCard,
+        html.theme-sepia #ghModalCard {{
+            background-color: #fdfbf7 !important;
+            border-color: #ded1b8 !important;
+            color: #2c221e !important;
+        }}
+
         /* Overlay Transitions & Viewport Sizing */
-        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay {{
+        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay {{
             transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
             height: 100vh;
             height: 100dvh;
         }}
-        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible {{
+        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible {{
             opacity: 1;
             pointer-events: auto;
         }}
 
-        #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard {{
+        #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, max-height 0.2s ease;
             transform: scale(0.96) translateY(-10px);
             opacity: 0;
@@ -923,7 +1031,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         }}
         #chaptersModalOverlay.visible #chaptersModalCard,
         #critiqueModalOverlay.visible #critiqueBottomSheet,
-        #criticForumModalOverlay.visible #criticForumModalCard {{
+        #criticForumModalOverlay.visible #criticForumModalCard,
+        #settingsModalOverlay.visible #settingsModalCard,
+        #onboardingModalOverlay.visible #onboardingModalCard {{
             transform: scale(1) translateY(0);
             opacity: 1;
         }}
@@ -971,27 +1081,29 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
             </div>
 
-            <!-- Header Controls: Critic Button, Chapters Button & Reading Mode Switcher -->
+            <!-- Header Controls: Critic Button, Chapters Button, Mode Toggle & Settings Cog -->
             <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                <button id="toggleCriticForumBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-950/60 hover:bg-rose-900/80 border border-rose-700/70 text-rose-200 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Editorial Critic Review & Forum">
+                <button id="toggleCriticForumBtn" type="button" class="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-950/60 hover:bg-rose-900/80 border border-rose-700/70 text-rose-200 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Editorial Critic Review & Forum">
                     <span class="text-sm">🍅</span>
                     <span class="font-bold font-mono text-rose-400">{bot_grade}</span>
                     <span class="hidden md:inline text-rose-300 font-normal">Critic</span>
                 </button>
 
-                <button id="toggleChaptersBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
+                <button id="toggleChaptersBtn" type="button" class="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
                     <span>📑</span>
                     <span class="hidden xs:inline">Chapters</span>
                 </button>
 
-                <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5" title="Switch reading mode">
-                    <button id="modeReaderBtn" type="button" class="px-2 sm:px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1">
-                        <span>📖</span> <span class="hidden sm:inline">Read</span>
-                    </button>
-                    <button id="modeCritiqueBtn" type="button" class="px-2 sm:px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1">
-                        <span>✍️</span> <span class="hidden sm:inline">Critique</span>
-                    </button>
-                </div>
+                <!-- Combined Single Mode Toggle: Switches dynamically between Read Mode and Critique Mode -->
+                <button id="modeToggleBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 text-slate-950 border border-amber-300 shadow-md ring-2 ring-amber-400/30 transition-all flex items-center gap-1.5 active:scale-95" title="Critique Mode Active — tap to toggle to Read Mode">
+                    <span id="modeToggleIcon">✍️</span>
+                    <span id="modeToggleLabel" class="hidden sm:inline">Critique</span>
+                </button>
+
+                <!-- Reading Settings Cog -->
+                <button id="toggleSettingsBtn" type="button" class="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white flex items-center gap-1 transition-all shadow-sm active:scale-95" title="Reading Preferences (Font Size, Theme, Font Family)">
+                    <span class="text-sm">⚙️</span>
+                </button>
             </div>
         </div>
         <!-- Minimal Top Reading Progress Bar with Dynamic Chapter Breadcrumbs & Finished Pip -->
@@ -1382,73 +1494,175 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     <!-- FIRST-TIME SESSION WELCOME & FEATURE TOUR MODAL -->
     <!-- ========================================================= -->
     <div id="onboardingModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-4 transition-opacity duration-200">
-        <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 text-left">
-            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-xl flex-shrink-0">
+        <div id="onboardingModalCard" class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-lg w-full p-5 sm:p-7 shadow-2xl space-y-4 text-left">
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3.5">
+                <div class="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl flex-shrink-0">
                     ✨
                 </div>
                 <div>
-                    <h3 class="text-base font-bold text-slate-100 font-serif">Welcome to Session {session_num}</h3>
-                    <p class="text-xs text-amber-400 font-mono">Interactive Reader & Critique Engine</p>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-100 font-serif">Welcome to Session {session_num}</h3>
+                    <p class="text-xs sm:text-sm text-amber-400 font-mono font-medium">Interactive Reader & Critique Engine</p>
                 </div>
             </div>
 
-            <p class="text-xs text-slate-300 leading-relaxed">
-                Here is a quick overview of what this interactive session offers:
+            <p class="text-sm sm:text-base text-slate-200 leading-relaxed">
+                Experience this chronicle with rich interactive controls, character diagnostics, custom reading themes, and inline feedback:
             </p>
 
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <!-- 1. Critique Mode & Interactive Toggle Matching Header -->
-                <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-2">
+            <div class="space-y-3 text-sm text-slate-300">
+                <!-- 1. Critique Mode & Single Toggle Matching Header -->
+                <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-2">
                     <div class="flex items-center justify-between gap-2">
-                        <span class="font-bold text-amber-300 flex items-center gap-1.5 text-xs">
+                        <span class="font-bold text-amber-300 flex items-center gap-1.5 text-sm">
                             <span>✍️</span> <span>Reading & Critique Mode</span>
                         </span>
-                        <!-- Interactive Toggle component matching Header -->
-                        <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5 shadow-inner">
-                            <button id="onboardingModeReaderBtn" type="button" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1">
-                                <span>📖</span> <span>Read</span>
-                            </button>
-                            <button id="onboardingModeCritiqueBtn" type="button" class="px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1">
-                                <span>✍️</span> <span>Critique</span>
-                            </button>
-                        </div>
+                        <!-- Combined Single Mode Toggle -->
+                        <button id="onboardingModeToggleBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 border border-amber-300 shadow-md flex items-center gap-1.5 transition-all active:scale-95">
+                            <span id="onboardingModeToggleIcon">✍️</span>
+                            <span id="onboardingModeToggleLabel">Critique Mode</span>
+                        </button>
                     </div>
-                    <p id="onboardingModeDesc" class="text-[11px] text-slate-300 leading-normal bg-slate-900/60 p-2 rounded-lg border border-slate-800/80">
+                    <p id="onboardingModeDesc" class="text-xs sm:text-sm text-slate-300 leading-normal bg-slate-900/70 p-2.5 rounded-lg border border-slate-800/80">
                         <strong>Critique Mode Active:</strong> Click or tap any passage to leave review notes, tone directives, or suggested rewrites.
                     </p>
                 </div>
 
                 <!-- 2. Chapters & Diagnostics -->
-                <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1">
+                <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-indigo-300 flex items-center gap-1.5">
+                        <span class="font-bold text-indigo-300 flex items-center gap-1.5 text-sm">
                             <span>📑</span> <span>Chapters & Session Stats</span>
                         </span>
-                        <span class="text-[10px] text-slate-500 font-mono">Top Header</span>
+                        <span class="text-xs text-slate-400 font-mono">Top Header</span>
                     </div>
-                    <p class="text-[11px] text-slate-400 leading-normal">
-                        Tap <strong>📑 Chapters</strong> anytime to jump to scenes, view dialogue shares per chapter, inspect character voice velocity curves, sensory registers, and campaign analytics.
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Tap <strong>📑 Chapters</strong> anytime to jump to scenes, view dialogue shares per chapter, character voice curves, sensory registers, and campaign analytics.
                     </p>
                 </div>
 
-                <!-- 3. Reading Progress Bar -->
-                <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1">
+                <!-- 3. Reading Preferences & Font Scaling -->
+                <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-emerald-300 flex items-center gap-1.5">
-                            <span>📏</span> <span>Live Reading Progress</span>
+                        <span class="font-bold text-emerald-300 flex items-center gap-1.5 text-sm">
+                            <span>⚙️</span> <span>Font Sizing & Reading Themes</span>
                         </span>
-                        <span class="text-[10px] text-slate-500 font-mono">Under Header</span>
+                        <span class="text-xs text-slate-400 font-mono">Top Header</span>
                     </div>
-                    <p class="text-[11px] text-slate-400 leading-normal">
-                        The minimal blue bar directly beneath the top header tracks how far along you are in the story from start to finish.
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Tap the <strong>⚙️ Settings cog</strong> to adjust story font size (A− / A+) and switch between Dark 🌙, Light ☀️, and Sepia 📜 reading palettes.
                     </p>
                 </div>
             </div>
 
-            <button id="closeOnboardingBtn" type="button" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 active:scale-98 flex items-center justify-center gap-1.5">
+            <button id="closeOnboardingBtn" type="button" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-sm sm:text-base transition-all shadow-lg shadow-amber-500/20 active:scale-98 flex items-center justify-center gap-2">
                 <span>Start Reading Session {session_num}</span> <span>🚀</span>
             </button>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- READING SETTINGS & PREFERENCES MODAL -->
+    <!-- ========================================================= -->
+    <div id="settingsModalOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 transition-opacity duration-200">
+        <div id="settingsModalCard" class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl flex flex-col max-h-[90vh] space-y-4 text-left">
+            
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-xl">
+                        ⚙️
+                    </div>
+                    <div>
+                        <h3 class="text-slate-100 font-bold text-base font-serif">Reading Preferences</h3>
+                        <p class="text-xs text-slate-400 font-mono">Font Size, Color Themes & Typography</p>
+                    </div>
+                </div>
+                <button id="closeSettingsModalBtn" type="button" class="text-slate-400 hover:text-slate-200 text-2xl font-bold p-1 leading-none transition-colors" title="Close">&times;</button>
+            </div>
+
+            <div class="space-y-4 flex-1 overflow-y-auto pr-1 custom-scrollbar">
+                
+                <!-- 1. Font Size Section -->
+                <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 font-mono">
+                            <span>🔤</span> <span>Story Font Size</span>
+                        </span>
+                        <span id="fontSizeDisplay" class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-amber-300">100%</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between gap-2">
+                        <button id="fontSizeMinusBtn" type="button" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-bold text-sm border border-slate-700 transition-all flex items-center justify-center gap-1" title="Decrease Font Size">
+                            <span>A−</span> <span class="text-[11px] text-slate-400 font-normal">Smaller</span>
+                        </button>
+                        <button id="fontSizeResetBtn" type="button" class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-semibold border border-slate-800 transition-colors" title="Reset to 100%">
+                            Reset
+                        </button>
+                        <button id="fontSizePlusBtn" type="button" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-bold text-sm border border-slate-700 transition-all flex items-center justify-center gap-1" title="Increase Font Size">
+                            <span>A+</span> <span class="text-[11px] text-slate-400 font-normal">Larger</span>
+                        </button>
+                    </div>
+
+                    <!-- Live Font Preview -->
+                    <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800/80">
+                        <p id="settingsFontPreview" class="text-slate-300 italic transition-all leading-normal" style="font-size: 1.0625rem;">
+                            "The threads of the Weave hum softly across the pages of history..."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 2. Reading Theme Switcher -->
+                <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 font-mono">
+                        <span>🎨</span> <span>Color Palette Theme</span>
+                    </span>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-xs font-medium">
+                        <button id="themeDarkBtn" type="button" class="p-2.5 rounded-xl border-2 border-amber-400 bg-slate-950 text-slate-100 flex flex-col items-center gap-1 transition-all shadow-sm">
+                            <span class="text-base">🌙</span>
+                            <span class="font-bold">Dark</span>
+                        </button>
+                        <button id="themeLightBtn" type="button" class="p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 bg-slate-100 text-slate-900 flex flex-col items-center gap-1 transition-all">
+                            <span class="text-base">☀️</span>
+                            <span class="font-bold">Light</span>
+                        </button>
+                        <button id="themeSepiaBtn" type="button" class="p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 bg-[#f6f0e2] text-[#2c221e] flex flex-col items-center gap-1 transition-all">
+                            <span class="text-base">📜</span>
+                            <span class="font-bold">Sepia</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Reading Typography / Font Family -->
+                <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5 font-mono">
+                        <span>📖</span> <span>Reading Typography</span>
+                    </span>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        <button id="fontSansBtn" type="button" class="p-2 rounded-xl border-2 border-amber-400 bg-slate-900 text-slate-100 font-sans text-center transition-all">
+                            <span class="block font-bold">Sans</span>
+                            <span class="text-[10px] text-slate-400">Outfit</span>
+                        </button>
+                        <button id="fontSerifBtn" type="button" class="p-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 font-serif text-center transition-all">
+                            <span class="block font-bold">Serif</span>
+                            <span class="text-[10px] text-slate-400">Cinzel</span>
+                        </button>
+                        <button id="fontMonoBtn" type="button" class="p-2 rounded-xl border border-slate-700 bg-slate-900 text-slate-300 font-mono text-center transition-all">
+                            <span class="block font-bold">Mono</span>
+                            <span class="text-[10px] text-slate-400">JetBrains</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="pt-2 border-t border-slate-800 flex justify-end flex-shrink-0">
+                <button id="closeSettingsFooterBtn" type="button" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs sm:text-sm transition-all shadow-md">
+                    Done
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1488,8 +1702,30 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const forumCommentInput = document.getElementById('forumCommentInput');
             const forumStatusMsg = document.getElementById('forumStatusMsg');
 
-            const modeReaderBtn = document.getElementById('modeReaderBtn');
-            const modeCritiqueBtn = document.getElementById('modeCritiqueBtn');
+            // Combined Mode Toggle & Settings Elements
+            const modeToggleBtn = document.getElementById('modeToggleBtn');
+            const modeToggleIcon = document.getElementById('modeToggleIcon');
+            const modeToggleLabel = document.getElementById('modeToggleLabel');
+            const onboardingModeToggleBtn = document.getElementById('onboardingModeToggleBtn');
+            const onboardingModeToggleIcon = document.getElementById('onboardingModeToggleIcon');
+            const onboardingModeToggleLabel = document.getElementById('onboardingModeToggleLabel');
+
+            const toggleSettingsBtn = document.getElementById('toggleSettingsBtn');
+            const settingsModalOverlay = document.getElementById('settingsModalOverlay');
+            const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
+            const closeSettingsFooterBtn = document.getElementById('closeSettingsFooterBtn');
+            const fontSizeMinusBtn = document.getElementById('fontSizeMinusBtn');
+            const fontSizePlusBtn = document.getElementById('fontSizePlusBtn');
+            const fontSizeResetBtn = document.getElementById('fontSizeResetBtn');
+            const fontSizeDisplay = document.getElementById('fontSizeDisplay');
+            const settingsFontPreview = document.getElementById('settingsFontPreview');
+            const themeDarkBtn = document.getElementById('themeDarkBtn');
+            const themeLightBtn = document.getElementById('themeLightBtn');
+            const themeSepiaBtn = document.getElementById('themeSepiaBtn');
+            const fontSansBtn = document.getElementById('fontSansBtn');
+            const fontSerifBtn = document.getElementById('fontSerifBtn');
+            const fontMonoBtn = document.getElementById('fontMonoBtn');
+
             const footerExportBtn = document.getElementById('footerExportBtn');
             const clearCritiquesBtn = document.getElementById('clearCritiquesBtn');
             const exportBadgeCount = document.getElementById('exportBadgeCount');
@@ -1520,6 +1756,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         (modalOverlay && modalOverlay.classList.contains('visible')) ||
                         (onboardingOverlay && onboardingOverlay.classList.contains('visible')) ||
                         (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) ||
+                        (settingsModalOverlay && settingsModalOverlay.classList.contains('visible')) ||
                         (typeof ghModalOverlay !== 'undefined' && ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0'))
                     );
                     if (!isAnyModalOpen) {{
@@ -1758,29 +1995,49 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }});
             }}
 
-            const onbModeReaderBtn = document.getElementById('onboardingModeReaderBtn');
-            const onbModeCritiqueBtn = document.getElementById('onboardingModeCritiqueBtn');
             const onbModeDesc = document.getElementById('onboardingModeDesc');
+            let currentReadingMode = "critique";
+
+            window.toggleReadingMode = function() {{
+                const nextMode = (currentReadingMode === 'critique') ? 'read' : 'critique';
+                window.setReadingMode(nextMode);
+            }};
 
             window.setReadingMode = function(mode) {{
+                currentReadingMode = mode;
                 const isCritique = (mode === 'critique');
                 if (isCritique) {{
                     document.body.classList.add('mode-critique');
                 }} else {{
                     document.body.classList.remove('mode-critique');
                 }}
-                
-                const activeBtnClass = "px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1";
-                const inactiveBtnClass = "px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1";
 
-                if (modeReaderBtn && modeCritiqueBtn) {{
-                    modeReaderBtn.className = !isCritique ? activeBtnClass : inactiveBtnClass;
-                    modeCritiqueBtn.className = isCritique ? activeBtnClass : inactiveBtnClass;
+                // Update Sticky Header Combined Toggle
+                if (modeToggleBtn) {{
+                    if (isCritique) {{
+                        modeToggleBtn.className = "px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 text-slate-950 border border-amber-300 shadow-md ring-2 ring-amber-400/30 transition-all flex items-center gap-1.5 active:scale-95";
+                        if (modeToggleIcon) modeToggleIcon.textContent = "✍️";
+                        if (modeToggleLabel) modeToggleLabel.textContent = "Critique";
+                        modeToggleBtn.title = "Critique Mode is Active — tap to toggle to Read Mode";
+                    }} else {{
+                        modeToggleBtn.className = "px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-1.5 active:scale-95";
+                        if (modeToggleIcon) modeToggleIcon.textContent = "📖";
+                        if (modeToggleLabel) modeToggleLabel.textContent = "Read";
+                        modeToggleBtn.title = "Read Mode is Active — tap to enable Critique Mode";
+                    }}
                 }}
 
-                if (onbModeReaderBtn && onbModeCritiqueBtn) {{
-                    onbModeReaderBtn.className = !isCritique ? activeBtnClass : inactiveBtnClass;
-                    onbModeCritiqueBtn.className = isCritique ? activeBtnClass : inactiveBtnClass;
+                // Update Onboarding Combined Toggle
+                if (onboardingModeToggleBtn) {{
+                    if (isCritique) {{
+                        onboardingModeToggleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 border border-amber-300 shadow-md flex items-center gap-1.5 transition-all active:scale-95";
+                        if (onboardingModeToggleIcon) onboardingModeToggleIcon.textContent = "✍️";
+                        if (onboardingModeToggleLabel) onboardingModeToggleLabel.textContent = "Critique Mode";
+                    }} else {{
+                        onboardingModeToggleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-1.5 active:scale-95";
+                        if (onboardingModeToggleIcon) onboardingModeToggleIcon.textContent = "📖";
+                        if (onboardingModeToggleLabel) onboardingModeToggleLabel.textContent = "Read Mode";
+                    }}
                 }}
 
                 if (onbModeDesc) {{
@@ -1792,10 +2049,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
             }};
 
-            if (modeReaderBtn) modeReaderBtn.onclick = () => window.setReadingMode('read');
-            if (modeCritiqueBtn) modeCritiqueBtn.onclick = () => window.setReadingMode('critique');
-            if (onbModeReaderBtn) onbModeReaderBtn.onclick = () => window.setReadingMode('read');
-            if (onbModeCritiqueBtn) onbModeCritiqueBtn.onclick = () => window.setReadingMode('critique');
+            if (modeToggleBtn) modeToggleBtn.onclick = window.toggleReadingMode;
+            if (onboardingModeToggleBtn) onboardingModeToggleBtn.onclick = window.toggleReadingMode;
 
             categoryPills.forEach(pill => {{
                 pill.onclick = function() {{
@@ -1891,6 +2146,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         chaptersModalOverlay,
                         onboardingOverlay,
                         criticForumModalOverlay,
+                        settingsModalOverlay,
                         document.getElementById('ghModalOverlay')
                     ];
                     overlays.forEach(ov => {{
@@ -1932,6 +2188,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             document.addEventListener('keydown', function(e) {{
                 if (e.key === 'Escape') {{
+                    if (settingsModalOverlay && settingsModalOverlay.classList.contains('visible')) hideSettingsModal();
                     if (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) hideCriticForumModal();
                     if (modalOverlay && modalOverlay.classList.contains('visible')) closeModal();
                     if (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) closeChaptersModal();
@@ -2552,6 +2809,137 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     }}
                 }};
             }}
+
+            // =========================================================
+            // READING SETTINGS & THEME CONTROLLER
+            // =========================================================
+            let currentFontScale = 1.0;
+            const FONT_SCALES = [0.8, 0.9, 1.0, 1.15, 1.3, 1.5];
+
+            function showSettingsModal() {{
+                if (settingsModalOverlay) {{
+                    settingsModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                    settingsModalOverlay.classList.add('visible');
+                    if (window.visualViewport) {{
+                        settingsModalOverlay.style.height = window.visualViewport.height + 'px';
+                        settingsModalOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
+                    }}
+                    setBodyScrollLock(true);
+                }}
+            }}
+
+            function hideSettingsModal() {{
+                if (settingsModalOverlay) {{
+                    settingsModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    settingsModalOverlay.classList.remove('visible');
+                    settingsModalOverlay.style.height = '';
+                    settingsModalOverlay.style.transform = '';
+                    setBodyScrollLock(false);
+                }}
+            }}
+
+            function updateFontScale(scale) {{
+                currentFontScale = Math.min(1.6, Math.max(0.75, Math.round(scale * 100) / 100));
+                document.documentElement.style.setProperty('--story-font-scale', currentFontScale);
+                if (fontSizeDisplay) {{
+                    fontSizeDisplay.textContent = Math.round(currentFontScale * 100) + '%';
+                }}
+                if (settingsFontPreview) {{
+                    settingsFontPreview.style.fontSize = (1.0625 * currentFontScale) + 'rem';
+                }}
+                try {{
+                    localStorage.setItem('dnd_reader_font_scale', currentFontScale.toString());
+                }} catch(e) {{}}
+            }}
+
+            function setReaderTheme(theme) {{
+                document.documentElement.classList.remove('theme-dark', 'theme-light', 'theme-sepia');
+                document.documentElement.classList.add('theme-' + theme);
+
+                const activeThemeClass = "p-2.5 rounded-xl border-2 border-amber-400 bg-slate-950 text-slate-100 flex flex-col items-center gap-1 transition-all shadow-sm";
+                const lightActiveThemeClass = "p-2.5 rounded-xl border-2 border-amber-500 bg-slate-100 text-slate-900 flex flex-col items-center gap-1 transition-all shadow-sm";
+                const sepiaActiveThemeClass = "p-2.5 rounded-xl border-2 border-amber-600 bg-[#f6f0e2] text-[#2c221e] flex flex-col items-center gap-1 transition-all shadow-sm";
+
+                const darkInactiveClass = "p-2.5 rounded-xl border border-slate-800 hover:border-slate-600 bg-slate-950 text-slate-400 flex flex-col items-center gap-1 transition-all";
+                const lightInactiveClass = "p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 bg-slate-100 text-slate-900 flex flex-col items-center gap-1 transition-all";
+                const sepiaInactiveClass = "p-2.5 rounded-xl border border-slate-700 hover:border-slate-500 bg-[#f6f0e2] text-[#2c221e] flex flex-col items-center gap-1 transition-all";
+
+                if (themeDarkBtn) themeDarkBtn.className = (theme === 'dark') ? activeThemeClass : darkInactiveClass;
+                if (themeLightBtn) themeLightBtn.className = (theme === 'light') ? lightActiveThemeClass : lightInactiveClass;
+                if (themeSepiaBtn) themeSepiaBtn.className = (theme === 'sepia') ? sepiaActiveThemeClass : sepiaInactiveClass;
+
+                try {{
+                    localStorage.setItem('dnd_reader_theme', theme);
+                }} catch(e) {{}}
+            }}
+
+            function setReaderFontFamily(family) {{
+                let fontVal = "'Outfit', sans-serif";
+                if (family === 'serif') fontVal = "'Cinzel', Georgia, serif";
+                if (family === 'mono') fontVal = "'JetBrains Mono', monospace";
+
+                document.documentElement.style.setProperty('--story-font-family', fontVal);
+
+                const activeFontClass = "p-2 rounded-xl border-2 border-amber-400 bg-slate-900 text-slate-100 text-center transition-all shadow-sm";
+                const inactiveFontClass = "p-2 rounded-xl border border-slate-800 bg-slate-900/60 text-slate-400 text-center transition-all hover:border-slate-700";
+
+                if (fontSansBtn) fontSansBtn.className = (family === 'sans') ? (activeFontClass + " font-sans") : (inactiveFontClass + " font-sans");
+                if (fontSerifBtn) fontSerifBtn.className = (family === 'serif') ? (activeFontClass + " font-serif") : (inactiveFontClass + " font-serif");
+                if (fontMonoBtn) fontMonoBtn.className = (family === 'mono') ? (activeFontClass + " font-mono") : (inactiveFontClass + " font-mono");
+
+                try {{
+                    localStorage.setItem('dnd_reader_font_family', family);
+                }} catch(e) {{}}
+            }}
+
+            // Bind Settings Events
+            if (toggleSettingsBtn) toggleSettingsBtn.onclick = showSettingsModal;
+            if (closeSettingsModalBtn) closeSettingsModalBtn.onclick = hideSettingsModal;
+            if (closeSettingsFooterBtn) closeSettingsFooterBtn.onclick = hideSettingsModal;
+            if (settingsModalOverlay) {{
+                settingsModalOverlay.onclick = function(e) {{
+                    if (e.target === settingsModalOverlay) hideSettingsModal();
+                }};
+            }}
+
+            if (fontSizeMinusBtn) {{
+                fontSizeMinusBtn.onclick = function() {{
+                    const idx = FONT_SCALES.findIndex(s => s >= currentFontScale);
+                    const prev = (idx > 0) ? FONT_SCALES[idx - 1] : (currentFontScale - 0.1);
+                    updateFontScale(prev);
+                }};
+            }}
+            if (fontSizePlusBtn) {{
+                fontSizePlusBtn.onclick = function() {{
+                    const next = FONT_SCALES.find(s => s > currentFontScale) || (currentFontScale + 0.1);
+                    updateFontScale(next);
+                }};
+            }}
+            if (fontSizeResetBtn) {{
+                fontSizeResetBtn.onclick = function() {{
+                    updateFontScale(1.0);
+                }};
+            }}
+
+            if (themeDarkBtn) themeDarkBtn.onclick = () => setReaderTheme('dark');
+            if (themeLightBtn) themeLightBtn.onclick = () => setReaderTheme('light');
+            if (themeSepiaBtn) themeSepiaBtn.onclick = () => setReaderTheme('sepia');
+
+            if (fontSansBtn) fontSansBtn.onclick = () => setReaderFontFamily('sans');
+            if (fontSerifBtn) fontSerifBtn.onclick = () => setReaderFontFamily('serif');
+            if (fontMonoBtn) fontMonoBtn.onclick = () => setReaderFontFamily('mono');
+
+            // Initialize saved preferences
+            try {{
+                const savedScale = parseFloat(localStorage.getItem('dnd_reader_font_scale') || '1');
+                if (savedScale && !isNaN(savedScale)) updateFontScale(savedScale);
+
+                const savedTheme = localStorage.getItem('dnd_reader_theme') || 'dark';
+                setReaderTheme(savedTheme);
+
+                const savedFont = localStorage.getItem('dnd_reader_font_family') || 'sans';
+                setReaderFontFamily(savedFont);
+            }} catch(e) {{}}
 
             // =========================================================
             // READERSHIP TELEMETRY & COMPLETION TRACKER (V2 Clean)
