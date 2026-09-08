@@ -3,7 +3,7 @@
 2. Consolidated Top Stats Drawer with Single-View Dialogue Momentum Visualizer (Zero Horizontal Scroll):
    - Tab 1: Stacked Chapter Histogram (Interval bars with PC/NPC breakdown and tap-to-jump)
    - Tab 2: Cumulative Dialogue Words Line Chart (SVG Velocity curve)
-   - Tab 3: Campaign Whole Analytics (Sessions 1-3 Comparison & Totals)
+   - Tab 3: Campaign to Date Analytics (Current Session & Before: S1 for S1, S1-S2 for S2, S1-S3 for S3)
 3. Elevated Mobile Critique Modal (Shifted above keyboard, top passage navigation arrows, dynamic scroll)
 4. Natural prose flow for narration blocks
 5. Named NPCs in red (#f87171), clean PC names, fast scene jump pills
@@ -253,14 +253,14 @@ def build_session_line_chart_svg(chapters: list) -> str:
     </div>
     """
 
-def build_campaign_whole_html() -> str:
-    """Builds cross-session comparison across Sessions 1–3."""
+def build_campaign_whole_html(current_session_num: int) -> str:
+    """Builds cross-session comparison for the campaign up to and including current session."""
     s_stats = []
     tot_camp_words = 0
     tot_camp_spoken = 0
     speaker_totals = {}
 
-    for s_num in [1, 2, 3]:
+    for s_num in range(1, current_session_num + 1):
         m = all_manifests.get(s_num, {})
         st = m.get("stats", {})
         wc = st.get("wordCount", 0)
@@ -281,7 +281,8 @@ def build_campaign_whole_html() -> str:
             if sid != "narrator":
                 speaker_totals[sid] = speaker_totals.get(sid, 0) + sp.get("words", 0)
 
-    # Session summary cards
+    # Grid columns based on number of sessions to date
+    cols_class = "grid-cols-1" if current_session_num == 1 else ("grid-cols-2" if current_session_num == 2 else "grid-cols-3")
     session_cards = ""
     for ss in s_stats:
         session_cards += f"""
@@ -298,7 +299,7 @@ def build_campaign_whole_html() -> str:
         </div>
         """
 
-    # Whole Campaign Speaker Share
+    # Cumulative Speaker Share to date
     spk_chips = ""
     for sid, words in sorted(speaker_totals.items(), key=lambda x: -x[1]):
         pct = round((words / max(tot_camp_spoken, 1)) * 100, 1)
@@ -314,18 +315,19 @@ def build_campaign_whole_html() -> str:
         """
 
     camp_pct = round((tot_camp_spoken / max(tot_camp_words, 1)) * 100, 1)
+    sessions_range_str = "Session 1" if current_session_num == 1 else f"Sessions 1–{current_session_num}"
 
     return f"""
     <div class="w-full space-y-2.5">
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-            <span>Campaign Totals (Sessions 1–3)</span>
+            <span>Campaign to Date ({sessions_range_str})</span>
             <span class="text-[10px] text-amber-400 font-mono">{tot_camp_words:,} Total Words · {tot_camp_spoken:,} Spoken ({camp_pct}%)</span>
         </div>
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid {cols_class} gap-2">
             {session_cards}
         </div>
         <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 space-y-1.5">
-            <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Campaign Cumulative Voice Share</div>
+            <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Campaign Voice Share (Through S{current_session_num})</div>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                 {spk_chips}
             </div>
@@ -450,7 +452,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     # =========================================================================
     session_histogram_html = build_session_histogram_html(chapters, characters)
     session_line_chart_svg = build_session_line_chart_svg(chapters)
-    campaign_whole_html = build_campaign_whole_html()
+    campaign_whole_html = build_campaign_whole_html(session_num)
+    camp_tab_label = "Campaign (S1)" if session_num == 1 else f"Campaign (S1–S{session_num})"
 
     # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
@@ -750,7 +753,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                                 <span>📈</span> <span>Line Velocity</span>
                             </button>
                             <button id="chartTabCampaignBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('campaign')">
-                                <span>🌐</span> <span>Campaign Whole</span>
+                                <span>🌐</span> <span>{camp_tab_label}</span>
                             </button>
                         </div>
                     </div>
@@ -765,7 +768,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         {session_line_chart_svg}
                     </div>
 
-                    <!-- View 3: Campaign Whole Comparison (Sessions 1-3) -->
+                    <!-- View 3: Campaign Whole Comparison (Scoped to current session and before) -->
                     <div id="chartViewCampaign" class="w-full hidden">
                         {campaign_whole_html}
                     </div>
