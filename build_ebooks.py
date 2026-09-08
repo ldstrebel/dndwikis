@@ -1211,16 +1211,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             border-color: #d97706 !important;
             color: #d97706 !important;
         }}
-        html.theme-light #endSessionCriticCard {{
-            background: #ffffff !important;
-            border-color: #cbd5e1 !important;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
-        }}
-        html.theme-light #endSessionCriticCard:hover {{
+        html.theme-light #footerCriticForumBtn {{
+            background: #ffe4e6 !important;
             border-color: #f43f5e !important;
+            color: #9f1239 !important;
         }}
-        html.theme-light #endSessionCriticCard h3 {{
-            color: #0f172a !important;
+        html.theme-light #footerCriticForumBtn:hover {{
+            background: #fecdd3 !important;
         }}
         html.theme-light .custom-scrollbar::-webkit-scrollbar-track {{
             background: #f1f5f9 !important;
@@ -1317,16 +1314,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             border-color: #b45309 !important;
             color: #b45309 !important;
         }}
-        html.theme-sepia #endSessionCriticCard {{
-            background: #fffdf8 !important;
-            border-color: #ded1b8 !important;
-            box-shadow: 0 4px 16px rgba(60, 40, 20, 0.06) !important;
-        }}
-        html.theme-sepia #endSessionCriticCard:hover {{
+        html.theme-sepia #footerCriticForumBtn {{
+            background: #fce7f3 !important;
             border-color: #e11d48 !important;
+            color: #881337 !important;
         }}
-        html.theme-sepia #endSessionCriticCard h3 {{
-            color: #2c221e !important;
+        html.theme-sepia #footerCriticForumBtn:hover {{
+            background: #fbcfe8 !important;
         }}
         html.theme-sepia .custom-scrollbar::-webkit-scrollbar-track {{
             background: #ede3cb !important;
@@ -1340,6 +1334,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
             height: 100vh;
             height: 100dvh;
+            box-sizing: border-box !important;
+            padding: 1rem !important;
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
         }}
         #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible {{
             opacity: 1;
@@ -1351,6 +1349,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             transform: scale(0.96) translateY(-10px);
             opacity: 0;
             max-height: min(88vh, 88dvh);
+            box-sizing: border-box !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
         }}
         #chaptersModalOverlay.visible #chaptersModalCard,
         #critiqueModalOverlay.visible #critiqueBottomSheet,
@@ -1362,10 +1363,20 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         }}
 
         @media (max-width: 640px) {{
+            #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay {{
+                padding: 0.75rem !important;
+                box-sizing: border-box !important;
+            }}
             #critiqueModalOverlay {{
                 align-items: flex-start !important;
-                padding-top: 0.75rem !important;
-                padding-bottom: 0.75rem !important;
+                padding: 0.75rem !important;
+            }}
+            #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
             }}
             #critiqueBottomSheet {{
                 max-height: calc(100dvh - 1.5rem) !important;
@@ -1474,30 +1485,31 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <span>✦ End of Session {session_num} ✦</span>
         </div>
 
-        {end_session_critic_card_html}
-
-        <!-- Bottom Page Controls & Feedback Review Summary -->
+        <!-- Bottom Controls: Reader Feedback & Editorial Review -->
         <footer class="mt-12 pt-8 border-t border-slate-800 text-center space-y-4">
-            <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 max-w-md mx-auto shadow-lg">
-                <div class="flex items-center justify-center gap-2 text-amber-400 mb-1">
-                    <span class="text-lg">💬</span>
-                    <h3 class="text-sm font-bold">Feedback & Editorial Review</h3>
+            <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 max-w-lg mx-auto shadow-lg space-y-3.5">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-center gap-2 text-amber-400">
+                        <span class="text-base">📝</span>
+                        <h3 class="text-sm font-bold tracking-wide">Reader Feedback & Notes</h3>
+                    </div>
+                    <p class="text-xs text-slate-400">Review your inline critique notes or explore the bot's editorial review of the session.</p>
                 </div>
-                <p class="text-xs text-slate-400 mb-3">Review your collected notes or check the narrative element scorecard.</p>
-                <div class="flex flex-wrap gap-2 justify-center">
-                    <button id="footerExportBtn" type="button" class="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5">
+
+                <div class="flex flex-wrap gap-2.5 justify-center items-center pt-1">
+                    <button id="footerExportBtn" type="button" class="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5 active:scale-95">
                         <span>📝</span> <span>Review Feedback</span>
                         <span id="exportBadgeCount" class="bg-slate-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1">0</span>
                     </button>
-                    <button id="footerCriticForumBtn" type="button" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-rose-800/60 hover:border-rose-700 text-rose-300 hover:text-rose-200 font-semibold rounded-xl text-xs transition-colors flex items-center gap-1.5 shadow-md">
-                        <span>🍅</span> <span>Narrative Spectrum</span>
+                    <button id="footerCriticForumBtn" type="button" class="px-4 sm:px-5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-rose-800/80 hover:border-rose-600 text-rose-300 hover:text-rose-200 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5 active:scale-95" title="View the editorial story critique and narrative spectrum for this session">
+                        <span>🍅</span> <span>Read the Critique</span>
                     </button>
-                    <button id="clearCritiquesBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl transition-colors">
+                    <button id="clearCritiquesBtn" type="button" class="px-3 py-2 bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl transition-colors active:scale-95">
                         Clear Notes
                     </button>
                 </div>
             </div>
-            <p class="text-xs text-slate-600">UNERASEABLE © D&D Scribe Engine · Schema 2.0 Indexed.</p>
+            <p class="text-[11px] text-slate-600 font-mono">UNERASEABLE © D&D Scribe Engine · Schema 2.0 Indexed.</p>
         </footer>
 
     </div>
@@ -1754,51 +1766,51 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     <!-- ========================================================= -->
     <!-- MOBILE CRITIQUE MODAL / PASSAGE EDITOR -->
     <!-- ========================================================= -->
-    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto pt-5 sm:pt-4">
-        <div id="critiqueBottomSheet" class="w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[85vh] sm:max-h-[82vh]">
+    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto box-border">
+        <div id="critiqueBottomSheet" class="w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl p-3.5 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[85vh] sm:max-h-[82vh] box-border">
             
             <!-- Top Header with Speaker, Block ID, and Prev/Next Passage Navigation -->
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3 gap-2 flex-shrink-0">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span id="modalSpeakerPill" class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider font-mono truncate"></span>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3 gap-2 flex-shrink-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span id="modalSpeakerPill" class="px-2 py-0.5 rounded-md text-[11px] sm:text-xs font-bold uppercase tracking-wider font-mono truncate max-w-[130px] sm:max-w-none"></span>
                     <span id="modalBlockIndex" class="text-xs text-slate-400 font-mono flex-shrink-0"></span>
                 </div>
-                <div class="flex items-center gap-1.5 flex-shrink-0">
+                <div class="flex items-center gap-1 flex-shrink-0">
                     <!-- Shifted Arrow Keys to Top for rapid passage jumping -->
-                    <button id="modalPrevBlockBtn" type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all" title="Previous passage">
-                        <span>◀</span> <span class="hidden xs:inline text-[11px]">Prev</span>
+                    <button id="modalPrevBlockBtn" type="button" class="px-2 sm:px-2.5 py-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all" title="Previous passage">
+                        <span>◀</span> <span class="hidden sm:inline text-[11px]">Prev</span>
                     </button>
-                    <button id="modalNextBlockBtn" type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all" title="Next passage">
-                        <span class="hidden xs:inline text-[11px]">Next</span> <span>▶</span>
+                    <button id="modalNextBlockBtn" type="button" class="px-2 sm:px-2.5 py-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all" title="Next passage">
+                        <span class="hidden sm:inline text-[11px]">Next</span> <span>▶</span>
                     </button>
-                    <button id="modalCloseBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 ml-1 leading-none transition-colors" title="Close">&times;</button>
+                    <button id="modalCloseBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 ml-0.5 leading-none transition-colors" title="Close" aria-label="Close modal">&times;</button>
                 </div>
             </div>
 
             <!-- Scrollable Content Body (Expands & Scrolls Gracefully) -->
-            <div class="overflow-y-auto space-y-3.5 pr-1 flex-1 min-h-0 custom-scrollbar">
-                <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80">
+            <div class="overflow-y-auto space-y-3 pr-1 flex-1 min-h-0 custom-scrollbar box-border">
+                <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 box-border">
                     <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Target Passage:</div>
                     <p id="modalPassageText" class="text-xs sm:text-sm text-slate-200 italic leading-relaxed max-h-28 overflow-y-auto custom-scrollbar"></p>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Category</label>
                     <div class="grid grid-cols-3 sm:grid-cols-6 gap-1.5" id="categoryPillContainer">
-                        <button type="button" class="category-pill active px-2 py-1.5 rounded-lg text-[11px] font-bold border border-amber-500 bg-amber-500/20 text-amber-300 text-center" data-category="general">General</button>
-                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="tone">Tone / Voice</button>
-                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="continuity">Continuity</button>
-                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="pacing">Pacing</button>
-                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="rewrite">Rewrite</button>
-                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="audio_cue">Audio Cue</button>
+                        <button type="button" class="category-pill active px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold border border-amber-500 bg-amber-500/20 text-amber-300 text-center truncate" data-category="general">General</button>
+                        <button type="button" class="category-pill px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center truncate" data-category="tone">Tone / Voice</button>
+                        <button type="button" class="category-pill px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center truncate" data-category="continuity">Continuity</button>
+                        <button type="button" class="category-pill px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center truncate" data-category="pacing">Pacing</button>
+                        <button type="button" class="category-pill px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center truncate" data-category="rewrite">Rewrite</button>
+                        <button type="button" class="category-pill px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center truncate" data-category="audio_cue">Audio Cue</button>
                     </div>
                 </div>
                 <div>
                     <label for="critiqueTextInput" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Critique / Revision Directive</label>
-                    <textarea id="critiqueTextInput" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500" placeholder="E.g. Make this interaction sharper, emphasize the tension..."></textarea>
+                    <textarea id="critiqueTextInput" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 box-border" placeholder="E.g. Make this interaction sharper, emphasize the tension..."></textarea>
                 </div>
                 <div>
                     <label for="suggestedRewriteInput" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Direct Suggested Rewrite <span class="text-slate-600 font-normal lowercase">(optional)</span></label>
-                    <textarea id="suggestedRewriteInput" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500" placeholder="Provide direct replacement line if desired..."></textarea>
+                    <textarea id="suggestedRewriteInput" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500 box-border" placeholder="Provide direct replacement line if desired..."></textarea>
                 </div>
             </div>
 
