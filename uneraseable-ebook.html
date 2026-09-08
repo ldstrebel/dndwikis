@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Uneraseable — Session 1: The Dust Run (Ebook & Critique)</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#080c14' },
+                        amber: { 450: '#fbbf24' }
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'Georgia', 'serif'],
+                        sans: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cinzel:wght@500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-narrator: #94a3b8;
+            --color-doug: #f59e0b;
+            --color-mara: #06b6d4;
+            --color-kael: #10b981;
+            --color-radio: #c084fc;
+        }
+
+        body {
+            background-color: #080c14;
+            color: #f1f5f9;
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 11Labs Style Dialogue Block Highlights */
+        .story-block {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        /* Mode: Edit / Critique highlights */
+        body.mode-critique .story-block {
+            cursor: pointer;
+        }
+        body.mode-critique .story-block:hover {
+            transform: translateX(4px);
+        }
+        body.mode-critique .story-block::after {
+            content: '💬';
+            position: absolute;
+            right: -28px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+        @media (max-width: 640px) {
+            body.mode-critique .story-block::after {
+                right: 8px;
+                top: 8px;
+                transform: none;
+            }
+        }
+        body.mode-critique .story-block:hover::after {
+            opacity: 0.8;
+        }
+
+        /* Speaker-specific styles */
+        .block-speaker-doug {
+            border-left: 3.5px solid var(--color-doug);
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.01) 100%);
+        }
+        .block-speaker-mara {
+            border-left: 3.5px solid var(--color-mara);
+            background: linear-gradient(90deg, rgba(6, 182, 212, 0.08) 0%, rgba(6, 182, 212, 0.01) 100%);
+        }
+        .block-speaker-kael {
+            border-left: 3.5px solid var(--color-kael);
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.01) 100%);
+        }
+        .block-speaker-radio {
+            border-left: 3.5px solid var(--color-radio);
+            background: linear-gradient(90deg, rgba(192, 132, 252, 0.08) 0%, rgba(192, 132, 252, 0.01) 100%);
+        }
+        .block-speaker-narrator {
+            border-left: 3px solid rgba(148, 163, 184, 0.2);
+        }
+
+        /* Critiqued Active Marker */
+        .story-block.has-critique {
+            box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.4);
+        }
+        .story-block.has-critique .critique-indicator-dot {
+            display: inline-flex;
+        }
+
+        /* Top Stats Drawer animations */
+        #sessionStatsSection {
+            transition: max-height 0.4s ease, opacity 0.3s ease, margin-bottom 0.3s ease;
+        }
+        #sessionStatsSection.collapsed {
+            max-height: 0px !important;
+            opacity: 0 !important;
+            margin-bottom: 0 !important;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Mobile Bottom Sheet Modal */
+        #critiqueModalOverlay {
+            transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
+        }
+        #critiqueModalOverlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #critiqueBottomSheet {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #critiqueModalOverlay.visible #critiqueBottomSheet {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
+
+    <!-- STICKY TOP APP BAR -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <a href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center text-sm font-semibold gap-1">
+                    <span>←</span> <span class="hidden sm:inline">Portals</span>
+                </a>
+                <span class="text-slate-700">|</span>
+                <div class="truncate">
+                    <h1 class="font-bold text-sm sm:text-base text-amber-400 font-serif tracking-wide truncate">UNERASEABLE</h1>
+                    <p class="text-xs text-slate-400 truncate">Session 1: The Dust Run · Doug N Masters</p>
+                </div>
+            </div>
+
+            <!-- Header Action Controls -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <!-- Stats Toggle Button -->
+                <button id="toggleStatsBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center gap-1.5 transition-all">
+                    <span>📊</span>
+                    <span class="hidden md:inline">Session Stats</span>
+                </button>
+
+                <!-- Reader / Critique Mode Switcher -->
+                <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
+                    <button id="modeReaderBtn" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1">
+                        <span>📖</span> <span class="hidden sm:inline">Read</span>
+                    </button>
+                    <button id="modeCritiqueBtn" class="px-2.5 py-1 rounded-md text-xs font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1">
+                        <span>✍️</span> <span class="hidden sm:inline">Critique</span>
+                    </button>
+                </div>
+
+                <!-- Export Critiques Trigger -->
+                <button id="exportCritiquesBtn" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 text-slate-950 flex items-center gap-1 shadow-sm">
+                    <span>💾</span>
+                    <span id="exportBadgeCount" class="bg-sky-950 text-sky-200 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- WRAPPER -->
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
+
+        <!-- ========================================================= -->
+        <!-- TOP STATS & WRITING TEST AUDIT DRAWER (Collapses on Scroll) -->
+        <!-- ========================================================= -->
+        <section id="sessionStatsSection" class="mb-8 overflow-hidden transition-all duration-300">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-sm">
+                
+                <!-- Drawer Header -->
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">📊</span>
+                        <h2 class="text-sm font-bold tracking-wider uppercase text-amber-400">Session 1 Diagnostics & Writing Metrics</h2>
+                    </div>
+                    <button id="minimizeStatsBtn" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1">
+                        <span>Hide Stats</span> <span>▲</span>
+                    </button>
+                </div>
+
+                <!-- KPI Metric Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+                        <div class="text-[11px] text-slate-400 font-medium">Word & Page Count</div>
+                        <div class="text-lg font-bold text-slate-100 mt-0.5 font-mono">2,140 <span class="text-xs text-slate-500 font-normal">w</span></div>
+                        <div class="text-[10px] text-emerald-400 mt-0.5">~8.5 Book Pages · 8m Read</div>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+                        <div class="text-[11px] text-slate-400 font-medium">Dialogue Ratio</div>
+                        <div class="text-lg font-bold text-amber-400 mt-0.5 font-mono">48.2% <span class="text-xs text-slate-500 font-normal">spoken</span></div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">51.8% Narrative Prose</div>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+                        <div class="text-[11px] text-slate-400 font-medium">Pacing Dynamic (StdDev)</div>
+                        <div class="text-lg font-bold text-sky-400 mt-0.5 font-mono">8.4 <span class="text-xs text-emerald-400">✓ Dynamic</span></div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">Punchy vs Expansive Flow</div>
+                    </div>
+
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
+                        <div class="text-[11px] text-slate-400 font-medium">Writing Test Status</div>
+                        <div class="text-lg font-bold text-emerald-400 mt-0.5 font-mono">5/5 PASS</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">0 Leaks · 0 Echo Loops</div>
+                    </div>
+                </div>
+
+                <!-- Character Dialogue Breakdown (11Labs Style Voice Distribution) -->
+                <div class="space-y-2 mb-5 bg-slate-950/40 p-3.5 rounded-xl border border-slate-800/60">
+                    <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-1">
+                        <span>🎙️ Speaker Line Share & Dialogue Distribution</span>
+                        <span class="text-[11px] text-slate-400">4 Active Speakers</span>
+                    </div>
+
+                    <!-- Multi-color split progress bar -->
+                    <div class="h-3 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
+                        <div style="width: 36%" class="bg-amber-500 h-full" title="Doug / Driver: 36%"></div>
+                        <div style="width: 28%" class="bg-cyan-500 h-full" title="Mara: 28%"></div>
+                        <div style="width: 22%" class="bg-emerald-500 h-full" title="Kael: 22%"></div>
+                        <div style="width: 14%" class="bg-purple-500 h-full" title="Broadcast / Radio: 14%"></div>
+                    </div>
+
+                    <!-- Speaker Legend Chips -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
+                        <div class="flex items-center gap-1.5 text-xs text-slate-300">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500 flex-shrink-0"></span>
+                            <span class="font-medium truncate">Doug (Driver):</span>
+                            <span class="font-mono text-amber-450 font-bold ml-auto">36%</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-xs text-slate-300">
+                            <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 flex-shrink-0"></span>
+                            <span class="font-medium truncate">Mara (Pass. 4):</span>
+                            <span class="font-mono text-cyan-400 font-bold ml-auto">28%</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-xs text-slate-300">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+                            <span class="font-medium truncate">Kael (Drifter):</span>
+                            <span class="font-mono text-emerald-400 font-bold ml-auto">22%</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-xs text-slate-300">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-500 flex-shrink-0"></span>
+                            <span class="font-medium truncate">CB Radio:</span>
+                            <span class="font-mono text-purple-400 font-bold ml-auto">14%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Writing Tests & Sensory Palette Quality Checks -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <!-- Sensory Registers -->
+                    <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
+                        <div class="font-semibold text-slate-300 mb-2 flex items-center justify-between">
+                            <span>🌿 Sensory Palette Coverage</span>
+                            <span class="text-emerald-400 font-bold">5 / 5 Covered</span>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5">
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">👁️ Visual: <strong class="text-amber-400">38</strong></span>
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">👂 Auditory: <strong class="text-sky-400">24</strong></span>
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">✋ Tactile: <strong class="text-emerald-400">19</strong></span>
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">👃 Olfactory: <strong class="text-purple-400">11</strong></span>
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 text-[10px]">⚡ Ambient/Dust: <strong class="text-amber-300">15</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Writing Test Guardians -->
+                    <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
+                        <div class="font-semibold text-slate-300 mb-2 flex items-center justify-between">
+                            <span>🛡️ Automated Writing Guard Audits</span>
+                            <span class="text-emerald-400 font-bold">Verified</span>
+                        </div>
+                        <div class="space-y-1 text-[11px] text-slate-300">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Leak Detector (OOC/Meta Terms):</span>
+                                <span class="text-emerald-400 font-bold">0 Leaks (PASS)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Echo Detector (Crutch Words):</span>
+                                <span class="text-emerald-400 font-bold">0 Loops (PASS)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Adverb Dialogue Tag Check:</span>
+                                <span class="text-emerald-400 font-bold">0 Adverb Tags (PASS)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- EBOOK COVER & INTRO HEADER -->
+        <div class="mb-10 text-center">
+            <div class="w-48 sm:w-56 mx-auto mb-4 rounded-xl overflow-hidden shadow-2xl border border-slate-800 ring-1 ring-amber-500/20">
+                <img src="images/uneraseable-cover.jpg" alt="Uneraseable Cover by Doug N Masters" class="w-full h-auto object-cover">
+            </div>
+            <span class="text-xs uppercase tracking-widest text-amber-500 font-bold">Campaign Premiere</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-100 font-serif mt-1 tracking-wide">UNERASEABLE</h2>
+            <p class="text-sm text-slate-400 mt-1 font-serif italic">Written by Doug N Masters</p>
+            <div class="mt-3 flex items-center justify-center gap-2 text-xs text-slate-500">
+                <span>Session 1: The Dust Run</span>
+                <span>•</span>
+                <span>Indexed Edition</span>
+                <span>•</span>
+                <span class="text-amber-400/80 font-medium">Tap any section in Critique Mode to comment</span>
+            </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- 11LABS-STYLE STORY BLOCKS CONTAINER -->
+        <!-- ========================================================= -->
+        <main id="storyContentContainer" class="space-y-4 text-base sm:text-lg leading-relaxed">
+
+            <!-- Block 1: Narrator Opening -->
+            <div class="story-block block-speaker-narrator p-4 rounded-r-xl bg-slate-900/30"
+                 data-block-id="uneraseable_s01_b001"
+                 data-speaker="narrator"
+                 data-speaker-name="Narrator"
+                 data-speaker-color="#94a3b8">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Scene 1 · The Highway</span>
+                    <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
+                </div>
+                <p class="text-slate-300">
+                    The air inside the coach tasted of old foam cushions, ozone, and red desert dust. Sunlight spilled down through the overhead vents in long, trembling shafts, illuminating the suspended silt that rose whenever the tires struck a seam in the sun-bleached asphalt.
+                </p>
+            </div>
+
+            <!-- Block 2: Narrator -->
+            <div class="story-block block-speaker-narrator p-4 rounded-r-xl bg-slate-900/30"
+                 data-block-id="uneraseable_s01_b002"
+                 data-speaker="narrator"
+                 data-speaker-name="Narrator"
+                 data-speaker-color="#94a3b8">
+                <p class="text-slate-300">
+                    Up front, Doug shifted down into third gear. The transmission groaned with the heavy weight of twenty passengers who had nowhere else left to go. Overhead, the television monitors buzzed with quiet grey static.
+                </p>
+            </div>
+
+            <!-- Block 3: Doug (Driver) -->
+            <div class="story-block block-speaker-doug p-4 rounded-r-xl"
+                 data-block-id="uneraseable_s01_b003"
+                 data-speaker="doug"
+                 data-speaker-name="Doug (Driver)"
+                 data-speaker-color="#f59e0b">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider font-mono">Doug</span>
+                    <span class="text-[11px] text-slate-500 font-sans">Driver · PA Mic</span>
+                    <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
+                </div>
+                <p class="text-slate-100 font-medium">
+                    "Keep your heads below the glass line once we cross Marker 40. Road patrol doesn’t ask for tickets out here—they just check for heat signatures."
+                </p>
+            </div>
+
+            <!-- Block 4: Mara (Passenger 4) -->
+            <div class="story-block block-speaker-mara p-4 rounded-r-xl"
+                 data-block-id="uneraseable_s01_b004"
+                 data-speaker="mara"
+                 data-speaker-name="Mara"
+                 data-speaker-color="#06b6d4">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider font-mono">Mara</span>
+                    <span class="text-[11px] text-slate-500 font-sans">Row 4 · Window</span>
+                    <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
+                </div>
+                <p class="text-slate-100 font-medium">
+                    "And if the scanners pick up the cold box under seat nine? What’s the play then, Doug?"
+                </p>
+            </div>
+
+            <!-- Block 5: Narrator -->
+            <div class="story-block block-speaker-narrator p-4 rounded-r-xl bg-slate-900/30"
+                 data-block-id="uneraseable_s01_b005"
+                 data-speaker="narrator"
+                 data-speaker-name="Narrator"
+                 data-speaker-color="#94a3b8">
+                <p class="text-slate-300">
+                    Doug’s eyes flicked up to the rearview mirror. His knuckles went white on the steering wheel, but his voice stayed dead even over the engine’s rattle.
+                </p>
+            </div>
+
+            <!-- Block 6: Doug -->
+            <div class="story-block block-speaker-doug p-4 rounded-r-xl"
+                 data-block-id="uneraseable_s01_b006"
+                 data-speaker="doug"
+                 data-speaker-name="Doug (Driver)"
+                 data-speaker-color="#f59e0b">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider font-mono">Doug</span>
+                    <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
+                </div>
+                <p class="text-slate-100 font-medium">
+                    "Then we find out how fast this rig can take the washboard flats. Sit tight, Mara."
+                </p>
+            </div>
+
+            <!-- Block 7: Kael (Drifter) -->
+            <div class="story-block block-speaker-kael p-4 rounded-r-xl"
+                 data-block-id="uneraseable_s01_b007"
+                 data-speaker="kael"
+                 data-speaker-name="Kael"
+                 data-speaker-color="#10b981">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider font-mono">Kael</span>
+                    <span class="text-[11px] text-slate-500 font-sans">Aisle · Armed</span>
+                    <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
+                </div>
+                <p class="text-slate-100 font-medium">
+                    "I didn't pay in fuel rods to get turned into cinder in the Salt Reach. If the drones ping us, I’m cutting the rear latch."
+                </p>
+            </div>
+
+            <!-- Block 8: CB Radio -->
+            <div class="story-block block-speaker-radio p-4 rounded-r-xl"
+                 data-block-id="uneraseable_s01_b008"
+                 data-speaker="radio"
+                 data-speaker-name="CB Radio"
+                 data-speaker-color="#c084fc">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                    <span class="text-xs font-bold text-purple-400 uppercase tracking-wider font-mono">CB Channel 9</span>
+                    <span class="text-[11px] text-purple-300/80 font-sans">Static Feed</span>
+                    <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
+                </div>
+                <p class="text-slate-100 font-mono text-sm tracking-wide bg-purple-950/40 p-2.5 rounded-lg border border-purple-800/40">
+                    [CRACKLE] "...Any westbound transit on Route 14... be advised... the Erasure horizon just crept five miles north. If you see the mirror-line... do not look back..." [BURST STATIC]
+                </p>
+            </div>
+
+            <!-- Block 9: Narrator Closing -->
+            <div class="story-block block-speaker-narrator p-4 rounded-r-xl bg-slate-900/30"
+                 data-block-id="uneraseable_s01_b009"
+                 data-speaker="narrator"
+                 data-speaker-name="Narrator"
+                 data-speaker-color="#94a3b8">
+                <p class="text-slate-300">
+                    Silence fell across the bus. Beyond the scratched glass, the desert stretched out under an orange, incandescent sky, where distant power pylons stood like iron ribs against the coming storm.
+                </p>
+            </div>
+
+        </main>
+
+        <!-- Bottom Page Controls & Review Summary -->
+        <footer class="mt-16 pt-8 border-t border-slate-800 text-center space-y-4">
+            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 max-w-md mx-auto">
+                <h3 class="text-sm font-bold text-amber-400 mb-1">Session Review Progress</h3>
+                <p class="text-xs text-slate-400 mb-3">All notes and edits sync to the story generation critique harness.</p>
+                <div class="flex gap-2 justify-center">
+                    <button id="footerExportBtn" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition-colors shadow">
+                        Export Critiques for Agent Pipeline
+                    </button>
+                    <button id="clearCritiquesBtn" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-lg transition-colors">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+            <p class="text-xs text-slate-600">UNERASEABLE © D&D Scribe Engine · All stories indexed.</p>
+        </footer>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MOBILE BOTTOM SHEET & CRITIQUE MODAL -->
+    <!-- ========================================================= -->
+    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center opacity-0 pointer-events-none p-0 sm:p-4">
+        
+        <div id="critiqueBottomSheet" class="w-full max-w-lg bg-slate-900 border-t sm:border border-slate-700 sm:rounded-2xl rounded-t-2xl p-5 shadow-2xl transform translate-y-full sm:translate-y-4 max-h-[90vh] flex flex-col">
+            
+            <!-- Mobile Drag Indicator Bar -->
+            <div class="w-12 h-1.5 bg-slate-700 rounded-full mx-auto mb-3 sm:hidden"></div>
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                <div class="flex items-center gap-2">
+                    <span id="modalSpeakerPill" class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider font-mono"></span>
+                    <span id="modalBlockIndex" class="text-xs text-slate-400 font-mono"></span>
+                </div>
+                <button id="modalCloseBtn" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1">&times;</button>
+            </div>
+
+            <!-- Scrollable Body Content -->
+            <div class="overflow-y-auto space-y-4 pr-1 flex-1">
+                
+                <!-- Quote Snippet -->
+                <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80">
+                    <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Target Passage:</div>
+                    <p id="modalPassageText" class="text-sm text-slate-200 italic leading-relaxed"></p>
+                </div>
+
+                <!-- Critique Category Pills -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Category</label>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5" id="categoryPillContainer">
+                        <button type="button" class="category-pill active px-2 py-1.5 rounded-lg text-[11px] font-bold border border-amber-500 bg-amber-500/20 text-amber-300 text-center" data-category="tone">Tone / Voice</button>
+                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="continuity">Continuity</button>
+                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="pacing">Pacing</button>
+                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="rewrite">Rewrite</button>
+                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="audio_cue">Audio Cue</button>
+                    </div>
+                </div>
+
+                <!-- Free Text Feedback Note Area -->
+                <div>
+                    <label for="critiqueTextInput" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Critique / Revision Directive
+                    </label>
+                    <textarea id="critiqueTextInput" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500" placeholder="E.g. Make Doug sound more tense. He knows road patrol is listening in..."></textarea>
+                </div>
+
+                <!-- Direct Rewrite Area (Optional) -->
+                <div>
+                    <label for="suggestedRewriteInput" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                        Direct Suggested Rewrite <span class="text-slate-600 font-normal lowercase">(optional)</span>
+                    </label>
+                    <textarea id="suggestedRewriteInput" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500" placeholder="Provide direct replacement line if desired..."></textarea>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer & Sequential Nav -->
+            <div class="pt-3 mt-2 border-t border-slate-800 flex items-center justify-between gap-2">
+                <div class="flex gap-1.5">
+                    <button id="modalPrevBlockBtn" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1">
+                        <span>◀</span> <span class="hidden sm:inline">Prev</span>
+                    </button>
+                    <button id="modalNextBlockBtn" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1">
+                        <span class="hidden sm:inline">Next</span> <span>▶</span>
+                    </button>
+                </div>
+
+                <div class="flex gap-2">
+                    <button id="modalDeleteBtn" class="px-3 py-2 bg-rose-950/50 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded-lg text-xs font-bold transition-colors hidden">
+                        Delete
+                    </button>
+                    <button id="modalSaveBtn" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition-colors shadow-lg shadow-amber-500/20 flex items-center gap-1.5">
+                        <span>💾</span> <span>Save Critique</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- INTERACTIVE JAVASCRIPT CONTROLLER -->
+    <!-- ========================================================= -->
+    <script>
+        (function() {
+            // State
+            const CAMPAIGN_ID = "uneraseable";
+            const CHAPTER_ID = "s01";
+            const STORAGE_KEY = `critiques_${CAMPAIGN_ID}_${CHAPTER_ID}`;
+            
+            let critiques = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+            let activeBlockIndex = 0;
+            let selectedCategory = "tone";
+            const blocks = Array.from(document.querySelectorAll('.story-block'));
+
+            // DOM Elements
+            const statsSection = document.getElementById('sessionStatsSection');
+            const toggleStatsBtn = document.getElementById('toggleStatsBtn');
+            const minimizeStatsBtn = document.getElementById('minimizeStatsBtn');
+            const modeReaderBtn = document.getElementById('modeReaderBtn');
+            const modeCritiqueBtn = document.getElementById('modeCritiqueBtn');
+            const exportCritiquesBtn = document.getElementById('exportCritiquesBtn');
+            const footerExportBtn = document.getElementById('footerExportBtn');
+            const clearCritiquesBtn = document.getElementById('clearCritiquesBtn');
+            const exportBadgeCount = document.getElementById('exportBadgeCount');
+
+            // Modal Elements
+            const modalOverlay = document.getElementById('critiqueModalOverlay');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            const modalSpeakerPill = document.getElementById('modalSpeakerPill');
+            const modalBlockIndex = document.getElementById('modalBlockIndex');
+            const modalPassageText = document.getElementById('modalPassageText');
+            const critiqueTextInput = document.getElementById('critiqueTextInput');
+            const suggestedRewriteInput = document.getElementById('suggestedRewriteInput');
+            const modalPrevBlockBtn = document.getElementById('modalPrevBlockBtn');
+            const modalNextBlockBtn = document.getElementById('modalNextBlockBtn');
+            const modalSaveBtn = document.getElementById('modalSaveBtn');
+            const modalDeleteBtn = document.getElementById('modalDeleteBtn');
+            const categoryPills = document.querySelectorAll('.category-pill');
+
+            // Initialize Badge & Visual Markers
+            function refreshMarkers() {
+                const count = Object.keys(critiques).length;
+                exportBadgeCount.textContent = count;
+
+                blocks.forEach((el) => {
+                    const id = el.dataset.blockId;
+                    if (critiques[id]) {
+                        el.classList.add('has-critique');
+                        const dot = el.querySelector('.critique-indicator-dot');
+                        if (dot) dot.classList.remove('hidden');
+                    } else {
+                        el.classList.remove('has-critique');
+                        const dot = el.querySelector('.critique-indicator-dot');
+                        if (dot) dot.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Sync to Firestore if online (using existing project setup)
+            function syncCritiqueToFirestore(submission) {
+                const FIRESTORE_PROJECT = "thecountgame";
+                const API_ENDPOINT = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT}/databases/(default)/documents/campaign_critiques`;
+                
+                const payload = {
+                    fields: {
+                        campaignId: { stringValue: CAMPAIGN_ID },
+                        chapterId: { stringValue: CHAPTER_ID },
+                        blockId: { stringValue: submission.blockId },
+                        speaker: { stringValue: submission.speaker },
+                        category: { stringValue: submission.category },
+                        quote: { stringValue: submission.quote },
+                        comment: { stringValue: submission.comment },
+                        suggestedRewrite: { stringValue: submission.suggestedRewrite || "" },
+                        timestamp: { timestampValue: new Date().toISOString() }
+                    }
+                };
+
+                fetch(API_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                }).catch(err => console.log("Firestore sync notice (offline fallback active):", err));
+            }
+
+            // Scroll Hide/Show Stats logic
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 120 && !statsSection.classList.contains('collapsed') && !statsSection.dataset.userPinned) {
+                    statsSection.classList.add('collapsed');
+                }
+            }, { passive: true });
+
+            toggleStatsBtn.addEventListener('click', () => {
+                statsSection.classList.toggle('collapsed');
+                if (!statsSection.classList.contains('collapsed')) {
+                    statsSection.dataset.userPinned = "true";
+                } else {
+                    delete statsSection.dataset.userPinned;
+                }
+            });
+
+            minimizeStatsBtn.addEventListener('click', () => {
+                statsSection.classList.add('collapsed');
+                delete statsSection.dataset.userPinned;
+            });
+
+            // Mode Switching
+            modeReaderBtn.addEventListener('click', () => {
+                document.body.classList.remove('mode-critique');
+                modeReaderBtn.classList.replace('text-slate-400', 'text-slate-950');
+                modeReaderBtn.classList.add('bg-amber-400', 'font-bold');
+                modeCritiqueBtn.classList.remove('bg-amber-400', 'text-slate-950', 'font-bold');
+                modeCritiqueBtn.classList.add('text-slate-400');
+            });
+
+            modeCritiqueBtn.addEventListener('click', () => {
+                document.body.classList.add('mode-critique');
+                modeCritiqueBtn.classList.replace('text-slate-400', 'text-slate-950');
+                modeCritiqueBtn.classList.add('bg-amber-400', 'font-bold');
+                modeReaderBtn.classList.remove('bg-amber-400', 'text-slate-950', 'font-bold');
+                modeReaderBtn.classList.add('text-slate-400');
+            });
+
+            // Category Pill selection
+            categoryPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    categoryPills.forEach(p => {
+                        p.classList.remove('active', 'border-amber-500', 'bg-amber-500/20', 'text-amber-300');
+                        p.classList.add('border-slate-700', 'bg-slate-800', 'text-slate-300');
+                    });
+                    pill.classList.add('active', 'border-amber-500', 'bg-amber-500/20', 'text-amber-300');
+                    selectedCategory = pill.dataset.category;
+                });
+            });
+
+            // Open Modal for Block
+            function openModalForBlock(index) {
+                if (index < 0 || index >= blocks.length) return;
+                activeBlockIndex = index;
+                const block = blocks[index];
+                const blockId = block.dataset.blockId;
+                const speakerName = block.dataset.speakerName || "Narrator";
+                const speakerColor = block.dataset.speakerColor || "#94a3b8";
+                const text = block.querySelector('p').innerText;
+
+                modalSpeakerPill.textContent = speakerName;
+                modalSpeakerPill.style.backgroundColor = speakerColor + "25";
+                modalSpeakerPill.style.borderColor = speakerColor;
+                modalSpeakerPill.style.color = speakerColor;
+                modalBlockIndex.textContent = `#${index + 1} (${blockId})`;
+                modalPassageText.textContent = `"${text}"`;
+
+                // Load existing critique if present
+                const existing = critiques[blockId];
+                if (existing) {
+                    critiqueTextInput.value = existing.comment || "";
+                    suggestedRewriteInput.value = existing.suggestedRewrite || "";
+                    selectedCategory = existing.category || "tone";
+                    modalDeleteBtn.classList.remove('hidden');
+
+                    categoryPills.forEach(p => {
+                        if (p.dataset.category === selectedCategory) {
+                            p.click();
+                        }
+                    });
+                } else {
+                    critiqueTextInput.value = "";
+                    suggestedRewriteInput.value = "";
+                    modalDeleteBtn.classList.add('hidden');
+                }
+
+                modalPrevBlockBtn.disabled = (index === 0);
+                modalNextBlockBtn.disabled = (index === blocks.length - 1);
+
+                modalOverlay.classList.add('visible');
+                critiqueTextInput.focus();
+            }
+
+            function closeModal() {
+                modalOverlay.classList.remove('visible');
+            }
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) closeModal();
+            });
+
+            modalPrevBlockBtn.addEventListener('click', () => {
+                if (activeBlockIndex > 0) openModalForBlock(activeBlockIndex - 1);
+            });
+
+            modalNextBlockBtn.addEventListener('click', () => {
+                if (activeBlockIndex < blocks.length - 1) openModalForBlock(activeBlockIndex + 1);
+            });
+
+            // Save Critique
+            modalSaveBtn.addEventListener('click', () => {
+                const block = blocks[activeBlockIndex];
+                const blockId = block.dataset.blockId;
+                const comment = critiqueTextInput.value.trim();
+                const rewrite = suggestedRewriteInput.value.trim();
+
+                if (!comment && !rewrite) {
+                    alert("Please provide a critique note or suggested rewrite before saving.");
+                    return;
+                }
+
+                const data = {
+                    blockId: blockId,
+                    blockIndex: activeBlockIndex + 1,
+                    speaker: block.dataset.speakerName,
+                    category: selectedCategory,
+                    quote: block.querySelector('p').innerText,
+                    comment: comment,
+                    suggestedRewrite: rewrite,
+                    updatedAt: new Date().toISOString()
+                };
+
+                critiques[blockId] = data;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(critiques));
+                syncCritiqueToFirestore(data);
+                refreshMarkers();
+                closeModal();
+            });
+
+            // Delete Critique
+            modalDeleteBtn.addEventListener('click', () => {
+                const block = blocks[activeBlockIndex];
+                const blockId = block.dataset.blockId;
+                delete critiques[blockId];
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(critiques));
+                refreshMarkers();
+                closeModal();
+            });
+
+            // Click Block Handler
+            blocks.forEach((b, idx) => {
+                b.addEventListener('click', () => {
+                    if (document.body.classList.contains('mode-critique')) {
+                        openModalForBlock(idx);
+                    }
+                });
+            });
+
+            // GitHub PR Submission Modal Elements & Logic
+            const ghModalOverlay = document.createElement('div');
+            ghModalOverlay.id = "ghModalOverlay";
+            ghModalOverlay.className = "fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-4 transition-opacity duration-200";
+            ghModalOverlay.innerHTML = `
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl">🐙</span>
+                            <h3 class="text-amber-400 font-bold text-base">Submit Review PR to GitHub</h3>
+                        </div>
+                        <button id="closeGhModal" class="text-slate-400 hover:text-slate-200 text-xl font-bold">&times;</button>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Target Repository:</span>
+                                <span class="font-mono text-slate-200">ldstrebel/dnd-scribe</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Target Base Branch:</span>
+                                <span class="font-mono text-amber-400">Uneraseable</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Critiques in Batch:</span>
+                                <span class="font-mono text-emerald-400 font-bold" id="ghCritiqueCountDisplay">0 notes</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-300 mb-1">Reviewer Name / Player Handle</label>
+                            <input type="text" id="ghReviewerNameInput" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-amber-500" placeholder="e.g. Doug, Mara / Sarah, Editor">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-300 mb-1">
+                                Fine-Grained GitHub Token (FGAT)
+                                <span class="text-slate-500 font-normal ml-1">(Saved locally on this device)</span>
+                            </label>
+                            <input type="password" id="ghTokenInput" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-100 placeholder-slate-600 font-mono text-xs focus:outline-none focus:border-amber-500" placeholder="github_pat_...">
+                            <p class="text-[10px] text-slate-500 mt-1">Requires only <code>Contents: Write</code> and <code>Pull Requests: Write</code> on dnd-scribe.</p>
+                        </div>
+
+                        <div id="ghStatusMsg" class="hidden p-2.5 rounded-lg text-xs"></div>
+                    </div>
+
+                    <div class="flex gap-2 pt-2 border-t border-slate-800">
+                        <button id="ghCopyJsonBtn" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg text-xs transition-colors">
+                            📋 Copy JSON Only
+                        </button>
+                        <button id="ghSubmitPrBtn" class="flex-1 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-lg text-xs transition-colors shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5">
+                            <span>🚀</span> <span>Open GitHub PR</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(ghModalOverlay);
+
+            const closeGhModal = document.getElementById('closeGhModal');
+            const ghReviewerNameInput = document.getElementById('ghReviewerNameInput');
+            const ghTokenInput = document.getElementById('ghTokenInput');
+            const ghCritiqueCountDisplay = document.getElementById('ghCritiqueCountDisplay');
+            const ghSubmitPrBtn = document.getElementById('ghSubmitPrBtn');
+            const ghCopyJsonBtn = document.getElementById('ghCopyJsonBtn');
+            const ghStatusMsg = document.getElementById('ghStatusMsg');
+
+            // Load saved settings
+            ghTokenInput.value = localStorage.getItem('dnd_scribe_gh_token') || '';
+            ghReviewerNameInput.value = localStorage.getItem('dnd_scribe_reviewer_name') || 'Reviewer';
+
+            function showGhModal() {
+                const count = Object.keys(critiques).length;
+                if (count === 0) {
+                    alert("No review notes recorded yet! Click on any dialogue or narrator block to add notes first.");
+                    return;
+                }
+                ghCritiqueCountDisplay.textContent = `${count} critique(s)`;
+                ghStatusMsg.classList.add('hidden');
+                ghModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            function hideGhModal() {
+                ghModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            closeGhModal.addEventListener('click', hideGhModal);
+            ghModalOverlay.addEventListener('click', (e) => {
+                if (e.target === ghModalOverlay) hideGhModal();
+            });
+
+            ghCopyJsonBtn.addEventListener('click', () => {
+                const count = Object.keys(critiques).length;
+                const exportPayload = {
+                    campaign: CAMPAIGN_ID,
+                    chapter: CHAPTER_ID,
+                    title: "Uneraseable - Session 1: The Dust Run",
+                    reviewer: ghReviewerNameInput.value.trim() || "Anonymous",
+                    exportedAt: new Date().toISOString(),
+                    totalCritiques: count,
+                    critiques: Object.values(critiques)
+                };
+                const jsonStr = JSON.stringify(exportPayload, null, 2);
+                navigator.clipboard.writeText(jsonStr).then(() => {
+                    alert(`✨ Copied ${count} critique(s) to clipboard!`);
+                    hideGhModal();
+                });
+            });
+
+            // Create Branch, Commit File, and Open PR via GitHub API
+            ghSubmitPrBtn.addEventListener('click', async () => {
+                const token = ghTokenInput.value.trim();
+                const reviewer = ghReviewerNameInput.value.trim() || 'Reviewer';
+                const count = Object.keys(critiques).length;
+
+                if (!token) {
+                    alert("Please enter a GitHub Fine-Grained Token (FGAT) to submit.");
+                    return;
+                }
+
+                // Save to localStorage
+                localStorage.setItem('dnd_scribe_gh_token', token);
+                localStorage.setItem('dnd_scribe_reviewer_name', reviewer);
+
+                ghStatusMsg.className = "p-2.5 rounded-lg text-xs bg-sky-950/60 border border-sky-800 text-sky-300 block";
+                ghStatusMsg.textContent = "⏳ Contacting GitHub API to create critique branch...";
+                ghSubmitPrBtn.disabled = true;
+
+                const REPO = "ldstrebel/dnd-scribe";
+                const BASE_BRANCH = "Uneraseable";
+                const safeName = reviewer.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                const timestamp = Date.now().toString().slice(-6);
+                const NEW_BRANCH = `critique/${CAMPAIGN_ID}-${CHAPTER_ID}-${safeName}-${timestamp}`;
+
+                const exportPayload = {
+                    campaign: CAMPAIGN_ID,
+                    chapter: CHAPTER_ID,
+                    title: "Uneraseable - Session 1: The Dust Run",
+                    reviewer: reviewer,
+                    exportedAt: new Date().toISOString(),
+                    totalCritiques: count,
+                    critiques: Object.values(critiques)
+                };
+
+                const markdownRows = Object.values(critiques).map(c => 
+                    `| \`${c.blockId}\` | **${c.speaker}** | \`${c.category}\` | ${c.comment.replace(/\|/g, '\\|')} | ${c.suggestedRewrite ? c.suggestedRewrite.replace(/\|/g, '\\|') : '-'} |`
+                ).join('\n');
+
+                const prBody = `## 📝 Story Critique Batch: ${exportPayload.title}
+**Reviewer:** ${reviewer}
+**Total Notes:** ${count}
+**Target Branch:** \`${BASE_BRANCH}\`
+
+### 📋 Critique Items Table
+| Block ID | Speaker | Category | Critique / Directive | Suggested Rewrite |
+|---|---|---|---|---|
+${markdownRows}
+
+<details>
+<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>
+
+\`\`\`json
+${JSON.stringify(exportPayload, null, 2)}
+\`\`\`
+</details>
+`;
+
+                try {
+                    const headers = {
+                        "Authorization": `Bearer ${token}`,
+                        "Accept": "application/vnd.github+json",
+                        "Content-Type": "application/json"
+                    };
+
+                    // 1. Get SHA of base branch
+                    let baseRefRes = await fetch(`https://api.github.com/repos/${REPO}/git/ref/heads/${BASE_BRANCH}`, { headers });
+                    if (!baseRefRes.ok) {
+                        // Fallback to main if Uneraseable ref not in dnd-scribe yet
+                        baseRefRes = await fetch(`https://api.github.com/repos/${REPO}/git/ref/heads/main`, { headers });
+                    }
+                    if (!baseRefRes.ok) throw new Error("Could not find base branch on GitHub repo: " + baseRefRes.statusText);
+                    const baseRefData = await baseRefRes.json();
+                    const baseSha = baseRefData.object.sha;
+
+                    // 2. Create new branch
+                    ghStatusMsg.textContent = "⏳ Creating review branch: " + NEW_BRANCH;
+                    const createBranchRes = await fetch(`https://api.github.com/repos/${REPO}/git/refs`, {
+                        method: "POST",
+                        headers,
+                        body: JSON.stringify({ ref: `refs/heads/${NEW_BRANCH}`, sha: baseSha })
+                    });
+                    if (!createBranchRes.ok) throw new Error("Failed to create critique branch: " + (await createBranchRes.text()));
+
+                    // 3. Commit critique JSON file
+                    ghStatusMsg.textContent = "⏳ Committing critique JSON payload...";
+                    const filePath = `sessions/data/critiques/${CAMPAIGN_ID}-${CHAPTER_ID}-${safeName}-${timestamp}.json`;
+                    const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(exportPayload, null, 2))));
+                    const commitRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${filePath}`, {
+                        method: "PUT",
+                        headers,
+                        body: JSON.stringify({
+                            message: `critique: ${reviewer} review for ${CAMPAIGN_ID} ${CHAPTER_ID}`,
+                            content: contentBase64,
+                            branch: NEW_BRANCH
+                        })
+                    });
+                    if (!commitRes.ok) throw new Error("Failed to commit critique file: " + (await commitRes.text()));
+
+                    // 4. Open Pull Request
+                    ghStatusMsg.textContent = "⏳ Opening Pull Request on GitHub...";
+                    const prRes = await fetch(`https://api.github.com/repos/${REPO}/pulls`, {
+                        method: "POST",
+                        headers,
+                        body: JSON.stringify({
+                            title: `📝 Review: ${CAMPAIGN_ID.toUpperCase()} ${CHAPTER_ID.toUpperCase()} by ${reviewer}`,
+                            head: NEW_BRANCH,
+                            base: BASE_BRANCH,
+                            body: prBody
+                        })
+                    });
+                    if (!prRes.ok) throw new Error("Failed to open Pull Request: " + (await prRes.text()));
+                    const prData = await prRes.json();
+
+                    ghStatusMsg.className = "p-2.5 rounded-lg text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
+                    ghStatusMsg.innerHTML = `🎉 <strong>PR Opened Successfully!</strong><br><a href="${prData.html_url}" target="_blank" class="underline font-bold text-amber-300">View Pull Request #${prData.number}</a>`;
+
+                } catch (err) {
+                    ghStatusMsg.className = "p-2.5 rounded-lg text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                    ghStatusMsg.textContent = "❌ Error: " + err.message;
+                } finally {
+                    ghSubmitPrBtn.disabled = false;
+                }
+            });
+
+            // Trigger GitHub Modal on Export Click
+            exportCritiquesBtn.addEventListener('click', showGhModal);
+            footerExportBtn.addEventListener('click', showGhModal);
+
+            clearCritiquesBtn.addEventListener('click', () => {
+                if (confirm("Are you sure you want to clear all review notes for this session?")) {
+                    critiques = {};
+                    localStorage.removeItem(STORAGE_KEY);
+                    refreshMarkers();
+                }
+            });
+
+            // Initial render
+            refreshMarkers();
+        })();
+    </script>
+</body>
+</html>
