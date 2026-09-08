@@ -1036,8 +1036,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Category</label>
-                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5" id="categoryPillContainer">
-                        <button type="button" class="category-pill active px-2 py-1.5 rounded-lg text-[11px] font-bold border border-amber-500 bg-amber-500/20 text-amber-300 text-center" data-category="tone">Tone / Voice</button>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-1.5" id="categoryPillContainer">
+                        <button type="button" class="category-pill active px-2 py-1.5 rounded-lg text-[11px] font-bold border border-amber-500 bg-amber-500/20 text-amber-300 text-center" data-category="general">General</button>
+                        <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="tone">Tone / Voice</button>
                         <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="continuity">Continuity</button>
                         <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="pacing">Pacing</button>
                         <button type="button" class="category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center" data-category="rewrite">Rewrite</button>
@@ -1156,7 +1157,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             }}
 
             let activeBlockIndex = 0;
-            let selectedCategory = "tone";
+            let selectedCategory = "general";
             const blocks = Array.from(document.querySelectorAll('.story-block'));
 
             const chaptersModalOverlay = document.getElementById('chaptersModalOverlay');
@@ -1377,7 +1378,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         p.className = "category-pill px-2 py-1.5 rounded-lg text-[11px] font-medium border border-slate-700 bg-slate-800 text-slate-300 text-center";
                     }});
                     pill.className = "category-pill active px-2 py-1.5 rounded-lg text-[11px] font-bold border border-amber-500 bg-amber-500/20 text-amber-300 text-center";
-                    selectedCategory = pill.dataset.category || "tone";
+                    selectedCategory = pill.dataset.category || "general";
                 }};
             }});
 
@@ -1404,7 +1405,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 if (existing) {{
                     if (critiqueTextInput) critiqueTextInput.value = existing.comment || "";
                     if (suggestedRewriteInput) suggestedRewriteInput.value = existing.suggestedRewrite || "";
-                    selectedCategory = existing.category || "tone";
+                    selectedCategory = existing.category || "general";
                     if (modalDeleteBtn) modalDeleteBtn.classList.remove('hidden');
 
                     categoryPills.forEach(pill => {{
@@ -1414,6 +1415,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     if (critiqueTextInput) critiqueTextInput.value = "";
                     if (suggestedRewriteInput) suggestedRewriteInput.value = "";
                     if (modalDeleteBtn) modalDeleteBtn.classList.add('hidden');
+                    selectedCategory = "general";
+                    categoryPills.forEach(pill => {{
+                        if (pill.dataset.category === "general") pill.click();
+                    }});
                 }}
 
                 if (modalPrevBlockBtn) {{
