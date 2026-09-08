@@ -1201,6 +1201,27 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             border-color: #cbd5e1 !important;
             color: #334155 !important;
         }}
+        html.theme-light a[href^="#chapter-"] {{
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #334155 !important;
+        }}
+        html.theme-light a[href^="#chapter-"]:hover {{
+            background-color: #f1f5f9 !important;
+            border-color: #d97706 !important;
+            color: #d97706 !important;
+        }}
+        html.theme-light #endSessionCriticCard {{
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+        }}
+        html.theme-light #endSessionCriticCard:hover {{
+            border-color: #f43f5e !important;
+        }}
+        html.theme-light #endSessionCriticCard h3 {{
+            color: #0f172a !important;
+        }}
         html.theme-light .custom-scrollbar::-webkit-scrollbar-track {{
             background: #f1f5f9 !important;
         }}
@@ -1286,6 +1307,27 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             border-color: #d8c7a6 !important;
             color: #4a3d35 !important;
         }}
+        html.theme-sepia a[href^="#chapter-"] {{
+            background-color: #fffdf8 !important;
+            border-color: #d8c7a6 !important;
+            color: #4a3d35 !important;
+        }}
+        html.theme-sepia a[href^="#chapter-"]:hover {{
+            background-color: #ede3cb !important;
+            border-color: #b45309 !important;
+            color: #b45309 !important;
+        }}
+        html.theme-sepia #endSessionCriticCard {{
+            background: #fffdf8 !important;
+            border-color: #ded1b8 !important;
+            box-shadow: 0 4px 16px rgba(60, 40, 20, 0.06) !important;
+        }}
+        html.theme-sepia #endSessionCriticCard:hover {{
+            border-color: #e11d48 !important;
+        }}
+        html.theme-sepia #endSessionCriticCard h3 {{
+            color: #2c221e !important;
+        }}
         html.theme-sepia .custom-scrollbar::-webkit-scrollbar-track {{
             background: #ede3cb !important;
         }}
@@ -1350,12 +1392,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
     <!-- STICKY TOP APP BAR (Clean & Content-Focused with Minimal Reading Progress) -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
-        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 px-4 py-2.5">
-            <div class="flex items-center gap-2.5 min-w-0">
-                <a href="index.html?c={campaign_id}" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center text-xs sm:text-sm font-semibold gap-1 py-1 px-1.5 -ml-1.5 rounded-lg hover:bg-slate-800/60" title="Back to {campaign_name} Sessions">
-                    <span>←</span> <span class="font-medium">Sessions</span>
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-2.5 px-3 sm:px-4 py-2.5">
+            <div class="flex items-center gap-2 min-w-0">
+                <a href="index.html?c={campaign_id}" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center justify-center w-8 h-8 -ml-1 rounded-lg hover:bg-slate-800/60 active:scale-95 flex-shrink-0" title="Back to {campaign_name} Sessions" aria-label="Back to Sessions">
+                    <span class="text-lg leading-none font-bold">←</span>
                 </a>
-                <span class="text-slate-700">|</span>
+                <span class="text-slate-700 select-none hidden xs:inline">|</span>
                 <div class="truncate">
                     <h1 class="font-bold text-sm sm:text-base text-amber-400 font-serif tracking-wide truncate">{campaign_name}</h1>
                     <p class="text-xs text-slate-400 truncate">Session {session_num}: {session_title}</p>
@@ -1364,9 +1406,16 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             <!-- Header Controls: Chapters Button, Mode Toggle & Settings Cog -->
             <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                <button id="toggleChaptersBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
-                    <span>📑</span>
-                    <span class="hidden xs:inline">Chapters</span>
+                <button id="toggleChaptersBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Breakdown" aria-label="Open Chapters Table of Contents">
+                    <svg class="w-3.5 h-3.5 flex-shrink-0 text-amber-400" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+                        <line x1="9" y1="6" x2="20" y2="6"></line>
+                        <line x1="9" y1="12" x2="20" y2="12"></line>
+                        <line x1="9" y1="18" x2="20" y2="18"></line>
+                        <circle cx="4" cy="6" r="1.5" fill="currentColor"></circle>
+                        <circle cx="4" cy="12" r="1.5" fill="currentColor"></circle>
+                        <circle cx="4" cy="18" r="1.5" fill="currentColor"></circle>
+                    </svg>
+                    <span>Chapters</span>
                 </button>
 
                 <!-- Combined Single Mode Toggle: Switches dynamically between Read Mode and Critique Mode -->
