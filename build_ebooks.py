@@ -2129,7 +2129,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     <!-- ========================================================= -->
     <!-- MOBILE CRITIQUE MODAL / PASSAGE EDITOR -->
     <!-- ========================================================= -->
-    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto box-border">
+    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-[60] flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto box-border">
         <div id="critiqueBottomSheet" class="w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl p-3.5 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[85vh] sm:max-h-[82vh] box-border">
             
             <!-- Top Header with Speaker, Block ID, and Prev/Next Passage Navigation -->
@@ -2898,10 +2898,11 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     window.closeDiffInspector();
                 }};
             }}
+            let openedFromDiff = false;
             if (diffSubmitFeedbackBtn) {{
                 diffSubmitFeedbackBtn.onclick = function() {{
                     const targetIdx = activeBlockIndex;
-                    window.closeDiffInspector();
+                    openedFromDiff = true;
                     openModalForBlock(targetIdx);
                 }};
             }}
@@ -3216,6 +3217,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 const originalSpeakerId = (block.dataset.speaker || "narrator").toLowerCase().trim();
                 const originalSpeakerName = block.dataset.speakerName || "Narrator";
                 const originalSpeakerColor = block.dataset.speakerColor || "#94a3b8";
+                const existing = critiques[blockId];
 
                 // Populate Speaker Attribution Selector
                 if (modalSpeakerSelect) {{
@@ -3298,7 +3300,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     }}
                 }}
 
-                const existing = critiques[blockId];
                 if (existing) {{
                     if (critiqueTextInput) critiqueTextInput.value = existing.comment || "";
                     if (suggestedRewriteInput) suggestedRewriteInput.value = existing.suggestedRewrite || "";
@@ -3349,7 +3350,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     modalOverlay.classList.remove('visible');
                     modalOverlay.style.height = '';
                     modalOverlay.style.transform = '';
-                    setBodyScrollLock(false);
+                    if (openedFromDiff) {{
+                        openedFromDiff = false;
+                        setBodyScrollLock(true);
+                        if (diffInspectorOverlay) {{
+                            diffInspectorOverlay.classList.add('visible');
+                        }}
+                    }} else {{
+                        setBodyScrollLock(false);
+                    }}
                 }}
             }}
 
@@ -3406,13 +3415,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             document.addEventListener('keydown', function(e) {{
                 if (e.key === 'Escape') {{
+                    if (modalOverlay && modalOverlay.classList.contains('visible')) {{
+                        closeModal();
+                        return;
+                    }}
                     if (diffInspectorOverlay && diffInspectorOverlay.classList.contains('visible')) {{
                         closeDiffInspector();
                         return;
                     }}
-                    if (settingsModalOverlay && settingsModalOverlay.classList.contains('visible')) hideSettingsModal();
-                    if (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) hideCriticForumModal();
-                    if (modalOverlay && modalOverlay.classList.contains('visible')) closeModal();
                     if (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) closeChaptersModal();
                     if (ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0')) hideGhModal();
                     if (onboardingOverlay && !onboardingOverlay.classList.contains('opacity-0')) closeOnboardingModal();
@@ -3494,7 +3504,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             // =========================================================
             const ghModalOverlay = document.createElement('div');
             ghModalOverlay.id = "ghModalOverlay";
-            ghModalOverlay.className = "fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 transition-opacity duration-200";
+            ghModalOverlay.className = "fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[70] flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 transition-opacity duration-200";
             ghModalOverlay.innerHTML = `
                 <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-4 sm:p-5 shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[85dvh] space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-800 pb-2.5 flex-shrink-0">
