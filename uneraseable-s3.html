@@ -3027,8 +3027,18 @@ ightarrow$ *Sheep*.</p>
                     </div>
 
                     <div class="flex-shrink-0">
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name / Handle</label>
-                        <input type="text" id="ghReviewerNameInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500" placeholder="e.g. Luke, Doug, Mara, Anonymous">
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-semibold text-slate-300">Your Reviewer Name / Handle</label>
+                            <button id="rerollReviewerNameBtn" type="button" class="text-[11px] text-amber-400 hover:text-amber-300 flex items-center gap-1 font-mono transition-colors font-medium" title="Roll a D&D pun adventurer handle">
+                                🎲 Roll D&D Name
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="ghReviewerNameInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 pr-10" placeholder="e.g. Artie Ficer, Drew Id, or your handle">
+                            <button id="rerollReviewerNameInlineBtn" type="button" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400 p-1 text-sm transition-colors" title="Roll a D&D pun handle">
+                                🎲
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Scrollable List of Collected Feedback Items -->
@@ -3058,17 +3068,84 @@ ightarrow$ *Sheep*.</p>
 
             const closeGhModal = document.getElementById('closeGhModal');
             const ghReviewerNameInput = document.getElementById('ghReviewerNameInput');
+            const rerollReviewerNameBtn = document.getElementById('rerollReviewerNameBtn');
+            const rerollReviewerNameInlineBtn = document.getElementById('rerollReviewerNameInlineBtn');
             const ghSubmitPrBtn = document.getElementById('ghSubmitPrBtn');
             const ghCopyJsonBtn = document.getElementById('ghCopyJsonBtn');
             const modalClearAllCritiquesBtn = document.getElementById('modalClearAllCritiquesBtn');
             const ghStatusMsg = document.getElementById('ghStatusMsg');
 
+            // =========================================================
+            // D&D PUN REVIEWER NAMES BANK & GENERATION
+            // =========================================================
+            const DND_PUN_NAMES = [
+                "Artie Ficer", "Barbie Dian", "Claire Ick", "Drew Id", "Faye Terr",
+                "Monk Montgomery", "Paula Din", "Ray N. Gerr", "Rowan Rogue", "Sorcha Sparks",
+                "Warrick Lock", "Wizzy Ward", "Natasha Twenty", "Dexter Ity", "Connie Stitution",
+                "Charis Mah", "Justin Initiative", "Eileen Advantage", "Disa Dvantage",
+                "Penny Shortrest", "Lonnie Longrest", "Mithril Mike", "Kenku Kenny",
+                "Tabitha Tarrasque", "Spellslot Sam", "Sneak Attack Stan", "Lootis Goblin",
+                "Calvin Trip", "Missy Step", "Barb Arian", "Bardy McFly", "Prestidi Katie",
+                "Otto Resilient", "Tasha Laughter", "Morden Kainen-Smith", "Bigby Handley",
+                "Eldritch Blast-on", "Githy Hank", "Mimic Mike", "Dungeon Dan", "Master Mia"
+            ];
+
+            const DND_PUN_REPLACEMENTS = [
+                "Vicious Mocker-y", "Feather Fallon", "Mage Handy", "Counterspell Craig",
+                "Polymorph Polly", "Guidance Gail", "Bane Brandon", "Bless Brenda",
+                "Eldritch Eli", "Flanklin Pierce", "Saving Throw Stan", "Hit Dice Harry",
+                "Opportunity Oscar", "Critical Clive", "Passive Per-Septimus", "Shield Bash Sean",
+                "Hexen Heather", "Smite Samantha", "Wildshape Wendy", "Arcane Archer Archie",
+                "Animate Dead Andy", "Detect Magic Dave", "Sanctuary Sandy", "Haste Horace",
+                "Beacon Hope-kins", "Zone Truth-er", "Death Ward Dale"
+            ];
+
+            function getRandomDndName() {
+                return DND_PUN_NAMES[Math.floor(Math.random() * DND_PUN_NAMES.length)];
+            }
+
+            function getOrInitReviewerName() {
+                let saved = localStorage.getItem('dnd_scribe_reviewer_name');
+                if (!saved || !saved.trim()) {
+                    saved = getRandomDndName();
+                    localStorage.setItem('dnd_scribe_reviewer_name', saved);
+                    localStorage.setItem('dnd_scribe_is_bank_name', 'true');
+                }
+                return saved;
+            }
+
+            function generateReplacementBankName(usedName) {
+                const pool = DND_PUN_REPLACEMENTS.concat(DND_PUN_NAMES);
+                const available = pool.filter(n => n.toLowerCase() !== (usedName || '').toLowerCase());
+                if (available.length > 0) {
+                    return available[Math.floor(Math.random() * available.length)];
+                }
+                return "Nat Twenty-Two";
+            }
+
+            function rollNewReviewerName() {
+                const newName = getRandomDndName();
+                if (ghReviewerNameInput) {
+                    ghReviewerNameInput.value = newName;
+                    localStorage.setItem('dnd_scribe_reviewer_name', newName);
+                    localStorage.setItem('dnd_scribe_is_bank_name', 'true');
+                    ghReviewerNameInput.classList.add('ring-2', 'ring-amber-400');
+                    setTimeout(() => ghReviewerNameInput.classList.remove('ring-2', 'ring-amber-400'), 400);
+                }
+            }
+
             if (ghReviewerNameInput) {
-                ghReviewerNameInput.value = localStorage.getItem('dnd_scribe_reviewer_name') || '';
+                ghReviewerNameInput.value = getOrInitReviewerName();
                 ghReviewerNameInput.addEventListener('input', function() {
-                    localStorage.setItem('dnd_scribe_reviewer_name', this.value.trim());
+                    const val = this.value.trim();
+                    localStorage.setItem('dnd_scribe_reviewer_name', val);
+                    const isPun = DND_PUN_NAMES.some(n => n.toLowerCase() === val.toLowerCase());
+                    localStorage.setItem('dnd_scribe_is_bank_name', isPun ? 'true' : 'false');
                 });
             }
+
+            if (rerollReviewerNameBtn) rerollReviewerNameBtn.onclick = rollNewReviewerName;
+            if (rerollReviewerNameInlineBtn) rerollReviewerNameInlineBtn.onclick = rollNewReviewerName;
 
             function renderFeedbackNotesList() {
                 const container = document.getElementById('feedbackNotesContainer');
@@ -3189,12 +3266,19 @@ ightarrow$ *Sheep*.</p>
             if (ghCopyJsonBtn) {
                 ghCopyJsonBtn.onclick = function() {
                     const count = Object.keys(critiques).length;
-                    const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : "Reader";
+                    const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : getOrInitReviewerName();
+                    const isBankName = DND_PUN_NAMES.some(n => n.toLowerCase() === reviewer.toLowerCase()) || (localStorage.getItem('dnd_scribe_is_bank_name') === 'true');
+                    const replacementName = isBankName ? generateReplacementBankName(reviewer) : null;
                     const exportPayload = {
                         campaign: CAMPAIGN_ID,
                         chapter: CHAPTER_ID,
                         title: "Uneraseable - THE MUSEUM HEIST IN NORTH CAROLINA",
                         reviewer: reviewer,
+                        reviewerMeta: {
+                            handle: reviewer,
+                            isBankPunName: isBankName,
+                            suggestedBankReplacement: replacementName
+                        },
                         exportedAt: new Date().toISOString(),
                         totalCritiques: count,
                         critiques: Object.values(critiques)
@@ -3252,7 +3336,7 @@ ightarrow$ *Sheep*.</p>
                 const header = base64UrlEncode(JSON.stringify({ alg: "RS256", typ: "JWT" }));
                 const payload = base64UrlEncode(JSON.stringify({
                     iat: now - 60,
-                    exp: now + 600,
+                    exp: now + 500,
                     iss: BOT_APP_ID
                 }));
 
@@ -3280,7 +3364,7 @@ ightarrow$ *Sheep*.</p>
 
             if (ghSubmitPrBtn) {
                 ghSubmitPrBtn.onclick = async function() {
-                    const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : 'Reader';
+                    const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : getOrInitReviewerName();
                     const count = Object.keys(critiques).length;
                     if (count === 0) {
                         alert("No feedback notes to submit.");
@@ -3295,6 +3379,9 @@ ightarrow$ *Sheep*.</p>
                     }
                     ghSubmitPrBtn.disabled = true;
 
+                    const isBankName = DND_PUN_NAMES.some(n => n.toLowerCase() === reviewer.toLowerCase()) || (localStorage.getItem('dnd_scribe_is_bank_name') === 'true');
+                    const replacementName = isBankName ? generateReplacementBankName(reviewer) : null;
+
                     const REPO = "ldstrebel/dnd-scribe";
                     const BASE_BRANCH = "uneraseable";
                     const safeName = reviewer.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -3306,6 +3393,11 @@ ightarrow$ *Sheep*.</p>
                         chapter: CHAPTER_ID,
                         title: "Uneraseable - THE MUSEUM HEIST IN NORTH CAROLINA",
                         reviewer: reviewer,
+                        reviewerMeta: {
+                            handle: reviewer,
+                            isBankPunName: isBankName,
+                            suggestedBankReplacement: replacementName
+                        },
                         exportedAt: new Date().toISOString(),
                         totalCritiques: count,
                         critiques: Object.values(critiques)
@@ -3315,7 +3407,12 @@ ightarrow$ *Sheep*.</p>
                         "| `" + c.blockId + "` | **" + c.speaker + "** | `" + c.category + "` | " + (c.comment || '').replace(/\|/g, '\\|') + " | " + (c.suggestedRewrite ? c.suggestedRewrite.replace(/\|/g, '\\|') : '-') + " |"
                     ).join('\n');
 
-                    const prBody = "## 📝 Story Feedback: " + exportPayload.title + "\n**Reviewer:** " + reviewer + "\n**Total Notes:** " + count + "\n\n### 📋 Feedback Items Table\n| Block ID | Speaker | Category | Critique / Directive | Suggested Rewrite |\n|---|---|---|---|---|\n" + markdownRows + "\n\n<details>\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\n\n```json\n" + JSON.stringify(exportPayload, null, 2) + "\n```\n</details>";
+                    let reviewerSection = "**Reviewer:** `" + reviewer + "`";
+                    if (isBankName && replacementName) {
+                        reviewerSection += " *(🎲 D&D Pun Handle)*\n**Next Pool Replacement Suggestion:** `" + replacementName + "` 🎲";
+                    }
+
+                    const prBody = "## 📝 Story Feedback: " + exportPayload.title + "\n" + reviewerSection + "\n**Total Notes:** " + count + "\n\n### 📋 Feedback Items Table\n| Block ID | Speaker | Category | Critique / Directive | Suggested Rewrite |\n|---|---|---|---|---|\n" + markdownRows + "\n\n<details>\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\n\n```json\n" + JSON.stringify(exportPayload, null, 2) + "\n```\n</details>";
 
                     try {
                         const token = await getInstallationAccessToken();
@@ -3357,7 +3454,11 @@ ightarrow$ *Sheep*.</p>
 
                         if (ghStatusMsg) {
                             ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
-                            ghStatusMsg.innerHTML = '🎉 <strong>Feedback Submitted!</strong><br>Thank you, ' + reviewer + '! Your notes have been submitted to the scribe pipeline.';
+                            let successHtml = '🎉 <strong>Feedback Submitted!</strong><br>Thank you, ' + reviewer + '! Your notes have been submitted to the scribe pipeline.';
+                            if (isBankName && replacementName) {
+                                successHtml += '<br><span class="text-[11px] text-amber-300 font-mono mt-1 block">🎲 Bank Refresh: Generated <strong>' + replacementName + '</strong> for next adventurer.</span>';
+                            }
+                            ghStatusMsg.innerHTML = successHtml;
                         }
 
                         // Clear cache and refresh markers upon submission
@@ -3369,7 +3470,7 @@ ightarrow$ *Sheep*.</p>
 
                         setTimeout(() => {
                             hideGhModal();
-                        }, 2200);
+                        }, 2500);
                     } catch (err) {
                         if (ghStatusMsg) {
                             ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
