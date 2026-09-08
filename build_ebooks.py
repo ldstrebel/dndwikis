@@ -1,9 +1,9 @@
 """Builds interactive Schema 2.0 HTML EBooks with:
-1. Natural, seamless narrative flow with reduced spacing and elegant typography for long narration blocks
-2. All PCs and Named NPCs clearly listed in the Dialogue Share chart and legend (NPCs share low-intensity red #f87171)
-3. Interactive Character Dialogue Momentum Waveform (click spikes to jump to character lines)
-4. Fast jump chapter pills and clean chapter dividers
-5. Bulletproof null-safe JS controls and GitHub PR modal
+1. Clean sticky top bar (removed top Submit PR button; Submit PR lives in review footer)
+2. All stats unified inside the collapsible top drawer
+3. Mobile-first 2-column Dialogue Momentum cards with horizontal volume bars & large tap targets
+4. Natural prose flow for narration blocks
+5. Named NPCs in red (#f87171), clean PC names, fast scene jump pills
 """
 
 import json
@@ -59,7 +59,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     writing_metrics = stats.get("writingMetrics", {})
     sensory = writing_metrics.get("sensoryRegisters", {})
 
-    # Separate spoken character/NPC dialogue from narrator for the spoken dialogue breakdown
+    # Spoken characters & NPCs
     spoken_speakers = []
     total_spoken_words = sum(sp.get("words", 0) for sp in raw_speaker_dist if sp.get("id") != "narrator")
 
@@ -80,10 +80,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             "is_npc": c_info.get("type") == "npc" or sp_id not in PC_COLORS
         })
 
-    # Sort: PCs first, then NPCs by word volume
     spoken_speakers.sort(key=lambda s: (s["is_npc"], -s["words"]))
 
-    # Generate Spoken Dialogue progress bar segments
+    # Spoken Dialogue Split Bar
     prog_bar_segments = ""
     for sp in spoken_speakers:
         pct = sp["pct"]
@@ -91,7 +90,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         name = sp["name"]
         prog_bar_segments += f'<div style="width: {pct}%; background-color: {color}" class="h-full border-r border-slate-900/40" title="{name}: {pct}% ({sp["words"]} words)"></div>\n'
 
-    # Generate Legend Chips for all PCs & Named NPCs
+    # Legend Chips
     speaker_chips = ""
     for sp in spoken_speakers:
         pct = sp["pct"]
@@ -107,7 +106,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             </div>
         """
 
-    # Group Blocks by Chapter/Scene for Quick Jump Pills & Dividers
+    # Group Blocks by Chapter/Scene
     chapters = []
     current_chapter_title = ""
     current_chapter_blocks = []
@@ -133,7 +132,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             "word_count": sum(len(blk.get("text", "").split()) for blk in current_chapter_blocks)
         })
 
-    # Build Quick Jump Chapter Pills
+    # Quick Jump Chapter Pills
     chapter_pills_html = ""
     for idx, ch in enumerate(chapters, 1):
         ch_title = ch["title"]
@@ -146,47 +145,44 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         </a>
         """
 
-    # Build Dialogue Momentum Waveform Spikes (Excluding Narrator)
-    dialogue_spikes_html = ""
+    # =========================================================================
+    # MOBILE-FIRST 2-COLUMN DIALOGUE MOMENTUM CARDS (Horizontal Volume Bars)
+    # =========================================================================
     dialogue_blocks = [b for b in blocks if b.get("speakerId", "").lower() != "narrator"]
     max_words = max((len(b.get("text", "").split()) for b in dialogue_blocks), default=50)
+    dialogue_cards_html = ""
 
-    for b in blocks:
+    for b in dialogue_blocks:
         sp_id = b.get("speakerId", "").lower().strip()
         b_id = b.get("id", "")
+        b_idx = b.get("index", 1)
         text = b.get("text", "")
         w_count = len(text.split())
+        sp_info = characters.get(sp_id, {"name": sp_id.title(), "type": "character"})
+        sp_name = sp_info.get("name", sp_id.title())
+        sp_color = get_speaker_color(sp_id, sp_info)
+        bar_pct = max(15, min(100, round((w_count / max(max_words, 1)) * 100)))
+        short_preview = text[:55].replace('"', '&quot;') + ("..." if len(text) > 55 else "")
 
-        if sp_id == "narrator":
-            # Subtle low spacer dot on timeline for narrator prose pacing
-            dialogue_spikes_html += f"""
-            <div class="w-1.5 h-1.5 bg-slate-800/80 rounded-full my-auto flex-shrink-0 cursor-pointer hover:bg-slate-600 transition-colors"
-                 title="Narrator ({w_count} words)"
-                 onclick="document.getElementById('{b_id}')?.scrollIntoView({{behavior: 'smooth', block: 'center'}})"></div>
-            """
-        else:
-            sp_info = characters.get(sp_id, {"name": sp_id.title(), "type": "character"})
-            sp_name = sp_info.get("name", sp_id.title())
-            sp_color = get_speaker_color(sp_id, sp_info)
-            height_px = max(14, min(56, round((w_count / max(max_words, 1)) * 56)))
-            short_preview = text[:60].replace('"', '&quot;') + "..."
-
-            dialogue_spikes_html += f"""
-            <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
-                 onclick="document.getElementById('{b_id}')?.scrollIntoView({{behavior: 'smooth', block: 'center'}})">
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
-                    <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
-                        <div class="font-bold" style="color: {sp_color}">{sp_name} ({w_count}w)</div>
-                        <div class="text-slate-400 italic line-clamp-2 mt-0.5">"{short_preview}"</div>
-                    </div>
-                    <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
+        dialogue_cards_html += f"""
+        <div class="bg-slate-950/90 hover:bg-slate-900 border border-slate-800/90 hover:border-slate-700 p-2.5 rounded-xl cursor-pointer transition-all active:scale-[0.98] shadow-sm flex flex-col justify-between"
+             onclick="document.getElementById('{b_id}')?.scrollIntoView({{behavior: 'smooth', block: 'center'}})">
+            <div class="flex items-center justify-between gap-1 mb-1">
+                <div class="flex items-center gap-1.5 min-w-0">
+                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {sp_color}"></span>
+                    <span class="text-[11px] font-bold truncate" style="color: {sp_color}">{sp_name}</span>
                 </div>
-                <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
-                     style="height: {height_px}px; background-color: {sp_color}; box-shadow: 0 0 6px {sp_color}40;"></div>
+                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">#{b_idx} · {w_count}w</span>
             </div>
-            """
+            <!-- Horizontal Word Volume Bar -->
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden my-1">
+                <div class="h-full rounded-full" style="width: {bar_pct}%; background-color: {sp_color}"></div>
+            </div>
+            <p class="text-[11px] text-slate-400 italic line-clamp-1 mt-0.5">"{short_preview}"</p>
+        </div>
+        """
 
-    # Generate Story Blocks with Natural Narration Flow & Dedicated Dividers
+    # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
     chapter_index = 0
 
@@ -223,7 +219,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             is_narrator = (sp_info.get("type") == "narrator" or sp_id == "narrator")
 
             if is_narrator:
-                # Natural prose paragraph with smooth flow and reduced gap
                 blocks_html += f"""
                 <!-- Block {b_idx} (Narrator) -->
                 <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
@@ -239,7 +234,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
                 """
             else:
-                # Spoken dialogue block with character badge and color border
                 blocks_html += f"""
                 <!-- Block {b_idx} ({sp_name}) -->
                 <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
@@ -354,14 +348,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             transform: translateY(0);
         }}
 
-        .momentum-scroll::-webkit-scrollbar {{
+        .custom-scrollbar::-webkit-scrollbar {{
             height: 5px;
+            width: 5px;
         }}
-        .momentum-scroll::-webkit-scrollbar-track {{
+        .custom-scrollbar::-webkit-scrollbar-track {{
             background: rgba(15, 23, 42, 0.6);
             border-radius: 999px;
         }}
-        .momentum-scroll::-webkit-scrollbar-thumb {{
+        .custom-scrollbar::-webkit-scrollbar-thumb {{
             background: rgba(100, 116, 139, 0.5);
             border-radius: 999px;
         }}
@@ -369,7 +364,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
 
-    <!-- STICKY TOP APP BAR -->
+    <!-- STICKY TOP APP BAR (Clean & Uncluttered) -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-2.5">
         <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
@@ -383,15 +378,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
             </div>
 
-            <!-- Header Action Controls -->
+            <!-- Header Controls: Stats Toggle & Mode Switcher -->
             <div class="flex items-center gap-2 flex-shrink-0">
-                <!-- Stats Toggle Button -->
                 <button id="toggleStatsBtn" type="button" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center gap-1.5 transition-all" title="Toggle session diagnostics drawer">
                     <span>📊</span>
                     <span id="toggleStatsBtnLabel">Hide Stats</span>
                 </button>
 
-                <!-- Reader / Critique Mode Switcher -->
                 <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5" title="Switch reading mode">
                     <button id="modeReaderBtn" type="button" class="px-2.5 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1">
                         <span>📖</span> <span class="hidden sm:inline">Read</span>
@@ -400,13 +393,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         <span>✍️</span> <span class="hidden sm:inline">Critique</span>
                     </button>
                 </div>
-
-                <!-- Export / PR Trigger -->
-                <button id="exportCritiquesBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 flex items-center gap-1.5 shadow-sm" title="Submit review notes as a GitHub PR">
-                    <span>🐙</span>
-                    <span>Submit PR</span>
-                    <span id="exportBadgeCount" class="bg-slate-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-0.5">0</span>
-                </button>
             </div>
         </div>
     </header>
@@ -415,16 +401,16 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     <div class="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
 
         <!-- ========================================================= -->
-        <!-- TOP STATS DRAWER (Single-Row Metrics & Spoken Distribution) -->
+        <!-- CONSOLIDATED TOP STATS DRAWER (All Diagnostics In One Place) -->
         <!-- ========================================================= -->
         <section id="sessionStatsSection" class="mb-8">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-sm">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-sm space-y-4">
                 
                 <!-- Drawer Header -->
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                     <div class="flex items-center gap-2">
                         <span class="text-lg">📊</span>
-                        <h2 class="text-sm font-bold tracking-wider uppercase text-amber-400">Session {session_num} Metrics & Distribution</h2>
+                        <h2 class="text-sm font-bold tracking-wider uppercase text-amber-400">Session {session_num} Metrics & Diagnostics</h2>
                     </div>
                     <button id="minimizeStatsBtn" type="button" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
                         <span>Hide Stats ▲</span>
@@ -432,22 +418,19 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
 
                 <!-- Single-Row Unified Metric Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                    <!-- 1. Length & Read Time -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                        <div class="text-[11px] text-slate-400 font-medium">Story Length & Reading Time</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Story Length & Read Time</div>
                         <div class="text-lg font-bold text-slate-100 mt-0.5 font-mono">{word_count:,} <span class="text-xs text-slate-500 font-normal">words</span></div>
                         <div class="text-[11px] text-emerald-400 mt-0.5">~{book_pages} Book Pages · {read_mins}m Read</div>
                     </div>
 
-                    <!-- 2. Dialogue Ratio -->
                     <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
                         <div class="text-[11px] text-slate-400 font-medium">Dialogue Ratio</div>
                         <div class="text-lg font-bold text-amber-400 mt-0.5 font-mono">{spoken_pct}% <span class="text-xs text-slate-500 font-normal">spoken</span></div>
                         <div class="text-[11px] text-slate-400 mt-0.5">{narrative_pct}% Narrative Prose</div>
                     </div>
 
-                    <!-- 3. Sensory Registers -->
                     <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
                         <div class="text-[11px] text-slate-400 font-medium mb-1.5">Sensory Palette ({sensory.get("registersCovered", 5)}/5 Registers)</div>
                         <div class="flex flex-wrap gap-1">
@@ -459,21 +442,34 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     </div>
                 </div>
 
-                <!-- Character & NPC Dialogue Breakdown -->
+                <!-- Spoken Character & NPC Line Share -->
                 <div class="space-y-2 bg-slate-950/40 p-3.5 rounded-xl border border-slate-800/60">
                     <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-1">
-                        <span>🎙️ Spoken Character & NPC Line Share ({total_spoken_words:,} spoken words)</span>
-                        <span class="text-[11px] text-slate-400">{len(spoken_speakers)} Active Spoken Voices</span>
+                        <span>🎙️ Spoken Line Share ({total_spoken_words:,} spoken words across {len(spoken_speakers)} active voices)</span>
                     </div>
 
-                    <!-- Multi-color split progress bar of spoken turns -->
-                    <div class="h-3 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
+                    <div class="h-2.5 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
                         {prog_bar_segments}
                     </div>
 
-                    <!-- All PCs and Named NPCs in Legend -->
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
                         {speaker_chips}
+                    </div>
+                </div>
+
+                <!-- 2-Column Mobile-Friendly Dialogue Momentum & Character Line Navigator -->
+                <div class="bg-slate-950/50 p-3.5 rounded-xl border border-slate-800/60 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                            <span>📈</span>
+                            <span>Dialogue Momentum (Tap to Jump to Line)</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-mono">{len(dialogue_blocks)} spoken turns</span>
+                    </div>
+
+                    <!-- 2-Column Dense Grid with Horizontal Volume Bars & Touch Targets -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                        {dialogue_cards_html}
                     </div>
                 </div>
 
@@ -481,7 +477,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         </section>
 
         <!-- EBOOK COVER & INTRO HEADER -->
-        <div class="mb-6 text-center">
+        <div class="mb-5 text-center">
             <div class="w-36 sm:w-44 mx-auto mb-3 rounded-xl overflow-hidden shadow-2xl border border-slate-800 ring-1 ring-amber-500/20">
                 <img src="images/uneraseable-cover.jpg" alt="Uneraseable Cover by Doug N Masters" class="w-full h-auto object-cover">
             </div>
@@ -490,28 +486,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <p class="text-xs sm:text-sm text-slate-400 mt-1.5 font-serif italic max-w-xl mx-auto">{session_synopsis}</p>
         </div>
 
-        <!-- ========================================================= -->
-        <!-- INTERACTIVE CHARACTER DIALOGUE MOMENTUM WAVEFORM -->
-        <!-- ========================================================= -->
-        <div class="mb-8 bg-slate-900/80 p-4 rounded-2xl border border-slate-800/90 shadow-lg">
-            <div class="flex items-center justify-between gap-2 mb-2">
-                <div class="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider">
-                    <span>📈</span>
-                    <span>Dialogue Momentum Waveform (Tap Spikes to Jump)</span>
-                </div>
-                <span class="text-[10px] text-slate-500 hidden sm:inline">Narrator Filtered · Spikes = Spoken Lines</span>
-            </div>
-
-            <!-- Waveform Bar Container -->
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 flex items-end gap-1 overflow-x-auto momentum-scroll h-20 pb-1">
-                {dialogue_spikes_html}
-            </div>
-
-            <!-- Jump Navigation Pills Below Waveform -->
-            <div class="flex items-center gap-1.5 overflow-x-auto pt-3 pb-1 momentum-scroll">
-                <span class="text-[10px] font-bold uppercase text-slate-500 flex-shrink-0 mr-1">Jump to Scene:</span>
-                {chapter_pills_html}
-            </div>
+        <!-- FAST SCENE JUMP PILLS -->
+        <div class="mb-6 flex items-center gap-1.5 overflow-x-auto pb-1 custom-scrollbar">
+            <span class="text-[10px] font-bold uppercase text-slate-500 flex-shrink-0 mr-1">Jump to Scene:</span>
+            {chapter_pills_html}
         </div>
 
         <!-- ========================================================= -->
@@ -524,11 +502,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         <!-- Bottom Page Controls & Review Summary -->
         <footer class="mt-16 pt-8 border-t border-slate-800 text-center space-y-4">
             <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 max-w-md mx-auto shadow-lg">
-                <h3 class="text-sm font-bold text-amber-400 mb-1">Session Review & Critique Submission</h3>
+                <div class="flex items-center justify-center gap-2 text-amber-400 mb-1">
+                    <span class="text-lg">🐙</span>
+                    <h3 class="text-sm font-bold">Submit Review PR to GitHub</h3>
+                </div>
                 <p class="text-xs text-slate-400 mb-3">Submit your feedback directly to the dnd-scribe agent pipeline.</p>
                 <div class="flex gap-2 justify-center">
                     <button id="footerExportBtn" type="button" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5">
-                        <span>🐙</span> <span>Submit Review PR to GitHub</span>
+                        <span>🚀</span> <span>Open Review PR</span>
+                        <span id="exportBadgeCount" class="bg-slate-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1">0</span>
                     </button>
                     <button id="clearCritiquesBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl transition-colors">
                         Clear All
@@ -614,7 +596,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const minimizeStatsBtn = document.getElementById('minimizeStatsBtn');
             const modeReaderBtn = document.getElementById('modeReaderBtn');
             const modeCritiqueBtn = document.getElementById('modeCritiqueBtn');
-            const exportCritiquesBtn = document.getElementById('exportCritiquesBtn');
             const footerExportBtn = document.getElementById('footerExportBtn');
             const clearCritiquesBtn = document.getElementById('clearCritiquesBtn');
             const exportBadgeCount = document.getElementById('exportBadgeCount');
@@ -793,7 +774,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }};
             }});
 
-            // GitHub PR Submission Modal
+            // =========================================================
+            // GITHUB PR SUBMISSION MODAL
+            // =========================================================
             const ghModalOverlay = document.createElement('div');
             ghModalOverlay.id = "ghModalOverlay";
             ghModalOverlay.className = "fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-4 transition-opacity duration-200";
@@ -983,7 +966,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }};
             }}
 
-            if (exportCritiquesBtn) exportCritiquesBtn.onclick = showGhModal;
             if (footerExportBtn) footerExportBtn.onclick = showGhModal;
             if (clearCritiquesBtn) {{
                 clearCritiquesBtn.onclick = function() {{
