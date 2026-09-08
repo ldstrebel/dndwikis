@@ -679,9 +679,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
             </div>
         </div>
-        <!-- Minimal Top Reading Progress Bar -->
-        <div class="w-full bg-slate-950/60 h-[2.5px] overflow-hidden">
-            <div id="readingProgressBar" class="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 transition-[width] duration-75 ease-out" style="width: 0%;"></div>
+        <!-- Minimal Top Reading Progress Bar (Clean Blue Accent) -->
+        <div class="w-full bg-slate-950/80 h-[2px] overflow-hidden">
+            <div id="readingProgressBar" class="h-full bg-gradient-to-r from-blue-600 via-sky-400 to-cyan-300 transition-[width] duration-75 ease-out" style="width: 0%;"></div>
         </div>
     </header>
 
@@ -1076,7 +1076,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         <span class="text-[10px] text-slate-500 font-mono">Under Header</span>
                     </div>
                     <p class="text-[11px] text-slate-400 leading-normal">
-                        The minimal amber bar directly beneath the top header tracks how far along you are in the story from start to finish.
+                        The minimal blue bar directly beneath the top header tracks how far along you are in the story from start to finish.
                     </p>
                 </div>
             </div>
