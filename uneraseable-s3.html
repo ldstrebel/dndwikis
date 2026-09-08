@@ -93,7 +93,6 @@
             transform: translateY(0);
         }
 
-        /* Custom Scrollbar for Momentum Waveform */
         .momentum-scroll::-webkit-scrollbar {
             height: 5px;
         }
@@ -155,7 +154,7 @@
     <div class="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
 
         <!-- ========================================================= -->
-        <!-- TOP STATS DRAWER (Unified Single-Row Metrics) -->
+        <!-- TOP STATS DRAWER (Single-Row Metrics & Spoken Distribution) -->
         <!-- ========================================================= -->
         <section id="sessionStatsSection" class="mb-8">
             <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-sm">
@@ -171,7 +170,7 @@
                     </button>
                 </div>
 
-                <!-- Unified Single-Row Metrics Card (Story Length + Dialogue Ratio + Sensory) -->
+                <!-- Single-Row Unified Metric Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                     <!-- 1. Length & Read Time -->
                     <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
@@ -189,7 +188,7 @@
 
                     <!-- 3. Sensory Registers -->
                     <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                        <div class="text-[11px] text-slate-400 font-medium mb-1.5">Sensory Palette Coverage (5/5)</div>
+                        <div class="text-[11px] text-slate-400 font-medium mb-1.5">Sensory Palette (5/5 Registers)</div>
                         <div class="flex flex-wrap gap-1">
                             <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👁️ Visual: <strong class="text-amber-400">8</strong></span>
                             <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👂 Audio: <strong class="text-sky-400">3</strong></span>
@@ -199,66 +198,67 @@
                     </div>
                 </div>
 
-                <!-- Character Dialogue Breakdown (11Labs Multi-Voice Split Bar) -->
-                <div class="space-y-2 bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
+                <!-- Character & NPC Dialogue Breakdown -->
+                <div class="space-y-2 bg-slate-950/40 p-3.5 rounded-xl border border-slate-800/60">
                     <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-1">
-                        <span>🎙️ Speaker Line Share & Dialogue Distribution</span>
-                        <span class="text-[11px] text-slate-400">7 Active Voices</span>
+                        <span>🎙️ Spoken Character & NPC Line Share (1,113 spoken words)</span>
+                        <span class="text-[11px] text-slate-400">6 Active Spoken Voices</span>
                     </div>
 
-                    <div class="h-2.5 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
-                        <div style="width: 52.6%; background-color: #94a3b8" class="h-full" title="Narrator: 52.6%"></div>
-<div style="width: 19.8%; background-color: #3b82f6" class="h-full" title="Pierre: 19.8%"></div>
-<div style="width: 11.8%; background-color: #8b5cf6" class="h-full" title="Prof. Edward Dravin: 11.8%"></div>
-<div style="width: 8.7%; background-color: #f59e0b" class="h-full" title="Eusacles: 8.7%"></div>
-<div style="width: 5.7%; background-color: #10b981" class="h-full" title="Alfie: 5.7%"></div>
-<div style="width: 0.8%; background-color: #f87171" class="h-full" title="Thomas (Guard): 0.8%"></div>
-<div style="width: 0.6%; background-color: #f87171" class="h-full" title="Nancy (Guard): 0.6%"></div>
+                    <!-- Multi-color split progress bar of spoken turns -->
+                    <div class="h-3 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
+                        <div style="width: 41.8%; background-color: #3b82f6" class="h-full border-r border-slate-900/40" title="Pierre: 41.8% (465 words)"></div>
+<div style="width: 24.9%; background-color: #8b5cf6" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 24.9% (277 words)"></div>
+<div style="width: 18.4%; background-color: #f59e0b" class="h-full border-r border-slate-900/40" title="Eusacles: 18.4% (205 words)"></div>
+<div style="width: 12.0%; background-color: #10b981" class="h-full border-r border-slate-900/40" title="Alfie: 12.0% (134 words)"></div>
+<div style="width: 1.6%; background-color: #f87171" class="h-full border-r border-slate-900/40" title="Thomas (Guard): 1.6% (18 words)"></div>
+<div style="width: 1.3%; background-color: #f87171" class="h-full border-r border-slate-900/40" title="Nancy (Guard): 1.3% (14 words)"></div>
 
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                    <!-- All PCs and Named NPCs in Legend -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
                         
-            <div class="flex items-center gap-1.5 text-xs text-slate-300">
-                <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #94a3b8"></span>
-                <span class="font-medium truncate">Narrator:</span>
-                <span class="font-mono font-bold ml-auto" style="color: #94a3b8">52.6%</span>
-            </div>
-        
-            <div class="flex items-center gap-1.5 text-xs text-slate-300">
+            <div class="flex items-center gap-1.5 text-xs text-slate-300 py-0.5">
                 <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
-                <span class="font-medium truncate">Pierre:</span>
-                <span class="font-mono font-bold ml-auto" style="color: #3b82f6">19.8%</span>
+                <span class="font-medium truncate">Pierre</span>
+                
+                <span class="font-mono font-bold ml-auto" style="color: #3b82f6">41.8%</span>
             </div>
         
-            <div class="flex items-center gap-1.5 text-xs text-slate-300">
+            <div class="flex items-center gap-1.5 text-xs text-slate-300 py-0.5">
                 <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
-                <span class="font-medium truncate">Prof. Edward Dravin:</span>
-                <span class="font-mono font-bold ml-auto" style="color: #8b5cf6">11.8%</span>
+                <span class="font-medium truncate">Prof. Edward Dravin</span>
+                
+                <span class="font-mono font-bold ml-auto" style="color: #8b5cf6">24.9%</span>
             </div>
         
-            <div class="flex items-center gap-1.5 text-xs text-slate-300">
+            <div class="flex items-center gap-1.5 text-xs text-slate-300 py-0.5">
                 <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
-                <span class="font-medium truncate">Eusacles:</span>
-                <span class="font-mono font-bold ml-auto" style="color: #f59e0b">8.7%</span>
+                <span class="font-medium truncate">Eusacles</span>
+                
+                <span class="font-mono font-bold ml-auto" style="color: #f59e0b">18.4%</span>
             </div>
         
-            <div class="flex items-center gap-1.5 text-xs text-slate-300">
+            <div class="flex items-center gap-1.5 text-xs text-slate-300 py-0.5">
                 <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
-                <span class="font-medium truncate">Alfie:</span>
-                <span class="font-mono font-bold ml-auto" style="color: #10b981">5.7%</span>
+                <span class="font-medium truncate">Alfie</span>
+                
+                <span class="font-mono font-bold ml-auto" style="color: #10b981">12.0%</span>
             </div>
         
-            <div class="flex items-center gap-1.5 text-xs text-slate-300">
+            <div class="flex items-center gap-1.5 text-xs text-slate-300 py-0.5">
                 <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f87171"></span>
-                <span class="font-medium truncate">Thomas (Guard):</span>
-                <span class="font-mono font-bold ml-auto" style="color: #f87171">0.8%</span>
+                <span class="font-medium truncate">Thomas (Guard)</span>
+                <span class="text-[9px] px-1 py-0.2 rounded bg-rose-950/60 text-rose-300 border border-rose-800/60 font-mono">NPC</span>
+                <span class="font-mono font-bold ml-auto" style="color: #f87171">1.6%</span>
             </div>
         
-            <div class="flex items-center gap-1.5 text-xs text-slate-300">
+            <div class="flex items-center gap-1.5 text-xs text-slate-300 py-0.5">
                 <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f87171"></span>
-                <span class="font-medium truncate">Nancy (Guard):</span>
-                <span class="font-mono font-bold ml-auto" style="color: #f87171">0.6%</span>
+                <span class="font-medium truncate">Nancy (Guard)</span>
+                <span class="text-[9px] px-1 py-0.2 rounded bg-rose-950/60 text-rose-300 border border-rose-800/60 font-mono">NPC</span>
+                <span class="font-mono font-bold ml-auto" style="color: #f87171">1.3%</span>
             </div>
         
                     </div>
@@ -269,7 +269,7 @@
 
         <!-- EBOOK COVER & INTRO HEADER -->
         <div class="mb-6 text-center">
-            <div class="w-40 sm:w-48 mx-auto mb-3 rounded-xl overflow-hidden shadow-2xl border border-slate-800 ring-1 ring-amber-500/20">
+            <div class="w-36 sm:w-44 mx-auto mb-3 rounded-xl overflow-hidden shadow-2xl border border-slate-800 ring-1 ring-amber-500/20">
                 <img src="images/uneraseable-cover.jpg" alt="Uneraseable Cover by Doug N Masters" class="w-full h-auto object-cover">
             </div>
             <span class="text-xs uppercase tracking-widest text-amber-500 font-bold font-mono">Session 3 · Interactive Edition</span>
@@ -286,7 +286,7 @@
                     <span>📈</span>
                     <span>Dialogue Momentum Waveform (Tap Spikes to Jump)</span>
                 </div>
-                <span class="text-[10px] text-slate-500 hidden sm:inline">Narrator Hidden · Spikes = Spoken Turns</span>
+                <span class="text-[10px] text-slate-500 hidden sm:inline">Narrator Filtered · Spikes = Spoken Lines</span>
             </div>
 
             <!-- Waveform Bar Container -->
@@ -298,105 +298,91 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b002')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (23w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Pierre adjusted his beret, peering through the windshield wi..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 24px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b003')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #10b981">Alfie (33w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Very famous,&quot; Alfie piped up from the dashboard, standing t..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 34px; background-color: #10b981; box-shadow: 0 0 6px #10b98140;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b004')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (31w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;World famous,&quot; Dravin smiled from the passenger seat, adjus..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 32px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b005')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (54w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Eusacles parallel parked the rusted farm truck in a public l..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 56px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b006')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (29w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;We buy tickets like civilized scholars,&quot; Dravin advised, sm..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 30px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b007')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (34w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Pierre pulled the three ancient scrolls deeper into his canv..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 35px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b008')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (25w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;About the same chance that the Fates have a sense of humor,..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 26px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
@@ -419,75 +405,65 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b013')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (33w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Four guards on this floor,&quot; Eusacles whispered, leaning cas..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 34px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b014')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (39w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Alfie peeked out from Pierre's breast pocket, his tiny shell..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 40px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b015')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (29w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Dravin nodded thoughtfully, inspecting the promotional broch..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 30px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b016')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (24w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;The Greek tablet,&quot; Pierre murmured, his pulse quickening. &quot;..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 25px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b017')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (42w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Because the grammar makes no sense to modern historians,&quot; D..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 44px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
@@ -502,17 +478,15 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b020')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (11w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;There it is,&quot; Eusacles breathed, stepping closer to the vel..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
-                     style="height: 12px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
+                     style="height: 14px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
             
             <div class="w-1.5 h-1.5 bg-slate-800/80 rounded-full my-auto flex-shrink-0 cursor-pointer hover:bg-slate-600 transition-colors"
@@ -525,30 +499,26 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b023')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (28w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;The stone matches the piece in my rucksack,&quot; Pierre whisper..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 29px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b024')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (29w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;And the display case is wired with magnetic contact sensors..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 30px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
@@ -563,15 +533,13 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b027')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (19w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Closing time,&quot; Eusacles muttered, drifting toward the shado..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 20px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
@@ -582,45 +550,39 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b029')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f87171">Thomas (Guard) (18w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Excuse me, folks,&quot; Thomas announced, clapping his hands tog..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 19px; background-color: #f87171; box-shadow: 0 0 6px #f8717140;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b030')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (26w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Of course, officer,&quot; Dravin replied smoothly, taking a slow..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 27px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b031')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (30w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Alfie shifted in Pierre's pocket, whispering directly into h..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 31px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
@@ -631,15 +593,13 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b033')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #10b981">Alfie (14w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;I've got an idea,&quot; Alfie's voice echoed faintly through the..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 15px; background-color: #10b981; box-shadow: 0 0 6px #10b98140;"></div>
             </div>
@@ -666,17 +626,15 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b039')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (12w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Pierre, now!&quot; Dravin hissed, grabbing the guard's dropped c..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
-                     style="height: 12px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
+                     style="height: 14px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="w-1.5 h-1.5 bg-slate-800/80 rounded-full my-auto flex-shrink-0 cursor-pointer hover:bg-slate-600 transition-colors"
@@ -685,17 +643,15 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b041')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (9w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Got it!&quot; Pierre breathed, clutching the blue plastic keycar..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
-                     style="height: 12px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
+                     style="height: 14px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="w-1.5 h-1.5 bg-slate-800/80 rounded-full my-auto flex-shrink-0 cursor-pointer hover:bg-slate-600 transition-colors"
@@ -712,45 +668,39 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b045')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (18w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;What kind of American museum has this much security for old..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 19px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b046')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (21w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;When an artifact radiates anomalous energy,&quot; Dravin whisper..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 22px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b047')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (32w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Alfie dropped down from the ceiling conduit, landing neatly ..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 33px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
@@ -761,17 +711,15 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b049')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (6w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Magnificent,&quot; Pierre grinned, pocketing the card...."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
-                     style="height: 12px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
+                     style="height: 14px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="w-1.5 h-1.5 bg-slate-800/80 rounded-full my-auto flex-shrink-0 cursor-pointer hover:bg-slate-600 transition-colors"
@@ -780,15 +728,13 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b051')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (23w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;We have roughly ten minutes before Thomas calls the front d..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 24px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
@@ -799,60 +745,52 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b053')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (9w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;How do I look?&quot; Pierre asked, adjusting his lapels...."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
-                     style="height: 12px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
+                     style="height: 14px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b054')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (16w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Like a French intern who got lost on his way to the cafeter..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 17px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b055')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (27w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Dravin handed Pierre the wheeled archival tray. &quot;Walk with p..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 28px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b056')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #10b981">Alfie (19w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Watch out for wet floors, mate,&quot; Alfie added, burrowing int..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 20px; background-color: #10b981; box-shadow: 0 0 6px #10b98140;"></div>
             </div>
@@ -863,62 +801,54 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b058')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f87171">Nancy (Guard) (14w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Hey! What are you doing in the galleries after hours?&quot; Nanc..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 15px; background-color: #f87171; box-shadow: 0 0 6px #f8717140;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b059')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (44w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Pierre offered a polite, apologetic bow, gesturing smoothly ..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 46px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b060')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (40w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Nancy blinked, looking between Pierre's earnest smile, the l..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 41px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b061')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (12w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Merci beaucoup, Madame!&quot; Pierre beamed, continuing down the..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
-                     style="height: 12px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
+                     style="height: 14px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="w-1.5 h-1.5 bg-slate-800/80 rounded-full my-auto flex-shrink-0 cursor-pointer hover:bg-slate-600 transition-colors"
@@ -927,15 +857,13 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b063')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (17w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Alfie popped his driftwood head out of Pierre's coat. &quot;Keyca..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 18px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
@@ -954,15 +882,13 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b067')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #10b981">Alfie (19w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Curator said this was dug up in Thessaly,&quot; Alfie whispered,..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 20px; background-color: #10b981; box-shadow: 0 0 6px #10b98140;"></div>
             </div>
@@ -973,30 +899,26 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b069')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (26w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;It was never lost,&quot; Pierre realized with quiet awe. &quot;It was..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 27px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b070')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (19w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;And now we mend the weave,&quot; Dravin said softly as he steppe..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 20px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
@@ -1007,17 +929,15 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b072')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (8w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Let's see what the truth says,&quot; Eusacles nodded...."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
-                     style="height: 12px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
+                     style="height: 14px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
             
             <div class="w-1.5 h-1.5 bg-slate-800/80 rounded-full my-auto flex-shrink-0 cursor-pointer hover:bg-slate-600 transition-colors"
@@ -1042,45 +962,39 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b078')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #8b5cf6">Prof. Edward Dravin (28w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;The resonance is stabilizing,&quot; Dravin observed, watching th..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 29px; background-color: #8b5cf6; box-shadow: 0 0 6px #8b5cf640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b079')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #f59e0b">Eusacles (21w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;And we've got ourselves our first real Fragment,&quot; Eusacles ..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 22px; background-color: #f59e0b; box-shadow: 0 0 6px #f59e0b40;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b080')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #10b981">Alfie (27w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Alfie swung his needle rapier in a celebratory circle. &quot;Firs..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 28px; background-color: #10b981; box-shadow: 0 0 6px #10b98140;"></div>
             </div>
@@ -1095,45 +1009,39 @@
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b083')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (22w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;Pierre, you were magnificent in that lab coat,&quot; Dravin prai..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 23px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b084')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #3b82f6">Pierre (31w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"&quot;I must admit, Monsieur,&quot; Pierre laughed, taking off his gla..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 32px; background-color: #3b82f6; box-shadow: 0 0 6px #3b82f640;"></div>
             </div>
             
             <div class="group relative flex flex-col justify-end items-center cursor-pointer flex-shrink-0 px-0.5"
                  onclick="document.getElementById('uneraseable_s03_b085')?.scrollIntoView({behavior: 'smooth', block: 'center'})">
-                <!-- Tooltip on hover -->
-                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[200px]">
+                <div class="pointer-events-none absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center z-50 min-w-[140px] max-w-[220px]">
                     <div class="bg-slate-900 border border-slate-700 text-slate-100 text-[10px] p-2 rounded-lg shadow-xl text-center">
                         <div class="font-bold" style="color: #10b981">Alfie (22w)</div>
                         <div class="text-slate-400 italic line-clamp-2 mt-0.5">"Alfie perched proudly on the rearview mirror, swinging his w..."</div>
                     </div>
                     <div class="w-2 h-2 bg-slate-900 border-r border-b border-slate-700 transform rotate-45 -mt-1"></div>
                 </div>
-                <!-- Vertical Spike Bar -->
                 <div class="w-2 rounded-t-sm transition-all group-hover:w-3 group-hover:brightness-125"
                      style="height: 23px; background-color: #10b981; box-shadow: 0 0 6px #10b98140;"></div>
             </div>
@@ -1154,7 +1062,7 @@
 
             <!-- Jump Navigation Pills Below Waveform -->
             <div class="flex items-center gap-1.5 overflow-x-auto pt-3 pb-1 momentum-scroll">
-                <span class="text-[10px] font-bold uppercase text-slate-500 flex-shrink-0 mr-1">Chapters:</span>
+                <span class="text-[10px] font-bold uppercase text-slate-500 flex-shrink-0 mr-1">Jump to Scene:</span>
                 
         <a href="#chapter-1" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-amber-500 text-slate-300 hover:text-amber-300 transition-all flex items-center gap-1.5 flex-shrink-0">
             <span class="text-amber-500 font-mono text-[10px]">#1</span>
@@ -1212,7 +1120,7 @@
         <!-- ========================================================= -->
         <!-- 11LABS-STYLE STORY BLOCKS CONTAINER -->
         <!-- ========================================================= -->
-        <main id="storyContentContainer" class="space-y-4">
+        <main id="storyContentContainer" class="space-y-1">
             
         <!-- CHAPTER DIVIDER 1 -->
         <section id="chapter-1" class="pt-8 pb-4 my-6 border-b border-slate-800/80 scroll-mt-20">
@@ -1227,21 +1135,20 @@
         </section>
         
                 <!-- Block 1 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b001"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b001"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The green Ford farm truck rolled off the final stretch of the Lost Roads, its tires thumping as reality solidified onto modern asphalt. Ahead, the morning sun rose over the downtown skyline of Raleigh, North Carolina, glinting off glass high-rises and the stately neoclassical columns of the state museum complex.</p>
                 </div>
                 
                 <!-- Block 2 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b002"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b002"
@@ -1249,7 +1156,7 @@
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1257,7 +1164,7 @@
                 </div>
                 
                 <!-- Block 3 (Alfie) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b003"
                      style="border-left: 3.5px solid #10b981; background: linear-gradient(90deg, #10b98114 0%, #10b98102 100%);"
                      data-block-id="uneraseable_s03_b003"
@@ -1265,7 +1172,7 @@
                      data-speaker-name="Alfie"
                      data-speaker-color="#10b981">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #10b981"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #10b981">Alfie</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1273,7 +1180,7 @@
                 </div>
                 
                 <!-- Block 4 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b004"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b004"
@@ -1281,7 +1188,7 @@
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1289,7 +1196,7 @@
                 </div>
                 
                 <!-- Block 5 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b005"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b005"
@@ -1297,7 +1204,7 @@
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1305,7 +1212,7 @@
                 </div>
                 
                 <!-- Block 6 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b006"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b006"
@@ -1313,7 +1220,7 @@
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1321,7 +1228,7 @@
                 </div>
                 
                 <!-- Block 7 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b007"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b007"
@@ -1329,7 +1236,7 @@
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1337,7 +1244,7 @@
                 </div>
                 
                 <!-- Block 8 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b008"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b008"
@@ -1345,7 +1252,7 @@
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1353,28 +1260,26 @@
                 </div>
                 
                 <!-- Block 9 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b009"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b009"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The party crossed the plaza, blending seamlessly with the morning crowds of school groups and tourists entering the museum's glass atrium.</p>
                 </div>
                 
                 <!-- Block 10 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b010"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b010"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Above the grand entryway hung an enormous vinyl banner: *VOICES OF THE ANCIENT AEGEAN: RECENT EXCAVATIONS & UNRESOLVED MYSTERIES*.</p>
@@ -1393,35 +1298,33 @@
         </section>
         
                 <!-- Block 11 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b011"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b011"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Inside the climate-controlled galleries, the ambient murmur of museum visitors echoed off marble floors. Dravin led the group through the dinosaur rotunda and up the wide central staircase toward the second-floor Mediterranean wing.</p>
                 </div>
                 
                 <!-- Block 12 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b012"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b012"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre kept a watchful eye on the security grid. High in the corners of each gallery, dome-mounted CCTV cameras swiveled on mechanical servos, tracking the crowd. Security guards in crisp black uniforms and golden badges stood stationed at key doorways, radios clipped to their duty belts.</p>
                 </div>
                 
                 <!-- Block 13 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b013"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b013"
@@ -1429,7 +1332,7 @@
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1437,7 +1340,7 @@
                 </div>
                 
                 <!-- Block 14 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b014"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b014"
@@ -1445,7 +1348,7 @@
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1453,7 +1356,7 @@
                 </div>
                 
                 <!-- Block 15 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b015"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b015"
@@ -1461,7 +1364,7 @@
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1469,7 +1372,7 @@
                 </div>
                 
                 <!-- Block 16 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b016"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b016"
@@ -1477,7 +1380,7 @@
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1485,7 +1388,7 @@
                 </div>
                 
                 <!-- Block 17 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b017"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b017"
@@ -1493,7 +1396,7 @@
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1513,35 +1416,33 @@
         </section>
         
                 <!-- Block 18 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b018"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b018"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">They passed under an arched entryway into the darkened Aegean gallery. Spotlights illuminated marble busts of philosophers, bronze hoplite helmets, and rows of terracotta amphorae.</p>
                 </div>
                 
                 <!-- Block 19 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b019"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b019"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">At the center of the gallery stood an isolated, freestanding pedestal encased in heavy three-quarter-inch tempered glass. Inside, resting on black velvet, was a slab of weathered grey limestone roughly two feet across, etched with deep archaic Greek characters.</p>
                 </div>
                 
                 <!-- Block 20 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b020"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b020"
@@ -1549,7 +1450,7 @@
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1557,35 +1458,33 @@
                 </div>
                 
                 <!-- Block 21 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b021"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b021"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The tablet was severely fractured along its upper-right corner. A jagged, triangular void broke the continuity of the inscription, leaving several lines of ancient verse sheared in half. Around the display case, a faint, almost imperceptible shimmer of purple static buzzed in the air—a subtle planar vibration that made Dravin's silver bell hum in his pocket.</p>
                 </div>
                 
                 <!-- Block 22 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b022"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b022"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre leaned in, peering through his spectacles at the plaque: *UNIDENTIFIED HELLENIC FRAGMENT (CIRCA 450 BCE). EXCAVATED FROM ANOMALOUS STRATA.*</p>
                 </div>
                 
                 <!-- Block 23 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b023"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b023"
@@ -1593,7 +1492,7 @@
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1601,7 +1500,7 @@
                 </div>
                 
                 <!-- Block 24 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b024"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b024"
@@ -1609,7 +1508,7 @@
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1629,35 +1528,33 @@
         </section>
         
                 <!-- Block 25 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b025"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b025"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The museum's public address system crackled to life with a polite chime: *Attention visitors, the museum will be closing in fifteen minutes. Please make your way toward the main exits.*</p>
                 </div>
                 
                 <!-- Block 26 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b026"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b026"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Around them, docents began gently shepherding family groups and school tours toward the central elevators. The gallery lights dimmed to a conservation baseline, casting long, dramatic shadows across the statues.</p>
                 </div>
                 
                 <!-- Block 27 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b027"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b027"
@@ -1665,7 +1562,7 @@
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1673,21 +1570,20 @@
                 </div>
                 
                 <!-- Block 28 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b028"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b028"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">A stern-looking night watchman with a heavy keyring and an electronic badge lanyarded around his neck stepped into the Aegean gallery, checking the display locks. His nametag read *THOMAS*.</p>
                 </div>
                 
                 <!-- Block 29 (Thomas (Guard)) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b029"
                      style="border-left: 3.5px solid #f87171; background: linear-gradient(90deg, #f8717114 0%, #f8717102 100%);"
                      data-block-id="uneraseable_s03_b029"
@@ -1695,7 +1591,7 @@
                      data-speaker-name="Thomas (Guard)"
                      data-speaker-color="#f87171">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f87171"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f87171"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f87171">Thomas (Guard)</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1703,7 +1599,7 @@
                 </div>
                 
                 <!-- Block 30 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b030"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b030"
@@ -1711,7 +1607,7 @@
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1719,7 +1615,7 @@
                 </div>
                 
                 <!-- Block 31 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b031"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b031"
@@ -1727,7 +1623,7 @@
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1747,21 +1643,20 @@
         </section>
         
                 <!-- Block 32 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b032"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b032"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">As Thomas turned to inspect the far corner of the gallery, Alfie sprang into action. Scrambling out of Pierre's coat, the little driftwood doll darted up the drapery and scurried into an open air vent.</p>
                 </div>
                 
                 <!-- Block 33 (Alfie) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b033"
                      style="border-left: 3.5px solid #10b981; background: linear-gradient(90deg, #10b98114 0%, #10b98102 100%);"
                      data-block-id="uneraseable_s03_b033"
@@ -1769,7 +1664,7 @@
                      data-speaker-name="Alfie"
                      data-speaker-color="#10b981">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #10b981"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #10b981">Alfie</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1777,28 +1672,26 @@
                 </div>
                 
                 <!-- Block 34 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b034"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b034"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Reaching deep into her Fate-granted Wordcraft magic, Alfie targeted the security guard's cognitive focus. Instead of invoking a traditional *Sleep* spell, she twisted a single letter of reality's script.</p>
                 </div>
                 
                 <!-- Block 35 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b035"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b035"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">*Sleep* $
@@ -1806,49 +1699,46 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 36 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b036"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b036"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">With a soft puff of iridescent vapor, three ghostly, spectral sheep materialized right in the middle of the polished marble floor. They let out loud, resonant bleats: *Baaaa! Baaaa!*</p>
                 </div>
                 
                 <!-- Block 37 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b037"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b037"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The security guard spun around, his jaw dropping in utter bewilderment. "What the... sheep?! In the Mediterranean wing?!"</p>
                 </div>
                 
                 <!-- Block 38 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b038"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b038"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Thomas lunged forward with flailing arms, trying desperately to corral the ethereal livestock as they trotted playfully around the marble pedestal of Athena.</p>
                 </div>
                 
                 <!-- Block 39 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b039"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b039"
@@ -1856,7 +1746,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1864,21 +1754,20 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 40 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b040"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b040"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre sprinted across the tiles while the guard was wrestling a phantom ewe. With a nimble swipe, Pierre unclipped the magnetic badge lanyard from Thomas's duty belt and darted behind a partition.</p>
                 </div>
                 
                 <!-- Block 41 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b041"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b041"
@@ -1886,7 +1775,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1894,14 +1783,13 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 42 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b042"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b042"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Behind them, the spectral sheep vanished into thin air with a gentle pop, leaving the bewildered guard clutching empty space on his hands and knees.</p>
@@ -1920,35 +1808,33 @@ ightarrow$ *Sheep*.</p>
         </section>
         
                 <!-- Block 43 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b043"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b043"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">With the keycard in hand, the party slipped through the heavy steel staff door marked *CONSERVATION & ARCHIVES - AUTHORIZED PERSONNEL ONLY*.</p>
                 </div>
                 
                 <!-- Block 44 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b044"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b044"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The hallway beyond was stark, lit by humming white fluorescent fixtures and lined with locked preservation rooms. In the distance, the faint chatter of two additional night guards echoed down the linoleum corridor.</p>
                 </div>
                 
                 <!-- Block 45 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b045"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b045"
@@ -1956,7 +1842,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1964,7 +1850,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 46 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b046"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b046"
@@ -1972,7 +1858,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1980,7 +1866,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 47 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b047"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b047"
@@ -1988,7 +1874,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1996,21 +1882,20 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 48 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b048"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b048"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre swiped the stolen keycard against the electronic reader: *Beep-click*. The heavy magnetic latch disengaged, allowing them to slip silently into the darkened workshop.</p>
                 </div>
                 
                 <!-- Block 49 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b049"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b049"
@@ -2018,7 +1903,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2026,21 +1911,20 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 50 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b050"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b050"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Inside the workshop, long stainless-steel workbenches were covered in magnifying lenses, archival brushes, chemical solvents, and high-resolution digital microscopes. On a wheeled cart in the center lay the duplicate display keys and diagnostic tablets.</p>
                 </div>
                 
                 <!-- Block 51 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b051"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b051"
@@ -2048,7 +1932,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2068,21 +1952,20 @@ ightarrow$ *Sheep*.</p>
         </section>
         
                 <!-- Block 52 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b052"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b052"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre spotted a white archival lab coat hanging on a wall peg. He slipped his arms into the oversized coat, buttoned it up to his chin, and tucked his beret into his pocket. With his wire-rimmed glasses and earnest expression, he looked astonishingly convincing as a young graduate researcher.</p>
                 </div>
                 
                 <!-- Block 53 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b053"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b053"
@@ -2090,7 +1973,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2098,7 +1981,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 54 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b054"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b054"
@@ -2106,7 +1989,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2114,7 +1997,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 55 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b055"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b055"
@@ -2122,7 +2005,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2130,7 +2013,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 56 (Alfie) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b056"
                      style="border-left: 3.5px solid #10b981; background: linear-gradient(90deg, #10b98114 0%, #10b98102 100%);"
                      data-block-id="uneraseable_s03_b056"
@@ -2138,7 +2021,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Alfie"
                      data-speaker-color="#10b981">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #10b981"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #10b981">Alfie</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2146,21 +2029,20 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 57 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b057"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b057"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre wheeled the rubber-tired cart back out into the main gallery corridor. Ahead, a female night guard named Nancy was walking the rounds with a heavy flashlight. As her beam illuminated Pierre, she stopped, frowning.</p>
                 </div>
                 
                 <!-- Block 58 (Nancy (Guard)) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b058"
                      style="border-left: 3.5px solid #f87171; background: linear-gradient(90deg, #f8717114 0%, #f8717102 100%);"
                      data-block-id="uneraseable_s03_b058"
@@ -2168,7 +2050,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Nancy (Guard)"
                      data-speaker-color="#f87171">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f87171"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f87171"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f87171">Nancy (Guard)</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2176,7 +2058,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 59 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b059"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b059"
@@ -2184,7 +2066,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2192,7 +2074,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 60 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b060"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b060"
@@ -2200,7 +2082,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2208,7 +2090,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 61 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b061"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b061"
@@ -2216,7 +2098,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2236,21 +2118,20 @@ ightarrow$ *Sheep*.</p>
         </section>
         
                 <!-- Block 62 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b062"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b062"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre wheeled the cart directly up to the freestanding pedestal in the Aegean gallery. Behind the columns, Dravin and Eusacles kept watch on the hallway monitors.</p>
                 </div>
                 
                 <!-- Block 63 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b063"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b063"
@@ -2258,7 +2139,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2266,49 +2147,46 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 64 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b064"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b064"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre slid the magnetic badge across the base sensor. *Click-whirrr*. The four magnetic locks retracted with a mechanical hiss, and the heavy tempered glass hood smoothly lifted upward on pneumatic pistons.</p>
                 </div>
                 
                 <!-- Block 65 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b065"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b065"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The moment the glass cleared the stone, the air in the gallery grew noticeably colder. The faint purple static around the Greek limestone flared brightly, humming with a frequency that resonated through the floorboards.</p>
                 </div>
                 
                 <!-- Block 66 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b066"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b066"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre carefully lifted the heavy limestone stele onto the velvet-lined tray. Up close, the ancient Greek characters were mesmerizing—a rhythmic recounting of heroes, lineages, and severed destinies.</p>
                 </div>
                 
                 <!-- Block 67 (Alfie) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b067"
                      style="border-left: 3.5px solid #10b981; background: linear-gradient(90deg, #10b98114 0%, #10b98102 100%);"
                      data-block-id="uneraseable_s03_b067"
@@ -2316,7 +2194,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Alfie"
                      data-speaker-color="#10b981">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #10b981"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #10b981">Alfie</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2324,21 +2202,20 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 68 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b068"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b068"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre reached into his canvas bag and retrieved the palm-sized limestone fragment he had carried from the Margin. The weathered grain, the mineral veins, and the sharp jagged edges aligned with mathematical perfection.</p>
                 </div>
                 
                 <!-- Block 69 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b069"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b069"
@@ -2346,7 +2223,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2354,7 +2231,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 70 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b070"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b070"
@@ -2362,7 +2239,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2370,21 +2247,20 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 71 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b071"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b071"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre positioned the stone fragment above the void, his hands steadying against the ancient rock.</p>
                 </div>
                 
                 <!-- Block 72 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b072"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b072"
@@ -2392,7 +2268,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2412,77 +2288,72 @@ ightarrow$ *Sheep*.</p>
         </section>
         
                 <!-- Block 73 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b073"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b073"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">With a gentle, deliberate motion, Pierre pressed the jagged limestone fragment into the broken corner of the stele.</p>
                 </div>
                 
                 <!-- Block 74 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b074"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b074"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">*Snap.*</p>
                 </div>
                 
                 <!-- Block 75 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b075"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b075"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The moment the stone locked into place, an intense golden resonance erupted from the seam. The hairline crack between the two pieces fused together, glowing with radiant warmth as if fresh ink were flowing through the carved Greek letters.</p>
                 </div>
                 
                 <!-- Block 76 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b076"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b076"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Across the surface of the tablet, the ancient Greek verses reorganized themselves before their eyes. The missing phrases filled in: a chronicle of a mortal hero born of Gorgon blood who stood at the gates of destiny to protect the innocent.</p>
                 </div>
                 
                 <!-- Block 77 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b077"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b077"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Pierre gasped, clutching his chest as a surge of warm energy resonated with his own heart. For the first time in his life, the mysterious power in his blood felt anchored—not a curse of monstrous petrification, but an ancient, noble shield.</p>
                 </div>
                 
                 <!-- Block 78 (Prof. Edward Dravin) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b078"
                      style="border-left: 3.5px solid #8b5cf6; background: linear-gradient(90deg, #8b5cf614 0%, #8b5cf602 100%);"
                      data-block-id="uneraseable_s03_b078"
@@ -2490,7 +2361,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Prof. Edward Dravin"
                      data-speaker-color="#8b5cf6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #8b5cf6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #8b5cf6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #8b5cf6">Prof. Edward Dravin</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2498,7 +2369,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 79 (Eusacles) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b079"
                      style="border-left: 3.5px solid #f59e0b; background: linear-gradient(90deg, #f59e0b14 0%, #f59e0b02 100%);"
                      data-block-id="uneraseable_s03_b079"
@@ -2506,7 +2377,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Eusacles"
                      data-speaker-color="#f59e0b">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #f59e0b"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #f59e0b"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #f59e0b">Eusacles</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2514,7 +2385,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 80 (Alfie) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b080"
                      style="border-left: 3.5px solid #10b981; background: linear-gradient(90deg, #10b98114 0%, #10b98102 100%);"
                      data-block-id="uneraseable_s03_b080"
@@ -2522,7 +2393,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Alfie"
                      data-speaker-color="#10b981">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #10b981"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #10b981">Alfie</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2542,35 +2413,33 @@ ightarrow$ *Sheep*.</p>
         </section>
         
                 <!-- Block 81 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b081"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b081"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">The party wheeled the blanket-wrapped tablet out the side delivery doors of the museum into the cool North Carolina evening.</p>
                 </div>
                 
                 <!-- Block 82 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b082"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b082"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">They loaded the artifact into the truck bed beneath a canvas tarp, and Eusacles fired up the Ford's engine with a triumphant roar.</p>
                 </div>
                 
                 <!-- Block 83 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b083"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b083"
@@ -2578,7 +2447,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2586,7 +2455,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 84 (Pierre) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b084"
                      style="border-left: 3.5px solid #3b82f6; background: linear-gradient(90deg, #3b82f614 0%, #3b82f602 100%);"
                      data-block-id="uneraseable_s03_b084"
@@ -2594,7 +2463,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Pierre"
                      data-speaker-color="#3b82f6">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3b82f6"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #3b82f6"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #3b82f6">Pierre</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2602,7 +2471,7 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 85 (Alfie) -->
-                <div class="story-block p-4 rounded-r-xl"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
                      id="uneraseable_s03_b085"
                      style="border-left: 3.5px solid #10b981; background: linear-gradient(90deg, #10b98114 0%, #10b98102 100%);"
                      data-block-id="uneraseable_s03_b085"
@@ -2610,7 +2479,7 @@ ightarrow$ *Sheep*.</p>
                      data-speaker-name="Alfie"
                      data-speaker-color="#10b981">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: #10b981"></span>
+                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: #10b981"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: #10b981">Alfie</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -2618,42 +2487,39 @@ ightarrow$ *Sheep*.</p>
                 </div>
                 
                 <!-- Block 86 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b086"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b086"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Behind them, the lights of Raleigh faded into the distance as the Ford turned off the main interstate onto an unmapped gravel exit. The headlights cut through the gathering mountain mist as the gateway to the Lost Roads parted before them once more.</p>
                 </div>
                 
                 <!-- Block 87 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b087"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b087"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">They had recovered their first Fragment of altered time, stabilized an unraveling timeline seam, and proved that a French scholar, a Greek professor, a Vegas son of Thanatos, and a driftwood doll could outwit history itself.</p>
                 </div>
                 
                 <!-- Block 88 (Narrator) -->
-                <div class="story-block p-4 rounded-r-xl bg-slate-900/30"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
                      id="uneraseable_s03_b088"
-                     style="border-left: 3px solid rgba(148, 163, 184, 0.2);"
                      data-block-id="uneraseable_s03_b088"
                      data-speaker="narrator"
                      data-speaker-name="Narrator"
                      data-speaker-color="#94a3b8">
-                    <div class="flex justify-end mb-1">
+                    <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">Ahead lay the sanctuary of The Margin, where the next chapter of the Stolen Weave awaited them around the fire.</p>
@@ -2730,7 +2596,7 @@ ightarrow$ *Sheep*.</p>
         </div>
     </div>
 
-    <!-- BULLETPROOF JAVASCRIPT CONTROLLER -->
+    <!-- JAVASCRIPT CONTROLLER -->
     <script>
         (function() {
             const CAMPAIGN_ID = "uneraseable";
@@ -2748,7 +2614,6 @@ ightarrow$ *Sheep*.</p>
             let selectedCategory = "tone";
             const blocks = Array.from(document.querySelectorAll('.story-block'));
 
-            // DOM Elements
             const statsSection = document.getElementById('sessionStatsSection');
             const toggleStatsBtn = document.getElementById('toggleStatsBtn');
             const toggleStatsBtnLabel = document.getElementById('toggleStatsBtnLabel');
@@ -2934,9 +2799,7 @@ ightarrow$ *Sheep*.</p>
                 };
             });
 
-            // =========================================================
-            // GITHUB PR SUBMISSION MODAL
-            // =========================================================
+            // GitHub PR Submission Modal
             const ghModalOverlay = document.createElement('div');
             ghModalOverlay.id = "ghModalOverlay";
             ghModalOverlay.className = "fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-4 transition-opacity duration-200";
