@@ -738,10 +738,23 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
             </div>
         </div>
-        <!-- Minimal Top Reading Progress Bar (Clean Accent with Finished Notch) -->
-        <div class="w-full bg-slate-950/90 h-[2.5px] overflow-hidden relative">
+        <!-- Minimal Top Reading Progress Bar with Breadcrumb Trail & Finished Pip -->
+        <div class="w-full bg-slate-950/90 h-[3px] relative overflow-hidden">
+            <!-- Active Scroll Progress Bar -->
             <div id="readingProgressBar" class="h-full bg-gradient-to-r from-blue-600 via-sky-400 to-cyan-300 transition-[width,background-color] duration-100 ease-out" style="width: 0%;"></div>
-            <div id="readingProgressFinishedPip" class="absolute right-0 top-0 bottom-0 w-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)] hidden" title="Session Completed"></div>
+            
+            <!-- Breadcrumb Trail Milestones -->
+            <div id="readingProgressBreadcrumbs" class="absolute inset-0 pointer-events-none flex items-center justify-between px-1">
+                <div class="w-1 h-1 rounded-full bg-slate-800/80 transition-all duration-300" data-pct="15" title="15% Traversed"></div>
+                <div class="w-1 h-1 rounded-full bg-slate-800/80 transition-all duration-300" data-pct="30" title="30% Traversed"></div>
+                <div class="w-1 h-1 rounded-full bg-slate-800/80 transition-all duration-300" data-pct="45" title="45% Traversed"></div>
+                <div class="w-1 h-1 rounded-full bg-slate-800/80 transition-all duration-300" data-pct="60" title="60% Traversed"></div>
+                <div class="w-1 h-1 rounded-full bg-slate-800/80 transition-all duration-300" data-pct="75" title="75% Traversed"></div>
+                <div class="w-1 h-1 rounded-full bg-slate-800/80 transition-all duration-300" data-pct="90" title="90% Traversed"></div>
+            </div>
+
+            <!-- Completion Pip on Far Right -->
+            <div id="readingProgressFinishedPip" class="absolute right-0 top-0 bottom-0 w-2.5 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,1)] hidden" title="Session Completed"></div>
         </div>
     </header>
 
@@ -1320,22 +1333,36 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
             }} catch(e) {{}}
 
-            // Minimal Reading Progress Bar on Scroll with Completion Color Transitions
+            // Minimal Reading Progress Bar on Scroll with Breadcrumb Trail & Completion Color Transitions
             function updateTopProgressBar() {{
                 const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
                 const progress = totalScroll > 0 ? (window.scrollY / totalScroll) * 100 : 0;
                 const bar = document.getElementById('readingProgressBar');
                 const pip = document.getElementById('readingProgressFinishedPip');
-                const isFinishedBefore = (typeof localTelemetry !== 'undefined') && localTelemetry && (localTelemetry.completed || (localTelemetry.maxDepth >= 95));
+                const maxDepth = (typeof localTelemetry !== 'undefined' && localTelemetry) ? (localTelemetry.maxDepth || 0) : progress;
+                const isFinishedBefore = (typeof localTelemetry !== 'undefined') && localTelemetry && (localTelemetry.completed || (maxDepth >= 95));
 
                 if (pip) {{
                     pip.classList.toggle('hidden', !isFinishedBefore);
                 }}
 
+                // Update glowing emerald breadcrumb milestones
+                const breadcrumbs = document.querySelectorAll('#readingProgressBreadcrumbs [data-pct]');
+                breadcrumbs.forEach(dot => {{
+                    const pct = parseInt(dot.getAttribute('data-pct'), 10);
+                    const isTraversed = (isFinishedBefore && pct <= 100) || (maxDepth >= pct);
+                    if (isTraversed) {{
+                        dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.95)] transition-all duration-300 scale-110";
+                    }} else {{
+                        dot.className = "w-1 h-1 rounded-full bg-slate-800/80 transition-all duration-300";
+                    }}
+                }});
+
                 if (bar) {{
                     bar.style.width = Math.min(100, Math.max(0, progress)) + '%';
                     if (progress >= 98 || (isFinishedBefore && progress >= 95)) {{
-                        bar.className = "h-full bg-gradient-to-r from-emerald-500 via-emerald-400 to-green-300 shadow-[0_0_8px_rgba(52,211,153,0.7)] transition-all duration-150 ease-out";
+                        // Green gradient ending on emerald-400 matching the completion pip and breadcrumbs identically
+                        bar.className = "h-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] transition-all duration-150 ease-out";
                     }} else {{
                         bar.className = "h-full bg-gradient-to-r from-blue-600 via-sky-400 to-cyan-300 transition-all duration-150 ease-out";
                     }}
@@ -2354,7 +2381,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 if (userProgressFill) {{
                     userProgressFill.style.width = displayUserDepth + '%';
                     if (isCompleted || displayUserDepth >= 98) {{
-                        userProgressFill.className = "h-full bg-gradient-to-r from-emerald-500 via-emerald-400 to-green-300 shadow-[0_0_12px_rgba(52,211,153,0.6)] transition-all duration-300 rounded-full";
+                        userProgressFill.className = "h-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.7)] transition-all duration-300 rounded-full";
                     }} else if (displayUserDepth < 35) {{
                         userProgressFill.className = "h-full bg-gradient-to-r from-amber-600 via-amber-500 to-orange-400 shadow-[0_0_8px_rgba(245,158,11,0.3)] transition-all duration-300 rounded-full";
                     }} else if (displayUserDepth < 70) {{
