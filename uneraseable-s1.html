@@ -3874,6 +3874,7 @@
                     blockId: blockId,
                     blockIndex: activeBlockIndex + 1,
                     speaker: block.dataset.speakerName,
+                    speakerColor: block.dataset.speakerColor || "#94a3b8",
                     category: selectedCategory,
                     quote: p ? p.innerText : "",
                     comment: comment,
@@ -3962,7 +3963,12 @@
             const modalClearAllCritiquesBtn = document.getElementById('modalClearAllCritiquesBtn');
             const ghStatusMsg = document.getElementById('ghStatusMsg');
 
-            if (ghReviewerNameInput) ghReviewerNameInput.value = localStorage.getItem('dnd_scribe_reviewer_name') || 'Reader';
+            if (ghReviewerNameInput) {
+                ghReviewerNameInput.value = localStorage.getItem('dnd_scribe_reviewer_name') || '';
+                ghReviewerNameInput.addEventListener('input', function() {
+                    localStorage.setItem('dnd_scribe_reviewer_name', this.value.trim());
+                });
+            }
 
             function renderFeedbackNotesList() {
                 const container = document.getElementById('feedbackNotesContainer');
@@ -3995,6 +4001,12 @@
                 }
 
                 container.innerHTML = items.map((c, idx) => {
+                    const spColor = c.speakerColor || '#94a3b8';
+                    const isNarrator = (!c.speaker || c.speaker.toLowerCase() === 'narrator');
+                    const cardStyle = isNarrator
+                        ? 'border-left: 3.5px solid #475569; background: rgba(15, 23, 42, 0.7);'
+                        : 'border-left: 3.5px solid ' + spColor + '; background: linear-gradient(90deg, ' + spColor + '16 0%, rgba(15, 23, 42, 0.85) 100%);';
+
                     const rewriteHtml = c.suggestedRewrite ? `
                         <div class="mt-1.5 p-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] text-cyan-300 font-mono">
                             <strong class="text-[9px] uppercase tracking-wider text-slate-500 block">Suggested Rewrite:</strong>
@@ -4003,19 +4015,19 @@
                     ` : '';
 
                     return `
-                        <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-1.5 relative group">
+                        <div class="p-3 rounded-r-xl rounded-l-md border-y border-r border-slate-800 space-y-1.5 relative group shadow-sm transition-all" style="` + cardStyle + `">
                             <div class="flex items-center justify-between gap-2">
                                 <div class="flex items-center gap-1.5 min-w-0">
-                                    <span class="text-[10px] font-mono text-amber-400 font-bold">#` + (c.blockIndex || (idx + 1)) + `</span>
-                                    <span class="text-[10px] font-semibold text-slate-300 truncate">` + (c.speaker || 'Narrator') + `</span>
-                                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono uppercase">` + (c.category || 'General') + `</span>
+                                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: ` + spColor + `"></span>
+                                    <span class="text-[10px] font-mono font-bold uppercase truncate" style="color: ` + spColor + `">#` + (c.blockIndex || (idx + 1)) + ` ` + (c.speaker || 'Narrator') + `</span>
+                                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-950/80 text-slate-300 border border-slate-700/60 font-mono uppercase font-semibold">` + (c.category || 'General') + `</span>
                                 </div>
                                 <button type="button" class="text-slate-500 hover:text-rose-400 text-xs p-1 transition-colors" title="Delete this note" onclick="window.deleteCritiqueItem('` + c.blockId + `')">
                                     🗑️
                                 </button>
                             </div>
-                            ` + (c.quote ? `<p class="text-[11px] text-slate-400 italic line-clamp-2">"` + c.quote + `"</p>` : '') + `
-                            ` + (c.comment ? `<p class="text-xs text-slate-200 font-medium">` + c.comment + `</p>` : '') + `
+                            ` + (c.quote ? `<p class="text-[11px] text-slate-300 italic line-clamp-2 pl-0.5">"` + c.quote + `"</p>` : '') + `
+                            ` + (c.comment ? `<p class="text-xs text-slate-100 font-medium pl-0.5">` + c.comment + `</p>` : '') + `
                             ` + rewriteHtml + `
                         </div>
                     `;
