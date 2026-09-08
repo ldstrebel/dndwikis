@@ -354,6 +354,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     stats = data.get("stats", {})
     blocks = data.get("blocks", [])
 
+    campaign_id = campaign.get("id", "uneraseable").lower()
     campaign_name = campaign.get("name", "UNERASEABLE").upper()
     session_num = session.get("number", 1)
     session_title = session.get("title", f"Session {session_num}")
@@ -651,9 +652,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     <!-- STICKY TOP APP BAR (Clean & Content-Focused with Minimal Reading Progress) -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 px-4 py-2.5">
-            <div class="flex items-center gap-3 min-w-0">
-                <a href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center text-sm font-semibold gap-1">
-                    <span>←</span> <span class="hidden sm:inline">Portals</span>
+            <div class="flex items-center gap-2.5 min-w-0">
+                <a href="index.html?c={campaign_id}" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center text-xs sm:text-sm font-semibold gap-1 py-1 px-1.5 -ml-1.5 rounded-lg hover:bg-slate-800/60" title="Back to {campaign_name} Sessions">
+                    <span>←</span> <span class="font-medium">Sessions</span>
                 </a>
                 <span class="text-slate-700">|</span>
                 <div class="truncate">
