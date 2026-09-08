@@ -50,7 +50,10 @@ for s in [1, 2, 3]:
             pass
 
 def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
-    """Builds a vertical chapter list (Y-Axis) with stacked horizontal speaker bars (X-Axis) and per-chapter NPC badges."""
+    """Builds a vertical chapter list with 2 lines per chapter:
+    Line 1: # - Name - stacked horizontal dialogue bar
+    Line 2: PCs and NPCs sorted by % (NPCs with red triangle ▲, no highlight pill)
+    """
     max_dialogue = 1
     chapter_data = []
 
@@ -77,7 +80,6 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
             "clean_title": clean_title,
             "full_title": ch_title,
             "total_words": ch["word_count"],
-            "read_mins": max(1, round(ch["word_count"] / 250)),
             "dialogue_words": tot_dialogue,
             "speakers": speaker_words,
             "anchor_id": f"chapter-{idx}"
@@ -86,12 +88,10 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
     rows_html = []
     for cd in chapter_data:
         tot_d = cd["dialogue_words"]
-        bar_fill_pct = max(12, round((tot_d / max_dialogue) * 100)) if tot_d > 0 else 0
+        bar_fill_pct = max(10, round((tot_d / max_dialogue) * 100)) if tot_d > 0 else 0
 
-        # Stacked horizontal bar segments
         segments = []
-        npc_chips = []
-        pc_chips = []
+        speaker_chips_list = []
 
         if tot_d > 0:
             for sp, w in sorted(cd["speakers"].items(), key=lambda x: -x[1]):
@@ -106,63 +106,50 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
                 )
 
                 if is_npc:
-                    npc_chips.append(
-                        f'<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 text-[10px] font-mono shadow-sm">'
-                        f'<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>'
-                        f'<span>{sp_name}</span> <strong class="text-rose-200">({w}w)</strong>'
+                    speaker_chips_list.append(
+                        f'<span class="inline-flex items-center gap-1 text-[11px] text-rose-300 flex-shrink-0">'
+                        f'<span class="text-[8px] text-[#f87171] leading-none">▲</span>'
+                        f'<span>{sp_name}</span> <span class="font-mono text-rose-400/80 text-[10px]">{seg_pct}%</span>'
                         f'</span>'
                     )
                 else:
-                    pc_chips.append(
-                        f'<span class="inline-flex items-center gap-1 text-[10px] text-slate-300">'
+                    speaker_chips_list.append(
+                        f'<span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0">'
                         f'<span class="w-1.5 h-1.5 rounded-full" style="background-color: {col}"></span>'
-                        f'<span>{sp_name.split()[0]}</span> <span class="font-mono text-slate-400 text-[9px]">({w}w)</span>'
+                        f'<span>{sp_name.split()[0]}</span> <span class="font-mono text-slate-400 text-[10px]">{seg_pct}%</span>'
                         f'</span>'
                     )
         else:
             segments.append('<div class="w-full h-full bg-slate-800/40" title="Narrative prose only"></div>')
-
-        chips_section = ""
-        if npc_chips or pc_chips:
-            chips_section = f"""
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                {''.join(npc_chips)}
-                {''.join(pc_chips)}
-            </div>
-            """
+            speaker_chips_list.append('<span class="text-[10px] text-slate-500 italic font-mono">Narrative prose only</span>')
 
         row_item = f"""
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('{cd['anchor_id']}');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch {cd['num']}
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #{cd['num']}
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         {cd['clean_title']}
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~{cd['read_mins']}m · {cd['total_words']:,}w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: {bar_fill_pct}%;">
                         {''.join(segments)}
                     </div>
                 </div>
-                <span class="text-[10px] font-mono { 'text-amber-400 font-bold' if tot_d > 0 else 'text-slate-500 italic' } w-20 text-right flex-shrink-0">
-                    { f"{tot_d}w spoken" if tot_d > 0 else "Prose only" }
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            {chips_section}
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                {''.join(speaker_chips_list)}
+            </div>
         </div>
         """
         rows_html.append(row_item)
@@ -170,8 +157,8 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
     return f"""
     <div class="space-y-2">
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-            <span>Chapter Sequence</span>
-            <span class="text-[10px] text-slate-500 font-mono">Speaker Share (Tap row to jump)</span>
+            <span>Chapter Index</span>
+            <span class="text-[10px] text-slate-500 font-mono">Voice Share (Tap row to jump)</span>
         </div>
         <div class="space-y-2">
             {''.join(rows_html)}
@@ -493,7 +480,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part {chapter_index} (~{ch_mins}m read · {ch_words:,}w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part {chapter_index}</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">{ch_title}</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -661,9 +648,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
 
-    <!-- STICKY TOP APP BAR (Clean & Content-Focused) -->
-    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-2.5">
-        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+    <!-- STICKY TOP APP BAR (Clean & Content-Focused with Minimal Reading Progress) -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 px-4 py-2.5">
             <div class="flex items-center gap-3 min-w-0">
                 <a href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center text-sm font-semibold gap-1">
                     <span>←</span> <span class="hidden sm:inline">Portals</span>
@@ -691,6 +678,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     </button>
                 </div>
             </div>
+        </div>
+        <!-- Minimal Top Reading Progress Bar -->
+        <div class="w-full bg-slate-950/60 h-[2.5px] overflow-hidden">
+            <div id="readingProgressBar" class="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 transition-[width] duration-75 ease-out" style="width: 0%;"></div>
         </div>
     </header>
 
@@ -945,7 +936,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#8b5cf6]"></span><span>Prof. Dravin</span></span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f59e0b]"></span><span>Eusacles</span></span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#10b981]"></span><span>Alfie</span></span>
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f87171]"></span><span class="text-rose-300 font-semibold">Named NPCs</span></span>
+                        <span class="flex items-center gap-1"><span class="text-rose-400 font-mono text-[9px] leading-none">▲</span><span class="text-rose-300 font-semibold">Named NPCs</span></span>
                     </div>
                 </div>
 
@@ -1022,6 +1013,36 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         </div>
     </div>
 
+    <!-- ========================================================= -->
+    <!-- FIRST-TIME CRITIQUE MODE ONBOARDING MODAL -->
+    <!-- ========================================================= -->
+    <div id="onboardingModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-4 transition-opacity duration-200">
+        <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-3.5 text-center">
+            <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl mx-auto text-amber-400">
+                ✍️
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-slate-100 font-serif">Critique Mode is Active</h3>
+                <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                    Tap or click on any paragraph or dialogue passage to leave notes, feedback, or suggested rewrites.
+                </p>
+            </div>
+            <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 text-[11px] text-slate-400 text-left space-y-1.5">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-slate-800 text-amber-300 font-bold font-mono text-[10px] flex-shrink-0">📖 Read</span>
+                    <span>Turn off commenting for clean, uninterrupted reading.</span>
+                </div>
+                <div class="flex items-center gap-2 pt-1 border-t border-slate-900">
+                    <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-bold font-mono text-[10px] flex-shrink-0">✍️ Critique</span>
+                    <span>Click any block to leave notes / suggested rewrites.</span>
+                </div>
+            </div>
+            <button id="closeOnboardingBtn" type="button" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md active:scale-98">
+                Got it, Let's Read! 👍
+            </button>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT CONTROLLER -->
     <script>
         (function() {{
@@ -1066,6 +1087,26 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const modalDeleteBtn = document.getElementById('modalDeleteBtn');
             const categoryPills = Array.from(document.querySelectorAll('.category-pill'));
 
+            const onboardingOverlay = document.getElementById('onboardingModalOverlay');
+            const closeOnboardingBtn = document.getElementById('closeOnboardingBtn');
+
+            // Modal Background Scroll Lock Helper
+            function setBodyScrollLock(locked) {{
+                if (locked) {{
+                    document.body.style.overflow = 'hidden';
+                }} else {{
+                    const isAnyModalOpen = (
+                        (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) ||
+                        (modalOverlay && modalOverlay.classList.contains('visible')) ||
+                        (onboardingOverlay && onboardingOverlay.classList.contains('visible')) ||
+                        (typeof ghModalOverlay !== 'undefined' && ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0'))
+                    );
+                    if (!isAnyModalOpen) {{
+                        document.body.style.overflow = '';
+                    }}
+                }}
+            }}
+
             // Smooth Scroll & Jump Helper
             window.scrollToAnchor = function(id) {{
                 const el = document.getElementById(id);
@@ -1081,13 +1122,19 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}, 150);
             }};
 
-            // Chapters Modal Open / Close
+            // Chapters Modal Open / Close with Scroll Lock
             window.openChaptersModal = function() {{
-                if (chaptersModalOverlay) chaptersModalOverlay.classList.add('visible');
+                if (chaptersModalOverlay) {{
+                    chaptersModalOverlay.classList.add('visible');
+                    setBodyScrollLock(true);
+                }}
             }};
 
             window.closeChaptersModal = function() {{
-                if (chaptersModalOverlay) chaptersModalOverlay.classList.remove('visible');
+                if (chaptersModalOverlay) {{
+                    chaptersModalOverlay.classList.remove('visible');
+                    setBodyScrollLock(false);
+                }}
             }};
 
             if (toggleChaptersBtn) toggleChaptersBtn.onclick = openChaptersModal;
@@ -1097,6 +1144,42 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     if (e.target === chaptersModalOverlay) closeChaptersModal();
                 }};
             }}
+
+            // First-Time Critique Onboarding
+            function closeOnboardingModal() {{
+                if (onboardingOverlay) {{
+                    onboardingOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    onboardingOverlay.classList.remove('visible');
+                    try {{ localStorage.setItem('dnd_seen_critique_onboarding', 'true'); }} catch(e) {{}}
+                    setBodyScrollLock(false);
+                }}
+            }}
+
+            if (closeOnboardingBtn) closeOnboardingBtn.onclick = closeOnboardingModal;
+            if (onboardingOverlay) {{
+                onboardingOverlay.onclick = function(e) {{
+                    if (e.target === onboardingOverlay) closeOnboardingModal();
+                }};
+            }}
+
+            try {{
+                const seenOnboarding = localStorage.getItem('dnd_seen_critique_onboarding');
+                if (!seenOnboarding && onboardingOverlay) {{
+                    setTimeout(() => {{
+                        onboardingOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                        onboardingOverlay.classList.add('visible');
+                        setBodyScrollLock(true);
+                    }}, 600);
+                }}
+            }} catch(e) {{}}
+
+            // Minimal Reading Progress Bar on Scroll
+            window.addEventListener('scroll', () => {{
+                const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = totalScroll > 0 ? (window.scrollY / totalScroll) * 100 : 0;
+                const bar = document.getElementById('readingProgressBar');
+                if (bar) bar.style.width = Math.min(100, Math.max(0, progress)) + '%';
+            }}, {{ passive: true }});
 
             // Stats Accordion Toggle (Defaults to Collapsed)
             if (toggleStatsAccordionBtn && statsAccordionBody && statsAccordionChevron) {{
@@ -1216,14 +1299,20 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     modalNextBlockBtn.style.opacity = (index === blocks.length - 1) ? "0.35" : "1";
                     modalNextBlockBtn.style.pointerEvents = (index === blocks.length - 1) ? "none" : "auto";
                 }}
-                if (modalOverlay) modalOverlay.classList.add('visible');
+                if (modalOverlay) {{
+                    modalOverlay.classList.add('visible');
+                    setBodyScrollLock(true);
+                }}
                 if (critiqueTextInput) {{
                     setTimeout(() => critiqueTextInput.focus(), 50);
                 }}
             }}
 
             function closeModal() {{
-                if (modalOverlay) modalOverlay.classList.remove('visible');
+                if (modalOverlay) {{
+                    modalOverlay.classList.remove('visible');
+                    setBodyScrollLock(false);
+                }}
             }}
 
             if (modalCloseBtn) modalCloseBtn.onclick = closeModal;
@@ -1246,6 +1335,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     if (modalOverlay && modalOverlay.classList.contains('visible')) closeModal();
                     if (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) closeChaptersModal();
                     if (ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0')) hideGhModal();
+                    if (onboardingOverlay && !onboardingOverlay.classList.contains('opacity-0')) closeOnboardingModal();
                 }} else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {{
                     if (modalOverlay && modalOverlay.classList.contains('visible') && modalSaveBtn) {{
                         modalSaveBtn.click();
@@ -1365,11 +1455,17 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
                 if (ghCritiqueCountDisplay) ghCritiqueCountDisplay.textContent = count + " critique(s)";
                 if (ghStatusMsg) ghStatusMsg.className = "hidden";
-                if (ghModalOverlay) ghModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                if (ghModalOverlay) {{
+                    ghModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                    setBodyScrollLock(true);
+                }}
             }}
 
             function hideGhModal() {{
-                if (ghModalOverlay) ghModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                if (ghModalOverlay) {{
+                    ghModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    setBodyScrollLock(false);
+                }}
             }}
 
             if (closeGhModal) closeGhModal.onclick = hideGhModal;

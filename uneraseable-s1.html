@@ -112,9 +112,9 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
 
-    <!-- STICKY TOP APP BAR (Clean & Content-Focused) -->
-    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-2.5">
-        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+    <!-- STICKY TOP APP BAR (Clean & Content-Focused with Minimal Reading Progress) -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 px-4 py-2.5">
             <div class="flex items-center gap-3 min-w-0">
                 <a href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center text-sm font-semibold gap-1">
                     <span>←</span> <span class="hidden sm:inline">Portals</span>
@@ -142,6 +142,10 @@
                     </button>
                 </div>
             </div>
+        </div>
+        <!-- Minimal Top Reading Progress Bar -->
+        <div class="w-full bg-slate-950/60 h-[2.5px] overflow-hidden">
+            <div id="readingProgressBar" class="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300 transition-[width] duration-75 ease-out" style="width: 0%;"></div>
         </div>
     </header>
 
@@ -234,7 +238,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 1 (~2m read · 386w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 1</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 1: THE DESERT TRANSIT</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -457,7 +461,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 2 (~2m read · 514w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 2</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 2: THE LIBRARY OF THE FATES</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -702,7 +706,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 3 (~2m read · 502w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 3</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 3: THE PLANAR RIFT</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -976,7 +980,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 4 (~1m read · 268w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 4</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 4: INCURSION AT THE COLONNADE</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -1130,7 +1134,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 5 (~1m read · 368w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 5</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 5: SUNDER AND SLUDGE</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -1310,7 +1314,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 6 (~1m read · 267w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 6</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 6: THE DRIFTWOOD DUELIST AWAKENS</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -1461,7 +1465,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 7 (~1m read · 316w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 7</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 7: IN THE SHADOWS OF THE STACKS</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -1612,7 +1616,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 8 (~1m read · 303w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 8</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 8: TENDON SEVER</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -1792,7 +1796,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 9 (~1m read · 317w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 9</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 9: THE LEGEND STRIKE</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -1940,7 +1944,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 10 (~1m read · 340w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 10</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 10: THE AWAKENING ON THE DARK HIGHWAY</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -2187,7 +2191,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 11 (~1m read · 293w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 11</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 11: THE ROAD TO THE MARIGOLD</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -2421,7 +2425,7 @@
             <div class="flex items-center gap-3">
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
                 <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 12 (~1m read · 242w)</span>
+                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part 12</span>
                     <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">CHAPTER 12: WELCOME TO THE MARGIN</h3>
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
@@ -2910,7 +2914,7 @@
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#8b5cf6]"></span><span>Prof. Dravin</span></span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f59e0b]"></span><span>Eusacles</span></span>
                         <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#10b981]"></span><span>Alfie</span></span>
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f87171]"></span><span class="text-rose-300 font-semibold">Named NPCs</span></span>
+                        <span class="flex items-center gap-1"><span class="text-rose-400 font-mono text-[9px] leading-none">▲</span><span class="text-rose-300 font-semibold">Named NPCs</span></span>
                     </div>
                 </div>
 
@@ -2919,465 +2923,345 @@
                     
     <div class="space-y-2">
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-            <span>Chapter Sequence</span>
-            <span class="text-[10px] text-slate-500 font-mono">Speaker Share (Tap row to jump)</span>
+            <span>Chapter Index</span>
+            <span class="text-[10px] text-slate-500 font-mono">Voice Share (Tap row to jump)</span>
         </div>
         <div class="space-y-2">
             
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-1');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 1
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #1
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         THE DESERT TRANSIT
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~2m · 386w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
-                    <div class="h-full flex rounded-full overflow-hidden" style="width: 12%;">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
+                    <div class="h-full flex rounded-full overflow-hidden" style="width: 10%;">
                         <div style="width: 100.0%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 7w (100.0%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    7w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(7w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">100.0%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-2');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 2
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #2
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         THE LIBRARY OF THE FATES
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~2m · 514w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 77%;">
                         <div style="width: 38.2%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 50w (38.2%)"></div><div style="width: 34.4%; background-color: #8b5cf6;" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 45w (34.4%)"></div><div style="width: 27.5%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 36w (27.5%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    131w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(50w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(45w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(36w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">38.2%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[10px]">34.4%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">27.5%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-3');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 3
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #3
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         THE PLANAR RIFT
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~2m · 502w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 64%;">
                         <div style="width: 33.9%; background-color: #8b5cf6;" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 37w (33.9%)"></div><div style="width: 28.4%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 31w (28.4%)"></div><div style="width: 22.9%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 25w (22.9%)"></div><div style="width: 14.7%; background-color: #f87171;" class="h-full border-r border-slate-900/40" title="The Three Fates: 16w (14.7%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    109w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 text-[10px] font-mono shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span><span>The Three Fates</span> <strong class="text-rose-200">(16w)</strong></span>
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(37w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(31w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(25w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[10px]">33.9%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">28.4%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">22.9%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-rose-300 flex-shrink-0"><span class="text-[8px] text-[#f87171] leading-none">▲</span><span>The Three Fates</span> <span class="font-mono text-rose-400/80 text-[10px]">14.7%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-4');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 4
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #4
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         INCURSION AT THE COLONNADE
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 268w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 16%;">
                         <div style="width: 53.6%; background-color: #8b5cf6;" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 15w (53.6%)"></div><div style="width: 46.4%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 13w (46.4%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    28w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(15w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(13w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[10px]">53.6%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">46.4%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-5');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 5
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #5
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         SUNDER AND SLUDGE
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 368w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 100%;">
                         <div style="width: 91.8%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 156w (91.8%)"></div><div style="width: 8.2%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 14w (8.2%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    170w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(156w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(14w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">91.8%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">8.2%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-6');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 6
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #6
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         THE DRIFTWOOD DUELIST AWAKENS
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 267w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 21%;">
                         <div style="width: 74.3%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 26w (74.3%)"></div><div style="width: 25.7%; background-color: #8b5cf6;" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 9w (25.7%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    35w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(26w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(9w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">74.3%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[10px]">25.7%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-7');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 7
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #7
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         IN THE SHADOWS OF THE STACKS
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 316w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 31%;">
                         <div style="width: 66.0%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 35w (66.0%)"></div><div style="width: 34.0%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 18w (34.0%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    53w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(35w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(18w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">66.0%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">34.0%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-8');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 8
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #8
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         TENDON SEVER
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 303w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 48%;">
                         <div style="width: 35.8%; background-color: #8b5cf6;" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 29w (35.8%)"></div><div style="width: 25.9%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 21w (25.9%)"></div><div style="width: 24.7%; background-color: #f87171;" class="h-full border-r border-slate-900/40" title="The Three Fates: 20w (24.7%)"></div><div style="width: 13.6%; background-color: #10b981;" class="h-full border-r border-slate-900/40" title="Alfie: 11w (13.6%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    81w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 text-[10px] font-mono shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span><span>The Three Fates</span> <strong class="text-rose-200">(20w)</strong></span>
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(29w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(21w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[9px]">(11w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[10px]">35.8%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">25.9%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-rose-300 flex-shrink-0"><span class="text-[8px] text-[#f87171] leading-none">▲</span><span>The Three Fates</span> <span class="font-mono text-rose-400/80 text-[10px]">24.7%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[10px]">13.6%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-9');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 9
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #9
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         THE LEGEND STRIKE
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 317w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 24%;">
                         <div style="width: 70.7%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 29w (70.7%)"></div><div style="width: 29.3%; background-color: #f87171;" class="h-full border-r border-slate-900/40" title="The Three Fates: 12w (29.3%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    41w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 text-[10px] font-mono shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span><span>The Three Fates</span> <strong class="text-rose-200">(12w)</strong></span>
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(29w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">70.7%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-rose-300 flex-shrink-0"><span class="text-[8px] text-[#f87171] leading-none">▲</span><span>The Three Fates</span> <span class="font-mono text-rose-400/80 text-[10px]">29.3%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-10');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 10
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #10
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         THE AWAKENING ON THE DARK HIGHWAY
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 340w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 88%;">
                         <div style="width: 40.7%; background-color: #8b5cf6;" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 61w (40.7%)"></div><div style="width: 34.0%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 51w (34.0%)"></div><div style="width: 25.3%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 38w (25.3%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    150w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(61w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(51w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(38w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[10px]">40.7%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">34.0%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">25.3%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-11');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 11
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #11
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         THE ROAD TO THE MARIGOLD
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 293w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 86%;">
                         <div style="width: 45.6%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 67w (45.6%)"></div><div style="width: 35.4%; background-color: #8b5cf6;" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 52w (35.4%)"></div><div style="width: 15.0%; background-color: #10b981;" class="h-full border-r border-slate-900/40" title="Alfie: 22w (15.0%)"></div><div style="width: 4.1%; background-color: #f59e0b;" class="h-full border-r border-slate-900/40" title="Eusacles: 6w (4.1%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    147w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(67w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[9px]">(52w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[9px]">(22w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[9px]">(6w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">45.6%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #8b5cf6"></span><span>Prof.</span> <span class="font-mono text-slate-400 text-[10px]">35.4%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[10px]">15.0%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #f59e0b"></span><span>Eusacles</span> <span class="font-mono text-slate-400 text-[10px]">4.1%</span></span>
             </div>
-            
         </div>
         
-        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+        <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('chapter-12');">
             
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
-                        Ch 12
+            <!-- Line 1: # - Name - Stacked Bar Chart -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        #12
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         WELCOME TO THE MARGIN
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
-                    ~1m · 242w
-                </span>
-            </div>
 
-            <!-- X-Axis Stacked Dialogue Bar -->
-            <div class="flex items-center gap-2 pt-0.5">
-                <div class="flex-1 bg-slate-900 h-2.5 rounded-full overflow-hidden flex border border-slate-800 shadow-inner">
+                <!-- Stacked Horizontal Dialogue Bar (sorted most to least speaking) -->
+                <div class="w-28 sm:w-44 h-2 bg-slate-900 rounded-full overflow-hidden flex border border-slate-800 shadow-inner flex-shrink-0">
                     <div class="h-full flex rounded-full overflow-hidden" style="width: 47%;">
                         <div style="width: 55.0%; background-color: #10b981;" class="h-full border-r border-slate-900/40" title="Alfie: 44w (55.0%)"></div><div style="width: 45.0%; background-color: #3b82f6;" class="h-full border-r border-slate-900/40" title="Pierre: 36w (45.0%)"></div>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-amber-400 font-bold w-20 text-right flex-shrink-0">
-                    80w spoken
-                </span>
             </div>
 
-            <!-- Active Characters in this Chapter (NPC Badges + PC Voices) -->
-            
-            <div class="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-900/60">
-                
-                <span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[9px]">(44w)</span></span><span class="inline-flex items-center gap-1 text-[10px] text-slate-300"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[9px]">(36w)</span></span>
+            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+                <span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #10b981"></span><span>Alfie</span> <span class="font-mono text-slate-400 text-[10px]">55.0%</span></span><span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full" style="background-color: #3b82f6"></span><span>Pierre</span> <span class="font-mono text-slate-400 text-[10px]">45.0%</span></span>
             </div>
-            
         </div>
         
         </div>
@@ -3453,6 +3337,36 @@
         </div>
     </div>
 
+    <!-- ========================================================= -->
+    <!-- FIRST-TIME CRITIQUE MODE ONBOARDING MODAL -->
+    <!-- ========================================================= -->
+    <div id="onboardingModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-4 transition-opacity duration-200">
+        <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-3.5 text-center">
+            <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl mx-auto text-amber-400">
+                ✍️
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-slate-100 font-serif">Critique Mode is Active</h3>
+                <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                    Tap or click on any paragraph or dialogue passage to leave notes, feedback, or suggested rewrites.
+                </p>
+            </div>
+            <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 text-[11px] text-slate-400 text-left space-y-1.5">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-slate-800 text-amber-300 font-bold font-mono text-[10px] flex-shrink-0">📖 Read</span>
+                    <span>Turn off commenting for clean, uninterrupted reading.</span>
+                </div>
+                <div class="flex items-center gap-2 pt-1 border-t border-slate-900">
+                    <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-bold font-mono text-[10px] flex-shrink-0">✍️ Critique</span>
+                    <span>Click any block to leave notes / suggested rewrites.</span>
+                </div>
+            </div>
+            <button id="closeOnboardingBtn" type="button" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md active:scale-98">
+                Got it, Let's Read! 👍
+            </button>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT CONTROLLER -->
     <script>
         (function() {
@@ -3497,6 +3411,26 @@
             const modalDeleteBtn = document.getElementById('modalDeleteBtn');
             const categoryPills = Array.from(document.querySelectorAll('.category-pill'));
 
+            const onboardingOverlay = document.getElementById('onboardingModalOverlay');
+            const closeOnboardingBtn = document.getElementById('closeOnboardingBtn');
+
+            // Modal Background Scroll Lock Helper
+            function setBodyScrollLock(locked) {
+                if (locked) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    const isAnyModalOpen = (
+                        (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) ||
+                        (modalOverlay && modalOverlay.classList.contains('visible')) ||
+                        (onboardingOverlay && onboardingOverlay.classList.contains('visible')) ||
+                        (typeof ghModalOverlay !== 'undefined' && ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0'))
+                    );
+                    if (!isAnyModalOpen) {
+                        document.body.style.overflow = '';
+                    }
+                }
+            }
+
             // Smooth Scroll & Jump Helper
             window.scrollToAnchor = function(id) {
                 const el = document.getElementById(id);
@@ -3512,13 +3446,19 @@
                 }, 150);
             };
 
-            // Chapters Modal Open / Close
+            // Chapters Modal Open / Close with Scroll Lock
             window.openChaptersModal = function() {
-                if (chaptersModalOverlay) chaptersModalOverlay.classList.add('visible');
+                if (chaptersModalOverlay) {
+                    chaptersModalOverlay.classList.add('visible');
+                    setBodyScrollLock(true);
+                }
             };
 
             window.closeChaptersModal = function() {
-                if (chaptersModalOverlay) chaptersModalOverlay.classList.remove('visible');
+                if (chaptersModalOverlay) {
+                    chaptersModalOverlay.classList.remove('visible');
+                    setBodyScrollLock(false);
+                }
             };
 
             if (toggleChaptersBtn) toggleChaptersBtn.onclick = openChaptersModal;
@@ -3528,6 +3468,42 @@
                     if (e.target === chaptersModalOverlay) closeChaptersModal();
                 };
             }
+
+            // First-Time Critique Onboarding
+            function closeOnboardingModal() {
+                if (onboardingOverlay) {
+                    onboardingOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    onboardingOverlay.classList.remove('visible');
+                    try { localStorage.setItem('dnd_seen_critique_onboarding', 'true'); } catch(e) {}
+                    setBodyScrollLock(false);
+                }
+            }
+
+            if (closeOnboardingBtn) closeOnboardingBtn.onclick = closeOnboardingModal;
+            if (onboardingOverlay) {
+                onboardingOverlay.onclick = function(e) {
+                    if (e.target === onboardingOverlay) closeOnboardingModal();
+                };
+            }
+
+            try {
+                const seenOnboarding = localStorage.getItem('dnd_seen_critique_onboarding');
+                if (!seenOnboarding && onboardingOverlay) {
+                    setTimeout(() => {
+                        onboardingOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                        onboardingOverlay.classList.add('visible');
+                        setBodyScrollLock(true);
+                    }, 600);
+                }
+            } catch(e) {}
+
+            // Minimal Reading Progress Bar on Scroll
+            window.addEventListener('scroll', () => {
+                const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = totalScroll > 0 ? (window.scrollY / totalScroll) * 100 : 0;
+                const bar = document.getElementById('readingProgressBar');
+                if (bar) bar.style.width = Math.min(100, Math.max(0, progress)) + '%';
+            }, { passive: true });
 
             // Stats Accordion Toggle (Defaults to Collapsed)
             if (toggleStatsAccordionBtn && statsAccordionBody && statsAccordionChevron) {
@@ -3647,14 +3623,20 @@
                     modalNextBlockBtn.style.opacity = (index === blocks.length - 1) ? "0.35" : "1";
                     modalNextBlockBtn.style.pointerEvents = (index === blocks.length - 1) ? "none" : "auto";
                 }
-                if (modalOverlay) modalOverlay.classList.add('visible');
+                if (modalOverlay) {
+                    modalOverlay.classList.add('visible');
+                    setBodyScrollLock(true);
+                }
                 if (critiqueTextInput) {
                     setTimeout(() => critiqueTextInput.focus(), 50);
                 }
             }
 
             function closeModal() {
-                if (modalOverlay) modalOverlay.classList.remove('visible');
+                if (modalOverlay) {
+                    modalOverlay.classList.remove('visible');
+                    setBodyScrollLock(false);
+                }
             }
 
             if (modalCloseBtn) modalCloseBtn.onclick = closeModal;
@@ -3677,6 +3659,7 @@
                     if (modalOverlay && modalOverlay.classList.contains('visible')) closeModal();
                     if (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) closeChaptersModal();
                     if (ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0')) hideGhModal();
+                    if (onboardingOverlay && !onboardingOverlay.classList.contains('opacity-0')) closeOnboardingModal();
                 } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                     if (modalOverlay && modalOverlay.classList.contains('visible') && modalSaveBtn) {
                         modalSaveBtn.click();
@@ -3796,11 +3779,17 @@
                 }
                 if (ghCritiqueCountDisplay) ghCritiqueCountDisplay.textContent = count + " critique(s)";
                 if (ghStatusMsg) ghStatusMsg.className = "hidden";
-                if (ghModalOverlay) ghModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                if (ghModalOverlay) {
+                    ghModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                    setBodyScrollLock(true);
+                }
             }
 
             function hideGhModal() {
-                if (ghModalOverlay) ghModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                if (ghModalOverlay) {
+                    ghModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    setBodyScrollLock(false);
+                }
             }
 
             if (closeGhModal) closeGhModal.onclick = hideGhModal;
