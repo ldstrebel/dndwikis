@@ -19,6 +19,7 @@ from pathlib import Path
 from cryptography.hazmat.primitives import serialization
 
 MANIFEST_DIR = Path("d:/Code/dnd-scribe/sessions/data/index")
+CLEAN_DIR = Path("d:/Code/dnd-scribe/sessions/data/clean")
 OUTPUT_DIR = Path("d:/Code/dndwikis-main/dndwikis-main")
 # Search possible secrets directory locations
 SECRETS_DIRS = [
@@ -91,6 +92,122 @@ for s in [1, 2, 3]:
             all_manifests[s] = json.loads(p.read_text(encoding="utf-8"))
         except Exception:
             pass
+
+def load_session_source_mapping(session_num: int) -> dict:
+    """Parses raw-indexed transcript and clean story markdown, mapping each block ID to:
+    - primaryLine: {line, speaker, text}
+    - bundledLines: [{line, speaker, text}, ...]
+    - lineRange: [start, end]
+    """
+    raw_path = MANIFEST_DIR / f"s{session_num}-raw-indexed.md"
+    clean_path = CLEAN_DIR / f"s{session_num}-clean-story.md"
+    manifest_path = MANIFEST_DIR / f"s{session_num}-manifest-v2.json"
+
+    if not (raw_path.exists() and clean_path.exists() and manifest_path.exists()):
+        return {}
+
+    raw_text = raw_path.read_text(encoding="utf-8")
+    clean_text = clean_path.read_text(encoding="utf-8")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    raw_lines = {}
+    for line in raw_text.splitlines():
+        m = re.match(r"^L(\d+):\s*(.*)$", line)
+        if m:
+            l_num = int(m.group(1))
+            rest = m.group(2).strip()
+            speaker = "Table Voice"
+            content = rest
+
+            if "**" in rest and ":" in rest:
+                if "**:" in rest:
+                    sp_part, text_part = rest.split("**:", 1)
+                    speaker = sp_part.replace("**", "").strip()
+                    content = text_part.strip()
+                elif ":**" in rest:
+                    sp_part, text_part = rest.split(":**", 1)
+                    speaker = sp_part.replace("**", "").strip()
+                    content = text_part.strip()
+            elif rest.startswith("*Table Note:"):
+                speaker = "Table Note"
+                content = rest.replace("*Table Note:", "").strip("* ").strip()
+
+            raw_lines[l_num] = {
+                "line": l_num,
+                "speaker": speaker,
+                "text": content
+            }
+
+    scenes_raw = re.findall(
+        r"<!--\s*RAW_RANGE:\s*\[(\d+),\s*(\d+)\]\s*\|\s*SCENE_ID:\s*(\d+)(?:\s*\|\s*OOC)?\s*-->\s*(.*?)(?=<!--\s*RAW_RANGE:|$)",
+        clean_text,
+        re.DOTALL
+    )
+
+    block_map = {}
+    blocks = manifest.get("blocks", [])
+    block_idx = 0
+    last_line_num = None
+
+    for start_l, end_l, sc_id, sc_content in scenes_raw:
+        s_line = int(start_l)
+        e_line = int(end_l)
+
+        paras = [p.strip() for p in sc_content.split("\n\n") if p.strip()]
+        for p in paras:
+            if p.startswith("#") or p.startswith("<!-- LEDGER:"):
+                continue
+            l_markers = [int(x) for x in re.findall(r"<!--\s*L(\d+)\s*-->", p)]
+            clean_p = re.sub(r"<!--.*?-->", "", p).strip()
+            if not clean_p:
+                continue
+
+            if block_idx < len(blocks):
+                b = blocks[block_idx]
+                b_id = b["id"]
+
+                primary_line = None
+                bundled = []
+
+                if l_markers:
+                    primary_line = l_markers[0]
+                    for lm in l_markers:
+                        if lm in raw_lines:
+                            bundled.append(raw_lines[lm])
+                elif last_line_num is not None and last_line_num <= e_line:
+                    primary_line = last_line_num
+                else:
+                    primary_line = s_line
+
+                if last_line_num and primary_line and primary_line > last_line_num + 1:
+                    for mid_l in range(last_line_num + 1, min(primary_line, last_line_num + 10)):
+                        if mid_l in raw_lines and mid_l not in [x["line"] for x in bundled]:
+                            bundled.append(raw_lines[mid_l])
+
+                primary_info = raw_lines.get(primary_line, {
+                    "line": primary_line,
+                    "speaker": "Table GM/Player",
+                    "text": f"Table scene context (Lines {s_line}–{e_line})"
+                })
+
+                final_bundled = [x for x in bundled if x["line"] != primary_line]
+
+                block_map[b_id] = {
+                    "blockId": b_id,
+                    "index": b.get("index", block_idx + 1),
+                    "scene": b.get("scene", ""),
+                    "speakerId": b.get("speakerId", "narrator"),
+                    "text": b.get("text", ""),
+                    "primaryLine": primary_info,
+                    "bundledLines": final_bundled,
+                    "lineRange": [s_line, e_line]
+                }
+
+                if primary_line:
+                    last_line_num = primary_line
+                block_idx += 1
+
+    return block_map
 
 def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
     """Builds a vertical chapter list with 2 lines per chapter:
@@ -818,6 +935,77 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
     </div>
     """
 
+def build_diff_inspector_html(session_num: int) -> str:
+    return f"""
+    <!-- ========================================================= -->
+    <!-- SYNCHRONIZED NARRATIVE VS. SOURCE DIFF INSPECTOR -->
+    <!-- ========================================================= -->
+    <div id="diffInspectorOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col opacity-0 pointer-events-none transition-opacity duration-200 box-border">
+        
+        <!-- Inspector Top Header Bar -->
+        <header class="flex-shrink-0 bg-slate-900/95 border-b border-slate-800 px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 shadow-md">
+            <div class="flex items-center gap-2 min-w-0">
+                <span class="text-base sm:text-lg flex-shrink-0">⚖️</span>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-xs sm:text-sm font-bold text-amber-400 truncate tracking-wide">Diff Inspector</h2>
+                        <span id="diffHeaderTargetBadge" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 truncate max-w-[140px] sm:max-w-xs">Select Passage</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 hidden sm:block">Session {session_num} · Synchronized Narrative Prose vs. Tabletop Source</p>
+                </div>
+            </div>
+
+            <!-- Controls: Layout Mode Toggle, Sync Scroll Toggle, Close Button -->
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <!-- Layout Toggle (Hamburger vs Hotdog) -->
+                <button id="diffLayoutToggleBtn" type="button" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm" title="Toggle between Hamburger (stacked 50/50) and Hotdog (side-by-side 50/50)">
+                    <span id="diffLayoutToggleIcon">⬍</span>
+                    <span id="diffLayoutToggleLabel" class="text-[11px]">Hamburger</span>
+                </button>
+
+                <!-- Sync Scroll Toggle -->
+                <button id="diffSyncToggleBtn" type="button" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all shadow-sm" title="Toggle Synchronized Scrolling">
+                    <span id="diffSyncToggleIcon">🔗</span>
+                    <span id="diffSyncToggleLabel" class="hidden md:inline text-[11px]">Sync: ON</span>
+                </button>
+
+                <!-- Close / Exit Inspector -->
+                <button id="closeDiffInspectorBtn" type="button" class="text-slate-400 hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-800 text-lg leading-none transition-colors" title="Close Diff Inspector" aria-label="Close Diff Inspector">
+                    &times;
+                </button>
+            </div>
+        </header>
+
+        <!-- Dual Panes Container (layout-hamburger vs layout-hotdog) -->
+        <div id="diffPanesContainer" class="flex-1 min-h-0 relative layout-hamburger">
+            <!-- Narrative Left / Top Pane -->
+            <div id="diffNarrativePane" class="diff-pane overflow-y-auto p-3 sm:p-5 space-y-3 custom-scrollbar">
+                <!-- Populated dynamically by initDiffInspector() -->
+            </div>
+
+            <!-- Tabletop Source Right / Bottom Pane -->
+            <div id="diffSourcePane" class="diff-pane overflow-y-auto p-3 sm:p-5 space-y-3 custom-scrollbar">
+                <!-- Populated dynamically by initDiffInspector() -->
+            </div>
+        </div>
+
+        <!-- Inspector Bottom Action Bar -->
+        <footer id="diffFooterBar" class="flex-shrink-0 bg-slate-900/95 border-t border-slate-800 px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2 shadow-2xl">
+            <button id="diffClearCloseBtn" type="button" class="px-3 sm:px-4 py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-300 hover:text-slate-100 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all">
+                <span>✕</span> <span>Clear & Exit</span>
+            </button>
+
+            <div id="diffActiveTargetBadge" class="text-[11px] sm:text-xs text-slate-300 font-mono truncate px-2 text-center flex-1 max-w-md">
+                Select a passage or source line to anchor feedback
+            </div>
+
+            <button id="diffSubmitFeedbackBtn" type="button" class="px-3.5 sm:px-5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-amber-500/20 flex items-center gap-1.5 active:scale-95 transition-all">
+                <span>✍️</span> <span class="hidden sm:inline">Provide</span> <span>Feedback</span>
+            </button>
+        </footer>
+    </div>
+    """
+
 def generate_html_for_session(manifest_path: Path, output_path: Path):
     with open(manifest_path, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -941,6 +1129,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     camp_tab_label = "Campaign (S1)" if session_num == 1 else f"Campaign (S1–S{session_num})"
     critic_forum_html = build_critic_forum_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct, sensory)
     end_session_critic_card_html = build_end_session_critic_card_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct, sensory)
+    source_mapping = load_session_source_mapping(session_num)
+    source_mapping_json = json.dumps(source_mapping)
+    diff_inspector_html = build_diff_inspector_html(session_num)
 
     # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
@@ -1225,6 +1416,47 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         html.theme-light .custom-scrollbar::-webkit-scrollbar-thumb {{
             background: #cbd5e1 !important;
         }}
+        html.theme-light #diffInspectorOverlay {{
+            background-color: rgba(248, 250, 252, 0.98) !important;
+            color: #0f172a !important;
+        }}
+        html.theme-light #diffInspectorOverlay header,
+        html.theme-light #diffInspectorOverlay footer {{
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }}
+        html.theme-light #diffNarrativePane,
+        html.theme-light #diffSourcePane {{
+            background-color: #f8fafc !important;
+        }}
+        html.theme-light .diff-card {{
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }}
+        html.theme-light .diff-card p {{
+            color: #0f172a !important;
+        }}
+        html.theme-light .diff-narrative-card.active-diff-card,
+        html.theme-light .diff-source-card.active-diff-card {{
+            background-color: rgba(254, 243, 199, 0.75) !important;
+            border-color: #d97706 !important;
+        }}
+        html.theme-light .diff-source-line {{
+            background-color: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+            color: #1e293b !important;
+        }}
+        html.theme-light .diff-source-line.active-diff-line {{
+            background-color: rgba(254, 243, 199, 0.95) !important;
+            border-color: #d97706 !important;
+        }}
+        html.theme-light .diff-bundled-toggle {{
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #92400e !important;
+        }}
 
         html.theme-sepia body {{
             background-color: #f6f0e2;
@@ -1328,9 +1560,50 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         html.theme-sepia .custom-scrollbar::-webkit-scrollbar-thumb {{
             background: #d8c7a6 !important;
         }}
+        html.theme-sepia #diffInspectorOverlay {{
+            background-color: rgba(245, 239, 226, 0.98) !important;
+            color: #2c221e !important;
+        }}
+        html.theme-sepia #diffInspectorOverlay header,
+        html.theme-sepia #diffInspectorOverlay footer {{
+            background-color: #fdfbf7 !important;
+            border-color: #ded1b8 !important;
+            color: #2c221e !important;
+        }}
+        html.theme-sepia #diffNarrativePane,
+        html.theme-sepia #diffSourcePane {{
+            background-color: #f5efe2 !important;
+        }}
+        html.theme-sepia .diff-card {{
+            background-color: #fffdf8 !important;
+            border-color: #ded1b8 !important;
+            color: #2c221e !important;
+        }}
+        html.theme-sepia .diff-card p {{
+            color: #2c221e !important;
+        }}
+        html.theme-sepia .diff-narrative-card.active-diff-card,
+        html.theme-sepia .diff-source-card.active-diff-card {{
+            background-color: rgba(217, 119, 6, 0.14) !important;
+            border-color: #b45309 !important;
+        }}
+        html.theme-sepia .diff-source-line {{
+            background-color: #ede3cb !important;
+            border-color: #ded1b8 !important;
+            color: #2c221e !important;
+        }}
+        html.theme-sepia .diff-source-line.active-diff-line {{
+            background-color: rgba(217, 119, 6, 0.22) !important;
+            border-color: #b45309 !important;
+        }}
+        html.theme-sepia .diff-bundled-toggle {{
+            background-color: #ede3cb !important;
+            border-color: #ded1b8 !important;
+            color: #78350f !important;
+        }}
 
         /* Overlay Transitions & Viewport Sizing */
-        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay {{
+        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay, #diffInspectorOverlay {{
             transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
             height: 100vh;
             height: 100dvh;
@@ -1339,7 +1612,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             max-width: 100vw !important;
             overflow-x: hidden !important;
         }}
-        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible {{
+        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible, #diffInspectorOverlay.visible {{
             opacity: 1;
             pointer-events: auto;
         }}
@@ -1396,6 +1669,71 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         .custom-scrollbar::-webkit-scrollbar-thumb {{
             background: rgba(100, 116, 139, 0.5);
             border-radius: 999px;
+        }}
+
+        /* ========================================================= */
+        /* SYNCHRONIZED NARRATIVE VS. SOURCE DIFF INSPECTOR STYLES   */
+        /* ========================================================= */
+        #diffInspectorOverlay {{
+            padding: 0 !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+        }}
+        #diffInspectorOverlay.visible {{
+            opacity: 1;
+            pointer-events: auto;
+        }}
+
+        /* Layout Hotdog (Side-by-Side Left/Right 50/50) */
+        #diffPanesContainer.layout-hotdog {{
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            overflow: hidden;
+        }}
+        #diffPanesContainer.layout-hotdog #diffNarrativePane {{
+            width: 50%;
+            height: 100%;
+            border-right: 1px solid rgba(51, 65, 85, 0.7);
+        }}
+        #diffPanesContainer.layout-hotdog #diffSourcePane {{
+            width: 50%;
+            height: 100%;
+        }}
+
+        /* Layout Hamburger (Stacked Top/Bottom 50/50 - Mobile Ergonomics) */
+        #diffPanesContainer.layout-hamburger {{
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }}
+        #diffPanesContainer.layout-hamburger #diffNarrativePane {{
+            width: 100%;
+            height: 50%;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.7);
+        }}
+        #diffPanesContainer.layout-hamburger #diffSourcePane {{
+            width: 100%;
+            height: 50%;
+        }}
+
+        .diff-card {{
+            transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+        }}
+        .diff-narrative-card.active-diff-card,
+        .diff-source-card.active-diff-card {{
+            border-color: #f59e0b !important;
+            background-color: rgba(245, 158, 11, 0.12) !important;
+            box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.4), 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+        }}
+        .diff-source-line {{
+            transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+        }}
+        .diff-source-line.active-diff-line {{
+            border-color: #f59e0b !important;
+            background-color: rgba(245, 158, 11, 0.22) !important;
+            box-shadow: 0 0 0 1.5px rgba(245, 158, 11, 0.6) !important;
         }}
     </style>
 </head>
@@ -1763,6 +2101,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         </div>
     </div>
 
+    {diff_inspector_html}
+
     <!-- ========================================================= -->
     <!-- MOBILE CRITIQUE MODAL / PASSAGE EDITOR -->
     <!-- ========================================================= -->
@@ -1790,7 +2130,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <!-- Scrollable Content Body (Expands & Scrolls Gracefully) -->
             <div class="overflow-y-auto space-y-3 pr-1 flex-1 min-h-0 custom-scrollbar box-border">
                 <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 box-border">
-                    <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Target Passage:</div>
+                    <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                        <span>Target Passage:</span>
+                        <span id="modalSourceProvenance" class="font-mono text-amber-400 normal-case"></span>
+                    </div>
                     <p id="modalPassageText" class="text-xs sm:text-sm text-slate-200 italic leading-relaxed max-h-28 overflow-y-auto custom-scrollbar"></p>
                 </div>
                 <div>
@@ -1860,7 +2203,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         </button>
                     </div>
                     <p id="onboardingModeDesc" class="text-xs sm:text-sm text-slate-300 leading-normal bg-slate-900/70 p-2.5 rounded-lg border border-slate-800/80">
-                        <strong>Critique Mode Active:</strong> Click or tap any passage to leave review notes, tone directives, or suggested rewrites.
+                        <strong>Critique Mode Active:</strong> Click or tap any passage to inspect it side-by-side (or stacked) against the raw tabletop source transcript and leave editorial directives.
                     </p>
                 </div>
 
@@ -2007,6 +2350,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
     <!-- JAVASCRIPT CONTROLLER -->
     <script>
+        window.SOURCE_TRANSCRIPT_MAP = {source_mapping_json};
         (function() {{
             const CAMPAIGN_ID = "uneraseable";
             const CHAPTER_ID = "s{session_num}";
@@ -2072,6 +2416,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const modalSpeakerPill = document.getElementById('modalSpeakerPill');
             const modalBlockIndex = document.getElementById('modalBlockIndex');
             const modalPassageText = document.getElementById('modalPassageText');
+            const modalSourceProvenance = document.getElementById('modalSourceProvenance');
             const critiqueTextInput = document.getElementById('critiqueTextInput');
             const suggestedRewriteInput = document.getElementById('suggestedRewriteInput');
             const modalPrevBlockBtn = document.getElementById('modalPrevBlockBtn');
@@ -2083,12 +2428,48 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const onboardingOverlay = document.getElementById('onboardingModalOverlay');
             const closeOnboardingBtn = document.getElementById('closeOnboardingBtn');
 
+            // =========================================================
+            // DIFF INSPECTOR (Synchronized Narrative vs Source) ELEMENTS
+            // =========================================================
+            const diffInspectorOverlay = document.getElementById('diffInspectorOverlay');
+            const diffPanesContainer = document.getElementById('diffPanesContainer');
+            const diffNarrativePane = document.getElementById('diffNarrativePane');
+            const diffSourcePane = document.getElementById('diffSourcePane');
+            const diffLayoutToggleBtn = document.getElementById('diffLayoutToggleBtn');
+            const diffLayoutToggleIcon = document.getElementById('diffLayoutToggleIcon');
+            const diffLayoutToggleLabel = document.getElementById('diffLayoutToggleLabel');
+            const diffSyncToggleBtn = document.getElementById('diffSyncToggleBtn');
+            const diffSyncToggleIcon = document.getElementById('diffSyncToggleIcon');
+            const diffSyncToggleLabel = document.getElementById('diffSyncToggleLabel');
+            const closeDiffInspectorBtn = document.getElementById('closeDiffInspectorBtn');
+            const diffClearCloseBtn = document.getElementById('diffClearCloseBtn');
+            const diffActiveTargetBadge = document.getElementById('diffActiveTargetBadge');
+            const diffHeaderTargetBadge = document.getElementById('diffHeaderTargetBadge');
+            const diffSubmitFeedbackBtn = document.getElementById('diffSubmitFeedbackBtn');
+
+            let currentDiffLayout = (window.innerWidth < 768) ? "hamburger" : "hotdog";
+            let syncScrollEnabled = true;
+            let isProgrammaticScroll = false;
+            let selectedSourceLine = null;
+            let diffInspectorInitialized = false;
+
+            function escapeHtml(str) {{
+                if (!str) return "";
+                return String(str)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }}
+
             // Modal Background Scroll Lock Helper
             function setBodyScrollLock(locked) {{
                 if (locked) {{
                     document.body.style.overflow = 'hidden';
                 }} else {{
                     const isAnyModalOpen = (
+                        (diffInspectorOverlay && diffInspectorOverlay.classList.contains('visible')) ||
                         (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) ||
                         (modalOverlay && modalOverlay.classList.contains('visible')) ||
                         (onboardingOverlay && onboardingOverlay.classList.contains('visible')) ||
@@ -2100,6 +2481,365 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         document.body.style.overflow = '';
                     }}
                 }}
+            }}
+
+            // Diff Inspector Layout Controller (Hotdog vs Hamburger)
+            function applyDiffLayout(layout) {{
+                currentDiffLayout = layout;
+                if (!diffPanesContainer) return;
+                if (layout === 'hamburger') {{
+                    diffPanesContainer.classList.remove('layout-hotdog');
+                    diffPanesContainer.classList.add('layout-hamburger');
+                    if (diffLayoutToggleIcon) diffLayoutToggleIcon.textContent = '⬍';
+                    if (diffLayoutToggleLabel) diffLayoutToggleLabel.textContent = 'Hamburger';
+                    if (diffLayoutToggleBtn) diffLayoutToggleBtn.title = 'Current: Hamburger (Stacked 50/50) — Tap to switch to Hotdog (Side-by-Side)';
+                }} else {{
+                    diffPanesContainer.classList.remove('layout-hamburger');
+                    diffPanesContainer.classList.add('layout-hotdog');
+                    if (diffLayoutToggleIcon) diffLayoutToggleIcon.textContent = '⬌';
+                    if (diffLayoutToggleLabel) diffLayoutToggleLabel.textContent = 'Hotdog';
+                    if (diffLayoutToggleBtn) diffLayoutToggleBtn.title = 'Current: Hotdog (Side-by-Side 50/50) — Tap to switch to Hamburger (Stacked)';
+                }}
+            }}
+
+            function toggleDiffLayout() {{
+                const nextLayout = (currentDiffLayout === 'hamburger') ? 'hotdog' : 'hamburger';
+                applyDiffLayout(nextLayout);
+                if (activeBlockIndex >= 0) {{
+                    scrollToCardInBothPanes(activeBlockIndex, false);
+                }}
+            }}
+            if (diffLayoutToggleBtn) diffLayoutToggleBtn.onclick = toggleDiffLayout;
+
+            function scrollToCardInBothPanes(index, smooth) {{
+                const nCard = diffNarrativePane ? diffNarrativePane.querySelector(`.diff-narrative-card[data-index="${{index}}"]`) : null;
+                const sCard = diffSourcePane ? diffSourcePane.querySelector(`.diff-source-card[data-index="${{index}}"]`) : null;
+
+                isProgrammaticScroll = true;
+                if (nCard) {{
+                    nCard.scrollIntoView({{ behavior: smooth ? 'smooth' : 'auto', block: 'center' }});
+                }}
+                if (sCard) {{
+                    sCard.scrollIntoView({{ behavior: smooth ? 'smooth' : 'auto', block: 'center' }});
+                }}
+                setTimeout(() => {{
+                    isProgrammaticScroll = false;
+                }}, smooth ? 450 : 60);
+            }}
+
+            function highlightBlockInDiff(index, sourceLineObj, autoScroll) {{
+                if (index < 0 || index >= blocks.length) return;
+                activeBlockIndex = index;
+                selectedSourceLine = sourceLineObj || null;
+
+                const block = blocks[index];
+                const bId = block.dataset.blockId || ("block-" + index);
+                const spName = block.dataset.speakerName || "Narrator";
+                const mapData = (window.SOURCE_TRANSCRIPT_MAP && window.SOURCE_TRANSCRIPT_MAP[bId]) || null;
+                const primary = mapData && mapData.primaryLine ? mapData.primaryLine : null;
+
+                if (diffNarrativePane) {{
+                    diffNarrativePane.querySelectorAll('.active-diff-card').forEach(el => el.classList.remove('active-diff-card'));
+                }}
+                if (diffSourcePane) {{
+                    diffSourcePane.querySelectorAll('.active-diff-card').forEach(el => el.classList.remove('active-diff-card'));
+                    diffSourcePane.querySelectorAll('.active-diff-line').forEach(el => el.classList.remove('active-diff-line'));
+                }}
+
+                const nCard = diffNarrativePane ? diffNarrativePane.querySelector(`.diff-narrative-card[data-index="${{index}}"]`) : null;
+                if (nCard) nCard.classList.add('active-diff-card');
+
+                const sCard = diffSourcePane ? diffSourcePane.querySelector(`.diff-source-card[data-index="${{index}}"]`) : null;
+                if (sCard) {{
+                    sCard.classList.add('active-diff-card');
+                    if (selectedSourceLine) {{
+                        const lineEl = sCard.querySelector(`.diff-source-line[data-line-num="${{selectedSourceLine.line}}"]`);
+                        if (lineEl) {{
+                            lineEl.classList.add('active-diff-line');
+                            const drawer = lineEl.closest('.diff-bundled-drawer');
+                            if (drawer && drawer.classList.contains('hidden')) {{
+                                drawer.classList.remove('hidden');
+                                const toggle = drawer.parentElement.querySelector('.diff-bundled-toggle');
+                                if (toggle) {{
+                                    const chev = toggle.querySelector('.diff-bundled-chevron');
+                                    const lbl = toggle.querySelector('.font-sans');
+                                    if (chev) chev.style.transform = 'rotate(180deg)';
+                                    if (lbl) lbl.textContent = 'Tap to collapse';
+                                }}
+                            }}
+                        }}
+                    }}
+                }}
+
+                const lineRef = selectedSourceLine ? `L${{selectedSourceLine.line}} (${{selectedSourceLine.speaker}})` : (primary ? `L${{primary.line}} (${{primary.speaker}})` : `Passage #${{index + 1}}`);
+                if (diffHeaderTargetBadge) diffHeaderTargetBadge.textContent = `#${{index + 1}} · ${{lineRef}}`;
+                if (diffActiveTargetBadge) {{
+                    diffActiveTargetBadge.innerHTML = `Anchor: <strong>Passage #${{index + 1}}</strong> · <span class="text-amber-400 font-semibold">${{lineRef}}</span>`;
+                }}
+
+                if (autoScroll) {{
+                    scrollToCardInBothPanes(index, true);
+                }}
+            }}
+
+            function setupDiffScrollSync() {{
+                if (!diffNarrativePane || !diffSourcePane) return;
+
+                function syncPanes(sourcePane, targetPane) {{
+                    if (!syncScrollEnabled || isProgrammaticScroll) return;
+
+                    const cardsSource = sourcePane.querySelectorAll('.diff-card');
+                    const cardsTarget = targetPane.querySelectorAll('.diff-card');
+                    if (!cardsSource.length || !cardsTarget.length) return;
+
+                    let activeIdx = 0;
+                    let progressThroughCard = 0;
+                    const targetTopOffset = 50;
+
+                    for (let i = 0; i < cardsSource.length; i++) {{
+                        const card = cardsSource[i];
+                        const cTop = card.offsetTop - sourcePane.scrollTop;
+                        if (cTop <= targetTopOffset && (cTop + card.offsetHeight) > targetTopOffset) {{
+                            activeIdx = i;
+                            progressThroughCard = (targetTopOffset - cTop) / card.offsetHeight;
+                            break;
+                        }} else if (cTop > targetTopOffset) {{
+                            activeIdx = Math.max(0, i - 1);
+                            break;
+                        }}
+                    }}
+
+                    if (cardsTarget[activeIdx]) {{
+                        const targetCard = cardsTarget[activeIdx];
+                        const desiredScrollTop = targetCard.offsetTop - targetTopOffset + (progressThroughCard * targetCard.offsetHeight);
+                        isProgrammaticScroll = true;
+                        targetPane.scrollTop = Math.max(0, desiredScrollTop);
+                        requestAnimationFrame(() => {{
+                            isProgrammaticScroll = false;
+                        }});
+                    }}
+                }}
+
+                diffNarrativePane.addEventListener('scroll', function() {{
+                    syncPanes(diffNarrativePane, diffSourcePane);
+                }}, {{ passive: true }});
+
+                diffSourcePane.addEventListener('scroll', function() {{
+                    syncPanes(diffSourcePane, diffNarrativePane);
+                }}, {{ passive: true }});
+
+                if (diffSyncToggleBtn) {{
+                    diffSyncToggleBtn.onclick = function() {{
+                        syncScrollEnabled = !syncScrollEnabled;
+                        if (syncScrollEnabled) {{
+                            if (diffSyncToggleIcon) diffSyncToggleIcon.textContent = '🔗';
+                            if (diffSyncToggleLabel) diffSyncToggleLabel.textContent = 'Sync: ON';
+                            diffSyncToggleBtn.className = "px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all shadow-sm";
+                            diffSyncToggleBtn.title = "Synchronized Scrolling is ON — tap to disable";
+                        }} else {{
+                            if (diffSyncToggleIcon) diffSyncToggleIcon.textContent = '🔓';
+                            if (diffSyncToggleLabel) diffSyncToggleLabel.textContent = 'Sync: OFF';
+                            diffSyncToggleBtn.className = "px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-400 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all shadow-sm";
+                            diffSyncToggleBtn.title = "Synchronized Scrolling is OFF — tap to enable";
+                        }}
+                    }};
+                }}
+            }}
+
+            function initDiffInspector() {{
+                if (diffInspectorInitialized || !diffNarrativePane || !diffSourcePane) return;
+                diffInspectorInitialized = true;
+
+                applyDiffLayout(currentDiffLayout);
+
+                let narrativeCardsHtml = `
+                    <div class="sticky top-0 z-10 -mt-1 mb-2 px-3 py-1.5 rounded-lg bg-slate-900/90 backdrop-blur border border-slate-800 flex items-center justify-between text-[11px] font-mono font-bold text-amber-400 shadow-sm">
+                        <span>📖 NOVEL PROSE</span>
+                        <span class="text-[10px] text-slate-400 font-sans">Passage View</span>
+                    </div>
+                `;
+                let sourceCardsHtml = `
+                    <div class="sticky top-0 z-10 -mt-1 mb-2 px-3 py-1.5 rounded-lg bg-slate-900/90 backdrop-blur border border-slate-800 flex items-center justify-between text-[11px] font-mono font-bold text-cyan-400 shadow-sm">
+                        <span>🎲 TABLETOP SOURCE</span>
+                        <span class="text-[10px] text-slate-400 font-sans">Raw Transcript</span>
+                    </div>
+                `;
+
+                blocks.forEach((block, idx) => {{
+                    const bId = block.dataset.blockId || ("block-" + idx);
+                    const spName = block.dataset.speakerName || "Narrator";
+                    const spColor = block.dataset.speakerColor || "#94a3b8";
+                    const p = block.querySelector('p');
+                    const text = p ? p.innerText : "";
+                    const mapData = (window.SOURCE_TRANSCRIPT_MAP && window.SOURCE_TRANSCRIPT_MAP[bId]) || null;
+
+                    const lineRangeText = mapData && mapData.lineRange ? `Lines ${{mapData.lineRange[0]}}–${{mapData.lineRange[1]}}` : "";
+                    const primary = (mapData && mapData.primaryLine) ? mapData.primaryLine : {{
+                        line: (mapData && mapData.lineRange ? mapData.lineRange[0] : (idx + 1)),
+                        speaker: spName,
+                        text: text
+                    }};
+                    const bundled = (mapData && mapData.bundledLines) ? mapData.bundledLines : [];
+
+                    narrativeCardsHtml += `
+                        <div class="diff-narrative-card diff-card p-3 sm:p-4 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/90 transition-all cursor-pointer relative" data-block-id="${{bId}}" data-index="${{idx}}">
+                            <div class="flex items-center justify-between mb-2 text-xs">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono truncate" style="background-color: ${{spColor}}25; color: ${{spColor}}; border: 1px solid ${{spColor}}50">${{spName}}</span>
+                                    <span class="text-slate-400 font-mono text-[10px]">#${{idx + 1}}</span>
+                                </div>
+                                ${{lineRangeText ? `<div class="text-[10px] font-mono text-slate-500">${{lineRangeText}}</div>` : ''}}
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif">${{escapeHtml(text)}}</p>
+                        </div>
+                    `;
+
+                    let bundledSectionHtml = "";
+                    if (bundled.length > 0) {{
+                        let bundledItemsHtml = "";
+                        bundled.forEach(bLine => {{
+                            bundledItemsHtml += `
+                                <div class="diff-source-line bundled-source-line p-2 rounded-lg bg-slate-950/70 border border-slate-800/80 hover:border-amber-500/50 cursor-pointer transition-colors" data-block-id="${{bId}}" data-index="${{idx}}" data-line-num="${{bLine.line}}" data-speaker="${{escapeHtml(bLine.speaker)}}" data-text="${{escapeHtml(bLine.text)}}">
+                                    <div class="flex items-center gap-1.5 text-[10px] font-mono mb-1">
+                                        <span class="text-amber-400 font-bold">L${{bLine.line}}</span>
+                                        <span class="text-slate-500">·</span>
+                                        <span class="text-slate-300 font-semibold truncate">${{escapeHtml(bLine.speaker)}}</span>
+                                    </div>
+                                    <div class="text-slate-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap">${{escapeHtml(bLine.text)}}</div>
+                                </div>
+                            `;
+                        }});
+
+                        bundledSectionHtml = `
+                            <div class="mt-2.5">
+                                <button type="button" class="diff-bundled-toggle w-full px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-800 border border-slate-700/80 text-left text-xs font-mono text-amber-300/90 flex items-center justify-between transition-colors shadow-sm" data-block-id="${{bId}}">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="diff-bundled-chevron inline-block transition-transform duration-200 text-[10px]">▼</span>
+                                        <span>${{bundled.length}} tabletop turn${{bundled.length > 1 ? 's' : ''}} bundled</span>
+                                    </span>
+                                    <span class="text-[10px] text-slate-400 font-sans">Tap to expand</span>
+                                </button>
+                                <div class="diff-bundled-drawer hidden mt-2 space-y-2 pl-2 border-l-2 border-amber-500/30">
+                                    ${{bundledItemsHtml}}
+                                </div>
+                            </div>
+                        `;
+                    }}
+
+                    sourceCardsHtml += `
+                        <div class="diff-source-card diff-card p-3 sm:p-4 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-900/90 transition-all relative" data-block-id="${{bId}}" data-index="${{idx}}">
+                            <div class="flex items-center justify-between mb-2 text-xs">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800">Source #${{idx + 1}}</span>
+                                    ${{lineRangeText ? `<span class="text-[10px] font-mono text-slate-400">${{lineRangeText}}</span>` : ''}}
+                                </div>
+                            </div>
+                            
+                            <!-- Primary Source Turn -->
+                            <div class="diff-source-line primary-source-line p-2 sm:p-2.5 rounded-lg bg-slate-950/80 border border-slate-800/90 hover:border-amber-500/50 cursor-pointer transition-colors" data-block-id="${{bId}}" data-index="${{idx}}" data-line-num="${{primary.line}}" data-speaker="${{escapeHtml(primary.speaker)}}" data-text="${{escapeHtml(primary.text)}}">
+                                <div class="flex items-center gap-1.5 text-[10px] font-mono mb-1">
+                                    <span class="text-amber-400 font-bold">L${{primary.line}}</span>
+                                    <span class="text-slate-500">·</span>
+                                    <span class="text-slate-300 font-semibold truncate">${{escapeHtml(primary.speaker)}}</span>
+                                    <span class="ml-auto text-[9px] text-amber-500/80 uppercase font-mono tracking-wider">Primary</span>
+                                </div>
+                                <div class="text-slate-200 font-mono text-[11px] sm:text-xs leading-relaxed whitespace-pre-wrap">${{escapeHtml(primary.text)}}</div>
+                            </div>
+
+                            ${{bundledSectionHtml}}
+                        </div>
+                    `;
+                }});
+
+                diffNarrativePane.innerHTML = narrativeCardsHtml;
+                diffSourcePane.innerHTML = sourceCardsHtml;
+
+                diffNarrativePane.querySelectorAll('.diff-narrative-card').forEach(card => {{
+                    card.addEventListener('click', function() {{
+                        const idx = parseInt(card.dataset.index);
+                        highlightBlockInDiff(idx, null, false);
+                    }});
+                }});
+
+                diffSourcePane.querySelectorAll('.diff-source-line').forEach(lineEl => {{
+                    lineEl.addEventListener('click', function(e) {{
+                        e.stopPropagation();
+                        const idx = parseInt(lineEl.dataset.index);
+                        const lineNum = parseInt(lineEl.dataset.lineNum);
+                        const speaker = lineEl.dataset.speaker;
+                        const text = lineEl.dataset.text;
+                        highlightBlockInDiff(idx, {{ line: lineNum, speaker: speaker, text: text }}, false);
+                    }});
+                }});
+
+                diffSourcePane.querySelectorAll('.diff-source-card').forEach(card => {{
+                    card.addEventListener('click', function(e) {{
+                        if (e.target.closest('.diff-bundled-toggle') || e.target.closest('.diff-source-line')) return;
+                        const idx = parseInt(card.dataset.index);
+                        highlightBlockInDiff(idx, null, false);
+                    }});
+                }});
+
+                diffSourcePane.querySelectorAll('.diff-bundled-toggle').forEach(btn => {{
+                    btn.addEventListener('click', function(e) {{
+                        e.stopPropagation();
+                        const container = btn.parentElement;
+                        const drawer = container.querySelector('.diff-bundled-drawer');
+                        const chevron = btn.querySelector('.diff-bundled-chevron');
+                        const label = btn.querySelector('.font-sans');
+                        if (drawer) {{
+                            const isHidden = drawer.classList.contains('hidden');
+                            drawer.classList.toggle('hidden');
+                            if (chevron) chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+                            if (label) label.textContent = isHidden ? 'Tap to collapse' : 'Tap to expand';
+                        }}
+                    }});
+                }});
+
+                setupDiffScrollSync();
+            }}
+
+            window.openDiffInspector = function(index) {{
+                if (index < 0 || index >= blocks.length) return;
+                initDiffInspector();
+                if (diffInspectorOverlay) {{
+                    diffInspectorOverlay.classList.add('visible');
+                    if (window.visualViewport) {{
+                        diffInspectorOverlay.style.height = window.visualViewport.height + 'px';
+                        diffInspectorOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
+                    }}
+                    setBodyScrollLock(true);
+                }}
+                highlightBlockInDiff(index, null, true);
+            }};
+
+            window.closeDiffInspector = function() {{
+                if (diffInspectorOverlay) {{
+                    diffInspectorOverlay.classList.remove('visible');
+                    diffInspectorOverlay.style.height = '';
+                    diffInspectorOverlay.style.transform = '';
+                    setBodyScrollLock(false);
+                }}
+            }};
+
+            if (closeDiffInspectorBtn) closeDiffInspectorBtn.onclick = window.closeDiffInspector;
+            if (diffClearCloseBtn) {{
+                diffClearCloseBtn.onclick = function() {{
+                    if (diffNarrativePane) diffNarrativePane.querySelectorAll('.active-diff-card').forEach(el => el.classList.remove('active-diff-card'));
+                    if (diffSourcePane) {{
+                        diffSourcePane.querySelectorAll('.active-diff-card').forEach(el => el.classList.remove('active-diff-card'));
+                        diffSourcePane.querySelectorAll('.active-diff-line').forEach(el => el.classList.remove('active-diff-line'));
+                    }}
+                    selectedSourceLine = null;
+                    window.closeDiffInspector();
+                }};
+            }}
+            if (diffSubmitFeedbackBtn) {{
+                diffSubmitFeedbackBtn.onclick = function() {{
+                    const targetIdx = activeBlockIndex;
+                    window.closeDiffInspector();
+                    openModalForBlock(targetIdx);
+                }};
             }}
 
             // Smooth Scroll & Jump Helper
@@ -2418,6 +3158,17 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 if (modalBlockIndex) modalBlockIndex.textContent = "#" + (index + 1) + " (" + blockId + ")";
                 if (modalPassageText) modalPassageText.textContent = '"' + text + '"';
 
+                const mapData = (window.SOURCE_TRANSCRIPT_MAP && window.SOURCE_TRANSCRIPT_MAP[blockId]) || null;
+                if (modalSourceProvenance) {{
+                    if (selectedSourceLine) {{
+                        modalSourceProvenance.textContent = `· L${{selectedSourceLine.line}} (${{selectedSourceLine.speaker}})`;
+                    }} else if (mapData && mapData.primaryLine) {{
+                        modalSourceProvenance.textContent = `· L${{mapData.primaryLine.line}} (${{mapData.primaryLine.speaker}})`;
+                    }} else {{
+                        modalSourceProvenance.textContent = '';
+                    }}
+                }}
+
                 const existing = critiques[blockId];
                 if (existing) {{
                     if (critiqueTextInput) critiqueTextInput.value = existing.comment || "";
@@ -2479,6 +3230,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     const vh = window.visualViewport.height;
                     const vTop = window.visualViewport.offsetTop;
                     const overlays = [
+                        diffInspectorOverlay,
                         modalOverlay,
                         chaptersModalOverlay,
                         onboardingOverlay,
@@ -2525,6 +3277,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             document.addEventListener('keydown', function(e) {{
                 if (e.key === 'Escape') {{
+                    if (diffInspectorOverlay && diffInspectorOverlay.classList.contains('visible')) {{
+                        closeDiffInspector();
+                        return;
+                    }}
                     if (settingsModalOverlay && settingsModalOverlay.classList.contains('visible')) hideSettingsModal();
                     if (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) hideCriticForumModal();
                     if (modalOverlay && modalOverlay.classList.contains('visible')) closeModal();
@@ -2551,6 +3307,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     return;
                 }}
 
+                const mapData = (window.SOURCE_TRANSCRIPT_MAP && window.SOURCE_TRANSCRIPT_MAP[blockId]) || null;
+                const activeProvLine = selectedSourceLine ? selectedSourceLine.line : (mapData && mapData.primaryLine ? mapData.primaryLine.line : null);
+                const activeProvSpeaker = selectedSourceLine ? selectedSourceLine.speaker : (mapData && mapData.primaryLine ? mapData.primaryLine.speaker : null);
+
                 critiques[blockId] = {{
                     blockId: blockId,
                     blockIndex: activeBlockIndex + 1,
@@ -2560,6 +3320,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     quote: p ? p.innerText : "",
                     comment: comment,
                     suggestedRewrite: rewrite,
+                    sourceLine: activeProvLine,
+                    sourceSpeaker: activeProvSpeaker,
                     updatedAt: new Date().toISOString()
                 }};
 
@@ -2584,7 +3346,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             blocks.forEach((b, idx) => {{
                 b.onclick = function() {{
-                    if (document.body.classList.contains('mode-critique')) openModalForBlock(idx);
+                    if (document.body.classList.contains('mode-critique')) openDiffInspector(idx);
                 }};
             }});
 
@@ -2778,6 +3540,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                                 <div class="flex items-center gap-1.5 min-w-0">
                                     <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: ` + spColor + `"></span>
                                     <span class="text-[10px] font-mono font-bold uppercase truncate" style="color: ` + spColor + `">#` + (c.blockIndex || (idx + 1)) + ` ` + (c.speaker || 'Narrator') + `</span>
+                                    ` + (c.sourceLine ? `<span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-700/60 font-mono font-semibold" title="Tabletop Source Line">L` + c.sourceLine + `</span>` : '') + `
                                     <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-950/80 text-slate-300 border border-slate-700/60 font-mono uppercase font-semibold">` + (c.category || 'General') + `</span>
                                 </div>
                                 <button type="button" class="text-slate-500 hover:text-rose-400 text-xs p-1 transition-colors" title="Delete this note" onclick="window.deleteCritiqueItem('` + c.blockId + `')">
@@ -2985,7 +3748,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     }};
 
                     const markdownRows = Object.values(critiques).map(c => 
-                        "| `" + c.blockId + "` | **" + c.speaker + "** | `" + c.category + "` | " + (c.comment || '').replace(/\\|/g, '\\\\|') + " | " + (c.suggestedRewrite ? c.suggestedRewrite.replace(/\\|/g, '\\\\|') : '-') + " |"
+                        "| `" + c.blockId + "` | **" + c.speaker + "** | " + (c.sourceLine ? ("`L" + c.sourceLine + "`" + (c.sourceSpeaker ? " (" + c.sourceSpeaker + ")" : "")) : "-") + " | `" + c.category + "` | " + (c.comment || '').replace(/\\|/g, '\\\\|') + " | " + (c.suggestedRewrite ? c.suggestedRewrite.replace(/\\|/g, '\\\\|') : '-') + " |"
                     ).join('\\n');
 
                     let reviewerSection = "**Reviewer:** `" + reviewer + "`";
@@ -2993,7 +3756,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         reviewerSection += " *(🎲 D&D Pun Handle)*\\n**Next Pool Replacement Suggestion:** `" + replacementName + "` 🎲";
                     }}
 
-                    const prBody = "## 📝 Story Feedback: " + exportPayload.title + "\\n" + reviewerSection + "\\n**Total Notes:** " + count + "\\n\\n### 📋 Feedback Items Table\\n| Block ID | Speaker | Category | Critique / Directive | Suggested Rewrite |\\n|---|---|---|---|---|\\n" + markdownRows + "\\n\\n<details>\\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\\n\\n```json\\n" + JSON.stringify(exportPayload, null, 2) + "\\n```\\n</details>";
+                    const prBody = "## 📝 Story Feedback: " + exportPayload.title + "\\n" + reviewerSection + "\\n**Total Notes:** " + count + "\\n\\n### 📋 Feedback Items Table\\n| Block ID | Speaker | Source Line | Category | Critique / Directive | Suggested Rewrite |\\n|---|---|---|---|---|---|\\n" + markdownRows + "\\n\\n<details>\\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\\n\\n```json\\n" + JSON.stringify(exportPayload, null, 2) + "\\n```\\n</details>";
 
                     try {{
                         const token = await getInstallationAccessToken();
