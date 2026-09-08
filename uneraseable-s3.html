@@ -1693,14 +1693,15 @@ ightarrow$ *Sheep*.</p>
                     </button>
 
                     <!-- Collapsed Body Content (Darker Gray Background) -->
+                    <!-- Collapsed Body Content (Darker Gray Background) -->
                     <div id="statsAccordionBody" class="hidden p-3.5 pt-2 border-t border-slate-800/90 bg-gray-950/70 space-y-3">
                         
                         <!-- Mode Switcher for Analytics Tabs -->
                         <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
                             <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono">Analytics Views</span>
-                            <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
+                            <div class="flex bg-slate-900 border border-slate-800 rounded-lg p-0.5 shadow-inner">
                                 <button id="chartTabStatsBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('session')">
-                                    <span>📊</span> <span>Session KPIs & Velocity</span>
+                                    <span>📊</span> <span>Session Engagement & KPIs</span>
                                 </button>
                                 <button id="chartTabCampaignBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('campaign')">
                                     <span>🌐</span> <span>Campaign (S1–S3)</span>
@@ -1708,14 +1709,98 @@ ightarrow$ *Sheep*.</p>
                             </div>
                         </div>
 
-                        <!-- View 1: Default Session KPIs (2 Columns: Length & Dialogue Connected to Spoken Share) + Velocity Chart -->
+                        <!-- View 1: Default Session KPIs (Leads with Telemetry & Comparative Journey, followed by 2-Column KPIs & Velocity) -->
                         <div id="chartViewSession" class="w-full space-y-3">
                             
-                            <!-- 2-COLUMN KPI GRID -->
+                            <!-- 1. READERSHIP & ENGAGEMENT TELEMETRY (Leads the Session Stats) -->
+                            <div class="bg-slate-900/90 p-3.5 sm:p-4 rounded-xl border border-slate-800 shadow-md space-y-3">
+                                <div class="flex items-center justify-between text-xs font-semibold text-slate-300 border-b border-slate-800/80 pb-2.5">
+                                    <span class="flex items-center gap-2 text-indigo-300">
+                                        <span class="p-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs">👥</span>
+                                        <span class="uppercase tracking-wider font-mono text-[11px] font-bold text-slate-200">Reader Engagement & Progress Journey</span>
+                                    </span>
+                                    <span id="telemetryPersonalStatus" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-400">
+                                        Reading...
+                                    </span>
+                                </div>
+
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+                                    <!-- 1. Unique Readers -->
+                                    <div class="bg-slate-950/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
+                                        <div class="text-[10px] text-slate-400 font-medium truncate">Unique Readers</div>
+                                        <div class="text-base sm:text-xl font-bold font-mono text-indigo-300 mt-0.5" id="telemetryUniqueReaders">--</div>
+                                        <div class="text-[9px] text-slate-500 font-mono">distinct devices</div>
+                                    </div>
+
+                                    <!-- 2. Total Opens -->
+                                    <div class="bg-slate-950/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
+                                        <div class="text-[10px] text-slate-400 font-medium truncate">Total Opens</div>
+                                        <div class="text-base sm:text-xl font-bold font-mono text-amber-400 mt-0.5" id="telemetryTotalOpens">--</div>
+                                        <div class="text-[9px] text-slate-500 font-mono">sessions</div>
+                                    </div>
+
+                                    <!-- 3. Completion Rate -->
+                                    <div class="bg-slate-950/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
+                                        <div class="text-[10px] text-slate-400 font-medium truncate">Finisher Circle</div>
+                                        <div class="text-base sm:text-xl font-bold font-mono text-emerald-400 mt-0.5" id="telemetryCompletionRate">--%</div>
+                                        <div class="text-[9px] text-slate-500 font-mono">100% completed</div>
+                                    </div>
+
+                                    <!-- 4. Avg Incomplete Drop-off Depth -->
+                                    <div class="bg-slate-950/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
+                                        <div class="text-[10px] text-slate-400 font-medium truncate">Avg Drop-Off</div>
+                                        <div class="text-base sm:text-xl font-bold font-mono text-rose-300 mt-0.5" id="telemetryDropoffDepth">--%</div>
+                                        <div class="text-[9px] text-slate-500 font-mono">unfinished reads</div>
+                                    </div>
+                                </div>
+
+                                <!-- Comparative Reading Journey & Benchmark Visualizer -->
+                                <div class="bg-slate-950/90 p-3 rounded-xl border border-slate-800/80 space-y-2.5">
+                                    <div class="flex items-center justify-between text-[11px] text-slate-300 font-medium">
+                                        <span class="flex items-center gap-1.5 font-mono text-[10px] uppercase text-slate-400 tracking-wider">
+                                            <span>📍</span> <span>Your Position vs. Reader Base</span>
+                                        </span>
+                                        <span id="telemetryJourneyTargetText" class="text-[10px] font-mono text-emerald-400 font-semibold">Target: 100% Finisher Circle</span>
+                                    </div>
+
+                                    <!-- Milestone Visual Track -->
+                                    <div class="relative pt-5 pb-5 px-1">
+                                        <!-- Background track -->
+                                        <div class="h-3 w-full rounded-full bg-slate-900 border border-slate-800 overflow-hidden relative shadow-inner">
+                                            <!-- User's progress fill -->
+                                            <div id="telemetryPersonalProgressFill" class="h-full bg-gradient-to-r from-indigo-500 via-sky-400 to-amber-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
+                                        </div>
+
+                                        <!-- Average Drop-off Vertical Guideline & Marker -->
+                                        <div id="telemetryDropoffMarker" class="absolute top-0 transition-all duration-300 flex flex-col items-center -translate-x-1/2 pointer-events-none" style="left: 45%;">
+                                            <span class="text-[9px] font-mono font-bold text-rose-400 bg-rose-950/90 px-1.5 py-0.2 rounded border border-rose-800 shadow whitespace-nowrap" id="telemetryDropoffMarkerText">Avg Exit ~45%</span>
+                                            <div class="w-0.5 h-6 bg-rose-500/80 mt-0.5 border-dashed"></div>
+                                        </div>
+
+                                        <!-- User's Live Pin Marker -->
+                                        <div id="telemetryUserPin" class="absolute bottom-0 transition-all duration-300 flex flex-col items-center -translate-x-1/2 pointer-events-none" style="left: 0%;">
+                                            <div class="w-2.5 h-2.5 rounded-full bg-amber-400 border-2 border-slate-950 shadow-md"></div>
+                                            <span class="text-[9px] font-mono font-bold text-amber-300 bg-slate-900 px-1.5 py-0.2 rounded border border-amber-500/50 shadow whitespace-nowrap mt-0.5" id="telemetryUserPinText">You: 0%</span>
+                                        </div>
+
+                                        <!-- Target Goal Finish Flag (at 100%) -->
+                                        <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 flex items-center pointer-events-none">
+                                            <span class="text-xs bg-slate-900 border border-emerald-500/40 rounded-full p-0.5 shadow" title="100% Completion Goal">🏁</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Motivational Guidance Subtext -->
+                                    <div id="telemetryMotivationBanner" class="text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2">
+                                        <span>✨</span> <span id="telemetryMotivationText">Scroll to read and advance your progress toward the 100% finisher mark!</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. 2-COLUMN KPI GRID (Story Length & Dialogue Ratio) -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                                 
                                 <!-- Column 1: Overall Story Length & Reading Overview -->
-                                <div class="bg-slate-950/70 p-3 sm:p-3.5 rounded-xl border border-slate-800/80 flex flex-col justify-between gap-2.5">
+                                <div class="bg-slate-900/90 p-3 sm:p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-2.5 shadow-sm">
                                     <div>
                                         <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
                                             <span class="uppercase font-mono text-[10px] tracking-wider text-slate-400">📖 Story Length & Reading Time</span>
@@ -1730,22 +1815,22 @@ ightarrow$ *Sheep*.</p>
                                     </div>
 
                                     <!-- Sensory Palette Registers -->
-                                    <div class="pt-2 border-t border-slate-900">
+                                    <div class="pt-2 border-t border-slate-800">
                                         <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex justify-between">
                                             <span>Sensory Registers</span>
                                             <span class="text-amber-400 font-mono">(5/5)</span>
                                         </div>
                                         <div class="grid grid-cols-2 gap-1.5">
-                                            <span class="px-2 py-1 rounded bg-slate-900/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
+                                            <span class="px-2 py-1 rounded bg-slate-950/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
                                                 <span>👁️ Visual</span> <strong class="text-amber-400 font-mono">8</strong>
                                             </span>
-                                            <span class="px-2 py-1 rounded bg-slate-900/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
+                                            <span class="px-2 py-1 rounded bg-slate-950/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
                                                 <span>👂 Auditory</span> <strong class="text-sky-400 font-mono">3</strong>
                                             </span>
-                                            <span class="px-2 py-1 rounded bg-slate-900/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
+                                            <span class="px-2 py-1 rounded bg-slate-950/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
                                                 <span>✋ Tactile</span> <strong class="text-emerald-400 font-mono">7</strong>
                                             </span>
-                                            <span class="px-2 py-1 rounded bg-slate-900/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
+                                            <span class="px-2 py-1 rounded bg-slate-950/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
                                                 <span>⚡ Atmosphere</span> <strong class="text-amber-300 font-mono">16</strong>
                                             </span>
                                         </div>
@@ -1753,7 +1838,7 @@ ightarrow$ *Sheep*.</p>
                                 </div>
 
                                 <!-- Column 2: Dialogue Ratio Connected to Spoken Line Share -->
-                                <div class="bg-slate-950/70 p-3 sm:p-3.5 rounded-xl border border-slate-800/80 flex flex-col justify-between gap-2.5">
+                                <div class="bg-slate-900/90 p-3 sm:p-3.5 rounded-xl border border-slate-800 flex flex-col justify-between gap-2.5 shadow-sm">
                                     <div>
                                         <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
                                             <span class="uppercase font-mono text-[10px] tracking-wider text-amber-400">🎙️ Dialogue Ratio & Voice Share</span>
@@ -1765,7 +1850,7 @@ ightarrow$ *Sheep*.</p>
                                         
                                         <!-- Connected Spoken Line Share Multi-Segment Progress Bar -->
                                         <div class="mt-2 space-y-1">
-                                            <div class="h-2.5 w-full rounded-full bg-slate-900 flex overflow-hidden border border-slate-800 shadow-inner">
+                                            <div class="h-2.5 w-full rounded-full bg-slate-950 flex overflow-hidden border border-slate-800 shadow-inner">
                                                 <div style="width: 41.8%; background-color: #3b82f6" class="h-full border-r border-slate-900/40" title="Pierre: 41.8% (465 words)"></div>
 <div style="width: 24.9%; background-color: #8b5cf6" class="h-full border-r border-slate-900/40" title="Prof. Edward Dravin: 24.9% (277 words)"></div>
 <div style="width: 18.4%; background-color: #f59e0b" class="h-full border-r border-slate-900/40" title="Eusacles: 18.4% (205 words)"></div>
@@ -1778,7 +1863,7 @@ ightarrow$ *Sheep*.</p>
                                     </div>
 
                                     <!-- Connected Speaker Share Breakdown Grid -->
-                                    <div class="pt-2 border-t border-slate-900">
+                                    <div class="pt-2 border-t border-slate-800">
                                         <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
                                             Spoken Line Breakdown (6 active voices)
                                         </div>
@@ -1832,60 +1917,7 @@ ightarrow$ *Sheep*.</p>
 
                             </div>
 
-                            <!-- Readership & Telemetry KPIs (Unique Readers, Total Opens, % Completed Book, Avg Incomplete Depth) -->
-                            <div class="bg-gradient-to-r from-indigo-950/40 via-slate-950/70 to-slate-950/70 p-3 sm:p-3.5 rounded-xl border border-indigo-900/40 shadow-sm space-y-2.5">
-                                <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
-                                    <span class="flex items-center gap-1.5 text-indigo-300">
-                                        <span>👥</span> <span class="uppercase tracking-wider font-mono text-[10px]">Reader Engagement & Telemetry</span>
-                                    </span>
-                                    <span id="telemetryPersonalStatus" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">
-                                        Reading...
-                                    </span>
-                                </div>
-
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-                                    <!-- 1. Unique Readers -->
-                                    <div class="bg-slate-900/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
-                                        <div class="text-[10px] text-slate-400 font-medium truncate">Unique Readers</div>
-                                        <div class="text-base sm:text-xl font-bold font-mono text-indigo-300 mt-0.5" id="telemetryUniqueReaders">--</div>
-                                        <div class="text-[9px] text-slate-500 font-mono">devices</div>
-                                    </div>
-
-                                    <!-- 2. Total Opens -->
-                                    <div class="bg-slate-900/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
-                                        <div class="text-[10px] text-slate-400 font-medium truncate">Total Opens</div>
-                                        <div class="text-base sm:text-xl font-bold font-mono text-amber-400 mt-0.5" id="telemetryTotalOpens">--</div>
-                                        <div class="text-[9px] text-slate-500 font-mono">sessions</div>
-                                    </div>
-
-                                    <!-- 3. Completion Rate (% Scrolled to End) -->
-                                    <div class="bg-slate-900/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
-                                        <div class="text-[10px] text-slate-400 font-medium truncate">Finished Story</div>
-                                        <div class="text-base sm:text-xl font-bold font-mono text-emerald-400 mt-0.5" id="telemetryCompletionRate">--%</div>
-                                        <div class="text-[9px] text-slate-500 font-mono">100% completed</div>
-                                    </div>
-
-                                    <!-- 4. Avg Incomplete Drop-off Depth -->
-                                    <div class="bg-slate-900/80 p-2 sm:p-2.5 rounded-lg border border-slate-800/80">
-                                        <div class="text-[10px] text-slate-400 font-medium truncate">Avg Drop-Off</div>
-                                        <div class="text-base sm:text-xl font-bold font-mono text-sky-400 mt-0.5" id="telemetryDropoffDepth">--%</div>
-                                        <div class="text-[9px] text-slate-500 font-mono">unfinished reads</div>
-                                    </div>
-                                </div>
-
-                                <!-- Readership Completion Progress Bar & Detailed Subtext -->
-                                <div class="space-y-1 pt-0.5">
-                                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
-                                        <span id="telemetryCompletionRatioText" class="text-emerald-400 font-bold">--% finished</span>
-                                        <span id="telemetryDropoffSubtext" class="text-slate-400">Avg Incomplete Depth: --%</span>
-                                    </div>
-                                    <div class="h-2 w-full rounded-full bg-slate-900 overflow-hidden border border-slate-800 shadow-inner">
-                                        <div id="telemetryCompletionBar" class="h-full bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-400 transition-all duration-500 rounded-full" style="width: 0%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Voice Velocity Line Chart in that subsection -->
+                            <!-- 3. Voice Velocity Line Chart in that subsection -->
                             <div class="w-full">
                                 
     <div class="w-full space-y-1.5">
@@ -1893,7 +1925,7 @@ ightarrow$ *Sheep*.</p>
             <span>Character Dialogue Velocity</span>
             <span class="text-[10px] text-amber-400 font-mono">Top Voice: Pierre (465w)</span>
         </div>
-        <div class="bg-slate-950/60 rounded-xl p-2.5 border border-slate-800">
+        <div class="bg-slate-900/90 rounded-xl p-3 sm:p-3.5 border border-slate-800 shadow-sm">
             <svg viewBox="0 0 500 145" class="w-full h-auto" style="overflow: visible;">
                 <!-- Grid Lines -->
                 <line x1="25" y1="120.0" x2="475" y2="120.0" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
@@ -3159,10 +3191,16 @@ ightarrow$ *Sheep*.</p>
                 const opensEl = document.getElementById('telemetryTotalOpens');
                 const compEl = document.getElementById('telemetryCompletionRate');
                 const dropoffEl = document.getElementById('telemetryDropoffDepth');
-                const barEl = document.getElementById('telemetryCompletionBar');
-                const ratioTextEl = document.getElementById('telemetryCompletionRatioText');
-                const dropoffSubtextEl = document.getElementById('telemetryDropoffSubtext');
                 const statusEl = document.getElementById('telemetryPersonalStatus');
+                
+                const userProgressFill = document.getElementById('telemetryPersonalProgressFill');
+                const dropoffMarker = document.getElementById('telemetryDropoffMarker');
+                const dropoffMarkerText = document.getElementById('telemetryDropoffMarkerText');
+                const userPin = document.getElementById('telemetryUserPin');
+                const userPinText = document.getElementById('telemetryUserPinText');
+                const motivationBanner = document.getElementById('telemetryMotivationBanner');
+                const motivationText = document.getElementById('telemetryMotivationText');
+                const targetText = document.getElementById('telemetryJourneyTargetText');
 
                 const rCount = Math.max(1, globalTelemetry.readers);
                 const oCount = Math.max(1, globalTelemetry.opens);
@@ -3172,6 +3210,8 @@ ightarrow$ *Sheep*.</p>
                 const incCount = globalTelemetry.incompleteCount || 0;
                 const incSum = globalTelemetry.incompleteDepthSum || 0;
                 const avgDropoffPct = incCount > 0 ? Math.min(99, Math.max(0, Math.round(incSum / incCount))) : 0;
+                const myDepth = localTelemetry.maxDepth || 0;
+                const isCompleted = localTelemetry.completed || myDepth >= 95;
 
                 if (uniqueEl) uniqueEl.textContent = globalTelemetry.readers.toLocaleString();
                 if (opensEl) opensEl.textContent = globalTelemetry.opens.toLocaleString();
@@ -3186,24 +3226,53 @@ ightarrow$ *Sheep*.</p>
                     }
                 }
 
-                if (barEl) barEl.style.width = compPct + '%';
-                if (ratioTextEl) ratioTextEl.textContent = compPct + '% finished (' + cCount + '/' + rCount + ' readers)';
-                if (dropoffSubtextEl) {
-                    if (incCount > 0) {
-                        dropoffSubtextEl.textContent = 'Avg Incomplete Depth: ~' + avgDropoffPct + '%';
-                    } else if (cCount > 0) {
-                        dropoffSubtextEl.textContent = 'All readers completed 100%';
+                // Update visual track
+                const displayUserDepth = isCompleted ? 100 : myDepth;
+                if (userProgressFill) userProgressFill.style.width = displayUserDepth + '%';
+                
+                if (userPin) {
+                    userPin.style.left = Math.min(94, Math.max(5, displayUserDepth)) + '%';
+                }
+                if (userPinText) {
+                    userPinText.textContent = isCompleted ? 'You: 100% 🏆' : ('You: ' + displayUserDepth + '%');
+                }
+
+                if (dropoffMarker && dropoffMarkerText) {
+                    if (incCount > 0 && avgDropoffPct > 0) {
+                        dropoffMarker.style.display = 'flex';
+                        dropoffMarker.style.left = Math.min(90, Math.max(8, avgDropoffPct)) + '%';
+                        dropoffMarkerText.textContent = 'Avg Exit ~' + avgDropoffPct + '%';
                     } else {
-                        dropoffSubtextEl.textContent = 'Awaiting reading progress...';
+                        dropoffMarker.style.display = 'none';
+                    }
+                }
+
+                if (targetText) {
+                    targetText.textContent = compPct + '% Finisher Rate (' + cCount + '/' + rCount + ' readers)';
+                }
+
+                // Motivational Guidance Banner
+                if (motivationText && motivationBanner) {
+                    if (isCompleted) {
+                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 leading-normal flex items-center gap-2 shadow-inner";
+                        motivationText.innerHTML = '<strong>🏆 Book Completed!</strong> You are part of the ' + compPct + '% finisher circle (' + cCount + '/' + rCount + ' readers).';
+                    } else if (myDepth > 0 && myDepth >= avgDropoffPct && avgDropoffPct > 0) {
+                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-amber-950/60 border border-amber-800 text-amber-200 leading-normal flex items-center gap-2 shadow-inner";
+                        motivationText.innerHTML = '<strong>🔥 Great Momentum!</strong> You are at <strong>' + myDepth + '% depth</strong>, past the average drop-off point (~' + avgDropoffPct + '%). Push forward to finish!';
+                    } else if (myDepth > 0) {
+                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2";
+                        motivationText.innerHTML = '<strong>📖 Keep Reading:</strong> You are at ' + myDepth + '% depth. Read past the ~' + (avgDropoffPct || 45) + '% mark to join the ' + compPct + '% finisher circle!';
+                    } else {
+                        motivationBanner.className = "text-[11px] p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 leading-normal flex items-center gap-2";
+                        motivationText.textContent = 'Scroll through the story to advance your reading progress toward the 100% completion goal.';
                     }
                 }
 
                 if (statusEl) {
-                    if (localTelemetry.completed) {
-                        statusEl.innerHTML = '<span class="text-emerald-400 font-bold">✨ You Completed This Book</span>';
+                    if (isCompleted) {
+                        statusEl.innerHTML = '<span class="text-emerald-400 font-bold">✨ Finisher</span>';
                     } else {
-                        const myDepth = localTelemetry.maxDepth || 0;
-                        statusEl.innerHTML = '<span class="text-amber-400">📖 Reading (~' + myDepth + '% depth)</span>';
+                        statusEl.innerHTML = '<span class="text-amber-400">📖 ' + myDepth + '% Read</span>';
                     }
                 }
             }
