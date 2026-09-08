@@ -2,7 +2,7 @@
 <html lang="en" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>Uneraseable — THE BUS FROM VEGAS & THE LIBRARY OF THE FATES</title>
     
@@ -75,9 +75,11 @@
             display: inline-flex;
         }
 
-        /* Overlay Transitions */
-        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay {
+        /* Overlay Transitions & Viewport Sizing */
+        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay {
             transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
+            height: 100vh;
+            height: 100dvh;
         }
         #chaptersModalOverlay.visible, #critiqueModalOverlay.visible {
             opacity: 1;
@@ -85,15 +87,28 @@
         }
 
         #chaptersModalCard, #critiqueBottomSheet {
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, max-height 0.2s ease;
             transform: scale(0.96) translateY(-10px);
             opacity: 0;
-            max-height: min(90vh, 90dvh);
+            max-height: min(88vh, 88dvh);
         }
         #chaptersModalOverlay.visible #chaptersModalCard,
         #critiqueModalOverlay.visible #critiqueBottomSheet {
             transform: scale(1) translateY(0);
             opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            #critiqueModalOverlay {
+                align-items: flex-start !important;
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+            }
+            #critiqueBottomSheet {
+                max-height: calc(100dvh - 1.5rem) !important;
+                margin-top: 0 !important;
+                margin-bottom: auto !important;
+            }
         }
 
         .custom-scrollbar::-webkit-scrollbar {
@@ -3539,6 +3554,8 @@
             window.closeChaptersModal = function() {
                 if (chaptersModalOverlay) {
                     chaptersModalOverlay.classList.remove('visible');
+                    chaptersModalOverlay.style.height = '';
+                    chaptersModalOverlay.style.transform = '';
                     setBodyScrollLock(false);
                 }
             };
@@ -3556,6 +3573,8 @@
                 if (onboardingOverlay) {
                     onboardingOverlay.classList.add('opacity-0', 'pointer-events-none');
                     onboardingOverlay.classList.remove('visible');
+                    onboardingOverlay.style.height = '';
+                    onboardingOverlay.style.transform = '';
                     try { localStorage.setItem('dnd_seen_critique_onboarding', 'true'); } catch(e) {}
                     setBodyScrollLock(false);
                 }
@@ -3732,19 +3751,61 @@
                 }
                 if (modalOverlay) {
                     modalOverlay.classList.add('visible');
+                    if (window.visualViewport) {
+                        modalOverlay.style.height = window.visualViewport.height + 'px';
+                        modalOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
+                    }
                     setBodyScrollLock(true);
                 }
                 if (critiqueTextInput) {
-                    setTimeout(() => critiqueTextInput.focus(), 50);
+                    setTimeout(() => {
+                        critiqueTextInput.focus();
+                        critiqueTextInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 80);
                 }
             }
 
             function closeModal() {
                 if (modalOverlay) {
                     modalOverlay.classList.remove('visible');
+                    modalOverlay.style.height = '';
+                    modalOverlay.style.transform = '';
                     setBodyScrollLock(false);
                 }
             }
+
+            // Dynamic Mobile Virtual Keyboard Sizing & Push-Up Controller
+            if (window.visualViewport) {
+                function syncActiveModalWithViewport() {
+                    const vh = window.visualViewport.height;
+                    const vTop = window.visualViewport.offsetTop;
+                    const overlays = [
+                        modalOverlay,
+                        chaptersModalOverlay,
+                        onboardingOverlay,
+                        document.getElementById('ghModalOverlay')
+                    ];
+                    overlays.forEach(ov => {
+                        if (ov && (ov.classList.contains('visible') || (!ov.classList.contains('opacity-0') && !ov.classList.contains('pointer-events-none')))) {
+                            ov.style.height = vh + 'px';
+                            ov.style.transform = 'translateY(' + vTop + 'px)';
+                        }
+                    });
+                }
+
+                window.visualViewport.addEventListener('resize', syncActiveModalWithViewport);
+                window.visualViewport.addEventListener('scroll', syncActiveModalWithViewport);
+            }
+
+            // Smoothly keep text inputs above keyboard when focused
+            [critiqueTextInput, suggestedRewriteInput].forEach(inp => {
+                if (!inp) return;
+                inp.addEventListener('focus', function() {
+                    setTimeout(() => {
+                        inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 250);
+                });
+            });
 
             if (modalCloseBtn) modalCloseBtn.onclick = closeModal;
             if (modalOverlay) {
@@ -3895,6 +3956,8 @@
             function hideGhModal() {
                 if (ghModalOverlay) {
                     ghModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    ghModalOverlay.style.height = '';
+                    ghModalOverlay.style.transform = '';
                     setBodyScrollLock(false);
                 }
             }
