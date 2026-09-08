@@ -414,19 +414,20 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         name = sp["name"]
         prog_bar_segments += f'<div style="width: {pct}%; background-color: {color}" class="h-full border-r border-slate-900/40" title="{name}: {pct}% ({sp["words"]} words)"></div>\n'
 
-    # Legend Chips
+    # Legend Chips for 2-Column KPI Card
     speaker_chips = ""
     for sp in spoken_speakers:
         pct = sp["pct"]
         color = sp["color"]
         name = sp["name"]
-        npc_badge = '<span class="text-[9px] px-1 py-0.2 rounded bg-rose-950/60 text-rose-300 border border-rose-800/60 font-mono">NPC</span>' if sp["is_npc"] else ""
+        short_name = name.split()[0] if not sp["is_npc"] else name
+        npc_badge = '<span class="text-[8px] px-1 py-0.2 rounded bg-rose-950/80 text-rose-300 border border-rose-800/80 font-mono ml-0.5">NPC</span>' if sp["is_npc"] else ""
         speaker_chips += f"""
-            <div class="flex items-center gap-1.5 text-xs text-slate-300 py-0.5">
-                <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {color}"></span>
-                <span class="font-medium truncate">{name}</span>
+            <div class="flex items-center gap-1.5 text-[11px] text-slate-300 py-0.5 px-1.5 rounded bg-slate-900/70 border border-slate-800/80">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {color}"></span>
+                <span class="font-medium truncate">{short_name}</span>
                 {npc_badge}
-                <span class="font-mono font-bold ml-auto" style="color: {color}">{pct}%</span>
+                <span class="font-mono font-bold ml-auto text-[10px]" style="color: {color}">{pct}%</span>
             </div>
         """
 
@@ -785,11 +786,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
                             <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono">Analytics Views</span>
                             <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
-                                <button id="chartTabLineBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('line')">
-                                    <span>📈</span> <span>Voice Velocity</span>
-                                </button>
-                                <button id="chartTabStatsBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('stats')">
-                                    <span>📊</span> <span>Session KPIs</span>
+                                <button id="chartTabStatsBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('session')">
+                                    <span>📊</span> <span>Session KPIs & Velocity</span>
                                 </button>
                                 <button id="chartTabCampaignBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('campaign')">
                                     <span>🌐</span> <span>{camp_tab_label}</span>
@@ -797,52 +795,90 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                             </div>
                         </div>
 
-                        <!-- View 1: Character Velocity SVG Line Chart -->
-                        <div id="chartViewLine" class="w-full">
-                            {session_line_chart_svg}
-                        </div>
+                        <!-- View 1: Default Session KPIs (2 Columns: Length & Dialogue Connected to Spoken Share) + Velocity Chart -->
+                        <div id="chartViewSession" class="w-full space-y-3">
+                            
+                            <!-- 2-COLUMN KPI GRID -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                                
+                                <!-- Column 1: Overall Story Length & Reading Overview -->
+                                <div class="bg-slate-950/70 p-3 sm:p-3.5 rounded-xl border border-slate-800/80 flex flex-col justify-between gap-2.5">
+                                    <div>
+                                        <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                                            <span class="uppercase font-mono text-[10px] tracking-wider text-slate-400">📖 Story Length & Reading Time</span>
+                                            <span class="text-[10px] text-emerald-400 font-mono font-semibold">~{read_mins}m Read</span>
+                                        </div>
+                                        <div class="text-xl sm:text-2xl font-bold text-slate-100 font-mono mt-1">
+                                            {word_count:,} <span class="text-xs text-slate-400 font-sans font-normal">words</span>
+                                        </div>
+                                        <div class="text-xs text-slate-400 mt-0.5">
+                                            ~{book_pages} Book Pages (at ~250 wpp)
+                                        </div>
+                                    </div>
 
-                        <!-- View 2: Unified KPIs & Sensory Palette -->
-                        <div id="chartViewStats" class="w-full hidden space-y-3">
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                                <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-                                    <div class="text-[11px] text-slate-400 font-medium">Story Length & Read Time</div>
-                                    <div class="text-base font-bold text-slate-100 mt-0.5 font-mono">{word_count:,} <span class="text-xs text-slate-500 font-normal">words</span></div>
-                                    <div class="text-[10px] text-emerald-400 mt-0.5">~{book_pages} Pages · {read_mins}m Read</div>
-                                </div>
-
-                                <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-                                    <div class="text-[11px] text-slate-400 font-medium">Dialogue Ratio</div>
-                                    <div class="text-base font-bold text-amber-400 mt-0.5 font-mono">{spoken_pct}% <span class="text-xs text-slate-500 font-normal">spoken</span></div>
-                                    <div class="text-[10px] text-slate-400 mt-0.5">{narrative_pct}% Narrative Prose</div>
-                                </div>
-
-                                <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-                                    <div class="text-[11px] text-slate-400 font-medium mb-1">Sensory ({sensory.get("registersCovered", 5)}/5)</div>
-                                    <div class="flex flex-wrap gap-1">
-                                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">👁️ <strong class="text-amber-400">{sensory.get("visual", 30)}</strong></span>
-                                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">👂 <strong class="text-sky-400">{sensory.get("auditory", 15)}</strong></span>
-                                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">✋ <strong class="text-emerald-400">{sensory.get("tactile", 20)}</strong></span>
-                                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">⚡ <strong class="text-amber-300">{sensory.get("atmospheric", 15)}</strong></span>
+                                    <!-- Sensory Palette Registers -->
+                                    <div class="pt-2 border-t border-slate-900">
+                                        <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex justify-between">
+                                            <span>Sensory Registers</span>
+                                            <span class="text-amber-400 font-mono">({sensory.get("registersCovered", 5)}/5)</span>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-1.5">
+                                            <span class="px-2 py-1 rounded bg-slate-900/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
+                                                <span>👁️ Visual</span> <strong class="text-amber-400 font-mono">{sensory.get("visual", 30)}</strong>
+                                            </span>
+                                            <span class="px-2 py-1 rounded bg-slate-900/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
+                                                <span>👂 Auditory</span> <strong class="text-sky-400 font-mono">{sensory.get("auditory", 15)}</strong>
+                                            </span>
+                                            <span class="px-2 py-1 rounded bg-slate-900/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
+                                                <span>✋ Tactile</span> <strong class="text-emerald-400 font-mono">{sensory.get("tactile", 20)}</strong>
+                                            </span>
+                                            <span class="px-2 py-1 rounded bg-slate-900/80 text-slate-300 border border-slate-800 text-[10px] flex justify-between">
+                                                <span>⚡ Atmosphere</span> <strong class="text-amber-300 font-mono">{sensory.get("atmospheric", 15)}</strong>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <!-- Column 2: Dialogue Ratio Connected to Spoken Line Share -->
+                                <div class="bg-slate-950/70 p-3 sm:p-3.5 rounded-xl border border-slate-800/80 flex flex-col justify-between gap-2.5">
+                                    <div>
+                                        <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                                            <span class="uppercase font-mono text-[10px] tracking-wider text-amber-400">🎙️ Dialogue Ratio & Voice Share</span>
+                                            <span class="text-[10px] text-slate-400 font-mono">{total_spoken_words:,}w spoken</span>
+                                        </div>
+                                        <div class="text-xl sm:text-2xl font-bold text-amber-400 font-mono mt-1">
+                                            {spoken_pct}% <span class="text-xs text-slate-400 font-sans font-normal">spoken dialogue ({narrative_pct}% prose)</span>
+                                        </div>
+                                        
+                                        <!-- Connected Spoken Line Share Multi-Segment Progress Bar -->
+                                        <div class="mt-2 space-y-1">
+                                            <div class="h-2.5 w-full rounded-full bg-slate-900 flex overflow-hidden border border-slate-800 shadow-inner">
+                                                {prog_bar_segments}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Connected Speaker Share Breakdown Grid -->
+                                    <div class="pt-2 border-t border-slate-900">
+                                        <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                                            Spoken Line Breakdown ({len(spoken_speakers)} active voices)
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-1.5 max-h-32 overflow-y-auto custom-scrollbar pr-0.5">
+                                            {speaker_chips}
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <!-- Spoken Line Share Progress Bar & Legend -->
-                            <div class="space-y-2 bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
-                                <div class="flex justify-between items-center text-xs font-semibold text-slate-300">
-                                    <span>🎙️ Spoken Share ({total_spoken_words:,}w across {len(spoken_speakers)} voices)</span>
-                                </div>
-                                <div class="h-2.5 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
-                                    {prog_bar_segments}
-                                </div>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-                                    {speaker_chips}
-                                </div>
+                            <!-- Voice Velocity Line Chart in that subsection -->
+                            <div class="w-full">
+                                {session_line_chart_svg}
                             </div>
+
                         </div>
 
-                        <!-- View 3: Campaign Whole Comparison -->
+                        <!-- View 2: Campaign Whole Comparison -->
                         <div id="chartViewCampaign" class="w-full hidden">
                             {campaign_whole_html}
                         </div>
@@ -1027,23 +1063,19 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             // Analytics Tab Switcher
             window.switchChartTab = function(tabName) {{
-                const lineView = document.getElementById('chartViewLine');
-                const statsView = document.getElementById('chartViewStats');
+                const sessionView = document.getElementById('chartViewSession');
                 const campView = document.getElementById('chartViewCampaign');
                 
-                const lineBtn = document.getElementById('chartTabLineBtn');
                 const statsBtn = document.getElementById('chartTabStatsBtn');
                 const campBtn = document.getElementById('chartTabCampaignBtn');
                 
                 const activeClass = "px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1";
                 const inactiveClass = "px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1";
                 
-                if (lineView) lineView.classList.toggle('hidden', tabName !== 'line');
-                if (statsView) statsView.classList.toggle('hidden', tabName !== 'stats');
+                if (sessionView) sessionView.classList.toggle('hidden', tabName !== 'session');
                 if (campView) campView.classList.toggle('hidden', tabName !== 'campaign');
                 
-                if (lineBtn) lineBtn.className = (tabName === 'line') ? activeClass : inactiveClass;
-                if (statsBtn) statsBtn.className = (tabName === 'stats') ? activeClass : inactiveClass;
+                if (statsBtn) statsBtn.className = (tabName === 'session') ? activeClass : inactiveClass;
                 if (campBtn) campBtn.className = (tabName === 'campaign') ? activeClass : inactiveClass;
             }};
 
