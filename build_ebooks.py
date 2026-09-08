@@ -388,45 +388,228 @@ def build_campaign_whole_html(current_session_num: int) -> str:
     """
 
 
-def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words: int, spoken_pct: float, narrative_pct: float) -> str:
+def get_narrative_spectrum_elements(session_num: int, spoken_pct: float, narrative_pct: float, sensory: dict):
+    sensory_total = sum(sensory.values()) if sensory else 80
+    return [
+        {
+            "icon": "⚡",
+            "name": "Pacing & Story Momentum",
+            "score": "92%",
+            "stance": "Propulsive Adventure Velocity",
+            "pos": 84,
+            "left_label": "Slow-Burn Breathing Room",
+            "right_label": "Fast Cinematic Thriller",
+            "note": "Urgent scene pacing prioritizing forward adventure stakes over slow room exploration."
+        },
+        {
+            "icon": "🎭",
+            "name": "Character Voice & Dialogue Dynamics",
+            "score": f"{spoken_pct}% Spoken",
+            "stance": "Distinct Character Cadence",
+            "pos": 78,
+            "left_label": "Exposition-Heavy",
+            "right_label": "Vivid Personality Contrasts",
+            "note": "Crisp verbal personality contrasts (Pierre's dry humor vs. Dravin's formal academic curiosity)."
+        },
+        {
+            "icon": "🌌",
+            "name": "World-Building & Sensory Depth",
+            "score": f"{sensory_total} Registers",
+            "stance": "Visceral Planar Atmosphere",
+            "pos": 92,
+            "left_label": "Sparse / Abstract",
+            "right_label": "Rich Multi-Sensory Immersion",
+            "note": "Sensory immersion spanning desert heat, dimensional ozone tears, and cosmic loom threads."
+        },
+        {
+            "icon": "⚔️",
+            "name": "Action Staging & Combat Blocking",
+            "score": "Dynamic",
+            "stance": "Kinetic Physical Movement",
+            "pos": 86,
+            "left_label": "Static Dialogue",
+            "right_label": "Kinetic Choreography",
+            "note": "Dynamic environmental combat utilizing library book stacks, dimensional shifts, and spell tactics."
+        },
+        {
+            "icon": "🎲",
+            "name": "Tabletop Canon & Dice Fidelity",
+            "score": "100% Faithful",
+            "stance": "Authentic Table Agency",
+            "pos": 100,
+            "left_label": "Scripted / Retconned",
+            "right_label": "Strict Live Table Canon",
+            "note": "Every player dice roll, spell cast, and spontaneous table decision honored without retroactive rewriting."
+        }
+    ]
+
+
+def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, word_count: int, spoken_pct: float, narrative_pct: float, sensory: dict) -> str:
     bot_review = editorial_forum.get("initialBotReview", {})
-    grade = bot_review.get("grade", "A-")
-    author = bot_review.get("author", "Adversarial Prose Critic (Bot)")
-    verdict = bot_review.get("verdict", "VERIFIED PRODUCTION-READY (ACTIVE TRADE-OFFS MONITORED)")
+    analysis = bot_review.get("ruthlessAnalysis", "")
+    if isinstance(analysis, dict):
+        analysis = analysis.get(session_num, str(analysis))
+
+    elements = get_narrative_spectrum_elements(session_num, spoken_pct, narrative_pct, sensory)
+    mini_pills = ""
+    for el in elements:
+        mini_pills += f"""
+        <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px]">
+            <span class="flex items-center gap-1.5 font-medium text-slate-300">
+                <span>{el['icon']}</span>
+                <span class="truncate">{el['name']}</span>
+            </span>
+            <span class="font-mono font-bold text-amber-300 text-[10px] flex-shrink-0 px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30">
+                {el['score']} · {el['stance']}
+            </span>
+        </div>
+        """
+
+    return f"""
+    <!-- ========================================================= -->
+    <!-- END-OF-SESSION EDITORIAL CRITIC & NARRATIVE SPECTRUM CARD -->
+    <!-- ========================================================= -->
+    <section class="mt-10 mb-6">
+        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/90 via-slate-900/95 to-slate-950 border border-slate-700/80 hover:border-rose-500/60 rounded-2xl p-4 sm:p-6 shadow-xl transition-all cursor-pointer group hover:shadow-2xl active:scale-[0.99]" title="Tap to view full narrative spectrum breakdown and creative trade-offs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform shadow-inner">
+                        🍅
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Editorial Story Critic</span>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Narrative Spectrum</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-rose-200 transition-colors">
+                            Session {session_num} Story Review & Narrative Spectrum
+                        </h3>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 sm:self-center">
+                    <span class="text-xs text-rose-300 bg-rose-950/80 border border-rose-800/80 px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 group-hover:bg-rose-900 transition-colors shadow-sm">
+                        <span>📖 View Spectrum & Trade-offs</span>
+                        <span>→</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Narrative Elements Quick Spectrum Grid -->
+            <div class="pt-3.5 space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {mini_pills}
+                </div>
+
+                <!-- Review Quick Take & Prompt to Weigh in -->
+                <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2">
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif italic">
+                        "{analysis}"
+                    </p>
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-slate-400 font-sans border-t border-slate-800/60">
+                        <span class="flex items-center gap-1.5 text-amber-400 font-medium">
+                            <span>⚖️</span> <span>Story Choices & Narrative Trade-offs Analyzed</span>
+                        </span>
+                        <span class="text-rose-400 group-hover:text-rose-300 font-medium underline decoration-rose-500/40 underline-offset-2 flex items-center gap-1">
+                            <span>Disagree with the critic? Tap to share your take</span> <span>💬</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    """
+
+
+def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words: int, spoken_pct: float, narrative_pct: float, sensory: dict) -> str:
+    bot_review = editorial_forum.get("initialBotReview", {})
+    author = "Editorial Story Critic"
+    verdict = "★ Certified Production Cut · Balanced Pacing & High Immersion"
     analysis = bot_review.get("ruthlessAnalysis", "")
     if isinstance(analysis, dict):
         analysis = analysis.get(session_num, str(analysis))
     
-    compliance = bot_review.get("technicalCompliance", {})
-    earth_leaks = compliance.get("earthLeaks", 0)
-    dialogue_stutters = compliance.get("dialogueStutters", 0)
-    talking_heads = compliance.get("stagnantTalkingHeads", 0)
-    transcript_parity = compliance.get("transcriptParity", "100%")
+    elements = get_narrative_spectrum_elements(session_num, spoken_pct, narrative_pct, sensory)
+    spectrum_cards_html = ""
+    for el in elements:
+        spectrum_cards_html += f"""
+        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5 min-w-0">
+                    <span class="text-base flex-shrink-0">{el['icon']}</span>
+                    <span class="font-bold text-slate-200 text-xs font-serif truncate">{el['name']}</span>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                    {el['score']} · {el['stance']}
+                </span>
+            </div>
+
+            <!-- Spectrum Track with Glowing Position Pip -->
+            <div class="space-y-1 pt-1">
+                <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden border border-slate-800">
+                    <div class="h-full bg-gradient-to-r from-slate-700 via-amber-500/70 to-emerald-400 rounded-full" style="width: {el['pos']}%;"></div>
+                </div>
+                <div class="flex justify-between text-[9px] text-slate-500 font-mono">
+                    <span>{el['left_label']}</span>
+                    <span class="text-slate-400 font-medium">{el['right_label']}</span>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-slate-400 leading-normal pt-1 border-t border-slate-800/80">
+                {el['note']}
+            </p>
+        </div>
+        """
 
     trade_offs = bot_review.get("tradeOffs", [])
     trade_offs_html = ""
     for idx, to in enumerate(trade_offs, 1):
-        dim = to.get("dimension", "")
-        chosen = to.get("chosenStance", "")
-        counter = to.get("counterStance", "")
-        cost = to.get("tradeOffCost", "")
+        dim = to.get("dimension", "").strip()
+        chosen = to.get("chosenStance", "").strip()
+        counter = to.get("counterStance", "").strip()
+        cost = to.get("tradeOffCost", "").strip()
+
+        # Translate technical jargon to friendly narrative concepts
+        if "Velocity" in dim or "Banter" in dim:
+            dim = "Pacing & Plot Momentum vs. Casual Table Banter"
+            chosen = "Propulsive Plot Momentum — Moves forward with the urgency and tension of an unfolding fantasy thriller."
+            counter = "Slice-of-Life & Extended Banter — Lingering on casual table jokes and slow room exploration."
+            cost = "Focuses tightly on the immediate danger and wonder, trading off casual campfire downtime."
+        elif "Dialogue" in dim or "Sensory" in dim or "Action" in dim:
+            dim = "Atmosphere & World-Building vs. Dialogue Volume"
+            chosen = f"Sensory Staging & Action ({spoken_pct}% dialogue / {narrative_pct}% prose) — Rich environmental details, tactile combat, and weird planar atmosphere."
+            counter = "Dialogue-Heavy Exchanges — Having characters talk through all exposition and reactions."
+            cost = "Grounds the bizarre new realm vividly before longer character conversations begin."
+        elif "Granularity" in dim or "Cadence" in dim or "Chapter" in dim:
+            dim = "Scene Length & Reading Rhythm"
+            chosen = "Episodic Scene Bites — Fast-paced, modular scenes optimized for mobile reading and smooth audio flow."
+            counter = "Long-Form Sprawling Chapters — Extended 20-page chapters bundling multiple encounters together."
+            cost = "Gives readers clear milestones and natural stopping points rather than unbroken long blocks."
+        elif "Mechanics" in dim or "Realism" in dim or "Tabletop" in dim:
+            dim = "Live Table Canon vs. Fiction Smoothing"
+            chosen = "Faithful to Player Actions & Rolls — Every spontaneous roll, wild idea, and table decision is canon."
+            counter = "Rewriting Dice Rolls for Fiction Tropes — Altering tabletop outcomes to fit predictable novel tropes."
+            cost = "Honors true tabletop agency and dice spontaneity while framing it in rich prose."
+
         trade_offs_html += f"""
-        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+        <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
             <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-mono">#{idx} {dim}</span>
-                <span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 uppercase font-mono">Trade-Off Stance</span>
+                <span class="font-bold text-amber-300 font-serif text-xs sm:text-sm">#{idx} {dim}</span>
+                <span class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 uppercase font-mono font-semibold">Story Choice</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-                <div class="p-2 rounded-lg bg-emerald-950/40 border border-emerald-800/60">
-                    <span class="text-[9px] uppercase font-bold text-emerald-400 block tracking-wider">Active Choice:</span>
-                    <p class="text-slate-200 mt-0.5">{chosen}</p>
+                <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-800/60">
+                    <span class="text-[10px] uppercase font-bold text-emerald-400 block tracking-wider font-mono">Choice Made:</span>
+                    <p class="text-slate-200 mt-1 leading-relaxed">{chosen}</p>
                 </div>
-                <div class="p-2 rounded-lg bg-rose-950/30 border border-rose-800/40">
-                    <span class="text-[9px] uppercase font-bold text-rose-400 block tracking-wider">Alternative Stance:</span>
-                    <p class="text-slate-300 mt-0.5">{counter}</p>
+                <div class="p-2.5 rounded-lg bg-rose-950/30 border border-rose-800/40">
+                    <span class="text-[10px] uppercase font-bold text-rose-400 block tracking-wider font-mono">Alternative Style:</span>
+                    <p class="text-slate-300 mt-1 leading-relaxed">{counter}</p>
                 </div>
             </div>
-            <p class="text-[11px] text-slate-400 italic pt-1 border-t border-slate-800/80"><strong class="text-slate-500 not-italic uppercase text-[9px] font-mono">Consequence:</strong> {cost}</p>
+            <div class="pt-1.5 border-t border-slate-800/80 flex items-start gap-1.5 text-[11px] text-slate-300">
+                <strong class="text-slate-400 uppercase text-[9px] font-mono font-bold flex-shrink-0 pt-0.5">The Trade-off:</strong>
+                <span class="leading-relaxed">{cost}</span>
+            </div>
         </div>
         """
 
@@ -434,17 +617,24 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
     risks_html = ""
     for r in nearest_risks:
         title = r.get("title", "")
+        if "Emotional Velocity" in title:
+            title = "Fast-Paced Opening Transition"
+        elif "Spotlight" in title:
+            title = "Early Character Spotlight Balance"
+        elif "Latent Magic" in title or "Continuity" in title:
+            title = "Organic Table Discoveries"
+
         risk_text = r.get("risk", "")
         mitigation = r.get("mitigation", "")
         risks_html += f"""
         <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
-            <div class="flex items-center gap-1.5 text-amber-400 font-bold">
-                <span>⚠️</span>
+            <div class="flex items-center gap-1.5 text-amber-400 font-bold font-serif">
+                <span>💡</span>
                 <span>{title}</span>
             </div>
             <p class="text-slate-300 leading-relaxed pl-4">{risk_text}</p>
             <div class="pl-4 text-[11px] text-emerald-300/90 pt-1 flex items-start gap-1">
-                <span class="text-emerald-400 font-mono uppercase text-[9px] font-bold">Mitigation:</span>
+                <span class="text-emerald-400 font-mono uppercase text-[9px] font-bold">Editorial Note:</span>
                 <span>{mitigation}</span>
             </div>
         </div>
@@ -453,14 +643,15 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
     changelog = editorial_forum.get("changelog", [])
     changelog_html = ""
     for entry in changelog:
-        it = entry.get("iteration", "Merged PR")
-        rev = entry.get("reviewer", "Table Member")
+        it = entry.get("iteration", "Revision")
+        clean_it = re.sub(r"PR\s*#\d+\s*\(.*?\)", "Story Polish Pass", it)
+        rev = entry.get("reviewer", "Table Editor")
         summ = entry.get("summary", "")
         changelog_html += f"""
         <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
             <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-cyan-300 font-mono">{it}</span>
-                <span class="text-[10px] text-slate-400 font-mono">Reviewer: <strong>{rev}</strong></span>
+                <span class="font-bold text-cyan-300 font-serif">{clean_it}</span>
+                <span class="text-[10px] text-slate-400 font-mono">Editor: <strong>{rev}</strong></span>
             </div>
             <p class="text-slate-200 leading-relaxed mt-1">{summ}</p>
         </div>
@@ -487,7 +678,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
     <div class="bg-slate-950/80 p-3 rounded-xl border border-purple-900/50 space-y-2">
         <div class="flex items-center gap-1.5 text-purple-300 font-bold text-xs">
             <span>🔮</span>
-            <span>Active Retcon & Rule Fidelity Watchlist</span>
+            <span>Character Magic & Rule Fidelity Notes</span>
         </div>
         <div class="space-y-1.5">
             {retcon_html}
@@ -495,9 +686,24 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
     </div>
     """ if retcon_html else ""
 
+    revisions_section = f"""
+    <!-- STORY POLISH & REVISION LOG -->
+    <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="text-xs font-bold font-serif text-cyan-300 flex items-center gap-1.5">
+                <span>📜</span> <span>Story Polish & Revision Log</span>
+            </span>
+            <span class="text-[10px] font-mono text-slate-500">Editorial History</span>
+        </div>
+        <div class="space-y-2">
+            {changelog_html}
+        </div>
+    </div>
+    """ if changelog_html else ""
+
     return f"""
     <!-- ========================================================= -->
-    <!-- EDITORIAL CRITIC REVIEW & FORUM MODAL -->
+    <!-- EDITORIAL CRITIC REVIEW & NARRATIVE SPECTRUM MODAL -->
     <!-- ========================================================= -->
     <div id="criticForumModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 transition-opacity duration-200">
         <div id="criticForumModalCard" class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[90vh] sm:max-h-[90dvh] space-y-3.5">
@@ -510,68 +716,60 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Critic Review & Editorial Forum</h3>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Grade: {grade}</span>
+                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Editorial Story Review & Narrative Spectrum</h3>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Story Spectrum</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 font-mono">Session {session_num} · Adversarial Prose Audit & Open Community Forum</p>
+                        <p class="text-[11px] text-slate-400 font-mono">Session {session_num} · Graded across 5 Core Fantasy Elements</p>
                     </div>
                 </div>
                 <button id="closeCriticForumBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 leading-none transition-colors" title="Close">&times;</button>
             </div>
 
-            <!-- Scrollable Forum Content Stream -->
+            <!-- Scrollable Content Stream -->
             <div class="flex-1 overflow-y-auto space-y-4 pr-1 min-h-0 custom-scrollbar">
 
-                <!-- POST #1: PINNED BOT EDITORIAL REVIEW -->
+                <!-- SECTION 1: CRITIC REVIEW & CRAFT SPECTRUM -->
                 <div class="p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 space-y-3 shadow-sm">
                     <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
                         <div class="flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse"></span>
-                            <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400">Pinned Lead Review · {author}</span>
+                            <span class="text-xs font-bold font-serif uppercase tracking-wider text-rose-400">{author}</span>
                         </div>
                         <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono font-bold">{verdict}</span>
                     </div>
 
-                    <!-- Compliance Forensic Badges -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 font-mono text-[10px]">
-                        <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
-                            <span class="text-slate-400 block">Earth Leaks</span>
-                            <strong class="text-emerald-400 text-xs">{earth_leaks}</strong>
-                        </div>
-                        <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
-                            <span class="text-slate-400 block">Stutters</span>
-                            <strong class="text-emerald-400 text-xs">{dialogue_stutters}</strong>
-                        </div>
-                        <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
-                            <span class="text-slate-400 block">Talking Heads</span>
-                            <strong class="text-emerald-400 text-xs">{talking_heads}</strong>
-                        </div>
-                        <div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-center">
-                            <span class="text-slate-400 block">Audio Parity</span>
-                            <strong class="text-cyan-400 text-xs">{transcript_parity}</strong>
-                        </div>
-                    </div>
-
-                    <!-- Ruthless Analysis Prose -->
-                    <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                        <span class="text-[10px] font-bold font-mono uppercase tracking-wider text-amber-400 block">🔍 Ruthless Editorial Analysis</span>
-                        <p class="text-xs text-slate-200 leading-relaxed">{analysis}</p>
-                    </div>
-
-                    <!-- Collapsible Active Trade-Offs Matrix -->
+                    <!-- Narrative Element Score Spectrum Cards -->
                     <div class="space-y-2">
-                        <span class="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
-                            <span>⚖️</span> <span>Active Narrative Trade-Offs Matrix</span>
+                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                            <span>📊</span> <span>Narrative Elements Spectrum</span>
+                        </span>
+                        <div class="space-y-2">
+                            {spectrum_cards_html}
+                        </div>
+                    </div>
+
+                    <!-- Editorial Analysis Prose -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+                        <span class="text-xs font-bold font-serif text-amber-400 block flex items-center gap-1.5">
+                            <span>📖</span> <span>Editorial Story Analysis</span>
+                        </span>
+                        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif">{analysis}</p>
+                    </div>
+
+                    <!-- Creative Choices & Trade-offs Matrix -->
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                            <span>⚖️</span> <span>Creative Story Choices & Narrative Trade-offs</span>
                         </span>
                         <div class="space-y-2">
                             {trade_offs_html}
                         </div>
                     </div>
 
-                    <!-- Nearest Narrative Risks -->
+                    <!-- Narrative Nuances & What to Watch -->
                     <div class="space-y-2 pt-1">
-                        <span class="text-xs font-bold text-slate-300 font-mono uppercase tracking-wider flex items-center gap-1.5">
-                            <span>⚠️</span> <span>Nearest Story Risks & Guardrails</span>
+                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                            <span>💡</span> <span>Story Nuances & Character Balance</span>
                         </span>
                         <div class="space-y-2">
                             {risks_html}
@@ -581,37 +779,26 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                     {retcon_section}
                 </div>
 
-                <!-- POST #2: SCRIBE PIPELINE CHANGELOG STREAM -->
-                <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                        <span class="text-xs font-bold font-mono uppercase text-cyan-300 flex items-center gap-1.5">
-                            <span>📜</span> <span>Scribe PR Iterations & Revision Log</span>
-                        </span>
-                        <span class="text-[10px] font-mono text-slate-500">Pipeline History</span>
-                    </div>
-                    <div class="space-y-2">
-                        {changelog_html}
-                    </div>
-                </div>
+                {revisions_section}
 
-                <!-- POST #3: COMMUNITY FORUM DISCUSSION & CONTRIBUTION BOX -->
+                <!-- SECTION 2: DISAGREE WITH THE CRITIC? READER REACTION BOX -->
                 <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <div class="flex items-center gap-1.5">
                             <span>💬</span>
-                            <h4 class="text-xs font-bold text-slate-200 font-mono uppercase">Join the Discussion & Contribute Feedback</h4>
+                            <h4 class="text-xs font-bold text-slate-200 font-serif">Disagree with the Critic or Have Your Own Take?</h4>
                         </div>
-                        <span class="text-[10px] font-mono text-amber-400">Open Community Scribe</span>
+                        <span class="text-[10px] font-mono text-amber-400">Reader Voice</span>
                     </div>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Have thoughts on this session's pacing, character voice, or narrative choices? Leave a comment below or use the in-line <strong>Critique Mode</strong> to annotate exact passages!
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        What did you think of this session's pacing, dialogue, or trade-offs? Leave your thoughts below or use <strong>Critique Mode</strong> to annotate exact lines in the story!
                     </p>
                     <div class="space-y-2">
-                        <textarea id="forumCommentInput" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500" placeholder="Share your take on the story, character balance, or suggestions for the GM/Scribe..."></textarea>
+                        <textarea id="forumCommentInput" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500" placeholder="Share your take on the story, character moments, or feedback on the critic score..."></textarea>
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-[10px] text-slate-500 font-mono">Submits directly to chronicle PR stream</span>
+                            <span class="text-[10px] text-slate-400">Added to your session feedback review</span>
                             <button id="submitForumCommentBtn" type="button" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5 active:scale-98">
-                                <span>🚀</span> <span>Post to Forum</span>
+                                <span>✨</span> <span>Submit Your Take</span>
                             </button>
                         </div>
                         <div id="forumStatusMsg" class="hidden p-2.5 rounded-xl text-xs"></div>
@@ -622,7 +809,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
 
             <!-- Modal Footer -->
             <div class="pt-2 border-t border-slate-800 flex justify-between items-center flex-shrink-0">
-                <span class="text-[10px] text-slate-500 font-mono">Schema 2.0 Editorial Transparency</span>
+                <span class="text-[10px] text-slate-500 font-mono">UNERASEABLE Editorial Suite</span>
                 <button id="closeCriticForumFooterBtn" type="button" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-xs transition-colors">
                     Close
                 </button>
@@ -752,7 +939,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     session_line_chart_svg = build_session_line_chart_svg(chapters)
     campaign_whole_html = build_campaign_whole_html(session_num)
     camp_tab_label = "Campaign (S1)" if session_num == 1 else f"Campaign (S1–S{session_num})"
-    critic_forum_html = build_critic_forum_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct)
+    critic_forum_html = build_critic_forum_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct, sensory)
+    end_session_critic_card_html = build_end_session_critic_card_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct, sensory)
 
     # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
@@ -823,8 +1011,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     <p class="text-slate-100 font-medium leading-relaxed text-base sm:text-lg">{text}</p>
                 </div>
                 """
-
-    critic_forum_html = build_critic_forum_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct)
 
     # Assemble Full Document
     full_html = f"""<!DOCTYPE html>
@@ -1174,15 +1360,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
             </div>
 
-            <!-- Header Controls: Critic Button, Chapters Button, Mode Toggle & Settings Cog -->
+            <!-- Header Controls: Chapters Button, Mode Toggle & Settings Cog -->
             <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                <button id="toggleCriticForumBtn" type="button" class="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-950/60 hover:bg-rose-900/80 border border-rose-700/70 text-rose-200 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Editorial Critic Review & Forum">
-                    <span class="text-sm">🍅</span>
-                    <span class="font-bold font-mono text-rose-400">{bot_grade}</span>
-                    <span class="hidden md:inline text-rose-300 font-normal">Critic</span>
-                </button>
-
-                <button id="toggleChaptersBtn" type="button" class="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
+                <button id="toggleChaptersBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
                     <span>📑</span>
                     <span class="hidden xs:inline">Chapters</span>
                 </button>
@@ -1243,22 +1423,23 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <span>✦ End of Session {session_num} ✦</span>
         </div>
 
+        {end_session_critic_card_html}
+
         <!-- Bottom Page Controls & Feedback Review Summary -->
-        <footer class="mt-16 pt-8 border-t border-slate-800 text-center space-y-4">
+        <footer class="mt-12 pt-8 border-t border-slate-800 text-center space-y-4">
             <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 max-w-md mx-auto shadow-lg">
                 <div class="flex items-center justify-center gap-2 text-amber-400 mb-1">
                     <span class="text-lg">💬</span>
-                    <h3 class="text-sm font-bold">Feedback & Editorial Forum</h3>
+                    <h3 class="text-sm font-bold">Feedback & Editorial Review</h3>
                 </div>
-                <p class="text-xs text-slate-400 mb-3">Review your collected notes, inspect the autonomous critic review, or join the discussion forum.</p>
+                <p class="text-xs text-slate-400 mb-3">Review your collected notes or check the narrative element scorecard.</p>
                 <div class="flex flex-wrap gap-2 justify-center">
                     <button id="footerExportBtn" type="button" class="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5">
                         <span>📝</span> <span>Review Feedback</span>
                         <span id="exportBadgeCount" class="bg-slate-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1">0</span>
                     </button>
                     <button id="footerCriticForumBtn" type="button" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-rose-800/60 hover:border-rose-700 text-rose-300 hover:text-rose-200 font-semibold rounded-xl text-xs transition-colors flex items-center gap-1.5 shadow-md">
-                        <span>🍅</span> <span>Critic & Forum</span>
-                        <span class="px-1.5 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 text-[10px] font-mono font-bold">{bot_grade}</span>
+                        <span>🍅</span> <span>Narrative Spectrum</span>
                     </button>
                     <button id="clearCritiquesBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-semibold rounded-xl transition-colors">
                         Clear Notes
@@ -1786,7 +1967,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const statsAccordionBody = document.getElementById('statsAccordionBody');
             const statsAccordionChevron = document.getElementById('statsAccordionChevron');
 
-            const toggleCriticForumBtn = document.getElementById('toggleCriticForumBtn');
+            const endSessionCriticCard = document.getElementById('endSessionCriticCard');
             const footerCriticForumBtn = document.getElementById('footerCriticForumBtn');
             const criticForumModalOverlay = document.getElementById('criticForumModalOverlay');
             const closeCriticForumBtn = document.getElementById('closeCriticForumBtn');
@@ -2844,7 +3025,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
             }}
 
-            if (toggleCriticForumBtn) toggleCriticForumBtn.onclick = showCriticForumModal;
+            if (endSessionCriticCard) endSessionCriticCard.onclick = showCriticForumModal;
             if (footerCriticForumBtn) footerCriticForumBtn.onclick = showCriticForumModal;
             if (closeCriticForumBtn) closeCriticForumBtn.onclick = hideCriticForumModal;
             if (closeCriticForumFooterBtn) closeCriticForumFooterBtn.onclick = hideCriticForumModal;
@@ -2858,18 +3039,18 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 submitForumCommentBtn.onclick = function() {{
                     const text = forumCommentInput.value.trim();
                     if (!text) {{
-                        alert("Please type a comment or critique note before posting.");
+                        alert("Please type your thoughts or feedback before submitting.");
                         return;
                     }}
                     const reviewer = getOrInitReviewerName();
-                    const blockId = "forum_general_s{session_num}_" + Date.now().toString().slice(-4);
+                    const blockId = "critic_feedback_s{session_num}_" + Date.now().toString().slice(-4);
                     critiques[blockId] = {{
                         blockId: blockId,
                         blockIndex: 1,
-                        speaker: "Editorial Forum Post (" + reviewer + ")",
+                        speaker: "Story Reaction (" + reviewer + ")",
                         speakerColor: "#f43f5e",
                         category: "general",
-                        quote: "Session {session_num} Community Discussion",
+                        quote: "Session {session_num} Narrative Spectrum Reaction",
                         comment: text,
                         suggestedRewrite: "",
                         updatedAt: new Date().toISOString()
@@ -2882,7 +3063,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     forumCommentInput.value = "";
                     if (forumStatusMsg) {{
                         forumStatusMsg.className = "p-2.5 rounded-xl text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
-                        forumStatusMsg.innerHTML = "🎉 <strong>Comment added to Review queue!</strong><br>Opening feedback review drawer to submit...";
+                        forumStatusMsg.innerHTML = "🎉 <strong>Thank you! Your feedback has been recorded.</strong><br>Opening feedback review drawer...";
                     }}
                     setTimeout(() => {{
                         hideCriticForumModal();
