@@ -3205,6 +3205,79 @@ ightarrow$ *Sheep*.</p>
                 };
             }
 
+            // =========================================================
+            // GITHUB APP AUTOMATED AUTHENTICATION ENGINE
+            // =========================================================
+            const BOT_APP_ID = "4866708";
+            const BOT_INSTALLATION_ID = "159911323";
+            const BOT_PKCS8_B64 = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDHLtyKSd5ZkhYc2NlWTMsqojAT3w158XVZUWlimQJRG96m+8+lFz2GmWhAHVgsg6Nmcgt2+PnyIJblNqw0ttLa5VXJm7Ox/HUNSMKddP4DhwflpsXvjxxX11ps3Q7Rwns/GjuleO5ywTWloyDeJFcNn5V0TcIzX9ehEoQVYg1mVztyPZ5dXnt83zDHW4473nj3VNQZuUNnSXVPAV0FKKhRVjPZ+WeND9suaZvB4S2l/1coIbXlOK9dd7RPuSeCZA4nxeh3o5vbo+aDy7+SYh/64WuGfNSuTDIwGfFXg5FbkNQ9WjnEJrSij8ak0xTUQP0+YnLM1BL+x6LOufKUWMijAgMBAAECggEBAKkXazoqw4werI8IuFi/EKq8zTvRW8tt5EVTC7gcVQ8uLbJsizaHqD+f9BSZ1MTVa94Iaxsw+l9Gs1MbOs31dsNFdbKVb9NlkqkYX770FsA/3cBj+B0KzPD1bVqFv5LrG13Sk1hCdYsN4tEez0RGbXCvTV1Stc6PSqr+4QqWFvINFGQFUYhMjm4eLqtl5aEJLk9NhCKzTChLz2vfV38RmpuggJ121NbMM+JMfCVxjehMTq2T7bdNUwOLspIRdgncyj145RdEk/DsBVrjvHyIH5l5E8kJYC3LPK/u9DLpnRW9go9ITH4qzKNieliF1F0FmceFE7EhFawB3fW1u7Q9A4ECgYEA6Kl4Sbkp7FzQiCRHEGbJ7cPXtab9B4fHPbOw4vcP5w7XgIXra1r7J2FHx/ItfcVcOKEIlMNQ6RdHvSu3v29TXP+dgmekT8/VVGbzDRkHEZjVBXc5SIM+TiwN8PeJxyN7hYU7L/C+R66U0jBRhyujDLk5zmkBCTojMIpjWm4RFTECgYEA2ymvfqdE9s8EBE6KquS/qUqpcQzmro8FsBukY8FN9QKKWZfcy6KDrJyYdP8bM6IDEi/992SEzFzCHM7q3AgCTG6w6vLHwNuj6kLLFH/scH6cRHqBqPU9XXVHOrFfz49B5vun3WJKuZCA4fZa4S/6sIm6ghczBw653HMItvziFhMCgYEAtmoAtJSniPjwSn1e9j4Q/gj5fCPT6O6MyRS0kA6y+i7Jyau1+3LWzXZZKCv5fM2bU472QmSscERfa7L2GvK2wohrPw3xZt4FXWpmD5Pa1fIkumdSk0bLN9EUkSQTcv2f3/yofhrbpSn85psZoMgWy2gCKZJsTIa3hlxKL2FypVECgYAk3Y43r8tZ+NikINISjQfwYi6+ZX0oP8alKQEuBoYmgJblGzZ4yo17q5u5km/w73+0v33o72+nMLM2RVgcSvyX/sajvtL7Dfc0oKeoexw6kBGZM0I8OYRpBCFHLi7/qwla4VoLU01eiYAkglwnJPr2VzSYTW638TIycuc0YLVnIQKBgQDHu/zJ+UrRdsI0Qbur8Llx8lMdRSb6aI9aQBkNPvslE0CR1h+bOpJIXs3wfnTIpVPPEvcYmLfBBPJUDFabLVI4TTM3AZzjFIwprUCHHIRxQkFUUBvS0it/MxvrEb/47AuP4H0AzN2vqO070XAqZMFHtRo9qd6SetBEcXpGOk8MMQ==";
+
+            async function getInstallationAccessToken() {
+                const manualToken = localStorage.getItem('dnd_scribe_gh_token');
+                if (manualToken) return manualToken;
+
+                if (!BOT_PKCS8_B64 || !BOT_APP_ID || !BOT_INSTALLATION_ID) {
+                    throw new Error("Bot authentication credentials missing.");
+                }
+
+                function base64UrlEncode(str) {
+                    return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                }
+
+                function base64UrlEncodeBuffer(buf) {
+                    const bytes = new Uint8Array(buf);
+                    let binary = '';
+                    for (let i = 0; i < bytes.byteLength; i++) {
+                        binary += String.fromCharCode(bytes[i]);
+                    }
+                    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                }
+
+                function str2ab(b64) {
+                    const binary = atob(b64);
+                    const bytes = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+                    return bytes.buffer;
+                }
+
+                const key = await crypto.subtle.importKey(
+                    "pkcs8",
+                    str2ab(BOT_PKCS8_B64),
+                    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+                    false,
+                    ["sign"]
+                );
+
+                const now = Math.floor(Date.now() / 1000);
+                const header = base64UrlEncode(JSON.stringify({ alg: "RS256", typ: "JWT" }));
+                const payload = base64UrlEncode(JSON.stringify({
+                    iat: now - 60,
+                    exp: now + 600,
+                    iss: BOT_APP_ID
+                }));
+
+                const dataToSign = new TextEncoder().encode(header + "." + payload);
+                const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, dataToSign);
+                const jwt = header + "." + payload + "." + base64UrlEncodeBuffer(signature);
+
+                const res = await fetch("https://api.github.com/app/installations/" + BOT_INSTALLATION_ID + "/access_tokens", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + jwt,
+                        "Accept": "application/vnd.github+json",
+                        "User-Agent": "dnd-scribe-bot"
+                    }
+                });
+
+                if (!res.ok) {
+                    const errBody = await res.text();
+                    throw new Error("Failed to authenticate bot (" + res.status + "): " + errBody);
+                }
+
+                const tokenData = await res.json();
+                return tokenData.token;
+            }
+
             if (ghSubmitPrBtn) {
                 ghSubmitPrBtn.onclick = async function() {
                     const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : 'Reader';
@@ -3218,11 +3291,10 @@ ightarrow$ *Sheep*.</p>
 
                     if (ghStatusMsg) {
                         ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-sky-950/60 border border-sky-800 text-sky-300 block";
-                        ghStatusMsg.innerHTML = "⏳ <strong>Submitting feedback...</strong> Sending review batch to the scribe pipeline.";
+                        ghStatusMsg.innerHTML = "⏳ <strong>Submitting feedback...</strong> Authenticating and dispatching review notes to the scribe pipeline.";
                     }
                     ghSubmitPrBtn.disabled = true;
 
-                    const token = localStorage.getItem('dnd_scribe_gh_token') || "";
                     const REPO = "ldstrebel/dnd-scribe";
                     const BASE_BRANCH = "uneraseable";
                     const safeName = reviewer.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -3246,15 +3318,7 @@ ightarrow$ *Sheep*.</p>
                     const prBody = "## 📝 Story Feedback: " + exportPayload.title + "\n**Reviewer:** " + reviewer + "\n**Total Notes:** " + count + "\n\n### 📋 Feedback Items Table\n| Block ID | Speaker | Category | Critique / Directive | Suggested Rewrite |\n|---|---|---|---|---|\n" + markdownRows + "\n\n<details>\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\n\n```json\n" + JSON.stringify(exportPayload, null, 2) + "\n```\n</details>";
 
                     try {
-                        if (!token) {
-                            if (ghStatusMsg) {
-                                ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-amber-950/70 border border-amber-700 text-amber-200 block space-y-1";
-                                ghStatusMsg.innerHTML = "⚠️ <strong>Bot token connection pending.</strong><br>Your " + count + " feedback note(s) have been copied to your clipboard!";
-                            }
-                            navigator.clipboard.writeText(JSON.stringify(exportPayload, null, 2));
-                            ghSubmitPrBtn.disabled = false;
-                            return;
-                        }
+                        const token = await getInstallationAccessToken();
 
                         const headers = {
                             "Authorization": "Bearer " + token,

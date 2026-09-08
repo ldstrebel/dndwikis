@@ -14,10 +14,40 @@
 
 import json
 import re
+import base64
 from pathlib import Path
+from cryptography.hazmat.primitives import serialization
 
 MANIFEST_DIR = Path("d:/Code/dnd-scribe/sessions/data/index")
 OUTPUT_DIR = Path("d:/Code/dndwikis-main/dndwikis-main")
+SECRETS_DIR = Path("d:/Code/dnd-scribe/.secrets")
+APP_CONFIG_PATH = SECRETS_DIR / "app_config.json"
+PEM_KEY_PATH = SECRETS_DIR / "dnd-scribe-bot.2026-09-07.private-key.pem"
+
+BOT_APP_ID = "4866708"
+BOT_INSTALLATION_ID = "159911323"
+BOT_PKCS8_B64 = ""
+
+if APP_CONFIG_PATH.exists():
+    try:
+        cfg = json.loads(APP_CONFIG_PATH.read_text(encoding="utf-8"))
+        BOT_APP_ID = str(cfg.get("app_id", BOT_APP_ID))
+        BOT_INSTALLATION_ID = str(cfg.get("installation_id", BOT_INSTALLATION_ID))
+    except Exception as e:
+        print("[WARN] Could not load app_config.json:", e)
+
+if PEM_KEY_PATH.exists():
+    try:
+        pk = serialization.load_pem_private_key(PEM_KEY_PATH.read_bytes(), password=None)
+        pkcs8_der = pk.private_bytes(
+            encoding=serialization.Encoding.DER,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        )
+        BOT_PKCS8_B64 = base64.b64encode(pkcs8_der).decode("ascii")
+        print(f"[OK] Loaded Bot PEM private key (PKCS8 length: {len(BOT_PKCS8_B64)})")
+    except Exception as e:
+        print("[WARN] Could not parse PEM key:", e)
 
 PC_COLORS = {
     "pierre": "#3b82f6",     # Blue
@@ -1782,6 +1812,79 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }};
             }}
 
+            // =========================================================
+            // GITHUB APP AUTOMATED AUTHENTICATION ENGINE
+            // =========================================================
+            const BOT_APP_ID = "{BOT_APP_ID}";
+            const BOT_INSTALLATION_ID = "{BOT_INSTALLATION_ID}";
+            const BOT_PKCS8_B64 = "{BOT_PKCS8_B64}";
+
+            async function getInstallationAccessToken() {{
+                const manualToken = localStorage.getItem('dnd_scribe_gh_token');
+                if (manualToken) return manualToken;
+
+                if (!BOT_PKCS8_B64 || !BOT_APP_ID || !BOT_INSTALLATION_ID) {{
+                    throw new Error("Bot authentication credentials missing.");
+                }}
+
+                function base64UrlEncode(str) {{
+                    return btoa(str).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+                }}
+
+                function base64UrlEncodeBuffer(buf) {{
+                    const bytes = new Uint8Array(buf);
+                    let binary = '';
+                    for (let i = 0; i < bytes.byteLength; i++) {{
+                        binary += String.fromCharCode(bytes[i]);
+                    }}
+                    return btoa(binary).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+                }}
+
+                function str2ab(b64) {{
+                    const binary = atob(b64);
+                    const bytes = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+                    return bytes.buffer;
+                }}
+
+                const key = await crypto.subtle.importKey(
+                    "pkcs8",
+                    str2ab(BOT_PKCS8_B64),
+                    {{ name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }},
+                    false,
+                    ["sign"]
+                );
+
+                const now = Math.floor(Date.now() / 1000);
+                const header = base64UrlEncode(JSON.stringify({{ alg: "RS256", typ: "JWT" }}));
+                const payload = base64UrlEncode(JSON.stringify({{
+                    iat: now - 60,
+                    exp: now + 600,
+                    iss: BOT_APP_ID
+                }}));
+
+                const dataToSign = new TextEncoder().encode(header + "." + payload);
+                const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, dataToSign);
+                const jwt = header + "." + payload + "." + base64UrlEncodeBuffer(signature);
+
+                const res = await fetch("https://api.github.com/app/installations/" + BOT_INSTALLATION_ID + "/access_tokens", {{
+                    method: "POST",
+                    headers: {{
+                        "Authorization": "Bearer " + jwt,
+                        "Accept": "application/vnd.github+json",
+                        "User-Agent": "dnd-scribe-bot"
+                    }}
+                }});
+
+                if (!res.ok) {{
+                    const errBody = await res.text();
+                    throw new Error("Failed to authenticate bot (" + res.status + "): " + errBody);
+                }}
+
+                const tokenData = await res.json();
+                return tokenData.token;
+            }}
+
             if (ghSubmitPrBtn) {{
                 ghSubmitPrBtn.onclick = async function() {{
                     const reviewer = (ghReviewerNameInput && ghReviewerNameInput.value.trim()) ? ghReviewerNameInput.value.trim() : 'Reader';
@@ -1795,11 +1898,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
                     if (ghStatusMsg) {{
                         ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-sky-950/60 border border-sky-800 text-sky-300 block";
-                        ghStatusMsg.innerHTML = "⏳ <strong>Submitting feedback...</strong> Sending review batch to the scribe pipeline.";
+                        ghStatusMsg.innerHTML = "⏳ <strong>Submitting feedback...</strong> Authenticating and dispatching review notes to the scribe pipeline.";
                     }}
                     ghSubmitPrBtn.disabled = true;
 
-                    const token = localStorage.getItem('dnd_scribe_gh_token') || "";
                     const REPO = "ldstrebel/dnd-scribe";
                     const BASE_BRANCH = "uneraseable";
                     const safeName = reviewer.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -1823,15 +1925,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     const prBody = "## 📝 Story Feedback: " + exportPayload.title + "\\n**Reviewer:** " + reviewer + "\\n**Total Notes:** " + count + "\\n\\n### 📋 Feedback Items Table\\n| Block ID | Speaker | Category | Critique / Directive | Suggested Rewrite |\\n|---|---|---|---|---|\\n" + markdownRows + "\\n\\n<details>\\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\\n\\n```json\\n" + JSON.stringify(exportPayload, null, 2) + "\\n```\\n</details>";
 
                     try {{
-                        if (!token) {{
-                            if (ghStatusMsg) {{
-                                ghStatusMsg.className = "p-2.5 rounded-xl text-xs bg-amber-950/70 border border-amber-700 text-amber-200 block space-y-1";
-                                ghStatusMsg.innerHTML = "⚠️ <strong>Bot token connection pending.</strong><br>Your " + count + " feedback note(s) have been copied to your clipboard!";
-                            }}
-                            navigator.clipboard.writeText(JSON.stringify(exportPayload, null, 2));
-                            ghSubmitPrBtn.disabled = false;
-                            return;
-                        }}
+                        const token = await getInstallationAccessToken();
 
                         const headers = {{
                             "Authorization": "Bearer " + token,
