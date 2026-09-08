@@ -1,12 +1,15 @@
 """Builds interactive Schema 2.0 HTML EBooks with:
-1. Clean sticky top bar with "Chapters" button (replaces "Hide Stats")
-2. Chapters Drawer with Vertical Chapter List (Y-Axis) & Stacked Horizontal Speaker Bars (X-Axis):
-   - Each chapter displays chapter number, title, read time, and stacked horizontal bar of speakers (PC colors + red named NPCs)
-   - Tapping any chapter row scrolls smoothly to that scene in the story
-3. Secondary analytics (Character velocity line chart, KPIs, Campaign to date)
-4. Elevated Mobile Critique Modal (Shifted above keyboard, top passage navigation arrows, dynamic scroll)
-5. Natural prose flow for narration blocks
-6. Named NPCs in red (#f87171), clean PC names, fast scene jump pills
+1. Sticky top bar with "📑 Chapters" button triggering a full Chapters Modal Overlay
+2. Chapters Modal Overlay:
+   - Close & Exit button, backdrop dismiss, Esc key
+   - Collapsible Stats & Voice Velocity section at the top (defaults to COLLAPSED)
+   - Global Character Color Key
+   - Vertical Chapter List (Y-Axis) & Stacked Horizontal Speaker Share Bars (X-Axis)
+   - Per-chapter active named NPC badges (#f87171) and PC voice chips
+   - Tap-to-jump directly to chapter in story (smoothly scrolls and dismisses modal)
+3. Elevated Mobile Critique Modal (Shifted above keyboard, top passage navigation arrows, dynamic scroll)
+4. Natural prose flow for narration blocks
+5. Named NPCs in red (#f87171), clean PC names, fast scene jump pills
 """
 
 import json
@@ -129,8 +132,8 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
             """
 
         row_item = f"""
-        <div class="p-2.5 sm:p-3 bg-slate-950/70 hover:bg-slate-900/90 border border-slate-800/80 hover:border-amber-500/50 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none"
-             onclick="scrollToAnchor('{cd['anchor_id']}'); toggleChapters();">
+        <div class="p-2.5 sm:p-3 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
+             onclick="jumpToChapter('{cd['anchor_id']}');">
             
             <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2 min-w-0">
@@ -141,7 +144,7 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
                         {cd['clean_title']}
                     </h4>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">
+                <span class="text-[10px] text-slate-400 font-mono flex-shrink-0">
                     ~{cd['read_mins']}m · {cd['total_words']:,}w
                 </span>
             </div>
@@ -165,25 +168,12 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
         rows_html.append(row_item)
 
     return f"""
-    <div class="space-y-2.5">
-        <!-- Global PC & NPC Color Key -->
-        <div class="flex flex-wrap items-center justify-between gap-2 p-2 bg-slate-950/80 rounded-xl border border-slate-800 text-[10px] text-slate-300">
-            <span class="font-semibold text-slate-400 uppercase tracking-wider font-mono">Key:</span>
-            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#3b82f6]"></span><span>Pierre</span></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#8b5cf6]"></span><span>Prof. Dravin</span></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f59e0b]"></span><span>Eusacles</span></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#10b981]"></span><span>Alfie</span></span>
-                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f87171]"></span><span class="text-rose-300 font-semibold">Named NPCs</span></span>
-            </div>
-        </div>
-
+    <div class="space-y-2">
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-            <span>Chapter Index (Y-Axis)</span>
-            <span class="text-[10px] text-slate-500 font-mono">X-Axis: Speaker Share (Tap row to jump)</span>
+            <span>Chapter Sequence</span>
+            <span class="text-[10px] text-slate-500 font-mono">Speaker Share (Tap row to jump)</span>
         </div>
-        
-        <div class="space-y-2 max-h-[65vh] overflow-y-auto pr-1 custom-scrollbar">
+        <div class="space-y-2">
             {''.join(rows_html)}
         </div>
     </div>
@@ -479,9 +469,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         </a>
         """
 
-    # =========================================================================
-    # CHAPTERS & ANALYTICS DRAWER HTML
-    # =========================================================================
+    # Analytics Elements
     vertical_chapters_html = build_vertical_chapters_html(chapters, characters)
     session_line_chart_svg = build_session_line_chart_svg(chapters)
     campaign_whole_html = build_campaign_whole_html(session_num)
@@ -635,23 +623,22 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             display: inline-flex;
         }}
 
-        #sessionChaptersSection.collapsed {{
-            display: none !important;
-        }}
-
-        #critiqueModalOverlay {{
+        /* Overlay Transitions */
+        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay {{
             transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
         }}
-        #critiqueModalOverlay.visible {{
+        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible {{
             opacity: 1;
             pointer-events: auto;
         }}
-        #critiqueBottomSheet {{
+
+        #chaptersModalCard, #critiqueBottomSheet {{
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
             transform: scale(0.96) translateY(-10px);
             opacity: 0;
-            max-height: min(85vh, 85dvh);
+            max-height: min(90vh, 90dvh);
         }}
+        #chaptersModalOverlay.visible #chaptersModalCard,
         #critiqueModalOverlay.visible #critiqueBottomSheet {{
             transform: scale(1) translateY(0);
             opacity: 1;
@@ -691,7 +678,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <div class="flex items-center gap-2 flex-shrink-0">
                 <button id="toggleChaptersBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Dialogue Breakdown">
                     <span>📑</span>
-                    <span id="toggleChaptersBtnLabel">Chapters</span>
+                    <span>Chapters</span>
                 </button>
 
                 <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5" title="Switch reading mode">
@@ -708,105 +695,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
     <!-- WRAPPER -->
     <div class="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
-
-        <!-- ========================================================= -->
-        <!-- CHAPTERS & DIALOGUE BREAKDOWN DRAWER (Vertical Y-Axis List & Stacked X-Axis Bars) -->
-        <!-- ========================================================= -->
-        <section id="sessionChaptersSection" class="mb-8">
-            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-sm space-y-4">
-                
-                <!-- Drawer Header -->
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <div class="flex items-center gap-2">
-                        <span class="text-lg">📑</span>
-                        <div>
-                            <h2 class="text-sm font-bold tracking-wider uppercase text-amber-400">Chapters & Dialogue Breakdown</h2>
-                            <p class="text-[11px] text-slate-400 font-mono">Session {session_num} · {len(chapters)} Chapters · {word_count:,} words (~{read_mins}m)</p>
-                        </div>
-                    </div>
-                    <button id="closeChaptersDrawerBtn" type="button" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-lg border border-slate-700 transition-colors">
-                        <span>Close ▲</span>
-                    </button>
-                </div>
-
-                <!-- Vertical Chapter List with Stacked Horizontal Dialogue Bars -->
-                <div class="w-full">
-                    {vertical_chapters_html}
-                </div>
-
-                <!-- Secondary Collapsible Analytics: Velocity Line Chart, KPIs & Campaign to Date -->
-                <div class="pt-3 border-t border-slate-800/80 space-y-3">
-                    
-                    <!-- Mode Switcher for Analytics Tabs -->
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">Analytics & Velocity</span>
-                        <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
-                            <button id="chartTabLineBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('line')">
-                                <span>📈</span> <span>Voice Velocity</span>
-                            </button>
-                            <button id="chartTabStatsBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('stats')">
-                                <span>📊</span> <span>Session KPIs</span>
-                            </button>
-                            <button id="chartTabCampaignBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('campaign')">
-                                <span>🌐</span> <span>{camp_tab_label}</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- View 1: Character Velocity SVG Line Chart -->
-                    <div id="chartViewLine" class="w-full">
-                        {session_line_chart_svg}
-                    </div>
-
-                    <!-- View 2: Unified KPIs & Sensory Palette -->
-                    <div id="chartViewStats" class="w-full hidden space-y-3">
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                                <div class="text-[11px] text-slate-400 font-medium">Story Length & Read Time</div>
-                                <div class="text-lg font-bold text-slate-100 mt-0.5 font-mono">{word_count:,} <span class="text-xs text-slate-500 font-normal">words</span></div>
-                                <div class="text-[11px] text-emerald-400 mt-0.5">~{book_pages} Book Pages · {read_mins}m Read</div>
-                            </div>
-
-                            <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                                <div class="text-[11px] text-slate-400 font-medium">Dialogue Ratio</div>
-                                <div class="text-lg font-bold text-amber-400 mt-0.5 font-mono">{spoken_pct}% <span class="text-xs text-slate-500 font-normal">spoken</span></div>
-                                <div class="text-[11px] text-slate-400 mt-0.5">{narrative_pct}% Narrative Prose</div>
-                            </div>
-
-                            <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800/80">
-                                <div class="text-[11px] text-slate-400 font-medium mb-1.5">Sensory Palette ({sensory.get("registersCovered", 5)}/5)</div>
-                                <div class="flex flex-wrap gap-1">
-                                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👁️ <strong class="text-amber-400">{sensory.get("visual", 30)}</strong></span>
-                                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">👂 <strong class="text-sky-400">{sensory.get("auditory", 15)}</strong></span>
-                                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">✋ <strong class="text-emerald-400">{sensory.get("tactile", 20)}</strong></span>
-                                    <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">⚡ <strong class="text-amber-300">{sensory.get("atmospheric", 15)}</strong></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Spoken Line Share Progress Bar & Legend -->
-                        <div class="space-y-2 bg-slate-950/40 p-3.5 rounded-xl border border-slate-800/60">
-                            <div class="flex justify-between items-center text-xs font-semibold text-slate-300 mb-1">
-                                <span>🎙️ Spoken Line Share ({total_spoken_words:,} spoken words across {len(spoken_speakers)} active voices)</span>
-                            </div>
-                            <div class="h-2.5 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
-                                {prog_bar_segments}
-                            </div>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-                                {speaker_chips}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- View 3: Campaign Whole Comparison (Scoped to current session and before) -->
-                    <div id="chartViewCampaign" class="w-full hidden">
-                        {campaign_whole_html}
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
 
         <!-- EBOOK COVER & INTRO HEADER -->
         <div class="mb-5 text-center">
@@ -852,6 +740,136 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <p class="text-xs text-slate-600">UNERASEABLE © D&D Scribe Engine · Schema 2.0 Indexed.</p>
         </footer>
 
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- CHAPTERS & STATS MODAL OVERLAY (Header-Triggered Modal) -->
+    <!-- ========================================================= -->
+    <div id="chaptersModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto pt-6 sm:pt-4">
+        <div id="chaptersModalCard" class="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[88vh] sm:max-h-[85vh]">
+            
+            <!-- Modal Header with Title & Exit Button -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3 gap-2 flex-shrink-0">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-xl">📑</span>
+                    <div class="truncate">
+                        <h3 class="text-sm sm:text-base font-bold text-amber-400 uppercase tracking-wider font-serif truncate">Chapters & Story Breakdown</h3>
+                        <p class="text-[11px] text-slate-400 font-mono truncate">Session {session_num} · {len(chapters)} Chapters · {word_count:,}w (~{read_mins}m)</p>
+                    </div>
+                </div>
+                <button id="closeChaptersModalBtn" type="button" class="text-slate-400 hover:text-slate-100 text-2xl font-bold p-1 leading-none transition-colors ml-2" title="Close (Esc)">&times;</button>
+            </div>
+
+            <!-- Scrollable Content Body -->
+            <div class="overflow-y-auto space-y-3.5 pr-1 flex-1 min-h-0 custom-scrollbar">
+                
+                <!-- 1. STATS CHAPTER AT BEGINNING (Defaults to Collapsed) -->
+                <div class="bg-slate-950/90 rounded-xl border border-slate-800 overflow-hidden shadow-sm">
+                    <button id="toggleStatsAccordionBtn" type="button" class="w-full p-3 flex items-center justify-between text-left hover:bg-slate-900/60 transition-colors select-none">
+                        <div class="flex items-center gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 text-[10px] font-mono font-bold">Stats</span>
+                            <div>
+                                <h4 class="text-xs sm:text-sm font-semibold text-slate-200">Session Stats & Voice Velocity</h4>
+                                <p class="text-[10px] text-slate-400 font-mono">Sensory registers, voice velocity curve & campaign stats</p>
+                            </div>
+                        </div>
+                        <span id="statsAccordionChevron" class="text-[11px] font-mono font-bold text-amber-400 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 flex items-center gap-1">
+                            <span>▼</span> <span>Expand</span>
+                        </span>
+                    </button>
+
+                    <!-- Collapsed Body Content -->
+                    <div id="statsAccordionBody" class="hidden p-3 pt-1 border-t border-slate-800/80 space-y-3">
+                        
+                        <!-- Mode Switcher for Analytics Tabs -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider font-mono">Analytics Views</span>
+                            <div class="flex bg-slate-950 border border-slate-800 rounded-lg p-0.5">
+                                <button id="chartTabLineBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-bold text-slate-950 bg-amber-400 shadow transition-all flex items-center gap-1" onclick="switchChartTab('line')">
+                                    <span>📈</span> <span>Voice Velocity</span>
+                                </button>
+                                <button id="chartTabStatsBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('stats')">
+                                    <span>📊</span> <span>Session KPIs</span>
+                                </button>
+                                <button id="chartTabCampaignBtn" type="button" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1" onclick="switchChartTab('campaign')">
+                                    <span>🌐</span> <span>{camp_tab_label}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- View 1: Character Velocity SVG Line Chart -->
+                        <div id="chartViewLine" class="w-full">
+                            {session_line_chart_svg}
+                        </div>
+
+                        <!-- View 2: Unified KPIs & Sensory Palette -->
+                        <div id="chartViewStats" class="w-full hidden space-y-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+                                    <div class="text-[11px] text-slate-400 font-medium">Story Length & Read Time</div>
+                                    <div class="text-base font-bold text-slate-100 mt-0.5 font-mono">{word_count:,} <span class="text-xs text-slate-500 font-normal">words</span></div>
+                                    <div class="text-[10px] text-emerald-400 mt-0.5">~{book_pages} Pages · {read_mins}m Read</div>
+                                </div>
+
+                                <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+                                    <div class="text-[11px] text-slate-400 font-medium">Dialogue Ratio</div>
+                                    <div class="text-base font-bold text-amber-400 mt-0.5 font-mono">{spoken_pct}% <span class="text-xs text-slate-500 font-normal">spoken</span></div>
+                                    <div class="text-[10px] text-slate-400 mt-0.5">{narrative_pct}% Narrative Prose</div>
+                                </div>
+
+                                <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+                                    <div class="text-[11px] text-slate-400 font-medium mb-1">Sensory ({sensory.get("registersCovered", 5)}/5)</div>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">👁️ <strong class="text-amber-400">{sensory.get("visual", 30)}</strong></span>
+                                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">👂 <strong class="text-sky-400">{sensory.get("auditory", 15)}</strong></span>
+                                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">✋ <strong class="text-emerald-400">{sensory.get("tactile", 20)}</strong></span>
+                                        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[9px]">⚡ <strong class="text-amber-300">{sensory.get("atmospheric", 15)}</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Spoken Line Share Progress Bar & Legend -->
+                            <div class="space-y-2 bg-slate-950/40 p-3 rounded-xl border border-slate-800/60">
+                                <div class="flex justify-between items-center text-xs font-semibold text-slate-300">
+                                    <span>🎙️ Spoken Share ({total_spoken_words:,}w across {len(spoken_speakers)} voices)</span>
+                                </div>
+                                <div class="h-2.5 w-full rounded-full bg-slate-800 flex overflow-hidden shadow-inner">
+                                    {prog_bar_segments}
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                                    {speaker_chips}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- View 3: Campaign Whole Comparison -->
+                        <div id="chartViewCampaign" class="w-full hidden">
+                            {campaign_whole_html}
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 2. GLOBAL CHARACTER COLOR KEY -->
+                <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-[10px] text-slate-300">
+                    <span class="font-semibold text-slate-400 uppercase tracking-wider font-mono">Voices Key:</span>
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#3b82f6]"></span><span>Pierre</span></span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#8b5cf6]"></span><span>Prof. Dravin</span></span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f59e0b]"></span><span>Eusacles</span></span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#10b981]"></span><span>Alfie</span></span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f87171]"></span><span class="text-rose-300 font-semibold">Named NPCs</span></span>
+                    </div>
+                </div>
+
+                <!-- 3. VERTICAL CHAPTER LIST WITH STACKED HORIZONTAL SPEAKER BARS -->
+                <div class="w-full">
+                    {vertical_chapters_html}
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
     <!-- ========================================================= -->
@@ -935,9 +953,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             let selectedCategory = "tone";
             const blocks = Array.from(document.querySelectorAll('.story-block'));
 
-            const chaptersSection = document.getElementById('sessionChaptersSection');
+            const chaptersModalOverlay = document.getElementById('chaptersModalOverlay');
             const toggleChaptersBtn = document.getElementById('toggleChaptersBtn');
-            const closeChaptersDrawerBtn = document.getElementById('closeChaptersDrawerBtn');
+            const closeChaptersModalBtn = document.getElementById('closeChaptersModalBtn');
+            const toggleStatsAccordionBtn = document.getElementById('toggleStatsAccordionBtn');
+            const statsAccordionBody = document.getElementById('statsAccordionBody');
+            const statsAccordionChevron = document.getElementById('statsAccordionChevron');
+
             const modeReaderBtn = document.getElementById('modeReaderBtn');
             const modeCritiqueBtn = document.getElementById('modeCritiqueBtn');
             const footerExportBtn = document.getElementById('footerExportBtn');
@@ -957,7 +979,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const modalDeleteBtn = document.getElementById('modalDeleteBtn');
             const categoryPills = Array.from(document.querySelectorAll('.category-pill'));
 
-            // Smooth Scroll Helper
+            // Smooth Scroll & Jump Helper
             window.scrollToAnchor = function(id) {{
                 const el = document.getElementById(id);
                 if (el) {{
@@ -965,14 +987,43 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
             }};
 
-            // Chapters Drawer Toggle
-            window.toggleChapters = function() {{
-                if (!chaptersSection) return;
-                chaptersSection.classList.toggle('collapsed');
+            window.jumpToChapter = function(id) {{
+                closeChaptersModal();
+                setTimeout(() => {{
+                    window.scrollToAnchor(id);
+                }}, 150);
             }};
 
-            if (toggleChaptersBtn) toggleChaptersBtn.onclick = toggleChapters;
-            if (closeChaptersDrawerBtn) closeChaptersDrawerBtn.onclick = toggleChapters;
+            // Chapters Modal Open / Close
+            window.openChaptersModal = function() {{
+                if (chaptersModalOverlay) chaptersModalOverlay.classList.add('visible');
+            }};
+
+            window.closeChaptersModal = function() {{
+                if (chaptersModalOverlay) chaptersModalOverlay.classList.remove('visible');
+            }};
+
+            if (toggleChaptersBtn) toggleChaptersBtn.onclick = openChaptersModal;
+            if (closeChaptersModalBtn) closeChaptersModalBtn.onclick = closeChaptersModal;
+            if (chaptersModalOverlay) {{
+                chaptersModalOverlay.onclick = function(e) {{
+                    if (e.target === chaptersModalOverlay) closeChaptersModal();
+                }};
+            }}
+
+            // Stats Accordion Toggle (Defaults to Collapsed)
+            if (toggleStatsAccordionBtn && statsAccordionBody && statsAccordionChevron) {{
+                toggleStatsAccordionBtn.onclick = function() {{
+                    const isHidden = statsAccordionBody.classList.contains('hidden');
+                    if (isHidden) {{
+                        statsAccordionBody.classList.remove('hidden');
+                        statsAccordionChevron.innerHTML = '<span>▲</span> <span>Collapse</span>';
+                    }} else {{
+                        statsAccordionBody.classList.add('hidden');
+                        statsAccordionChevron.innerHTML = '<span>▼</span> <span>Expand</span>';
+                    }}
+                }};
+            }}
 
             // Analytics Tab Switcher
             window.switchChartTab = function(tabName) {{
@@ -1108,11 +1159,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             }};
 
             document.addEventListener('keydown', function(e) {{
-                if (!modalOverlay || !modalOverlay.classList.contains('visible')) return;
                 if (e.key === 'Escape') {{
-                    closeModal();
+                    if (modalOverlay && modalOverlay.classList.contains('visible')) closeModal();
+                    if (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) closeChaptersModal();
+                    if (ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0')) hideGhModal();
                 }} else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {{
-                    if (modalSaveBtn) modalSaveBtn.click();
+                    if (modalOverlay && modalOverlay.classList.contains('visible') && modalSaveBtn) {{
+                        modalSaveBtn.click();
+                    }}
                 }}
             }});
 
