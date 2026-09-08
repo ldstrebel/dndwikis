@@ -1014,31 +1014,67 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     </div>
 
     <!-- ========================================================= -->
-    <!-- FIRST-TIME CRITIQUE MODE ONBOARDING MODAL -->
+    <!-- FIRST-TIME SESSION WELCOME & FEATURE TOUR MODAL -->
     <!-- ========================================================= -->
     <div id="onboardingModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-4 transition-opacity duration-200">
-        <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-3.5 text-center">
-            <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl mx-auto text-amber-400">
-                ✍️
-            </div>
-            <div>
-                <h3 class="text-base font-bold text-slate-100 font-serif">Critique Mode is Active</h3>
-                <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                    Tap or click on any paragraph or dialogue passage to leave notes, feedback, or suggested rewrites.
-                </p>
-            </div>
-            <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 text-[11px] text-slate-400 text-left space-y-1.5">
-                <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded bg-slate-800 text-amber-300 font-bold font-mono text-[10px] flex-shrink-0">📖 Read</span>
-                    <span>Turn off commenting for clean, uninterrupted reading.</span>
+        <div class="bg-slate-900 border border-amber-500/40 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 text-left">
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-xl flex-shrink-0">
+                    ✨
                 </div>
-                <div class="flex items-center gap-2 pt-1 border-t border-slate-900">
-                    <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-bold font-mono text-[10px] flex-shrink-0">✍️ Critique</span>
-                    <span>Click any block to leave notes / suggested rewrites.</span>
+                <div>
+                    <h3 class="text-base font-bold text-slate-100 font-serif">Welcome to Session {session_num}</h3>
+                    <p class="text-xs text-amber-400 font-mono">Interactive Reader & Critique Engine</p>
                 </div>
             </div>
-            <button id="closeOnboardingBtn" type="button" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-md active:scale-98">
-                Got it, Let's Read! 👍
+
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Here is a quick overview of what this interactive session offers:
+            </p>
+
+            <div class="space-y-2.5 text-xs text-slate-300">
+                <!-- 1. Critique Mode & Toggle -->
+                <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-amber-300 flex items-center gap-1.5">
+                            <span>✍️</span> <span>Critique Mode (Active by Default)</span>
+                        </span>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">Default</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-normal">
+                        Click or tap any paragraph or dialogue block to add review notes, directives, or suggested rewrites. Toggle <strong>📖 Read</strong> in the top bar anytime for clean, uninterrupted reading.
+                    </p>
+                </div>
+
+                <!-- 2. Chapters & Diagnostics -->
+                <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-indigo-300 flex items-center gap-1.5">
+                            <span>📑</span> <span>Chapters & Session Stats</span>
+                        </span>
+                        <span class="text-[10px] text-slate-500 font-mono">Top Header</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-normal">
+                        Tap <strong>📑 Chapters</strong> anytime to jump to scenes, view dialogue shares per chapter, inspect character voice velocity curves, sensory registers, and campaign analytics.
+                    </p>
+                </div>
+
+                <!-- 3. Reading Progress Bar -->
+                <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-emerald-300 flex items-center gap-1.5">
+                            <span>📏</span> <span>Live Reading Progress</span>
+                        </span>
+                        <span class="text-[10px] text-slate-500 font-mono">Under Header</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-normal">
+                        The minimal amber bar directly beneath the top header tracks how far along you are in the story from start to finish.
+                    </p>
+                </div>
+            </div>
+
+            <button id="closeOnboardingBtn" type="button" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 active:scale-98 flex items-center justify-center gap-1.5">
+                <span>Start Reading Session {session_num}</span> <span>🚀</span>
             </button>
         </div>
     </div>
