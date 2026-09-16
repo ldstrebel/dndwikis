@@ -1,151 +1,87 @@
-# D&D Wikis - The Portals
+﻿# D&D Wikis — The Living Campaign Portal
 
-A collection of interactive D&D campaign stories and adventures, featuring a modern web interface with slideshow chapters and campaign management.
+> **Interactive Web Publishing for Tabletop Roleplaying Campaigns**: Transforming raw tabletop audio, live gameplay transcripts, and graphic storyboards into polished, auditable web novellas and digital graphic novels.
 
-## Live Site
-https://ldstrebel.github.io/dndwikis/
+🌐 **Live Production Site**: [https://ldstrebel.github.io/dndwikis/](https://ldstrebel.github.io/dndwikis/)
 
-## Project Structure
+---
 
+## 🧭 Master Documentation Sitemap
+
+| Guide | Description | Target Audience |
+| :--- | :--- | :--- |
+| 🚀 **[CONTRIBUTING.md](CONTRIBUTING.md)** | Step-by-step guide to publishing new chapters, building reader files, and running the pipeline. | Authors, Scribes & Editors |
+| 📚 **[SESSIONS_INDEX.md](SESSIONS_INDEX.md)** | Catalog of all 5 tested session UX formats (Interactive Readers, Webtoon Strips, Multi-Session Arcs, Dashboards). | UI Developers & Storytellers |
+| 🎨 **[FRONTEND_COMPONENTS.md](FRONTEND_COMPONENTS.md)** | Component catalog, design tokens, character color keys, and proven UX rules vs. anti-patterns. | Frontend Engineers |
+
+---
+
+## 🌟 Platform Highlights
+
+### 1. Interactive Novelization Reader (Schema 2.0)
+* **The "Hot Dog" Diff Inspector**: Side-by-side vertical view that synchronizes narrative prose against verbatim tabletop audio transcripts.
+* **Chapters & Voice Velocity**: Live character voice breakdown per chapter, highlighting active named NPCs (`#f87171`) and PC dialogue shares.
+* **Passage Critique Modal**: In-browser feedback sheet allowing readers and editors to submit rewrites, dialogue notes, or speaker re-attributions.
+* **Zero-Backend GitHub PR Pipeline**: Uses the browser's Web Crypto API to sign JWTs for a GitHub App, committing structured critique payloads directly to upstream repositories without requiring user logins.
+
+### 2. Seamless Webtoon Strips
+* Infinite vertical scroll format with 0px image gaps, compact 480px responsive viewports, and interactive Tailwind narrative cards.
+
+---
+
+## 📖 Active Campaigns Showcase
+
+### 1. Uneraseable *(Sci-Fi / Post-Apocalyptic / Mythic Mystery)*
+*Displaced from reality into the timeless haven of The Margin, four strangers race across severed timeline seams to recover stolen fate epigraphy.*
+* **Format**: Schema 2.0 Interactive Novel Reader
+* **Available Sessions**:
+  * [Session 1: The Bus From Vegas & The Library of the Fates](uneraseable-s1.html)
+  * [Session 2: The Margin, The Fragments & The Lost Roads](uneraseable-s2.html)
+  * [Session 3: The Museum Heist in North Carolina](uneraseable-s3.html)
+
+### 2. Vumbua *(Steampunk / Fantasy Academy)*
+*A sprawling graphic narrative detailing the trials, tribulations, and adventures of students at the prestigious Vumbua Academy across Sessions 0 to 12.*
+* **Format**: Seamless Webtoon Strips & Prose Arcs
+* **Key Sessions**:
+  * [Session 8: Squad 907 (Webtoon Strip)](vumbua-s8.html)
+  * [Session 9: Five Sectors (Webtoon Strip)](vumbua-s9.html)
+  * [Session 10: Dagger Sharks (Webtoon Strip)](vumbua-s10.html)
+  * [Sessions 1–6 Omnibus Archive](vumbua-s1-6.html)
+  * [Session 12: The Origins](clan-origins.html)
+
+### 3. Classic Tabletop Archives
+* **The Chronicles of Meryl**: Fantasy adventure ([meryl1.html](meryl1.html), [meryl2.html](meryl2.html))
+* **Sigmar’s Heirs**: Warhammer Fantasy RPG ([sigmar1-9.html](sigmar1-9.html), [sigmar-ch10.html](sigmar-ch10.html))
+* **Dungeon Crawlers**: Sci-Fi LitRPG ([dc-ch1.html](dc-ch1.html))
+* **Verdant Scar**: High fantasy ([vs-ch1.html](vs-ch1.html))
+
+---
+
+## ⚙️ Quick Start: How to Build & Publish
+
+```powershell
+# 1. Ensure upstream data is ready in dnd-scribe
+cd D:\Code\dnd-scribe
+python sessions/_scripts/generate_web_manifest.py sN
+
+# 2. Build interactive reader files
+cd D:\Code\dndwikis-main\dndwikis-main
+python build_ebooks.py
+
+# 3. Commit and push to publish on GitHub Pages
+git add uneraseable-sN.html index.html
+git commit -m "feat(reader): publish Session N"
+git push origin main
 ```
-dndwikis/
-├── index.html              # Main homepage with campaign showcase
-├── script.js               # JavaScript functionality and modal system
-├── style.css               # Main stylesheet with theme variables
-├── chpt-html-template.html # Template for creating new chapters
-├── chapters/               # Chapter files directory
-├── images/                 # Campaign artwork and assets
-└── campaigns/              # Individual campaign directories
-```
+*For detailed instructions, see [CONTRIBUTING.md](CONTRIBUTING.md).*
 
-## Current Campaigns
+---
 
-### 1. The Chronicles of Meryl
-- **Genre**: Fantasy Adventure
-- **Chapters**: 2
-- **Description**: She said it was just a babysitting job, there was no mention of trials!
+## 🔗 Upstream Repository
+This web publishing portal is fed by the canon transcription, parity auditing, and editorial pipeline in:
+* **Repository**: [`ldstrebel/dnd-scribe`](https://github.com/ldstrebel/dnd-scribe)
 
-### 2. Dungeon Crawlers
-- **Genre**: Sci-Fi LitRPG
-- **Chapters**: 2
-- **Description**: In a world where reality blends with the digital, participants are thrust into deadly dungeons.
+---
 
-### 3. Verdant Scar
-- **Genre**: Fantasy Adventure
-- **Chapters**: 2
-- **Description**: In the mystical realm of Eldara, a verdant valley scarred by ancient magic holds secrets that could reshape the world.
-
-## How to Add a New Campaign
-
-### Step 1: Add Campaign Card to Main Page
-Edit `index.html` and add a new campaign card in the campaign grid section:
-
-```html
-<article class="campaign-card"
-    data-genre="fantasy adventure"
-    data-campaign-title="Your Campaign Name"
-    data-poster-image="images/your-campaign-image.jpg"
-    data-full-synopsis="Your campaign description here."
-    data-chapters='[
-        {"title": "Chapter 1: Title", "url": "your-ch1.html"},
-        {"title": "Chapter 2: Title", "url": "your-ch2.html"}
-    ]'>
-    <div class="tarot-art-container">
-        <img src="images/your-campaign-image.jpg" alt="Artwork for Your Campaign Name campaign" class="campaign-poster">
-    </div>
-    <div class="tarot-info-container">
-        <h3 class="campaign-title">Your Campaign Name</h3>
-    </div>
-</article>
-```
-
-**Required Data Attributes:**
-- `data-genre`: Campaign genre(s) for filtering
-- `data-campaign-title`: Campaign name
-- `data-poster-image`: Path to campaign artwork
-- `data-full-synopsis`: Full campaign description
-- `data-chapters`: JSON array of chapter objects with title and URL
-
-### Step 2: Create Campaign Artwork
-Add your campaign image to the `images/` directory. Recommended format: JPG or WebP, dimensions similar to existing campaign images.
-
-### Step 3: Create Chapter Files
-Use `chpt-html-template.html` as a starting point for each chapter:
-
-1. **Copy the template** and rename it (e.g., `your-ch1.html`)
-2. **Update the title** in both `<title>` tag and header
-3. **Add your content** in the slideshow format
-4. **Update slide counter** to match your total slide count
-
-**Chapter Structure:**
-- Each chapter uses a slideshow format with navigation
-- Content is divided into `<div class="slide">` elements
-- First slide is visible, others are hidden with `hidden` class
-- Navigation buttons allow users to move between slides
-
-### Step 4: Test Your Campaign
-1. Open `index.html` in a browser
-2. Click on your new campaign card
-3. Verify the modal displays correctly
-4. Test chapter navigation
-5. Ensure all links work properly
-
-## Technical Features
-
-### Campaign Modal System
-- Click any campaign card to open detailed view
-- Displays campaign artwork, synopsis, and chapter list
-- Genre tags are automatically generated from data attributes
-- Responsive design with accessibility features
-
-### Genre Filtering
-- Filter campaigns by genre using the dropdown
-- Supports multiple genres per campaign (space-separated)
-- "All Genres" option shows all campaigns
-
-### Chapter Navigation
-- Slideshow format with Previous/Next buttons
-- Keyboard navigation (Arrow keys)
-- Slide counter showing current position
-- Smooth fade transitions between slides
-
-### Loading Animations
-- Global loading overlay for page transitions
-- D20 dice animation for chapter loading
-- Smooth fade effects for better UX
-
-## File Naming Conventions
-
-- **Campaign files**: Use descriptive names (e.g., `verdant-scar.jpg`)
-- **Chapter files**: Use campaign abbreviation + chapter number (e.g., `vs-ch1.html`)
-- **Images**: Use descriptive names in lowercase with hyphens
-
-## Styling and Themes
-
-The site uses a custom color scheme defined in CSS variables:
-- **Primary Teal**: #25B8B8
-- **Primary Magenta**: #B42A8E
-- **Dark Background**: #181A1B
-- **Light Text**: #EAEAEA
-
-Typography uses Google Fonts:
-- **Primary**: MedievalSharp (for headings)
-- **Secondary**: Cinzel Decorative (for body text)
-
-## Browser Compatibility
-
-- Modern browsers with ES6+ support
-- Responsive design for mobile and desktop
-- Progressive enhancement for older browsers
-
-## Contributing
-
-When adding new content:
-1. Follow the existing naming conventions
-2. Test thoroughly before committing
-3. Ensure accessibility features are maintained
-4. Update this README if adding new features
-
-## License
-
-© No electrons were harmed in the making of this whatever it is. All rights reserved.
+## 📄 License
+© All original campaign content, worldbuilding lore, character concepts, and stories are the property of their respective creators. Code and reader components are distributed for platform publication.
