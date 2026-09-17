@@ -3503,7 +3503,18 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(critiques));
                 }} catch(e) {{}}
                 refreshMarkers();
+                openedFromDiff = false;
+                if (window.closeDiffInspector) window.closeDiffInspector();
                 closeModal();
+                if (blocks[activeBlockIndex]) {{
+                    blocks[activeBlockIndex].scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                    blocks[activeBlockIndex].classList.add('ring-2', 'ring-amber-400', 'ring-offset-2', 'ring-offset-slate-950');
+                    setTimeout(() => {{
+                        if (blocks[activeBlockIndex]) {{
+                            blocks[activeBlockIndex].classList.remove('ring-2', 'ring-amber-400', 'ring-offset-2', 'ring-offset-slate-950');
+                        }}
+                    }}, 1500);
+                }}
             }};
 
             if (modalDeleteBtn) modalDeleteBtn.onclick = function() {{
@@ -3515,7 +3526,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(critiques));
                 }} catch(e) {{}}
                 refreshMarkers();
+                openedFromDiff = false;
+                if (window.closeDiffInspector) window.closeDiffInspector();
                 closeModal();
+                if (blocks[activeBlockIndex]) {{
+                    blocks[activeBlockIndex].scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                }}
             }};
 
             blocks.forEach((b, idx) => {{
