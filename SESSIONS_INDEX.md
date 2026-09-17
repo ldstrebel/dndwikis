@@ -1,4 +1,4 @@
-﻿# D&D Wikis — Master Session Formats Index
+# D&D Wikis — Master Session Formats Index
 
 > **Quick Reference Catalog**: This index catalogs every distinct front-end reading format built and tested across the D&D Wikis platform. Use this matrix to select the right UX pattern for new campaigns, explore existing implementations, and avoid reinventing established components.
 
@@ -8,7 +8,7 @@
 
 | Format Paradigm | Primary Reference Files | Primary Build Tool | Key User Experience | Mobile Ergonomics |
 | :--- | :--- | :--- | :--- | :--- |
-| **1. Interactive Novel Reader (Schema 2.0)** | `uneraseable-s1.html`<br>`uneraseable-s2.html`<br>`uneraseable-s3.html` | `build_ebooks.py` | Full novelization with "Hot Dog" Diff Inspector, Voice Velocity bars, passage critique sheet, and zero-backend GitHub PR submissions. | Optimized; touch targets $\ge 44\text{px}$, sticky top/bottom bars, layered bottom sheets. |
+| **1. Interactive Novel Reader (Schema 2.0)** | `uneraseable-s1.html`<br>`uneraseable-s2.html`<br>`uneraseable-s3.html`<br>`uneraseable-s4.html` | `build_ebooks.py` | Full novelization with "Hot Dog" Diff Inspector, Voice Velocity bars, passage critique sheet, and zero-backend GitHub PR submissions. | Optimized; touch targets $\ge 44\text{px}$, sticky top/bottom bars, layered bottom sheets. |
 | **2. Seamless Webtoon Strip (Graphic Comic)** | `vumbua-s8.html`<br>`vumbua-s9.html`<br>`vumbua-s10.html` | Static HTML / Art Pipeline | Continuous vertical image scrolling (0px gap), compact 480px width, expandable transcript narrative cards. | Excellent for phones; thumb-driven continuous vertical scroll. |
 | **3. Multi-Session Prose Arc Reader** | `vumbua-s1-6.html`<br>`vumbua-s7.html`<br>`session11.html`<br>`session12.html` | Static HTML / Markdown | Long-form novel manuscript reading with scene break anchors, character dossiers, and clean typography. | Standard reading flow; responsive margins and fluid font sizing. |
 | **4. Reviewer & Analytics Dashboard** | `super-secret-stats.html` | Static HTML / `traffic-tracker.js` | Local device review log, reading velocity graphs, completion funnels, and Slack webhook diagnostic tools. | Fully responsive grid with collapsible panels. |
@@ -18,7 +18,7 @@
 
 ## 1. Interactive Schema 2.0 Novel Reader (Flagship)
 
-* **Reference Implementation**: [`uneraseable-s1.html`](file:///d:/Code/dndwikis-main/dndwikis-main/uneraseable-s1.html), [`uneraseable-s2.html`](file:///d:/Code/dndwikis-main/dndwikis-main/uneraseable-s2.html), [`uneraseable-s3.html`](file:///d:/Code/dndwikis-main/dndwikis-main/uneraseable-s3.html)
+* **Reference Implementation**: [`uneraseable-s1.html`](file:///d:/Code/dndwikis-main/dndwikis-main/uneraseable-s1.html), [`uneraseable-s2.html`](file:///d:/Code/dndwikis-main/dndwikis-main/uneraseable-s2.html), [`uneraseable-s3.html`](file:///d:/Code/dndwikis-main/dndwikis-main/uneraseable-s3.html), [`uneraseable-s4.html`](file:///d:/Code/dndwikis-main/dndwikis-main/uneraseable-s4.html)
 * **Compiler**: [`build_ebooks.py`](file:///d:/Code/dndwikis-main/dndwikis-main/build_ebooks.py)
 * **Data Contract**: Consumes `sN-manifest-v2.json` and `sN-clean-story.md` from `dnd-scribe/sessions/data/index/`.
 

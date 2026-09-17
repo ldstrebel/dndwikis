@@ -1,4 +1,4 @@
-﻿# D&D Wikis — The Living Campaign Portal
+# D&D Wikis — The Living Campaign Portal
 
 > **Interactive Web Publishing for Tabletop Roleplaying Campaigns**: Transforming raw tabletop audio, live gameplay transcripts, and graphic storyboards into polished, auditable web novellas and digital graphic novels.
 
@@ -38,6 +38,7 @@
   * [Session 1: The Bus From Vegas & The Library of the Fates](uneraseable-s1.html)
   * [Session 2: The Margin, The Fragments & The Lost Roads](uneraseable-s2.html)
   * [Session 3: The Museum Heist in North Carolina](uneraseable-s3.html)
+  * [Session 4: The Medusa Protocol & The Raleigh Redactors](uneraseable-s4.html)
 
 ### 2. Vumbua *(Steampunk / Fantasy Academy)*
 *A sprawling graphic narrative detailing the trials, tribulations, and adventures of students at the prestigious Vumbua Academy across Sessions 0 to 12.*
