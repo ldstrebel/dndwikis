@@ -108,7 +108,7 @@ def get_speaker_color(speaker_id: str, char_info: dict = None) -> str:
 
 # Preload all manifests for cross-session campaign analytics
 all_manifests = {}
-for s in [1, 2, 3]:
+for s in [1, 2, 3, 4]:
     p = MANIFEST_DIR / f"s{s}-manifest-v2.json"
     if p.exists():
         try:
@@ -1188,6 +1188,31 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             sp_color = get_speaker_color(sp_id, sp_info)
             text = b.get("text", "")
 
+            segments = b.get("segments", [])
+            if segments:
+                seg_html_parts = []
+                for seg in segments:
+                    s_type = seg.get("type", "narration")
+                    s_spk = seg.get("speakerId", "narrator").lower().strip()
+                    s_name = seg.get("speakerName", s_spk.title())
+                    s_line = seg.get("sourceLine")
+                    s_text = seg.get("text", "")
+
+                    if s_type == "dialogue" and s_spk != "narrator":
+                        s_color = get_speaker_color(s_spk, characters.get(s_spk))
+                        line_attr = f' data-source-line="{s_line}"' if s_line else ""
+                        title_attr = f' title="Spoken by {s_name}' + (f' (Line {s_line})"' if s_line else '"')
+                        seg_html_parts.append(
+                            f'<span class="dialogue-segment font-medium transition-colors cursor-pointer hover:underline" style="color: {s_color};" data-speaker="{s_spk}" data-speaker-name="{s_name}" data-speaker-color="{s_color}"{line_attr}{title_attr}>{s_text}</span>'
+                        )
+                    else:
+                        seg_html_parts.append(
+                            f'<span class="narration-segment text-slate-300" data-speaker="narrator">{s_text}</span>'
+                        )
+                rendered_text = "".join(seg_html_parts)
+            else:
+                rendered_text = text
+
             is_narrator = (sp_info.get("type") == "narrator" or sp_id == "narrator")
 
             if is_narrator:
@@ -1202,7 +1227,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
-                    <p class="text-slate-300 leading-relaxed text-base sm:text-lg">{text}</p>
+                    <p class="text-slate-300 leading-relaxed text-base sm:text-lg">{rendered_text}</p>
                 </div>
                 """
             else:
@@ -1220,7 +1245,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: {sp_color}">{sp_name}</span>
                         <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
-                    <p class="text-slate-100 font-medium leading-relaxed text-base sm:text-lg">{text}</p>
+                    <p class="text-slate-100 font-medium leading-relaxed text-base sm:text-lg">{rendered_text}</p>
                 </div>
                 """
 
@@ -4575,7 +4600,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     print(f"[OK] Generated {output_path.name} ({len(blocks)} blocks, {word_count:,} words)")
 
 if __name__ == "__main__":
-    for s_num in [1, 2, 3]:
+    for s_num in [1, 2, 3, 4]:
         m_path = MANIFEST_DIR / f"s{s_num}-manifest-v2.json"
         if m_path.exists():
             out_path = OUTPUT_DIR / f"uneraseable-s{s_num}.html"
