@@ -168,7 +168,9 @@ def load_session_source_mapping(session_num: int) -> dict:
     )
 
     block_map = {}
-    blocks = manifest.get("blocks", [])
+    all_blocks = manifest.get("blocks", [])
+    tabletop_blocks = [b for b in all_blocks if b.get("cut") != "cinematic"]
+    cinematic_blocks = [b for b in all_blocks if b.get("cut") == "cinematic"]
     block_idx = 0
     last_line_num = None
 
@@ -185,8 +187,8 @@ def load_session_source_mapping(session_num: int) -> dict:
             if not clean_p:
                 continue
 
-            if block_idx < len(blocks):
-                b = blocks[block_idx]
+            if block_idx < len(tabletop_blocks):
+                b = tabletop_blocks[block_idx]
                 b_id = b["id"]
 
                 bundled = []
@@ -227,6 +229,39 @@ def load_session_source_mapping(session_num: int) -> dict:
                 }
                 block_idx += 1
 
+    # Map cinematic blocks directly from their segment sourceLines or parent block
+    for cb_idx, cb in enumerate(cinematic_blocks, 1):
+        cb_id = cb["id"]
+        s_line = None
+        for seg in cb.get("segments", []):
+            if seg.get("sourceLine"):
+                s_line = int(seg["sourceLine"])
+                break
+        
+        if s_line and s_line in raw_lines:
+            p_info = raw_lines[s_line]
+            is_syn = False
+        else:
+            p_info = {
+                "line": s_line,
+                "speaker": "Cinematic Reconstruction",
+                "text": "Authorial cut prose synthesized from session audio arc.",
+                "isSynthesis": True
+            }
+            is_syn = True
+
+        block_map[cb_id] = {
+            "blockId": cb_id,
+            "index": cb_idx,
+            "scene": cb.get("scene", ""),
+            "speakerId": cb.get("speakerId", "narrator"),
+            "text": cb.get("text", ""),
+            "primaryLine": p_info,
+            "bundledLines": [],
+            "lineRange": [s_line, s_line] if s_line else [1, 1000],
+            "isSynthesis": is_syn
+        }
+
     return block_map
 
 def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
@@ -243,8 +278,11 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
         m = re.search(r"CHAPTER\s*(\d+)", ch_title, re.IGNORECASE)
         ch_num = m.group(1) if m else str(idx)
 
+        has_alt = ch.get("has_alternate_cuts", False)
         speaker_words = {}
         for b in ch["blocks"]:
+            if b.get("cut") == "cinematic":
+                continue
             sp = b.get("speakerId", "narrator").lower().strip()
             if sp != "narrator":
                 w = len(b.get("text", "").split())
@@ -259,6 +297,7 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
             "num": ch_num,
             "clean_title": clean_title,
             "full_title": ch_title,
+            "has_alternate_cuts": has_alt,
             "total_words": ch["word_count"],
             "dialogue_words": tot_dialogue,
             "speakers": speaker_words,
@@ -303,6 +342,16 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
             segments.append('<div class="w-full h-full bg-slate-800/40" title="Narrative prose only"></div>')
             speaker_chips_list.append('<span class="text-[10px] text-slate-500 italic font-mono">Narrative prose only</span>')
 
+        has_dual_cuts = cd.get("has_alternate_cuts", False)
+        dual_cut_badge = ""
+        if has_dual_cuts:
+            dual_cut_badge = (
+                '<span class="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0" '
+                'title="Features 2 Alternate Versions: The Tabletop Cut & The Cinematic Cut">'
+                '<span>🔀</span> <span>2 Cuts</span>'
+                '</span>'
+            )
+
         row_item = f"""
         <div class="p-2.5 bg-slate-950/80 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99]"
              onclick="jumpToChapter('{cd['anchor_id']}');">
@@ -313,6 +362,7 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
                     <span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-bold flex-shrink-0">
                         #{cd['num']}
                     </span>
+                    {dual_cut_badge}
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         {cd['clean_title']}
                     </h4>
@@ -1112,10 +1162,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         scene = b.get("scene", "").strip() or "Prologue"
         if scene != current_chapter_title:
             if current_chapter_blocks:
+                has_alt = any(blk.get("cut") == "cinematic" for blk in current_chapter_blocks)
                 chapters.append({
                     "title": current_chapter_title,
                     "blocks": current_chapter_blocks,
-                    "word_count": sum(len(blk.get("text", "").split()) for blk in current_chapter_blocks)
+                    "has_alternate_cuts": has_alt,
+                    "word_count": sum(len(blk.get("text", "").split()) for blk in current_chapter_blocks if blk.get("cut") != "cinematic")
                 })
             current_chapter_title = scene
             current_chapter_blocks = [b]
@@ -1123,10 +1175,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             current_chapter_blocks.append(b)
 
     if current_chapter_blocks:
+        has_alt = any(blk.get("cut") == "cinematic" for blk in current_chapter_blocks)
         chapters.append({
             "title": current_chapter_title,
             "blocks": current_chapter_blocks,
-            "word_count": sum(len(blk.get("text", "").split()) for blk in current_chapter_blocks)
+            "has_alternate_cuts": has_alt,
+            "word_count": sum(len(blk.get("text", "").split()) for blk in current_chapter_blocks if blk.get("cut") != "cinematic")
         })
 
     # Quick Jump Chapter Pills
@@ -1164,6 +1218,25 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         ch_words = ch["word_count"]
         ch_mins = max(1, round(ch_words / 250))
         anchor_id = f"chapter-{chapter_index}"
+        has_dual_cuts = ch.get("has_alternate_cuts", False)
+
+        cut_switcher_html = ""
+        if has_dual_cuts:
+            cut_switcher_html = f"""
+            <div class="mt-4 flex flex-col items-center justify-center gap-1.5">
+                <div class="inline-flex items-center p-1 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-md">
+                    <button type="button" class="chapter-cut-btn cut-btn-tabletop px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-cut="tabletop" onclick="switchGlobalCut('tabletop')">
+                        <span>🎲</span>
+                        <span>The Tabletop Cut</span>
+                    </button>
+                    <button type="button" class="chapter-cut-btn cut-btn-cinematic px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5" data-cut="cinematic" onclick="switchGlobalCut('cinematic')">
+                        <span>🎬</span>
+                        <span>The Cinematic Cut</span>
+                    </button>
+                </div>
+                <span class="text-[10px] text-slate-500 font-mono tracking-wide">Version switcher · Selection stays active across all chapters</span>
+            </div>
+            """
 
         blocks_html += f"""
         <!-- CHAPTER DIVIDER {chapter_index} -->
@@ -1176,12 +1249,23 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
                 <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
             </div>
+            {cut_switcher_html}
         </section>
         """
 
         for b in ch["blocks"]:
             b_id = b.get("id", "block")
             b_idx = b.get("index", 1)
+            b_cut = b.get("cut")
+            cut_classes = ""
+            cut_attr = ""
+            if b_cut == "tabletop":
+                cut_classes = " cut-block cut-block-tabletop"
+                cut_attr = ' data-cut="tabletop"'
+            elif b_cut == "cinematic":
+                cut_classes = " cut-block cut-block-cinematic hidden"
+                cut_attr = ' data-cut="cinematic"'
+
             sp_id = b.get("speakerId", "narrator").lower().strip()
             sp_info = characters.get(sp_id, {"name": sp_id.title(), "type": "narrator"})
             sp_name = sp_info.get("name", sp_id.title())
@@ -1218,12 +1302,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             if is_narrator:
                 blocks_html += f"""
                 <!-- Block {b_idx} (Narrator) -->
-                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1"
+                <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1{cut_classes}"
                      id="{b_id}"
                      data-block-id="{b_id}"
                      data-speaker="{sp_id}"
                      data-speaker-name="{sp_name}"
-                     data-speaker-color="{sp_color}">
+                     data-speaker-color="{sp_color}"{cut_attr}>
                     <div class="flex justify-end">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
                     </div>
@@ -1233,13 +1317,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             else:
                 blocks_html += f"""
                 <!-- Block {b_idx} ({sp_name}) -->
-                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm"
+                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm{cut_classes}"
                      id="{b_id}"
                      style="border-left: 3.5px solid {sp_color}; background: linear-gradient(90deg, {sp_color}14 0%, {sp_color}02 100%);"
                      data-block-id="{b_id}"
                      data-speaker="{sp_id}"
                      data-speaker-name="{sp_name}"
-                     data-speaker-color="{sp_color}">
+                     data-speaker-color="{sp_color}"{cut_attr}>
                     <div class="flex items-center gap-2 mb-2">
                         <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {sp_color}"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: {sp_color}">{sp_name}</span>
@@ -2433,7 +2517,51 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             let activeBlockIndex = 0;
             let selectedCategory = "general";
-            const blocks = Array.from(document.querySelectorAll('.story-block'));
+            let blocks = Array.from(document.querySelectorAll('.story-block:not(.hidden)'));
+            function updateBlocksReference() {{
+                blocks = Array.from(document.querySelectorAll('.story-block:not(.hidden)'));
+            }}
+
+            // =========================================================
+            // DUAL CUT CONTROLLER (The Tabletop Cut vs The Cinematic Cut)
+            // =========================================================
+            let currentActiveCut = 'tabletop';
+            try {{
+                const savedCut = localStorage.getItem('dnd_active_cut');
+                if (savedCut === 'cinematic' || savedCut === 'tabletop') {{
+                    currentActiveCut = savedCut;
+                }}
+            }} catch(e) {{}}
+
+            window.switchGlobalCut = function(newCut) {{
+                if (newCut !== 'tabletop' && newCut !== 'cinematic') return;
+                currentActiveCut = newCut;
+                try {{
+                    localStorage.setItem('dnd_active_cut', newCut);
+                }} catch(e) {{}}
+
+                // 1. Update button styling across all chapter dividers
+                document.querySelectorAll('.chapter-cut-btn').forEach(btn => {{
+                    const btnCut = btn.dataset.cut;
+                    if (btnCut === newCut) {{
+                        btn.className = "chapter-cut-btn cut-btn-" + btnCut + " px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm bg-slate-800 " + (btnCut === 'tabletop' ? 'text-amber-300 border border-amber-500/50' : 'text-cyan-300 border border-cyan-500/50');
+                    }} else {{
+                        btn.className = "chapter-cut-btn cut-btn-" + btnCut + " px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1.5 border border-transparent";
+                    }}
+                }});
+
+                // 2. Toggle block visibility
+                if (newCut === 'tabletop') {{
+                    document.querySelectorAll('.cut-block-tabletop').forEach(el => el.classList.remove('hidden'));
+                    document.querySelectorAll('.cut-block-cinematic').forEach(el => el.classList.add('hidden'));
+                }} else {{
+                    document.querySelectorAll('.cut-block-tabletop').forEach(el => el.classList.add('hidden'));
+                    document.querySelectorAll('.cut-block-cinematic').forEach(el => el.classList.remove('hidden'));
+                }}
+
+                updateBlocksReference();
+                diffInspectorInitialized = false;
+            }};
 
             const chaptersModalOverlay = document.getElementById('chaptersModalOverlay');
             const toggleChaptersBtn = document.getElementById('toggleChaptersBtn');
@@ -2719,6 +2847,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             function initDiffInspector() {{
                 if (diffInspectorInitialized || !diffNarrativePane || !diffSourcePane) return;
+                updateBlocksReference();
                 diffInspectorInitialized = true;
 
                 applyDiffLayout(currentDiffLayout);
@@ -2889,6 +3018,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             }}
 
             window.openDiffInspector = function(index) {{
+                updateBlocksReference();
                 if (index < 0 || index >= blocks.length) return;
                 initDiffInspector();
                 if (diffInspectorOverlay) {{
@@ -3149,7 +3279,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 const count = Object.keys(critiques).length;
                 if (exportBadgeCount) exportBadgeCount.textContent = count;
 
-                blocks.forEach((el) => {{
+                document.querySelectorAll('.story-block').forEach((el) => {{
                     const id = el.dataset.blockId;
                     const dot = el.querySelector('.critique-indicator-dot');
                     if (critiques[id]) {{
@@ -3534,9 +3664,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
             }};
 
-            blocks.forEach((b, idx) => {{
+            document.querySelectorAll('.story-block').forEach((b) => {{
                 b.onclick = function() {{
-                    if (document.body.classList.contains('mode-critique')) openDiffInspector(idx);
+                    if (document.body.classList.contains('mode-critique')) {{
+                        updateBlocksReference();
+                        const idx = blocks.indexOf(b);
+                        if (idx >= 0) openDiffInspector(idx);
+                    }}
                 }};
             }});
 
@@ -4602,6 +4736,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
             }}, {{ passive: true }});
 
+            window.switchGlobalCut(currentActiveCut);
             refreshMarkers();
         }})();
     </script>
