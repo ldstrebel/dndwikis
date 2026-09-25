@@ -783,9 +783,21 @@ def get_narrative_spectrum_elements(session_num: int, spoken_pct: float, narrati
 
 def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, word_count: int, spoken_pct: float, narrative_pct: float, sensory: dict) -> str:
     bot_review = editorial_forum.get("initialBotReview", {})
+    table_debrief = bot_review.get("tableDebrief", {})
+    tomatometer = bot_review.get("tomatometer") or table_debrief.get("tomatometer", 92 if session_num < 5 else 62)
+    popcornmeter = bot_review.get("popcornmeter") or table_debrief.get("popcornmeter", 96 if session_num < 5 else 94)
+    grade = bot_review.get("grade", "A-" if session_num < 5 else "D")
+
+    tomatometer_status = "Rotten" if tomatometer < 75 else "Certified Fresh"
+    tomatometer_icon = "🍅" if tomatometer >= 75 else "🟢"
+    tomato_badge_classes = "bg-rose-950/80 text-rose-300 border-rose-800/80" if tomatometer >= 75 else "bg-emerald-950/80 text-emerald-300 border-emerald-800/80"
+    popcorn_status = "Certified Fresh" if popcornmeter >= 75 else "Fresh"
+
     analysis = bot_review.get("ruthlessAnalysis", "")
     if isinstance(analysis, dict):
         analysis = analysis.get(session_num, str(analysis))
+    if not analysis and table_debrief.get("summary"):
+        analysis = table_debrief.get("summary")
 
     elements = get_narrative_spectrum_elements(session_num, spoken_pct, narrative_pct, sensory)
     mini_pills = ""
@@ -802,37 +814,95 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
         </div>
         """
 
+    # Highlights from whatHelped if present
+    mvp_pills = ""
+    what_helped = table_debrief.get("whatHelped", [])
+    if what_helped:
+        mvp_pills = '<div class="flex flex-wrap items-center gap-1.5 pt-1">'
+        mvp_pills += '<span class="text-[10px] uppercase font-mono font-bold text-slate-400 mr-1">Table MVPs:</span>'
+        for wh in what_helped[:4]:
+            p_name = wh.get("player", "").split()[0]
+            m_title = wh.get("moment", "")
+            mvp_pills += f'<span class="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-300"><strong class="text-amber-400">{p_name}</strong>: {m_title}</span>'
+        mvp_pills += '</div>'
+
     return f"""
     <!-- ========================================================= -->
-    <!-- END-OF-SESSION EDITORIAL CRITIC & NARRATIVE SPECTRUM CARD -->
+    <!-- END-OF-SESSION ROTTEN TOMATOES CRITIC & TABLE DEBRIEF CARD -->
     <!-- ========================================================= -->
-    <section class="mt-10 mb-6">
-        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/90 via-slate-900/95 to-slate-950 border border-slate-700/80 hover:border-rose-500/60 rounded-2xl p-4 sm:p-6 shadow-xl transition-all cursor-pointer group hover:shadow-2xl active:scale-[0.99]" title="Tap to view full narrative spectrum breakdown and creative trade-offs">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 border-b border-slate-800 pb-4">
+    <section class="mt-12 mb-8">
+        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view Rotten Tomatoes story debrief, anti-hallucination wall and player directives">
+            
+            <!-- Card Header: Title & Dual Rotten Tomatoes Badges -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                 <div class="flex items-center gap-3.5">
                     <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform shadow-inner">
                         🍅
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Editorial Story Critic</span>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Narrative Spectrum</span>
+                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Rotten Tomatoes Post-Mortem</span>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Table Debrief</span>
                         </div>
-                        <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-rose-200 transition-colors">
-                            Session {session_num} Story Review & Narrative Spectrum
+                        <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-amber-300 transition-colors">
+                            Session {session_num} Story Review & Directives
                         </h3>
                     </div>
                 </div>
-                <div class="flex items-center gap-2 sm:self-center">
-                    <span class="text-xs text-rose-300 bg-rose-950/80 border border-rose-800/80 px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 group-hover:bg-rose-900 transition-colors shadow-sm">
-                        <span>📖 View Spectrum & Trade-offs</span>
+
+                <!-- Dual Rotten Tomatoes Score Meters -->
+                <div class="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
+                    <!-- Tomatometer (Critic Score) -->
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                        <span class="text-2xl flex-shrink-0">{tomatometer_icon}</span>
+                        <div>
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-sm sm:text-base font-bold font-mono text-slate-100">{tomatometer}%</span>
+                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded {tomato_badge_classes}">{tomatometer_status}</span>
+                            </div>
+                            <span class="text-[9px] text-slate-400 font-mono block">Tomatometer ({grade})</span>
+                        </div>
+                    </div>
+
+                    <!-- Popcornmeter (Table Energy) -->
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                        <span class="text-2xl flex-shrink-0">🍿</span>
+                        <div>
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-sm sm:text-base font-bold font-mono text-amber-300">{popcornmeter}%</span>
+                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/80">{popcorn_status}</span>
+                            </div>
+                            <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Anti-Hallucination Convergence Boundary Callout -->
+            <div class="mt-3.5 p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-rose-950/30 via-slate-950/60 to-amber-950/30 border border-rose-800/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="text-rose-400 text-sm">🧱</span>
+                        <strong class="text-xs sm:text-sm font-bold text-rose-300 font-serif">The Anti-Hallucination Boundary Reached</strong>
+                        <span class="text-[10px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">Quality Gate Stop</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed font-sans">
+                        Rather than having AI authoring hallucinate missing character beats or internal grief, the authoring pipeline stops here and delivers direct coaching for the players and GM to resolve next session.
+                    </p>
+                </div>
+                <div class="flex-shrink-0 self-start sm:self-center">
+                    <span class="text-xs text-rose-200 bg-rose-900/60 border border-rose-700/80 px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 group-hover:bg-rose-800 transition-colors shadow-sm">
+                        <span>Read Debrief</span>
                         <span>→</span>
                     </span>
                 </div>
             </div>
 
+            <!-- Quick Table MVPs (if present) -->
+            {mvp_pills}
+
             <!-- Narrative Elements Quick Spectrum Grid -->
-            <div class="pt-3.5 space-y-3">
+            <div class="pt-3 space-y-3">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {mini_pills}
                 </div>
@@ -844,10 +914,10 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
                     </p>
                     <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-slate-400 font-sans border-t border-slate-800/60">
                         <span class="flex items-center gap-1.5 text-amber-400 font-medium">
-                            <span>⚖️</span> <span>Story Choices & Narrative Trade-offs Analyzed</span>
+                            <span>⚖️</span> <span>Story Choices, Player MVPs & Directives Ready</span>
                         </span>
                         <span class="text-rose-400 group-hover:text-rose-300 font-medium underline decoration-rose-500/40 underline-offset-2 flex items-center gap-1">
-                            <span>Disagree with the critic? Tap to share your take</span> <span>💬</span>
+                            <span>Tap to view full debrief & directives</span> <span>💬</span>
                         </span>
                     </div>
                 </div>
@@ -859,12 +929,102 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
 
 def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words: int, spoken_pct: float, narrative_pct: float, sensory: dict) -> str:
     bot_review = editorial_forum.get("initialBotReview", {})
-    author = "Editorial Story Critic"
-    verdict = "★ Certified Production Cut · Balanced Pacing & High Immersion"
+    table_debrief = bot_review.get("tableDebrief", {})
+    tomatometer = bot_review.get("tomatometer") or table_debrief.get("tomatometer", 92 if session_num < 5 else 62)
+    popcornmeter = bot_review.get("popcornmeter") or table_debrief.get("popcornmeter", 96 if session_num < 5 else 94)
+    grade = bot_review.get("grade", "A-" if session_num < 5 else "D")
+    verdict = bot_review.get("verdict", "APPROVED FOR PRODUCTION" if session_num < 5 else "BLOCKED — CRITICAL FAILURES REQUIRE REVISION")
+
+    tomatometer_status = "Rotten" if tomatometer < 75 else "Certified Fresh"
+    tomatometer_icon = "🍅" if tomatometer >= 75 else "🟢"
+    tomato_badge_classes = "bg-rose-950/80 text-rose-300 border-rose-800/80" if tomatometer >= 75 else "bg-emerald-950/80 text-emerald-300 border-emerald-800/80"
+    popcorn_status = "Certified Fresh" if popcornmeter >= 75 else "Fresh"
+
     analysis = bot_review.get("ruthlessAnalysis", "")
     if isinstance(analysis, dict):
         analysis = analysis.get(session_num, str(analysis))
-    
+    if not analysis and table_debrief.get("summary"):
+        analysis = table_debrief.get("summary")
+
+    author = "Editorial Story Critic"
+
+    # 1. WHAT HELPED THE NOVEL (PLAYER MVPS)
+    what_helped = table_debrief.get("whatHelped", [])
+    if not what_helped:
+        what_helped = [
+            {"player": "Luke S (Pierre)", "role": "Philosophical Stonemason", "moment": "Deadpan Parisian Worldview", "impact": "Anchors high-fantasy absurdities with deadpan French grounding."},
+            {"player": "William Webb (Dravin)", "role": "Scholarly Schemer", "moment": "Pedantic Academic Rigor", "impact": "Treats planar phenomena as rigorous fieldwork, elevating high-magic tension."},
+            {"player": "John Hagey (Eusacles)", "role": "Blue-Collar Cynic", "moment": "Pragmatic Problem Solving", "impact": "Punctures esoteric pretense with streetwise questions and gamble-ready swagger."},
+            {"player": "Sophie Foreman Noone (Alfie)", "role": "Emotional Heart", "moment": "High-Stakes Vulnerability", "impact": "Injects physical stakes and raw empathy into every dangerous encounter."}
+        ]
+
+    helped_cards_html = ""
+    for wh in what_helped:
+        helped_cards_html += f"""
+        <div class="p-3 rounded-xl bg-slate-950/70 border border-emerald-800/40 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between gap-1.5">
+                <span class="font-bold text-emerald-300 font-serif">{wh.get('player', '')}</span>
+                <span class="text-[9px] px-2 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-mono font-semibold truncate max-w-[140px]">{wh.get('role', '')}</span>
+            </div>
+            <div class="text-[11px] font-mono text-amber-300">
+                ✨ "{wh.get('moment', '')}"
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed font-sans pt-0.5">
+                {wh.get('impact', '')}
+            </p>
+        </div>
+        """
+
+    # 2. THE ANTI-HALLUCINATION WALL
+    anti_hallucination = table_debrief.get("antiHallucinationWall", [])
+    if not anti_hallucination:
+        anti_hallucination = [
+            {"issue": "Player Interiority Boundary", "tableOrigin": "Subtle character reactions at the table.", "hallucinationRisk": "AI must never invent synthetic emotional motivations not roleplayed.", "verdict": "STOP AUTHORING. Preserve raw player agency."},
+            {"issue": "Lore & Mechanics Parity", "tableOrigin": "Live dice rolls and DM adjudication.", "hallucinationRisk": "AI must never retcon failed checks or missed lore.", "verdict": "STOP AUTHORING. Honor dice canon."}
+        ]
+
+    wall_cards_html = ""
+    for wall in anti_hallucination:
+        wall_cards_html += f"""
+        <div class="p-3 rounded-xl bg-slate-950/70 border border-rose-800/50 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between gap-2">
+                <span class="font-bold text-rose-300 font-serif flex items-center gap-1.5">
+                    <span>🛑</span> <span>{wall.get('issue', '')}</span>
+                </span>
+                <span class="text-[9px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">{wall.get('verdict', 'STOP AUTHORING')}</span>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-normal pl-4 border-l border-slate-800">
+                <strong class="text-slate-300">Table Origin:</strong> {wall.get('tableOrigin', '')}
+            </p>
+            <p class="text-[11px] text-slate-300 leading-normal pl-4 border-l border-rose-900/50">
+                <strong class="text-rose-400">Hallucination Risk:</strong> {wall.get('hallucinationRisk', '')}
+            </p>
+        </div>
+        """
+
+    # 3. DIRECTIVES FOR NEXT SESSION
+    directives = table_debrief.get("playerDirectives", [])
+    if not directives:
+        directives = [
+            {"target": "Party & GM", "directive": "Sustain Live Table Momentum", "actionableCoaching": "Continue bringing spontaneous table banter and distinct character perspectives into the next encounter."}
+        ]
+
+    directives_cards_html = ""
+    for d in directives:
+        directives_cards_html += f"""
+        <div class="p-3 rounded-xl bg-slate-950/70 border border-amber-500/40 space-y-1.5 text-xs">
+            <div class="flex items-center justify-between gap-2">
+                <span class="font-bold text-amber-300 font-serif flex items-center gap-1.5">
+                    <span>🎯</span> <span>{d.get('directive', '')}</span>
+                </span>
+                <span class="text-[9px] px-2 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono font-bold truncate max-w-[150px]">{d.get('target', '')}</span>
+            </div>
+            <p class="text-[11px] text-slate-200 leading-relaxed pl-4 border-l border-amber-500/40 font-sans">
+                👉 <strong>Actionable Coaching:</strong> {d.get('actionableCoaching', '')}
+            </p>
+        </div>
+        """
+
     elements = get_narrative_spectrum_elements(session_num, spoken_pct, narrative_pct, sensory)
     spectrum_cards_html = ""
     for el in elements:
@@ -1040,10 +1200,10 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
 
     return f"""
     <!-- ========================================================= -->
-    <!-- EDITORIAL CRITIC REVIEW & NARRATIVE SPECTRUM MODAL -->
+    <!-- EDITORIAL CRITIC REVIEW & ROTTEN TOMATOES DEBRIEF MODAL  -->
     <!-- ========================================================= -->
     <div id="criticForumModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 transition-opacity duration-200">
-        <div id="criticForumModalCard" class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[90vh] sm:max-h-[90dvh] space-y-3.5">
+        <div id="criticForumModalCard" class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[90vh] sm:max-h-[90dvh] space-y-3.5">
             
             <!-- Modal Header with Rotten-Tomatoes Style Tomato Badge -->
             <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-shrink-0">
@@ -1053,10 +1213,10 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Editorial Story Review & Narrative Spectrum</h3>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Story Spectrum</span>
+                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Rotten Tomatoes Post-Mortem & Debrief</h3>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Player Coaching</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 font-mono">Session {session_num} · Graded across 5 Core Fantasy Elements</p>
+                        <p class="text-[11px] text-slate-400 font-mono">Session {session_num} · Anti-Hallucination Quality Gate & Directives</p>
                     </div>
                 </div>
                 <button id="closeCriticForumBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 leading-none transition-colors" title="Close">&times;</button>
@@ -1065,16 +1225,91 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
             <!-- Scrollable Content Stream -->
             <div class="flex-1 overflow-y-auto space-y-4 pr-1 min-h-0 custom-scrollbar">
 
-                <!-- SECTION 1: CRITIC REVIEW & CRAFT SPECTRUM -->
-                <div class="p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 space-y-3 shadow-sm">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+                <!-- SECTION 1: ROTTEN TOMATOES STORY POST-MORTEM & PLAYER DEBRIEF -->
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-rose-500/30 space-y-3.5 shadow-sm">
+                    
+                    <!-- Dual Score Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                         <div class="flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse"></span>
                             <span class="text-xs font-bold font-serif uppercase tracking-wider text-rose-400">{author}</span>
                         </div>
-                        <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono font-bold">{verdict}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-700 font-mono font-bold">{verdict}</span>
                     </div>
 
+                    <!-- Dual Scorecards Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Critic Tomatometer -->
+                        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
+                            <div class="text-3xl sm:text-4xl flex-shrink-0">{tomatometer_icon}</div>
+                            <div>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-xl sm:text-2xl font-bold font-mono text-slate-100">{tomatometer}%</span>
+                                    <span class="text-[10px] uppercase font-mono font-bold px-1.5 py-0.2 rounded {tomato_badge_classes}">{tomatometer_status} ({grade})</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 font-mono block">Tomatometer · Prose & Contract Critique</span>
+                            </div>
+                        </div>
+
+                        <!-- Table Popcornmeter -->
+                        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
+                            <div class="text-3xl sm:text-4xl flex-shrink-0">🍿</div>
+                            <div>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-xl sm:text-2xl font-bold font-mono text-amber-300">{popcornmeter}%</span>
+                                    <span class="text-[10px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/80">{popcorn_status}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 font-mono block">Popcornmeter · Live Tabletop Energy</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Anti-Hallucination Convergence Boundary Banner -->
+                    <div class="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border border-rose-500/40 space-y-2">
+                        <div class="flex items-center gap-2 text-rose-300 font-bold text-xs sm:text-sm font-serif">
+                            <span class="text-base">🧱</span>
+                            <span>The Anti-Hallucination Convergence Boundary</span>
+                        </div>
+                        <p class="text-xs text-slate-200 leading-relaxed font-sans">
+                            Upstream AI authoring can refine prose, tune sentence cadence, and trim dead silence. However, when character interiority or crucial story reveals were omitted at the table, <strong>the AI must STOP</strong>. Fabricating synthetic emotions, grief, or retroactive dialogue outside what the players delivered violates player agency. Addressing these gaps belongs directly to the players and GM at the table in their next session.
+                        </p>
+                    </div>
+
+                    <!-- What Helped the Novel (Player MVPs) -->
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-emerald-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                            <span>🌟</span> <span>What Helped the Novel (Player MVPs & Story Fuel)</span>
+                        </span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {helped_cards_html}
+                        </div>
+                    </div>
+
+                    <!-- The Anti-Hallucination Wall -->
+                    <div class="space-y-2 pt-1">
+                        <span class="text-xs font-bold text-rose-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                            <span>🛑</span> <span>The Anti-Hallucination Wall (Where AI Cannot Tread)</span>
+                        </span>
+                        <div class="space-y-2">
+                            {wall_cards_html}
+                        </div>
+                    </div>
+
+                    <!-- Directives for Next Session (Player & GM Coaching) -->
+                    <div class="space-y-2 pt-1">
+                        <span class="text-xs font-bold text-amber-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                            <span>🎯</span> <span>Directives for Next Session (Player & GM Coaching)</span>
+                        </span>
+                        <div class="space-y-2">
+                            {directives_cards_html}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- SECTION 2: CRAFT SPECTRUM & EDITORIAL ANALYSIS -->
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 space-y-3 shadow-sm">
+                    
                     <!-- Narrative Element Score Spectrum Cards -->
                     <div class="space-y-2">
                         <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
@@ -1118,7 +1353,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
 
                 {revisions_section}
 
-                <!-- SECTION 2: DISAGREE WITH THE CRITIC? READER REACTION BOX -->
+                <!-- SECTION 3: DISAGREE WITH THE CRITIC? READER REACTION BOX -->
                 <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <div class="flex items-center gap-1.5">
@@ -2274,6 +2509,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         <div id="storyEndSentinel" class="h-8 w-full flex items-center justify-center text-xs text-slate-500 font-mono py-6">
             <span>✦ End of Session {session_num} ✦</span>
         </div>
+
+        {end_session_critic_card_html}
 
         <!-- Bottom Controls: Reader Feedback & Editorial Review -->
         <footer class="mt-12 pt-8 border-t border-slate-800 text-center space-y-4">
@@ -5138,7 +5375,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     print(f"[OK] Generated {output_path.name} ({len(blocks)} blocks, {word_count:,} words)")
 
 if __name__ == "__main__":
-    for s_num in [1, 2, 3, 4]:
+    for s_num in [1, 2, 3, 4, 5]:
         m_path = MANIFEST_DIR / f"s{s_num}-manifest-v2.json"
         if m_path.exists():
             out_path = OUTPUT_DIR / f"uneraseable-s{s_num}.html"

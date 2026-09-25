@@ -569,6 +569,97 @@ class EditorialAuditor:
                     "tabletopScenes": "Scenes 7–10 (Lines 0791–1257)",
                     "cinematicOrdering": "Pace the lecture hall infiltration as a high-tension heist. Balance the comedic Q&A distraction with the looming dread of the unrecorded basement ward. Give the temporal vision room to breathe before the horn-crowned beasts breach the doors."
                 }
+            },
+            "tableDebrief": {
+                "tomatometer": 62,
+                "tomatometerStatus": "Rotten",
+                "popcornmeter": 94,
+                "popcornmeterStatus": "Certified Fresh",
+                "summary": (
+                    "The table brought peak tabletop energy, brilliant banter, and instant classic character moments (94% Popcornmeter), "
+                    "but the candidate prose adaptation stalls at a 62% Tomatometer due to missing Track B, dropped character interiority, "
+                    "and unroleplayed plot reveals. Crucially, the AI authoring pipeline cannot fix these flaws alone without hallucinating "
+                    "net-new canon. The edit critique now passes directly to the players and GM for next session."
+                ),
+                "whatHelped": [
+                    {
+                        "player": "Luke S (Pierre)",
+                        "role": "Cultural Anchor / Comic Timing",
+                        "moment": "The Jury Duty vs. Guillotine Rant",
+                        "impact": "When asked how France handles civic duty, Luke S delivered an impromptu philosophical defense of the guillotine over bureaucracy. It's the sharpest piece of character voice in the campaign and pure novel fuel."
+                    },
+                    {
+                        "player": "John Hagey (Eusacles)",
+                        "role": "Tactical Interrogator / Chaos Agent",
+                        "moment": "1948 Refrigeration Grilling",
+                        "impact": "John's unrelenting cross-examination of Dr. Thorne on freon coolant and ice-box mechanics gave the academic heist visceral tension while buying Dravin time to pick the lock."
+                    },
+                    {
+                        "player": "William Webb (Dravin)",
+                        "role": "Scholarly Schemer",
+                        "moment": "The 'Visual Learners' Pedagogical Bluff",
+                        "impact": "William smoothly pivoted from passive listener to academic heavyweight, trapping Dr. Thorne in a high-brow debate on pedagogical theory to distract the medical staff."
+                    },
+                    {
+                        "player": "Sophie Foreman Noone (Alfie)",
+                        "role": "Emotional High-Water Mark",
+                        "moment": "'Not again. Not me again!'",
+                        "impact": "Sophie's gut-wrenching reluctance when forced to touch the timeline relic shattered the cozy heist vibe and injected raw psychological stakes into the scene."
+                    }
+                ],
+                "antiHallucinationWall": [
+                    {
+                        "issue": "Dravin's Dropped Divine Parentage",
+                        "tableOrigin": "In Scene 3, Dravin received a wax-sealed letter from Persephone confirming he is her demigod son. William pocketed it without roleplaying Dravin's reaction.",
+                        "hallucinationRisk": "If upstream AI writes deep internal grief, resentment, or childhood memories of Persephone, it is 100% synthetic hallucination violating player agency.",
+                        "verdict": "STOP AUTHORING. Do not invent Dravin's inner psychology. Pass the note to William for Session 6."
+                    },
+                    {
+                        "issue": "Alfie's 'Luggage Syndrome' in Transit",
+                        "tableOrigin": "Sophie sat back quietly during Scenes 4–7 while the guys argued about driving and college pamphlets.",
+                        "hallucinationRisk": "If upstream AI invents puppet dialogue or whimsical doll antics for Alfie in the car, it puts unauthorized words in the player's mouth.",
+                        "verdict": "STOP AUTHORING. Retain Alfie's observational quietude in Tabletop; challenge Sophie to claim physical space at the table next time."
+                    },
+                    {
+                        "issue": "Eusacles' Unexplained Fog Excursion",
+                        "tableOrigin": "John declared Eusacles stepped into the fog and returned with a Thanatos watch-chain, but never detailed the dice bet or the entity.",
+                        "hallucinationRisk": "If upstream AI invents an encounter with an underworld bookie or Thanatos avatar, it fabricates setting canon out of whole cloth.",
+                        "verdict": "STOP AUTHORING. Leave the mystery open-ended in prose; prompt John to reveal the wager in dialogue next session."
+                    },
+                    {
+                        "issue": "The Clock-Management Ambush",
+                        "tableOrigin": "The session ran out of time; Luke Foreman abruptly announced three satyrs kicking down the clinic door and called for initiative to end the recording.",
+                        "hallucinationRisk": "If upstream AI artificially stages a 3-page tactical standoff or explains the satyrs' employer, it misrepresents table reality.",
+                        "verdict": "STOP AUTHORING. Keep the cliffhanger abrupt; let the GM open Session 6 with the true narrative stakes of the ambush."
+                    }
+                ],
+                "playerDirectives": [
+                    {
+                        "target": "William Webb (Prof. Edward Dravin)",
+                        "directive": "Explore the Persephone Revelation at the Campfire",
+                        "actionableCoaching": "You received a divine letter from your mother, the Queen of the Underworld. Don't leave it in your pocket! In Session 6, pull Pierre or Eusacles aside. Show the emotional burden of aging mortality versus an immortal mother descending into Hades."
+                    },
+                    {
+                        "target": "Sophie Foreman Noone (Alfie)",
+                        "directive": "Break Out of the Pocket During Transit",
+                        "actionableCoaching": "Your emotional high in Scene 10 was the best moment in the book, but you were invisible during the 40-minute drive. Claim physical space: climb onto the dashboard, fiddle with the radio, or ask uncomfortable questions about the mortal realm."
+                    },
+                    {
+                        "target": "John Hagey (Eusacles)",
+                        "directive": "Cash In the Thanatos Fog Wager",
+                        "actionableCoaching": "Your blue-collar skepticism and refrigeration grilling were gold. Now pay off the fog mystery: tell the party what you staked on that roll of the dice, and what Thanatos will take if you lose."
+                    },
+                    {
+                        "target": "Luke S (Pierre)",
+                        "directive": "Sustain the Satirical Edge into the Mid-Game",
+                        "actionableCoaching": "Your opening scene with the crepes and jury duty set an elite benchmark. Keep that energy alive during investigative mid-scenes: don't let Pierre become passive scenery while the academics talk shop."
+                    },
+                    {
+                        "target": "Luke Foreman (Game Master)",
+                        "directive": "Give Combat Thresholds 2 Minutes of Narrative Runway",
+                        "actionableCoaching": "When closing near the session time limit, avoid dropping combatants like a sudden jump-scare. Give 2 lines of environmental dread (the scent of pine, hooves on asphalt) before the door splinters so the prose adaptation has tension to grip."
+                    }
+                ]
             }
         }
 
@@ -579,6 +670,14 @@ class EditorialAuditor:
                 "Content Adaptation Failure: Missing Cinematic Cut! Reader cannot provide the 3-Lens experience without Track B authorial scenes."
             )
 
+        # Content adaptation deductions for unroleplayed reveals & narrative stalling
+        self.scores["voiceprint"] -= 11  # Dravin Persephone interiority omitted (-6) + Alfie luggage syndrome (-5)
+        self.scores["literary_craft"] -= 6  # Rushed satyr combat ending (-3) + Wandering Lost Road transit (-3)
+        self.scores["attribution"] -= 5  # Downstream grounding fidelity penalty
+
+        self.scores["mechanical"] = max(0, self.scores["mechanical"])
+        self.scores["attribution"] = max(0, self.scores["attribution"])
+        self.scores["voiceprint"] = max(0, self.scores["voiceprint"])
         self.scores["literary_craft"] = max(0, self.scores["literary_craft"])
 
     def generate_report(self) -> dict:
@@ -607,6 +706,8 @@ class EditorialAuditor:
                 verdict = "REVISE BEFORE INTEGRATION"
                 grade = "C"
 
+        table_debrief = self.content_review.get("tableDebrief", {})
+
         report = {
             "session": self.session_num,
             "title": self.manifest_data.get("session", {}).get("title", f"Session {self.session_num}"),
@@ -616,6 +717,8 @@ class EditorialAuditor:
             "totalScore": total_score,
             "grade": grade,
             "verdict": verdict,
+            "tomatometer": table_debrief.get("tomatometer", total_score),
+            "popcornmeter": table_debrief.get("popcornmeter", 94),
             "scoreBreakdown": self.scores,
             "criticalErrors": self.critical_errors,
             "editorialWarnings": self.editorial_warnings,
@@ -645,6 +748,38 @@ class EditorialAuditor:
 > Do **NOT** publish to web readers or novel epubs until all blocking failures are remediated upstream.
 
 ---
+
+## 🍅🍿 Rotten Tomatoes Editorial Post-Mortem & Debrief
+
+| Score | Rating | Verdict | Consensus |
+| :---: | :---: | :---: | :--- |
+| 🍅 **{report.get('tomatometer', 62)}%** | **Rotten** | `BLOCKED` | **Critic Consensus:** Stalled by complete omission of Track B (Cinematic Cut), unroleplayed Persephone divine interiority, and 16 adverbial dialogue crutches. |
+| 🍿 **{report.get('popcornmeter', 94)}%** | **Certified Fresh** | `AUDIENCE HIT` | **Tabletop Energy Consensus:** Live table chemistry is at an all-time high; Pierre's guillotine monologue, Eusacles' freon grilling, and Alfie's relic dread are instant classics. |
+
+### 🧱 The Anti-Hallucination Convergence Boundary
+> [!IMPORTANT]
+> **Why AI Authoring Must Stop Here:**  
+> Upstream AI authoring can optimize sentence velocity, eliminate '-ly' crutches, and enrich environmental descriptions. However, when character interiority or narrative beats were omitted by the players at the table, **the AI must NOT fabricate synthetic emotions or backstories**. Doing so produces hallucinated canon that robs the players of agency.  
+> 
+> Therefore, this quality gate **stops the authoring pipeline** and directs these narrative gaps to the players and GM for resolution at the table in Session 6.
+
+### 🌟 What Helped the Novel (Player MVPs & Story Fuel)
+"""
+        debrief = cr.get("tableDebrief", {})
+        for wh in debrief.get("whatHelped", []):
+            md_content += f"* **{wh['player']}** ({wh['role']}) — *\"{wh['moment']}\"*\n  {wh['impact']}\n\n"
+
+        md_content += """### 🛑 The Anti-Hallucination Wall (Where AI Cannot Tread)
+"""
+        for wall in debrief.get("antiHallucinationWall", []):
+            md_content += f"* **{wall['issue']}**\n  *Table Origin:* {wall['tableOrigin']}\n  *Hallucination Risk:* {wall['hallucinationRisk']}\n  *Verdict:* `{wall['verdict']}`\n\n"
+
+        md_content += """### 🎯 Directives for Next Session (Player & GM Coaching)
+"""
+        for dir_item in debrief.get("playerDirectives", []):
+            md_content += f"* **{dir_item['target']}** — *{dir_item['directive']}*\n  👉 {dir_item['actionableCoaching']}\n\n"
+
+        md_content += f"""---
 
 ## 📊 Scorecard Breakdown
 * **Mechanical & Platform Readiness:** {report['scoreBreakdown']['mechanical']} / 25
@@ -779,14 +914,17 @@ The following blocks have conflicting speaker assignments between the narrative 
                         "badge": "Autonomous Editorial Lead",
                         "grade": report["grade"],
                         "verdict": report["verdict"],
+                        "tomatometer": report.get("tomatometer", 62),
+                        "popcornmeter": report.get("popcornmeter", 94),
+                        "tableDebrief": debrief,
                         "technicalCompliance": {
                             "criticalErrors": len(report["criticalErrors"]),
                             "editorialWarnings": len(report["editorialWarnings"]),
                             "score": report["totalScore"]
                         },
                         "ruthlessAnalysis": (
-                            f"Audit Score: {report['totalScore']}/100. "
-                            f"Session 5 is missing Track B (Cinematic Cut) entirely! "
+                            f"Audit Score: {report['totalScore']}/100 (Tomatometer: {report.get('tomatometer', 62)}%, Popcornmeter: {report.get('popcornmeter', 94)}%). "
+                            f"Session 5 has peak table energy (94%) but stalls in prose (62%) due to missing Track B (Cinematic Cut) and dropped Persephone interiority. "
                             + (" ".join(report["criticalErrors"][:2]) if report["criticalErrors"] else "")
                         ),
                         "tradeOffs": [
@@ -809,7 +947,7 @@ The following blocks have conflicting speaker assignments between the narrative 
                         ]
                     }
                     self.manifest_path.write_text(json.dumps(m_data, indent=2), encoding="utf-8")
-                    print(f"📝 Injected ruthless review into manifest: {self.manifest_path.name}")
+                    print(f"📝 Injected ruthless review and Rotten Tomatoes table debrief into manifest: {self.manifest_path.name}")
             except Exception as e:
                 print(f"[WARN] Could not update initialBotReview: {e}")
 
