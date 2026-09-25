@@ -1,4 +1,4 @@
-﻿# D&D Wikis — Frontend Component Architecture & Standards
+# D&D Wikis — Frontend Component Architecture & Standards
 
 > **Guide for UI Contributors**: This document details the component architecture, visual design tokens, interaction lifecycles, and hard-won lessons learned across the D&D Wikis front-end reading applications.
 
@@ -52,11 +52,25 @@ Every character in the story receives a consistent, high-contrast color token:
   3. **Vertical Chapter List (Y-Axis)**:
      * Distinct novel chapters with scene range badges.
      * Active named NPC tags (`#f87171`) highlighting guest appearances in that chapter.
+     * Reading lens badges: `[ 🔀 3 Lenses ]` (Cinematic + Tabletop + Raw) or `[ 🎙️ 2 Lenses ]` (Tabletop + Raw).
      * Tapping any chapter executes a smooth scroll directly to the corresponding DOM element and dismisses the modal.
 
 ---
 
-### 3. Mobile Passage Critique Sheet
+### 3. The 3 Reading Lenses & Verbatim Audio Bridge
+* **Engine Architecture**:
+  1. `🎬 The Cinematic Cut`: Compressed authorial pacing, deep character interiority, and atmospheric narrative restructuring.
+  2. `🎲 The Tabletop Cut`: Grounded novel prose faithful 1:1 to the spoken tabletop turn sequence.
+  3. `🎙️ The Raw Transcript`: Complete verbatim audio transcript in script/screenplay format with zero pruned lines.
+* **Turn Grounding & Subdued Monospace Indexing**:
+  * **In-Character Dialogue (IC)**: Prominently highlighted with the speaker's character color left border and header tag (`Pierre (Luke S)`, `Naomi (Luke Foreman)`).
+  * **Secondary Monospace Indexing Chips**: Right-aligned, quiet chips (`[● Grounded #84]`, `[● Action Beat #85]`, `[Scene Bridge]`, `[Mechanics]`, `[OOC]`) demonstrating turn indexing effectiveness without cluttering the prose.
+  * **Bilateral Teleportation**: Tapping `[● Grounded #84]` in the Raw Transcript switches to the Novel Cut and centers block #84 with a temporary amber highlight pulse. Tapping `[🎙️ Raw L883]` or any dialogue segment in the Novel Cut flips directly to that line in the Raw Transcript.
+* **Persistent Selection**: Chapter switcher toggles (`data-cut`) persist user choice across chapters via `localStorage.getItem('dnd_active_cut')`.
+
+---
+
+### 4. Mobile Passage Critique Sheet
 * **Element ID**: `#critiqueModalOverlay`
 * **Design**: Bottom sheet on mobile viewports (`max-h-[85vh]`), centered dialog on desktop.
 * **Layering**: Always assigned `z-[60]` (elevated strictly above the `z-50` Diff Inspector).

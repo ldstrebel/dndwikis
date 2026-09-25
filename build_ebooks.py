@@ -264,6 +264,149 @@ def load_session_source_mapping(session_num: int) -> dict:
 
     return block_map
 
+def load_raw_transcript_data(session_num: int, manifest: dict, source_mapping: dict, chapters: list) -> tuple:
+    """Loads raw-indexed transcript and computes:
+    1. raw_lines: dict mapping line_num -> {line, speaker, text}
+    2. line_to_block: mapping line_num -> {blockId, blockIndex, speakerId, speakerName, type, cut}
+    3. chapter_ranges: continuous [start_line, end_line] ranges for all chapters
+    """
+    raw_path = MANIFEST_DIR / f"s{session_num}-raw-indexed.md"
+    if not raw_path.exists():
+        return {}, {}, []
+
+    raw_text = raw_path.read_text(encoding="utf-8")
+    raw_lines = {}
+    for line in raw_text.splitlines():
+        m = re.match(r"^L(\d+):\s*(.*)$", line)
+        if m:
+            l_num = int(m.group(1))
+            rest = m.group(2).strip()
+            speaker = "Table Voice"
+            content = rest
+            if "**" in rest and ":" in rest:
+                if "**:" in rest:
+                    sp_part, text_part = rest.split("**:", 1)
+                    speaker = sp_part.replace("**", "").strip()
+                    content = text_part.strip()
+                elif ":**" in rest:
+                    sp_part, text_part = rest.split(":**", 1)
+                    speaker = sp_part.replace("**", "").strip()
+                    content = text_part.strip()
+            elif rest.startswith("*Table Note:"):
+                speaker = "Table Note"
+                content = rest.replace("*Table Note:", "").strip("* ").strip()
+            raw_lines[l_num] = {
+                "line": l_num,
+                "speaker": speaker,
+                "text": content
+            }
+
+    # Build line_to_block mapping from segments and source_mapping
+    line_to_block = {}
+    all_blocks = manifest.get("blocks", [])
+
+    # 1. From block segments
+    npc_name_list = ["Naomi", "Mike", "Theodore", "Rosa", "Beast", "Nancy", "Thomas", "Gordon", "Anna", "Fates", "Clerk", "Anchor"]
+    for b in all_blocks:
+        b_id = b.get("id")
+        b_idx = b.get("index")
+        b_cut = b.get("cut", "tabletop")
+        b_text = b.get("text", "")
+
+        detected_npc = None
+        for npc in npc_name_list:
+            if re.search(r"\b" + re.escape(npc) + r"\b", b_text, re.IGNORECASE):
+                detected_npc = npc
+                break
+
+        for seg in b.get("segments", []):
+            sl = seg.get("sourceLine")
+            if sl:
+                try:
+                    ln = int(sl)
+                    if ln not in line_to_block or b_cut != "cinematic":
+                        seg_spk = seg.get("speakerId") or b.get("speakerId")
+                        seg_name = seg.get("speakerName")
+                        if (seg_spk == "narrator" or not seg_spk) and seg.get("type") == "dialogue" and detected_npc:
+                            seg_spk = detected_npc.lower()
+                            seg_name = detected_npc
+                        line_to_block[ln] = {
+                            "blockId": b_id,
+                            "blockIndex": b_idx,
+                            "speakerId": seg_spk,
+                            "speakerName": seg_name,
+                            "type": seg.get("type", "dialogue"),
+                            "cut": b_cut
+                        }
+                except (ValueError, TypeError):
+                    pass
+
+    # 2. From source_mapping
+    for b_id, sm_data in source_mapping.items():
+        mb = next((b for b in all_blocks if b.get("id") == b_id), None)
+        b_idx = mb.get("index") if mb else None
+        b_spk = mb.get("speakerId") if mb else sm_data.get("speakerId")
+        b_cut = mb.get("cut", "tabletop") if mb else "tabletop"
+        pl = sm_data.get("primaryLine", {}).get("line")
+        if pl and isinstance(pl, int) and pl not in line_to_block:
+            line_to_block[pl] = {
+                "blockId": b_id,
+                "blockIndex": b_idx,
+                "speakerId": b_spk,
+                "type": "grounded",
+                "cut": b_cut
+            }
+        for bl in sm_data.get("bundledLines", []):
+            bln = bl.get("line")
+            if bln and isinstance(bln, int) and bln not in line_to_block:
+                line_to_block[bln] = {
+                    "blockId": b_id,
+                    "blockIndex": b_idx,
+                    "speakerId": b_spk,
+                    "type": "grounded",
+                    "cut": b_cut
+                }
+
+    raw_nums = sorted(raw_lines.keys())
+    if not raw_nums:
+        return raw_lines, line_to_block, []
+
+    ch_starts = []
+    for ch in chapters:
+        c_lines = []
+        for b in ch["blocks"]:
+            for seg in b.get("segments", []):
+                sl = seg.get("sourceLine")
+                if sl:
+                    try:
+                        c_lines.append(int(sl))
+                    except (ValueError, TypeError):
+                        pass
+            bsm = source_mapping.get(b.get("id"), {})
+            pl = bsm.get("primaryLine", {}).get("line")
+            if pl and isinstance(pl, int):
+                c_lines.append(pl)
+        min_l = min(c_lines) if c_lines else None
+        max_l = max(c_lines) if c_lines else None
+        ch_starts.append((min_l, max_l))
+
+    chapter_ranges = []
+    tot_ch = len(chapters)
+    for i in range(tot_ch):
+        min_l, max_l = ch_starts[i]
+        start_b = 1 if i == 0 else (min_l if min_l else chapter_ranges[-1][1] + 1)
+        if i == tot_ch - 1:
+            end_b = max(raw_nums)
+        else:
+            next_start = ch_starts[i + 1][0]
+            if next_start:
+                end_b = next_start - 1
+            else:
+                end_b = max_l if max_l else start_b + 100
+        chapter_ranges.append((start_b, end_b))
+
+    return raw_lines, line_to_block, chapter_ranges
+
 def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
     """Builds a vertical chapter list with 2 lines per chapter:
     Line 1: # - Name - stacked horizontal dialogue bar
@@ -347,8 +490,15 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
         if has_dual_cuts:
             dual_cut_badge = (
                 '<span class="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0" '
-                'title="Features 2 Alternate Versions: The Tabletop Cut & The Cinematic Cut">'
-                '<span>🔀</span> <span>2 Cuts</span>'
+                'title="Features 3 Reading Lenses: The Cinematic Cut, The Tabletop Cut, and The Raw Transcript">'
+                '<span>🔀</span> <span>3 Lenses</span>'
+                '</span>'
+            )
+        else:
+            dual_cut_badge = (
+                '<span class="px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/50 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0" '
+                'title="Features 2 Reading Lenses: The Tabletop Cut and The Raw Transcript">'
+                '<span>🎙️</span> <span>2 Lenses</span>'
                 '</span>'
             )
 
@@ -1208,6 +1358,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     session_characters_json = json.dumps(characters)
     diff_inspector_html = build_diff_inspector_html(session_num)
 
+    # Load Raw Transcript Data
+    raw_lines, line_to_block, chapter_ranges = load_raw_transcript_data(session_num, data, source_mapping, chapters)
+
     # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
     chapter_index = 0
@@ -1225,52 +1378,68 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             cut_switcher_html = f"""
             <div class="mt-4 flex flex-col items-center justify-center gap-1.5">
                 <div class="inline-flex items-center p-1 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-md">
-                    <button type="button" class="chapter-cut-btn cut-btn-tabletop px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-cut="tabletop" onclick="switchGlobalCut('tabletop')">
-                        <span>🎲</span>
-                        <span>The Tabletop Cut</span>
-                    </button>
-                    <button type="button" class="chapter-cut-btn cut-btn-cinematic px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5" data-cut="cinematic" onclick="switchGlobalCut('cinematic')">
+                    <button type="button" class="chapter-cut-btn cut-btn-cinematic px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5" data-cut="cinematic" onclick="switchGlobalCut('cinematic')">
                         <span>🎬</span>
                         <span>The Cinematic Cut</span>
                     </button>
+                    <button type="button" class="chapter-cut-btn cut-btn-tabletop px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-cut="tabletop" onclick="switchGlobalCut('tabletop')">
+                        <span>🎲</span>
+                        <span>The Tabletop Cut</span>
+                    </button>
+                    <button type="button" class="chapter-cut-btn cut-btn-raw px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5" data-cut="raw" onclick="switchGlobalCut('raw')">
+                        <span>🎙️</span>
+                        <span>The Raw Transcript</span>
+                    </button>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono tracking-wide">Version switcher · Selection stays active across all chapters</span>
+                <span class="text-[10px] text-slate-500 font-mono tracking-wide">3 Reading Lenses · Selection stays active across all chapters</span>
+            </div>
+            """
+        else:
+            cut_switcher_html = f"""
+            <div class="mt-4 flex flex-col items-center justify-center gap-1.5">
+                <div class="inline-flex items-center p-1 rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-md">
+                    <button type="button" class="chapter-cut-btn cut-btn-tabletop px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-cut="tabletop" onclick="switchGlobalCut('tabletop')">
+                        <span>🎲</span>
+                        <span>The Tabletop Cut</span>
+                    </button>
+                    <button type="button" class="chapter-cut-btn cut-btn-raw px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5" data-cut="raw" onclick="switchGlobalCut('raw')">
+                        <span>🎙️</span>
+                        <span>The Raw Transcript</span>
+                    </button>
+                </div>
+                <span class="text-[10px] text-slate-500 font-mono tracking-wide">2 Reading Lenses · Selection stays active across all chapters</span>
             </div>
             """
 
-        blocks_html += f"""
-        <!-- CHAPTER DIVIDER {chapter_index} -->
-        <section id="{anchor_id}" class="pt-8 pb-4 my-6 border-b border-slate-800/80 scroll-mt-20">
-            <div class="flex items-center gap-3">
-                <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
-                <div class="text-center px-3">
-                    <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part {chapter_index}</span>
-                    <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">{ch_title}</h3>
-                </div>
-                <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
-            </div>
-            {cut_switcher_html}
-        </section>
-        """
-
+        ch_novel_blocks_html = ""
         for b in ch["blocks"]:
             b_id = b.get("id", "block")
             b_idx = b.get("index", 1)
             b_cut = b.get("cut")
             cut_classes = ""
             cut_attr = ""
-            if b_cut == "tabletop":
-                cut_classes = " cut-block cut-block-tabletop"
-                cut_attr = ' data-cut="tabletop"'
-            elif b_cut == "cinematic":
+            if b_cut == "cinematic":
                 cut_classes = " cut-block cut-block-cinematic hidden"
                 cut_attr = ' data-cut="cinematic"'
+            else:
+                cut_classes = " cut-block cut-block-tabletop"
+                cut_attr = ' data-cut="tabletop"'
 
             sp_id = b.get("speakerId", "narrator").lower().strip()
             sp_info = characters.get(sp_id, {"name": sp_id.title(), "type": "narrator"})
             sp_name = sp_info.get("name", sp_id.title())
             sp_color = get_speaker_color(sp_id, sp_info)
             text = b.get("text", "")
+
+            # Determine b_raw_line for 1-click jump to raw transcript
+            first_seg_line = next((int(seg["sourceLine"]) for seg in b.get("segments", []) if seg.get("sourceLine")), None)
+            sm_entry = source_mapping.get(b_id, {})
+            sm_primary = sm_entry.get("primaryLine", {}).get("line")
+            b_raw_line = first_seg_line or (sm_primary if isinstance(sm_primary, int) else None)
+
+            raw_jump_btn = ""
+            if b_raw_line:
+                raw_jump_btn = f'<button type="button" class="raw-jump-btn text-[10px] font-mono text-slate-500 hover:text-emerald-400 transition-colors inline-flex items-center gap-1 opacity-70 hover:opacity-100 cursor-pointer" onclick="event.stopPropagation(); jumpToRawLine({b_raw_line});" title="View line {b_raw_line} in Raw Transcript"><span>🎙️</span><span>Raw L{b_raw_line}</span></button>'
 
             segments = b.get("segments", [])
             if segments:
@@ -1285,7 +1454,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     if s_type == "dialogue" and s_spk != "narrator":
                         s_color = get_speaker_color(s_spk, characters.get(s_spk))
                         line_attr = f' data-source-line="{s_line}"' if s_line else ""
-                        title_attr = f' title="Spoken by {s_name}' + (f' (Line {s_line})"' if s_line else '"')
+                        title_attr = f' title="Spoken by {s_name}' + (f' · Click to jump to line {s_line} in Raw Transcript"' if s_line else '"')
                         seg_html_parts.append(
                             f'<span class="dialogue-segment font-medium transition-colors cursor-pointer hover:underline" style="color: {s_color};" data-speaker="{s_spk}" data-speaker-name="{s_name}" data-speaker-color="{s_color}"{line_attr}{title_attr}>{s_text}</span>'
                         )
@@ -1300,7 +1469,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             is_narrator = (sp_info.get("type") == "narrator" or sp_id == "narrator")
 
             if is_narrator:
-                blocks_html += f"""
+                ch_novel_blocks_html += f"""
                 <!-- Block {b_idx} (Narrator) -->
                 <div class="story-block story-block-narrator py-1.5 px-3 rounded-lg hover:bg-slate-900/40 transition-colors my-1{cut_classes}"
                      id="{b_id}"
@@ -1308,14 +1477,17 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                      data-speaker="{sp_id}"
                      data-speaker-name="{sp_name}"
                      data-speaker-color="{sp_color}"{cut_attr}>
-                    <div class="flex justify-end">
+                    <div class="flex items-center justify-between mb-1">
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
+                        <div class="ml-auto flex items-center gap-2">
+                            {raw_jump_btn}
+                        </div>
                     </div>
                     <p class="text-slate-300 leading-relaxed text-base sm:text-lg">{rendered_text}</p>
                 </div>
                 """
             else:
-                blocks_html += f"""
+                ch_novel_blocks_html += f"""
                 <!-- Block {b_idx} ({sp_name}) -->
                 <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm{cut_classes}"
                      id="{b_id}"
@@ -1327,11 +1499,159 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     <div class="flex items-center gap-2 mb-2">
                         <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {sp_color}"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: {sp_color}">{sp_name}</span>
-                        <span class="critique-indicator-dot hidden ml-auto text-xs text-amber-400 font-bold">● Critique Added</span>
+                        <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
+                        <div class="ml-auto flex items-center gap-2">
+                            {raw_jump_btn}
+                        </div>
                     </div>
                     <p class="text-slate-100 font-medium leading-relaxed text-base sm:text-lg">{rendered_text}</p>
                 </div>
                 """
+
+        # Generate Raw Transcript Turns for this chapter
+        ch_raw_turns_html = ""
+        ch_start_line, ch_end_line = chapter_ranges[chapter_index - 1] if (chapter_index - 1 < len(chapter_ranges)) else (1, 1)
+        for l_num in range(ch_start_line, ch_end_line + 1):
+            if l_num not in raw_lines:
+                continue
+            line_data = raw_lines[l_num]
+            speaker_raw = line_data["speaker"]
+            content_raw = line_data["text"]
+
+            # Initialize turn variables freshly on each iteration
+            is_ic = False
+            sp_color = "#94a3b8"
+            char_name = ""
+            player_name = speaker_raw
+            display_speaker = speaker_raw
+            tag_label = "OOC"
+
+            b_info = line_to_block.get(l_num)
+            if b_info:
+                block_id = b_info.get("blockId", "")
+                block_idx = b_info.get("blockIndex", "")
+                b_spk = (b_info.get("speakerId") or "").lower().strip()
+                b_type = b_info.get("type", "grounded")
+                b_cut = b_info.get("cut", "tabletop")
+
+                if b_spk and b_spk != "narrator":
+                    if speaker_raw == "Luke Foreman" and b_spk in ["pierre", "alfie", "dravin", "eusacles"]:
+                        is_ic = False
+                        sp_color = "#94a3b8"
+                        display_speaker = "Luke Foreman · GM Framing"
+                    else:
+                        is_ic = True
+                        c_info = characters.get(b_spk, {})
+                        char_name = c_info.get("name", b_info.get("speakerName") or b_spk.title())
+                        sp_color = get_speaker_color(b_spk, c_info)
+                        player_name = speaker_raw
+                else:
+                    is_ic = False
+                    sp_color = "#94a3b8"
+                    if speaker_raw == "Luke Foreman":
+                        display_speaker = "Luke Foreman · GM Framing"
+                    else:
+                        display_speaker = speaker_raw
+
+                if b_type == "action":
+                    right_chip = f'<button type="button" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-cyan-300 bg-cyan-950/70 border border-cyan-800/60 hover:border-cyan-500 hover:text-cyan-200 transition-colors cursor-pointer" onclick="jumpToNovelBlock(\'{block_id}\')" title="Jump to Novel Action Beat #{block_idx}"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span>● Action Beat #{block_idx}</span></button>'
+                else:
+                    right_chip = f'<button type="button" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono text-emerald-300 bg-emerald-950/70 border border-emerald-800/60 hover:border-emerald-500 hover:text-emerald-200 transition-colors cursor-pointer" onclick="jumpToNovelBlock(\'{block_id}\')" title="Jump to Novel Block #{block_idx}"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>● Grounded #{block_idx}</span></button>'
+            else:
+                is_ic = False
+                sp_color = "#94a3b8"
+                content_lower = content_raw.lower()
+                is_mechanics = any(w in content_lower for w in ["roll", "check", "save", "initiative", " dc ", " ac ", "damage", "spell slot", "combat", "hit points", " hp ", "long rest", "short rest", "d20", "d8", "d6", "d10", "d12"])
+
+                if speaker_raw == "Luke Foreman":
+                    if is_mechanics:
+                        tag_label = "Mechanics"
+                        display_speaker = "Luke Foreman · GM"
+                    else:
+                        tag_label = "Scene Bridge"
+                        display_speaker = "Luke Foreman · GM Framing"
+                elif speaker_raw == "Table Note":
+                    tag_label = "Table Note"
+                    display_speaker = "Table Note"
+                else:
+                    if is_mechanics:
+                        tag_label = "Mechanics"
+                    elif any(w in content_lower for w in ["ha", "lol", "beer", "pancake", "nfl", "titans", "tv", "stars", "cookie", "commercial", "allergies"]):
+                        tag_label = "Table Banter"
+                    else:
+                        tag_label = "OOC"
+                    display_speaker = speaker_raw
+
+                right_chip = f'<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono text-slate-500 bg-slate-900/60 border border-slate-800/60">{tag_label}</span>'
+
+            clean_text = content_raw.replace("<", "&lt;").replace(">", "&gt;")
+
+            if is_ic:
+                ch_raw_turns_html += f"""
+                <div class="raw-turn py-2 px-3 sm:px-4 rounded-lg my-2 transition-all hover:bg-slate-900/40"
+                     style="border-left: 3px solid {sp_color}; background: linear-gradient(90deg, {sp_color}14 0%, transparent 100%);"
+                     data-line-num="{l_num}">
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {sp_color};"></span>
+                            <span class="font-bold text-xs uppercase tracking-wider font-mono truncate" style="color: {sp_color};">{char_name}</span>
+                            <span class="text-[11px] text-slate-500 font-sans truncate">({player_name})</span>
+                        </div>
+                        <div class="flex-shrink-0">{right_chip}</div>
+                    </div>
+                    <p class="text-slate-100 font-normal leading-relaxed text-sm sm:text-base font-sans">{clean_text}</p>
+                </div>
+                """
+            else:
+                ch_raw_turns_html += f"""
+                <div class="raw-turn py-1.5 px-3 sm:px-4 rounded-lg my-1.5 hover:bg-slate-900/40 transition-all border-l-2 border-slate-800/70 bg-slate-950/40"
+                     data-line-num="{l_num}">
+                    <div class="flex items-center justify-between gap-2 mb-0.5">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="font-medium text-xs text-slate-400 font-sans truncate">{display_speaker}</span>
+                        </div>
+                        <div class="flex-shrink-0">{right_chip}</div>
+                    </div>
+                    <p class="text-slate-400/90 font-normal leading-relaxed text-xs sm:text-sm font-sans">{clean_text}</p>
+                </div>
+                """
+
+        blocks_html += f"""
+        <!-- CHAPTER SECTION {chapter_index} -->
+        <div id="{anchor_id}" class="chapter-section scroll-mt-20">
+            <div class="pt-8 pb-4 my-6 border-b border-slate-800/80">
+                <div class="flex items-center gap-3">
+                    <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
+                    <div class="text-center px-3">
+                        <span class="text-[11px] font-bold font-mono tracking-widest text-amber-500 uppercase">Part {chapter_index}</span>
+                        <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-0.5 tracking-wide">{ch_title}</h3>
+                    </div>
+                    <div class="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent flex-1"></div>
+                </div>
+                {cut_switcher_html}
+            </div>
+
+            <!-- Novel Blocks -->
+            <div class="novel-blocks-container">
+                {ch_novel_blocks_html}
+            </div>
+
+            <!-- Raw Transcript Blocks -->
+            <div class="cut-block cut-block-raw hidden space-y-1.5 max-w-4xl mx-auto py-2">
+                <div class="p-3 mb-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-400 font-bold">🎙️ Raw Audio Transcript</span>
+                        <span>·</span>
+                        <span>Lines {ch_start_line}–{ch_end_line}</span>
+                    </div>
+                    <div class="text-[11px] text-slate-500">
+                        Uncut verbatim session dialogue & table banter
+                    </div>
+                </div>
+                {ch_raw_turns_html}
+            </div>
+        </div>
+        """
 
     # Assemble Full Document
     full_html = f"""<!DOCTYPE html>
@@ -2523,18 +2843,18 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             }}
 
             // =========================================================
-            // DUAL CUT CONTROLLER (The Tabletop Cut vs The Cinematic Cut)
+            // 3-LENS READING CONTROLLER (Tabletop vs Cinematic vs Raw)
             // =========================================================
             let currentActiveCut = 'tabletop';
             try {{
                 const savedCut = localStorage.getItem('dnd_active_cut');
-                if (savedCut === 'cinematic' || savedCut === 'tabletop') {{
+                if (savedCut === 'cinematic' || savedCut === 'tabletop' || savedCut === 'raw') {{
                     currentActiveCut = savedCut;
                 }}
             }} catch(e) {{}}
 
             window.switchGlobalCut = function(newCut) {{
-                if (newCut !== 'tabletop' && newCut !== 'cinematic') return;
+                if (newCut !== 'tabletop' && newCut !== 'cinematic' && newCut !== 'raw') return;
                 currentActiveCut = newCut;
                 try {{
                     localStorage.setItem('dnd_active_cut', newCut);
@@ -2544,24 +2864,88 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 document.querySelectorAll('.chapter-cut-btn').forEach(btn => {{
                     const btnCut = btn.dataset.cut;
                     if (btnCut === newCut) {{
-                        btn.className = "chapter-cut-btn cut-btn-" + btnCut + " px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm bg-slate-800 " + (btnCut === 'tabletop' ? 'text-amber-300 border border-amber-500/50' : 'text-cyan-300 border border-cyan-500/50');
+                        let activeStyles = 'text-amber-300 border border-amber-500/50 bg-slate-800';
+                        if (btnCut === 'cinematic') activeStyles = 'text-cyan-300 border border-cyan-500/50 bg-slate-800';
+                        if (btnCut === 'raw') activeStyles = 'text-emerald-300 border border-emerald-500/50 bg-slate-800';
+                        btn.className = "chapter-cut-btn cut-btn-" + btnCut + " px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm " + activeStyles;
                     }} else {{
                         btn.className = "chapter-cut-btn cut-btn-" + btnCut + " px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1.5 border border-transparent";
                     }}
                 }});
 
                 // 2. Toggle block visibility
-                if (newCut === 'tabletop') {{
-                    document.querySelectorAll('.cut-block-tabletop').forEach(el => el.classList.remove('hidden'));
-                    document.querySelectorAll('.cut-block-cinematic').forEach(el => el.classList.add('hidden'));
-                }} else {{
+                if (newCut === 'raw') {{
                     document.querySelectorAll('.cut-block-tabletop').forEach(el => el.classList.add('hidden'));
-                    document.querySelectorAll('.cut-block-cinematic').forEach(el => el.classList.remove('hidden'));
+                    document.querySelectorAll('.cut-block-cinematic').forEach(el => el.classList.add('hidden'));
+                    document.querySelectorAll('.cut-block-raw').forEach(el => el.classList.remove('hidden'));
+                }} else if (newCut === 'cinematic') {{
+                    document.querySelectorAll('.cut-block-raw').forEach(el => el.classList.add('hidden'));
+                    document.querySelectorAll('.chapter-section').forEach(ch => {{
+                        const hasCinematic = ch.querySelector('.cut-block-cinematic');
+                        if (hasCinematic) {{
+                            ch.querySelectorAll('.cut-block-tabletop').forEach(el => el.classList.add('hidden'));
+                            ch.querySelectorAll('.cut-block-cinematic').forEach(el => el.classList.remove('hidden'));
+                        }} else {{
+                            ch.querySelectorAll('.cut-block-tabletop').forEach(el => el.classList.remove('hidden'));
+                        }}
+                    }});
+                }} else {{ // tabletop
+                    document.querySelectorAll('.cut-block-raw').forEach(el => el.classList.add('hidden'));
+                    document.querySelectorAll('.cut-block-cinematic').forEach(el => el.classList.add('hidden'));
+                    document.querySelectorAll('.cut-block-tabletop').forEach(el => el.classList.remove('hidden'));
                 }}
 
                 updateBlocksReference();
                 diffInspectorInitialized = false;
             }};
+
+            window.jumpToNovelBlock = function(blockId) {{
+                if (!blockId) return;
+                const targetEl = document.getElementById(blockId);
+                let targetCut = 'tabletop';
+                if (targetEl && targetEl.dataset.cut === 'cinematic') {{
+                    targetCut = 'cinematic';
+                }}
+                window.switchGlobalCut(targetCut);
+
+                setTimeout(() => {{
+                    const el = document.getElementById(blockId);
+                    if (el) {{
+                        el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                        el.classList.add('ring-2', 'ring-amber-400', 'bg-amber-500/10');
+                        setTimeout(() => {{
+                            el.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-500/10');
+                        }}, 2500);
+                    }}
+                }}, 60);
+            }};
+
+            window.jumpToRawLine = function(lineNum) {{
+                if (!lineNum) return;
+                window.switchGlobalCut('raw');
+
+                setTimeout(() => {{
+                    const rawEl = document.querySelector('.raw-turn[data-line-num="' + lineNum + '"]');
+                    if (rawEl) {{
+                        rawEl.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                        rawEl.classList.add('ring-2', 'ring-amber-400', 'bg-amber-500/10');
+                        setTimeout(() => {{
+                            rawEl.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-500/10');
+                        }}, 2500);
+                    }}
+                }}, 60);
+            }};
+
+            document.addEventListener('click', function(e) {{
+                const seg = e.target.closest('.dialogue-segment');
+                if (seg && !document.body.classList.contains('mode-critique')) {{
+                    const srcLine = seg.dataset.sourceLine;
+                    if (srcLine) {{
+                        e.stopPropagation();
+                        window.jumpToRawLine(parseInt(srcLine));
+                    }}
+                }}
+            }});
 
             const chaptersModalOverlay = document.getElementById('chaptersModalOverlay');
             const toggleChaptersBtn = document.getElementById('toggleChaptersBtn');
@@ -3304,6 +3688,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 currentReadingMode = mode;
                 const isCritique = (mode === 'critique');
                 if (isCritique) {{
+                    if (currentActiveCut === 'raw') {{
+                        window.switchGlobalCut('tabletop');
+                    }}
                     document.body.classList.add('mode-critique');
                 }} else {{
                     document.body.classList.remove('mode-critique');
