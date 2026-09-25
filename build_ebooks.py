@@ -781,6 +781,235 @@ def get_narrative_spectrum_elements(session_num: int, spoken_pct: float, narrati
     ]
 
 
+
+def get_default_participant_scorecards(session_num: int) -> list:
+    if session_num == 5:
+        return [
+            {
+                "id": "gm",
+                "name": "Luke Foreman",
+                "character": "Game Master",
+                "role": "Game Master & World Architect",
+                "badge": "The Architect",
+                "color": "#94a3b8",
+                "icon": "👑",
+                "grade": "C+",
+                "score": 77,
+                "spotlightShare": "38% narrative staging & framing",
+                "consistencyScore": "82%",
+                "ruthlessVerdict": "Brilliant temporal body horror in the 1948 clinic vision, but sloppy highway pacing and a cartoonish last-minute ambush.",
+                "whatHelped": "The description of the subterranean psychiatric ward, comatose milk-eyed patients, and the shifting ink from STABLE to STALE was 10/10 gothic world-building.",
+                "whatHurt": "Allowed Scenes 4–5 to drift aimlessly along the Lost Roads without conflict or obstacle, then panicked when the session clock ran out and threw 3 satyrs through the clinic door with zero narrative runway.",
+                "nextSessionDirectives": "Give combat thresholds at least 2 minutes of atmospheric build-up. In Session 6, immediately establish why the satyrs tracked the party, what their faction wants, and stop using combat encounters as arbitrary session cutoffs."
+            },
+            {
+                "id": "pierre",
+                "name": "Luke S",
+                "character": "Pierre",
+                "role": "Parisian Stonemason & Skeptic",
+                "badge": "The Artisan",
+                "color": "#3b82f6",
+                "icon": "🥖",
+                "grade": "B+",
+                "score": 88,
+                "spotlightShare": "19% spoken dialogue",
+                "consistencyScore": "94%",
+                "ruthlessVerdict": "Delivered the campaign's sharpest comedic monologue over breakfast, then checked out into passive scenery during the heist.",
+                "whatHelped": "The jury duty vs. French guillotine monologue in Scene 2 is pure novel gold—brilliantly grounding high-magic weirdness with Parisian contempt for bureaucracy.",
+                "whatHurt": "Faded into the background during Scenes 4–7. Stood by passively while Dravin and Eusacles negotiated campus security and manipulated Dr. Thorne.",
+                "nextSessionDirectives": "Bring your snobbery and architectural scrutiny directly into action beats. When the satyr doors splinter in Session 6, evaluate the wood, the lintels, and French defensive geometry rather than waiting for your turn."
+            },
+            {
+                "id": "dravin",
+                "name": "William Webb",
+                "character": "Prof. Edward Dravin",
+                "role": "Stanford Academic & Demigod",
+                "badge": "The Professor",
+                "color": "#8b5cf6",
+                "icon": "📚",
+                "grade": "C",
+                "score": 72,
+                "spotlightShare": "26% spoken dialogue",
+                "consistencyScore": "70%",
+                "ruthlessVerdict": "Smooth academic distraction heist, but committed the cardinal sin of pocketing a divine parentage revelation without a single roleplayed reaction.",
+                "whatHelped": "The 'visual learners' pedagogical bluff against Dr. Thorne in Scene 9 was masterful player maneuvering, weaponizing academic elitism as tactical distraction.",
+                "whatHurt": "Received a wax-sealed letter confirming Persephone is his divine mother descending to Hades for the winter, and folded it into his tweed coat without breathing a single word of existential interiority.",
+                "nextSessionDirectives": "Stop treating the Persephone letter as an archival curiosity. In Session 6, pull a party member aside at the campfire and reckon with what it means to be the mortal son of an underworld goddess."
+            },
+            {
+                "id": "eusacles",
+                "name": "John Hagey",
+                "character": "Eusacles",
+                "role": "Blue-Collar Gambler & Cynic",
+                "badge": "The Gambler",
+                "color": "#f59e0b",
+                "icon": "🎲",
+                "grade": "A-",
+                "score": 91,
+                "spotlightShare": "24% spoken dialogue",
+                "consistencyScore": "96%",
+                "ruthlessVerdict": "MVP of the academic infiltration, but walked out of the fog with Thanatos' watch-chain and left the wager as an unpaid narrative IOU.",
+                "whatHelped": "Relentlessly grilling Dr. Thorne on 1948 freon coolant, ice-box mechanics, and insulation bought crucial minutes for the heist while establishing unmatched blue-collar energy.",
+                "whatHurt": "Exited the Margin fog with a pocket-watch chain bound to the Greek god of death, but evaded explaining what he ante'd up or who he bet against.",
+                "nextSessionDirectives": "Cash in the fog wager. In Session 6, reveal to the party what you staked against Thanatos, and what debts are coming due when the dice stop rolling."
+            },
+            {
+                "id": "alfie",
+                "name": "Sophie Foreman Noone",
+                "character": "Alfie",
+                "role": "Driftwood Doll & Rogue Heart",
+                "badge": "The Rogue",
+                "color": "#10b981",
+                "icon": "🪆",
+                "grade": "B-",
+                "score": 81,
+                "spotlightShare": "13% spoken dialogue",
+                "consistencyScore": "86%",
+                "ruthlessVerdict": "Delivered the visceral emotional climax of the session, but spent 45 minutes of driving as passive pocket luggage.",
+                "whatHelped": "Her gut-wrenching dread in Scene 10 ('Not again. Not me again!') when forced to touch the temporal relic shattered the lighthearted tone and injected real human stakes.",
+                "whatHurt": "Suffered acute 'luggage syndrome' throughout the Lost Roads highway drive, remaining completely silent and passive in Dravin's coat while the men argued.",
+                "nextSessionDirectives": "Break out of the coat! Claim physical space in the environment during transition scenes—climb on car dashboards, fiddle with radios, and voice your pint-sized perspective before combat forces you into the spotlight."
+            }
+        ]
+    else:
+        return [
+            {
+                "id": "gm",
+                "name": "Luke Foreman",
+                "character": "Game Master",
+                "role": "Game Master & World Architect",
+                "badge": "The Architect",
+                "color": "#94a3b8",
+                "icon": "👑",
+                "grade": "A-",
+                "score": 90,
+                "spotlightShare": "35% narrative staging",
+                "consistencyScore": "92%",
+                "ruthlessVerdict": "Strong atmospheric tension and sharp encounter pacing throughout the early chapter arc.",
+                "whatHelped": "Kept scene transitions brisk and evocative, giving each party member distinctive space to establish character.",
+                "whatHurt": "Occasionally allowed lore exposition to interrupt natural party banter.",
+                "nextSessionDirectives": "Continue allowing players to organically uncover planar oddities through hands-on interaction."
+            },
+            {
+                "id": "pierre",
+                "name": "Luke S",
+                "character": "Pierre",
+                "role": "Parisian Stonemason & Skeptic",
+                "badge": "The Artisan",
+                "color": "#3b82f6",
+                "icon": "🥖",
+                "grade": "A",
+                "score": 93,
+                "spotlightShare": "22% spoken dialogue",
+                "consistencyScore": "95%",
+                "ruthlessVerdict": "Anchored high-magic surreality with sharp European cynicism and deadpan comedic timing.",
+                "whatHelped": "Distinctive Parisian voice and architectural sensibility gave the party an unmistakable moral center.",
+                "whatHurt": "Leaned heavily into passive observation during certain fast-paced transitions.",
+                "nextSessionDirectives": "Take more tactical initiative in physical confrontations."
+            },
+            {
+                "id": "dravin",
+                "name": "William Webb",
+                "character": "Prof. Edward Dravin",
+                "role": "Stanford Academic & Demigod",
+                "badge": "The Professor",
+                "color": "#8b5cf6",
+                "icon": "📚",
+                "grade": "B+",
+                "score": 88,
+                "spotlightShare": "25% spoken dialogue",
+                "consistencyScore": "90%",
+                "ruthlessVerdict": "Treats planar phenomena as rigorous fieldwork, elevating high-magic tension through scholarly arrogance.",
+                "whatHelped": "Weaponized pedantic academic authority to control NPC negotiations.",
+                "whatHurt": "Held cards too close to the chest regarding personal backstory.",
+                "nextSessionDirectives": "Share personal vulnerabilities with the party to deepen interpersonal drama."
+            },
+            {
+                "id": "eusacles",
+                "name": "John Hagey",
+                "character": "Eusacles",
+                "role": "Blue-Collar Gambler & Cynic",
+                "badge": "The Gambler",
+                "color": "#f59e0b",
+                "icon": "🎲",
+                "grade": "A-",
+                "score": 91,
+                "spotlightShare": "21% spoken dialogue",
+                "consistencyScore": "94%",
+                "ruthlessVerdict": "Punctures esoteric pretense with streetwise questions and gamble-ready swagger.",
+                "whatHelped": "Brought authentic working-class skepticism to high-concept magical dilemmas.",
+                "whatHurt": "Rushed some social interactions with impulsive bets.",
+                "nextSessionDirectives": "Pair gambling instincts with collaborative party strategy."
+            },
+            {
+                "id": "alfie",
+                "name": "Sophie Foreman Noone",
+                "character": "Alfie",
+                "role": "Driftwood Doll & Rogue Heart",
+                "badge": "The Rogue",
+                "color": "#10b981",
+                "icon": "🪆",
+                "grade": "A-",
+                "score": 90,
+                "spotlightShare": "18% spoken dialogue",
+                "consistencyScore": "92%",
+                "ruthlessVerdict": "Injects physical stakes and raw empathy into every dangerous encounter.",
+                "whatHelped": "Brought visceral emotional honesty that prevented scenes from lapsing into pure satire.",
+                "whatHurt": "Remained silent during extended vehicular transit.",
+                "nextSessionDirectives": "Assert physical presence in transit and downtime scenes."
+            }
+        ]
+
+
+def get_participant_icon(participant_id: str = "", name: str = "", character: str = "") -> str:
+    pid = (participant_id or "").lower()
+    ch = (character or "").lower()
+    nm = (name or "").lower()
+    if "gm" in pid or "master" in ch or ("foreman" in nm and "sophie" not in nm):
+        return "👑"
+    if "pierre" in pid or "pierre" in ch or "luke s" in nm:
+        return "🥖"
+    if "dravin" in pid or "dravin" in ch or "edward" in ch or "webb" in nm:
+        return "📚"
+    if "eusacles" in pid or "eusacles" in ch or "hagey" in nm:
+        return "🎲"
+    if "alfie" in pid or "alfie" in ch or "sophie" in nm:
+        return "🪆"
+    return "👤"
+
+
+def get_grade_badge_styles(grade: str) -> dict:
+    g = (grade or "").strip().upper()
+    if g.startswith("A"):
+        return {
+            "bg": "bg-emerald-950/80",
+            "border": "border-emerald-700/80",
+            "text": "text-emerald-300",
+            "subtext": "text-emerald-400/80"
+        }
+    elif g.startswith("B"):
+        return {
+            "bg": "bg-cyan-950/80",
+            "border": "border-cyan-700/80",
+            "text": "text-cyan-300",
+            "subtext": "text-cyan-400/80"
+        }
+    elif g.startswith("C"):
+        return {
+            "bg": "bg-amber-950/80",
+            "border": "border-amber-700/80",
+            "text": "text-amber-300",
+            "subtext": "text-amber-400/80"
+        }
+    else:
+        return {
+            "bg": "bg-rose-950/80",
+            "border": "border-rose-700/80",
+            "text": "text-rose-300",
+            "subtext": "text-rose-400/80"
+        }
+
+
 def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, word_count: int, spoken_pct: float, narrative_pct: float, sensory: dict) -> str:
     bot_review = editorial_forum.get("initialBotReview", {})
     table_debrief = bot_review.get("tableDebrief", {})
@@ -825,6 +1054,42 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
             m_title = wh.get("moment", "")
             mvp_pills += f'<span class="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-300"><strong class="text-amber-400">{p_name}</strong>: {m_title}</span>'
         mvp_pills += '</div>'
+
+    # Participant Report Cards Mini Strip
+    participant_scorecards = table_debrief.get("participantScorecards") or get_default_participant_scorecards(session_num)
+    participant_strip_html = ""
+    if participant_scorecards:
+        strip_pills = ""
+        for sc in participant_scorecards:
+            p_icon = sc.get("icon") or get_participant_icon(sc.get("id"), sc.get("name"), sc.get("character"))
+            g = sc.get("grade", "B")
+            g_style = get_grade_badge_styles(g)
+            c_name = sc.get("character") or sc.get("name", "")
+            short_name = c_name.replace("Prof. Edward ", "").replace("Game Master", "GM")
+            strip_pills += f"""
+            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1 min-w-0">
+                    <span class="text-xs flex-shrink-0">{p_icon}</span>
+                    <span class="truncate text-slate-300 font-medium text-[10px]">{short_name}</span>
+                </div>
+                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 {g_style['bg']} {g_style['text']} border {g_style['border']}">
+                    {g}
+                </span>
+            </div>
+            """
+        participant_strip_html = f"""
+        <div class="pt-2 border-t border-slate-800/60 space-y-1.5">
+            <div class="flex items-center justify-between text-[10px] font-mono">
+                <span class="flex items-center gap-1 font-bold text-slate-400 uppercase tracking-wider">
+                    <span>🎭</span> <span>Table Performance Report Cards:</span>
+                </span>
+                <span class="text-rose-400 font-medium">Acquisitions Editor Audit</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+                {strip_pills}
+            </div>
+        </div>
+        """
 
     return f"""
     <!-- ========================================================= -->
@@ -901,6 +1166,9 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
             <!-- Quick Table MVPs (if present) -->
             {mvp_pills}
 
+            <!-- Participant Report Card Strip -->
+            {participant_strip_html}
+
             <!-- Narrative Elements Quick Spectrum Grid -->
             <div class="pt-3 space-y-3">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -947,6 +1215,113 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         analysis = table_debrief.get("summary")
 
     author = "Editorial Story Critic"
+
+    # 0. TABLE PERFORMANCE & CHARACTER CONSISTENCY LEDGER
+    participant_scorecards = table_debrief.get("participantScorecards") or get_default_participant_scorecards(session_num)
+    participant_cards_html = ""
+    for sc in participant_scorecards:
+        p_icon = sc.get("icon") or get_participant_icon(sc.get("id"), sc.get("name"), sc.get("character"))
+        p_color = sc.get("color", "#94a3b8")
+        g = sc.get("grade", "B")
+        score = sc.get("score", 80)
+        g_style = get_grade_badge_styles(g)
+        p_name = sc.get("name", "")
+        c_name = sc.get("character", p_name)
+        badge = sc.get("badge", "")
+        role = sc.get("role", "")
+        spotlight = sc.get("spotlightShare", "")
+        consistency = sc.get("consistencyScore", "")
+        verdict_text = sc.get("ruthlessVerdict", "")
+        what_helped_text = sc.get("whatHelped", "")
+        what_hurt_text = sc.get("whatHurt", "")
+        directives_text = sc.get("nextSessionDirectives", "")
+
+        participant_cards_html += f"""
+        <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700/80 space-y-3 transition-colors shadow-sm" style="border-left: 4px solid {p_color};">
+            <!-- Participant Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/60 pb-2.5">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-slate-900 border border-slate-700">
+                        {p_icon}
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="font-bold text-slate-100 font-serif text-sm truncate">{p_name}</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: {p_color};">
+                                {c_name}
+                            </span>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
+                                {badge}
+                            </span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 font-sans truncate">
+                            {role}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grade & Metrics Badge -->
+                <div class="flex items-center gap-2.5 self-start sm:self-center flex-shrink-0">
+                    <div class="text-right hidden sm:block">
+                        <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
+                        <span class="text-[10px] text-slate-300 font-mono font-semibold">{spotlight.split(' ')[0]}</span>
+                    </div>
+                    <div class="text-right hidden sm:block">
+                        <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
+                        <span class="text-[10px] text-emerald-400 font-mono font-semibold">{consistency}</span>
+                    </div>
+                    <!-- Big Letter Grade Pill -->
+                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl {g_style['bg']} border {g_style['border']}">
+                        <span class="text-base sm:text-lg font-bold font-mono {g_style['text']}">{g}</span>
+                        <span class="text-[10px] font-mono {g_style['subtext']}">({score}%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Red-Ink Acquisitions Editor Verdict -->
+            <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-900/40 text-xs space-y-1">
+                <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
+                    <span>✒️</span> <span>The Red-Ink Verdict:</span>
+                </div>
+                <p class="text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-rose-600/60">
+                    "{verdict_text}"
+                </p>
+            </div>
+
+            <!-- What Helped & What Hurt Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 space-y-1">
+                    <span class="text-[10px] uppercase font-bold text-emerald-400 font-mono flex items-center gap-1">
+                        <span>🌟</span> <span>What Helped (Story Fuel)</span>
+                    </span>
+                    <p class="text-slate-300 text-[11px] leading-relaxed">
+                        {what_helped_text}
+                    </p>
+                </div>
+                <div class="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/40 space-y-1">
+                    <span class="text-[10px] uppercase font-bold text-amber-400 font-mono flex items-center gap-1">
+                        <span>⚠️</span> <span>What Hurt (Narrative Drag)</span>
+                    </span>
+                    <p class="text-slate-300 text-[11px] leading-relaxed">
+                        {what_hurt_text}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Actionable Coaching Directive -->
+            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-amber-500/30 text-xs space-y-1">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="font-bold text-amber-300 font-mono text-[10px] uppercase tracking-wide flex items-center gap-1">
+                        <span>🎯</span> <span>Session 6 Directive</span>
+                    </span>
+                    <span class="text-[9px] font-mono text-slate-400">Coaching Order</span>
+                </div>
+                <p class="text-slate-200 text-[11px] leading-relaxed pl-3 border-l-2 border-amber-500/60 font-sans">
+                    👉 {directives_text}
+                </p>
+            </div>
+        </div>
+        """
 
     # 1. WHAT HELPED THE NOVEL (PLAYER MVPS)
     what_helped = table_debrief.get("whatHelped", [])
@@ -1273,6 +1648,27 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                         <p class="text-xs text-slate-200 leading-relaxed font-sans">
                             Upstream AI authoring can refine prose, tune sentence cadence, and trim dead silence. However, when character interiority or crucial story reveals were omitted at the table, <strong>the AI must STOP</strong>. Fabricating synthetic emotions, grief, or retroactive dialogue outside what the players delivered violates player agency. Addressing these gaps belongs directly to the players and GM at the table in their next session.
                         </p>
+                    </div>
+
+                    <!-- 🎭 Table Performance & Character Consistency Ledger -->
+                    <div class="space-y-2.5 pt-1">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-800/80 pb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-base">🎭</span>
+                                <h4 class="text-xs sm:text-sm font-bold text-amber-300 font-serif uppercase tracking-wider">
+                                    Table Performance & Character Consistency Ledger
+                                </h4>
+                            </div>
+                            <span class="text-[10px] font-mono text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-800/50">
+                                ✒️ Red-Ink Acquisitions Editor Audit
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed font-sans">
+                            Holding both the Game Master and players to commercial publishing standards. Evaluates scene presence, dialogue voice fidelity, what propelled the fiction, and what stalled the narrative.
+                        </p>
+                        <div class="space-y-3 pt-1">
+                            {participant_cards_html}
+                        </div>
                     </div>
 
                     <!-- What Helped the Novel (Player MVPs) -->
