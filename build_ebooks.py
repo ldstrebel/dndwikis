@@ -1097,7 +1097,7 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
     <!-- END-OF-SESSION ROTTEN TOMATOES CRITIC & TABLE DEBRIEF CARD -->
     <!-- ========================================================= -->
     <section class="mt-12 mb-8">
-        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view Rotten Tomatoes story debrief, anti-hallucination wall and player directives">
+        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
             
             <!-- Card Header: Title & Dual Rotten Tomatoes Badges -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
@@ -1108,10 +1108,10 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
                     <div>
                         <div class="flex items-center gap-2">
                             <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Rotten Tomatoes Post-Mortem</span>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Table Debrief</span>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Story Review</span>
                         </div>
                         <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-amber-300 transition-colors">
-                            Session {session_num} Story Review & Directives
+                            Session {session_num} Story Review & Player Critique
                         </h3>
                     </div>
                 </div>
@@ -1144,52 +1144,28 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
                 </div>
             </div>
 
-            <!-- Anti-Hallucination Convergence Boundary Callout -->
-            <div class="mt-3.5 p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-rose-950/30 via-slate-950/60 to-amber-950/30 border border-rose-800/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span class="text-rose-400 text-sm">🧱</span>
-                        <strong class="text-xs sm:text-sm font-bold text-rose-300 font-serif">The Anti-Hallucination Boundary Reached</strong>
-                        <span class="text-[10px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">Quality Gate Stop</span>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                        Rather than having AI authoring hallucinate missing character beats or internal grief, the authoring pipeline stops here and delivers direct coaching for the players and GM to resolve next session.
-                    </p>
-                </div>
-                <div class="flex-shrink-0 self-start sm:self-center">
-                    <span class="text-xs text-rose-200 bg-rose-900/60 border border-rose-700/80 px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 group-hover:bg-rose-800 transition-colors shadow-sm">
-                        <span>Read Debrief</span>
-                        <span>→</span>
-                    </span>
-                </div>
-            </div>
-
-            <!-- Quick Table MVPs (if present) -->
-            {mvp_pills}
-
             <!-- Participant Report Card Strip -->
             {participant_strip_html}
 
-            <!-- Narrative Elements Quick Spectrum Grid -->
-            <div class="pt-3 space-y-3">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {mini_pills}
+            <!-- High-Level Editorial Summary -->
+            <div class="mt-4 p-4 rounded-xl bg-slate-950/70 border border-slate-800/90 space-y-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400">Editorial Summary:</span>
                 </div>
+                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif italic">
+                    "{analysis}"
+                </p>
+            </div>
 
-                <!-- Review Quick Take & Prompt to Weigh in -->
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2">
-                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif italic">
-                        "{analysis}"
-                    </p>
-                    <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-slate-400 font-sans border-t border-slate-800/60">
-                        <span class="flex items-center gap-1.5 text-amber-400 font-medium">
-                            <span>⚖️</span> <span>Story Choices, Player MVPs & Directives Ready</span>
-                        </span>
-                        <span class="text-rose-400 group-hover:text-rose-300 font-medium underline decoration-rose-500/40 underline-offset-2 flex items-center gap-1">
-                            <span>Tap to view full debrief & directives</span> <span>💬</span>
-                        </span>
-                    </div>
+            <!-- Action Prompt -->
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                    <span class="text-amber-400">🎭</span>
+                    <span>Tap to view tabbed player critiques, audit shortcomings & directives</span>
                 </div>
+                <span class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-900/80 to-amber-900/80 hover:from-rose-800 hover:to-amber-800 border border-rose-700/60 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
+                    <span>Read Player Breakdown</span> <span>→</span>
+                </span>
             </div>
         </div>
     </section>
@@ -1202,7 +1178,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
     tomatometer = bot_review.get("tomatometer") or table_debrief.get("tomatometer", 92 if session_num < 5 else 62)
     popcornmeter = bot_review.get("popcornmeter") or table_debrief.get("popcornmeter", 96 if session_num < 5 else 94)
     grade = bot_review.get("grade", "A-" if session_num < 5 else "D")
-    verdict = bot_review.get("verdict", "APPROVED FOR PRODUCTION" if session_num < 5 else "BLOCKED — CRITICAL FAILURES REQUIRE REVISION")
+    verdict = bot_review.get("verdict", "APPROVED FOR PRODUCTION" if session_num < 5 else "CRITICAL FAILURES REQUIRE REVISION")
 
     tomatometer_status = "Rotten" if tomatometer < 75 else "Certified Fresh"
     tomatometer_icon = "🍅" if tomatometer >= 75 else "🟢"
@@ -1215,21 +1191,37 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
     if not analysis and table_debrief.get("summary"):
         analysis = table_debrief.get("summary")
 
-    author = "Editorial Story Critic"
+    author = "Acquisitions Editor Audit"
 
-    # 0. TABLE PERFORMANCE & CHARACTER CONSISTENCY LEDGER
+    # Tabbed Player Performance Scorecards
     participant_scorecards = table_debrief.get("participantScorecards") or get_default_participant_scorecards(session_num)
-    participant_cards_html = ""
-    for sc in participant_scorecards:
+    tab_buttons_html = ""
+    tab_panels_html = ""
+    for idx, sc in enumerate(participant_scorecards):
+        pid = sc.get("id", f"p_{idx}")
+        p_name = sc.get("name", "")
+        c_name = sc.get("character", p_name)
+        short_char = c_name.replace("Prof. Edward ", "").replace("Game Master", "GM")
         p_icon = sc.get("icon") or get_participant_icon(sc.get("id"), sc.get("name"), sc.get("character"))
         p_color = sc.get("color", "#94a3b8")
         g = sc.get("grade", "B")
         score = sc.get("score", 80)
         g_style = get_grade_badge_styles(g)
-        p_name = sc.get("name", "")
-        c_name = sc.get("character", p_name)
-        badge = sc.get("badge", "")
+        is_first = (idx == 0)
+        active_btn_class = "border-amber-500 bg-slate-800 text-amber-300 shadow-md" if is_first else "border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+        hidden_class = "" if is_first else "hidden"
+
+        tab_buttons_html += f"""
+        <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 {active_btn_class}"
+                data-player-id="{pid}" onclick="switchPlayerCritiqueTab('{pid}')">
+            <span>{p_icon}</span>
+            <span>{short_char}</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold {g_style['bg']} {g_style['text']} border {g_style['border']}">{g}</span>
+        </button>
+        """
+
         role = sc.get("role", "")
+        badge = sc.get("badge", "")
         spotlight = sc.get("spotlightShare", "")
         consistency = sc.get("consistencyScore", "")
         verdict_text = sc.get("ruthlessVerdict", "")
@@ -1237,170 +1229,95 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         what_hurt_text = sc.get("whatHurt", "")
         directives_text = sc.get("nextSessionDirectives", "")
 
-        participant_cards_html += f"""
-        <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700/80 space-y-3 transition-colors shadow-sm" style="border-left: 4px solid {p_color};">
-            <!-- Participant Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/60 pb-2.5">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-slate-900 border border-slate-700">
+        tab_panels_html += f"""
+        <div id="playerPanel_{pid}" class="player-critique-panel {hidden_class} space-y-3.5" data-player-id="{pid}">
+            <!-- Player Header & Metrics -->
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid {p_color};">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         {p_icon}
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-bold text-slate-100 font-serif text-sm truncate">{p_name}</span>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: {p_color};">
+                            <h4 class="font-bold text-slate-100 font-serif text-sm sm:text-base">{p_name}</h4>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: {p_color};">
                                 {c_name}
                             </span>
-                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
                                 {badge}
                             </span>
                         </div>
-                        <div class="text-[11px] text-slate-400 font-sans truncate">
-                            {role}
-                        </div>
+                        <p class="text-xs text-slate-400 font-sans mt-0.5">{role}</p>
                     </div>
                 </div>
 
-                <!-- Grade & Metrics Badge -->
-                <div class="flex items-center gap-2.5 self-start sm:self-center flex-shrink-0">
-                    <div class="text-right hidden sm:block">
+                <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-[10px] text-slate-300 font-mono font-semibold">{spotlight.split(' ')[0]}</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">{spotlight.split(' ')[0]}</span>
                     </div>
-                    <div class="text-right hidden sm:block">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-[10px] text-emerald-400 font-mono font-semibold">{consistency}</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">{consistency}</span>
                     </div>
-                    <!-- Big Letter Grade Pill -->
-                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl {g_style['bg']} border {g_style['border']}">
-                        <span class="text-base sm:text-lg font-bold font-mono {g_style['text']}">{g}</span>
-                        <span class="text-[10px] font-mono {g_style['subtext']}">({score}%)</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl {g_style['bg']} border {g_style['border']}">
+                        <span class="text-lg font-bold font-mono {g_style['text']}">{g}</span>
+                        <span class="text-xs font-mono {g_style['subtext']}">({score}%)</span>
                     </div>
                 </div>
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-900/40 text-xs space-y-1">
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
                 <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict:</span>
+                    <span>✒️</span> <span>The Red-Ink Verdict</span>
                 </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-rose-600/60">
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
                     "{verdict_text}"
                 </p>
             </div>
 
-            <!-- What Helped & What Hurt Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 font-mono flex items-center gap-1">
-                        <span>🌟</span> <span>What Helped (Story Fuel)</span>
+            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
+            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
+                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
+                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        {what_helped_text}
-                    </p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-amber-400 font-mono flex items-center gap-1">
-                        <span>⚠️</span> <span>What Hurt (Narrative Drag)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                        Audit Finding
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        {what_hurt_text}
-                    </p>
                 </div>
+                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    {what_hurt_text}
+                </p>
             </div>
 
-            <!-- Actionable Coaching Directive -->
-            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-amber-500/30 text-xs space-y-1">
+            <!-- What They Did Well (Story Fuel) -->
+            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
+                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+                </span>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    {what_helped_text}
+                </p>
+            </div>
+
+            <!-- Next Session Directive / Coaching Mandate -->
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
                 <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-[10px] uppercase tracking-wide flex items-center gap-1">
-                        <span>🎯</span> <span>Session 6 Directive</span>
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
+                        <span>🎯</span> <span>Session Coaching Directive</span>
                     </span>
-                    <span class="text-[9px] font-mono text-slate-400">Coaching Order</span>
+                    <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
-                <p class="text-slate-200 text-[11px] leading-relaxed pl-3 border-l-2 border-amber-500/60 font-sans">
+                <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
                     👉 {directives_text}
                 </p>
             </div>
         </div>
         """
 
-    # 1. WHAT HELPED THE NOVEL (PLAYER MVPS)
-    what_helped = table_debrief.get("whatHelped", [])
-    if not what_helped:
-        what_helped = [
-            {"player": "Luke S (Pierre)", "role": "Philosophical Stonemason", "moment": "Deadpan Parisian Worldview", "impact": "Anchors high-fantasy absurdities with deadpan French grounding."},
-            {"player": "William Webb (Dravin)", "role": "Scholarly Schemer", "moment": "Pedantic Academic Rigor", "impact": "Treats planar phenomena as rigorous fieldwork, elevating high-magic tension."},
-            {"player": "John Hagey (Eusacles)", "role": "Blue-Collar Cynic", "moment": "Pragmatic Problem Solving", "impact": "Punctures esoteric pretense with streetwise questions and gamble-ready swagger."},
-            {"player": "Sophie Foreman Noone (Alfie)", "role": "Emotional Heart", "moment": "High-Stakes Vulnerability", "impact": "Injects physical stakes and raw empathy into every dangerous encounter."}
-        ]
-
-    helped_cards_html = ""
-    for wh in what_helped:
-        helped_cards_html += f"""
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-emerald-800/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-1.5">
-                <span class="font-bold text-emerald-300 font-serif">{wh.get('player', '')}</span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-mono font-semibold truncate max-w-[140px]">{wh.get('role', '')}</span>
-            </div>
-            <div class="text-[11px] font-mono text-amber-300">
-                ✨ "{wh.get('moment', '')}"
-            </div>
-            <p class="text-[11px] text-slate-300 leading-relaxed font-sans pt-0.5">
-                {wh.get('impact', '')}
-            </p>
-        </div>
-        """
-
-    # 2. THE ANTI-HALLUCINATION WALL
-    anti_hallucination = table_debrief.get("antiHallucinationWall", [])
-    if not anti_hallucination:
-        anti_hallucination = [
-            {"issue": "Player Interiority Boundary", "tableOrigin": "Subtle character reactions at the table.", "hallucinationRisk": "AI must never invent synthetic emotional motivations not roleplayed.", "verdict": "STOP AUTHORING. Preserve raw player agency."},
-            {"issue": "Lore & Mechanics Parity", "tableOrigin": "Live dice rolls and DM adjudication.", "hallucinationRisk": "AI must never retcon failed checks or missed lore.", "verdict": "STOP AUTHORING. Honor dice canon."}
-        ]
-
-    wall_cards_html = ""
-    for wall in anti_hallucination:
-        wall_cards_html += f"""
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-rose-800/50 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-rose-300 font-serif flex items-center gap-1.5">
-                    <span>🛑</span> <span>{wall.get('issue', '')}</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">{wall.get('verdict', 'STOP AUTHORING')}</span>
-            </div>
-            <p class="text-[11px] text-slate-400 leading-normal pl-4 border-l border-slate-800">
-                <strong class="text-slate-300">Table Origin:</strong> {wall.get('tableOrigin', '')}
-            </p>
-            <p class="text-[11px] text-slate-300 leading-normal pl-4 border-l border-rose-900/50">
-                <strong class="text-rose-400">Hallucination Risk:</strong> {wall.get('hallucinationRisk', '')}
-            </p>
-        </div>
-        """
-
-    # 3. DIRECTIVES FOR NEXT SESSION
-    directives = table_debrief.get("playerDirectives", [])
-    if not directives:
-        directives = [
-            {"target": "Party & GM", "directive": "Sustain Live Table Momentum", "actionableCoaching": "Continue bringing spontaneous table banter and distinct character perspectives into the next encounter."}
-        ]
-
-    directives_cards_html = ""
-    for d in directives:
-        directives_cards_html += f"""
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-amber-500/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif flex items-center gap-1.5">
-                    <span>🎯</span> <span>{d.get('directive', '')}</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono font-bold truncate max-w-[150px]">{d.get('target', '')}</span>
-            </div>
-            <p class="text-[11px] text-slate-200 leading-relaxed pl-4 border-l border-amber-500/40 font-sans">
-                👉 <strong>Actionable Coaching:</strong> {d.get('actionableCoaching', '')}
-            </p>
-        </div>
-        """
-
+    # Optional Craft Spectrum & Trade-offs
     elements = get_narrative_spectrum_elements(session_num, spoken_pct, narrative_pct, sensory)
     spectrum_cards_html = ""
     for el in elements:
@@ -1415,8 +1332,6 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                     {el['score']} · {el['stance']}
                 </span>
             </div>
-
-            <!-- Spectrum Track with Glowing Position Pip -->
             <div class="space-y-1 pt-1">
                 <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden border border-slate-800">
                     <div class="h-full bg-gradient-to-r from-slate-700 via-amber-500/70 to-emerald-400 rounded-full" style="width: {el['pos']}%;"></div>
@@ -1426,7 +1341,6 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                     <span class="text-slate-400 font-medium">{el['right_label']}</span>
                 </div>
             </div>
-
             <p class="text-[11px] text-slate-400 leading-normal pt-1 border-t border-slate-800/80">
                 {el['note']}
             </p>
@@ -1440,63 +1354,31 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         chosen = to.get("chosenStance", "").strip()
         counter = to.get("counterStance", "").strip()
         cost = to.get("tradeOffCost", "").strip()
-
-        # Translate technical jargon to friendly narrative concepts
-        if "Velocity" in dim or "Banter" in dim:
-            dim = "Pacing & Plot Momentum vs. Casual Table Banter"
-            chosen = "Propulsive Plot Momentum — Moves forward with the urgency and tension of an unfolding fantasy thriller."
-            counter = "Slice-of-Life & Extended Banter — Lingering on casual table jokes and slow room exploration."
-            cost = "Focuses tightly on the immediate danger and wonder, trading off casual campfire downtime."
-        elif "Dialogue" in dim or "Sensory" in dim or "Action" in dim:
-            dim = "Atmosphere & World-Building vs. Dialogue Volume"
-            chosen = f"Sensory Staging & Action ({spoken_pct}% dialogue / {narrative_pct}% prose) — Rich environmental details, tactile combat, and weird planar atmosphere."
-            counter = "Dialogue-Heavy Exchanges — Having characters talk through all exposition and reactions."
-            cost = "Grounds the bizarre new realm vividly before longer character conversations begin."
-        elif "Granularity" in dim or "Cadence" in dim or "Chapter" in dim:
-            dim = "Scene Length & Reading Rhythm"
-            chosen = "Episodic Scene Bites — Fast-paced, modular scenes optimized for mobile reading and smooth audio flow."
-            counter = "Long-Form Sprawling Chapters — Extended 20-page chapters bundling multiple encounters together."
-            cost = "Gives readers clear milestones and natural stopping points rather than unbroken long blocks."
-        elif "Mechanics" in dim or "Realism" in dim or "Tabletop" in dim:
-            dim = "Live Table Canon vs. Fiction Smoothing"
-            chosen = "Faithful to Player Actions & Rolls — Every spontaneous roll, wild idea, and table decision is canon."
-            counter = "Rewriting Dice Rolls for Fiction Tropes — Altering tabletop outcomes to fit predictable novel tropes."
-            cost = "Honors true tabletop agency and dice spontaneity while framing it in rich prose."
-
         trade_offs_html += f"""
-        <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
             <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif text-xs sm:text-sm">#{idx} {dim}</span>
-                <span class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 uppercase font-mono font-semibold">Story Choice</span>
+                <span class="font-bold text-amber-400 font-serif">Decision #{idx}: {dim}</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-                <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-800/60">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 block tracking-wider font-mono">Choice Made:</span>
-                    <p class="text-slate-200 mt-1 leading-relaxed">{chosen}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1">
+                <div class="p-2 rounded bg-slate-900 border border-emerald-900/40 text-emerald-300">
+                    <strong class="block text-emerald-400 font-mono text-[9px] uppercase">Chosen Stance:</strong>
+                    {chosen}
                 </div>
-                <div class="p-2.5 rounded-lg bg-rose-950/30 border border-rose-800/40">
-                    <span class="text-[10px] uppercase font-bold text-rose-400 block tracking-wider font-mono">Alternative Style:</span>
-                    <p class="text-slate-300 mt-1 leading-relaxed">{counter}</p>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                    <strong class="block text-slate-500 font-mono text-[9px] uppercase">Alternative Stance:</strong>
+                    {counter}
                 </div>
             </div>
-            <div class="pt-1.5 border-t border-slate-800/80 flex items-start gap-1.5 text-[11px] text-slate-300">
-                <strong class="text-slate-400 uppercase text-[9px] font-mono font-bold flex-shrink-0 pt-0.5">The Trade-off:</strong>
-                <span class="leading-relaxed">{cost}</span>
-            </div>
+            <p class="text-[11px] text-amber-300/90 italic pt-1 pl-1">
+                Trade-off Impact: {cost}
+            </p>
         </div>
         """
 
-    nearest_risks = bot_review.get("nearestRisks", [])
+    risks = bot_review.get("nearestRisks", [])
     risks_html = ""
-    for r in nearest_risks:
-        title = r.get("title", "")
-        if "Emotional Velocity" in title:
-            title = "Fast-Paced Opening Transition"
-        elif "Spotlight" in title:
-            title = "Early Character Spotlight Balance"
-        elif "Latent Magic" in title or "Continuity" in title:
-            title = "Organic Table Discoveries"
-
+    for r in risks:
+        title = r.get("title", "Editorial Note")
         risk_text = r.get("risk", "")
         mitigation = r.get("mitigation", "")
         risks_html += f"""
@@ -1560,7 +1442,6 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
     """ if retcon_html else ""
 
     revisions_section = f"""
-    <!-- STORY POLISH & REVISION LOG -->
     <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <span class="text-xs font-bold font-serif text-cyan-300 flex items-center gap-1.5">
@@ -1573,6 +1454,45 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         </div>
     </div>
     """ if changelog_html else ""
+
+    craft_accordion_html = f"""
+    <details class="group mt-3 rounded-xl bg-slate-950/60 border border-slate-800 p-3 text-xs">
+        <summary class="cursor-pointer font-bold font-mono text-slate-400 hover:text-amber-400 flex items-center justify-between select-none">
+            <span class="flex items-center gap-2">
+                <span>📊</span> <span>Explore Technical Craft, Trade-offs & Sensory Registers</span>
+            </span>
+            <span class="text-slate-500 group-open:rotate-180 transition-transform text-sm">▼</span>
+        </summary>
+        <div class="mt-3 space-y-4 pt-3 border-t border-slate-800">
+            <div class="space-y-2">
+                <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                    <span>📊</span> <span>Narrative Elements Spectrum</span>
+                </span>
+                <div class="space-y-2">
+                    {spectrum_cards_html}
+                </div>
+            </div>
+            <div class="space-y-2">
+                <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                    <span>⚖️</span> <span>Creative Story Choices & Narrative Trade-offs</span>
+                </span>
+                <div class="space-y-2">
+                    {trade_offs_html}
+                </div>
+            </div>
+            <div class="space-y-2 pt-1">
+                <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                    <span>💡</span> <span>Story Nuances & Character Balance</span>
+                </span>
+                <div class="space-y-2">
+                    {risks_html}
+                </div>
+            </div>
+            {retcon_section}
+            {revisions_section}
+        </div>
+    </details>
+    """
 
     return f"""
     <!-- ========================================================= -->
@@ -1589,10 +1509,10 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Rotten Tomatoes Post-Mortem & Debrief</h3>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Player Coaching</span>
+                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Session {session_num} Story Review & Player Critique</h3>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Table Debrief</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 font-mono">Session {session_num} · Anti-Hallucination Quality Gate & Directives</p>
+                        <p class="text-[11px] text-slate-400 font-mono">Acquisitions Editor Audit · Player-by-Player Breakdown</p>
                     </div>
                 </div>
                 <button id="closeCriticForumBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 leading-none transition-colors" title="Close">&times;</button>
@@ -1601,11 +1521,9 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
             <!-- Scrollable Content Stream -->
             <div class="flex-1 overflow-y-auto space-y-4 pr-1 min-h-0 custom-scrollbar">
 
-                <!-- SECTION 1: ROTTEN TOMATOES STORY POST-MORTEM & PLAYER DEBRIEF -->
-                <div class="p-4 rounded-xl bg-slate-950/80 border border-rose-500/30 space-y-3.5 shadow-sm">
-                    
-                    <!-- Dual Score Header -->
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <!-- SECTION 1: HIGH-LEVEL STORY SCORE & VERDICT -->
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-2.5">
                         <div class="flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse"></span>
                             <span class="text-xs font-bold font-serif uppercase tracking-wider text-rose-400">{author}</span>
@@ -1623,7 +1541,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                                     <span class="text-xl sm:text-2xl font-bold font-mono text-slate-100">{tomatometer}%</span>
                                     <span class="text-[10px] uppercase font-mono font-bold px-1.5 py-0.2 rounded {tomato_badge_classes}">{tomatometer_status} ({grade})</span>
                                 </div>
-                                <span class="text-[10px] text-slate-400 font-mono block">Tomatometer · Prose & Contract Critique</span>
+                                <span class="text-[10px] text-slate-400 font-mono block">Tomatometer · Narrative Execution</span>
                             </div>
                         </div>
 
@@ -1640,117 +1558,41 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                         </div>
                     </div>
 
-                    <!-- The Anti-Hallucination Convergence Boundary Banner -->
-                    <div class="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border border-rose-500/40 space-y-2">
-                        <div class="flex items-center gap-2 text-rose-300 font-bold text-xs sm:text-sm font-serif">
-                            <span class="text-base">🧱</span>
-                            <span>The Anti-Hallucination Convergence Boundary</span>
-                        </div>
-                        <p class="text-xs text-slate-200 leading-relaxed font-sans">
-                            Upstream AI authoring can refine prose, tune sentence cadence, and trim dead silence. However, when character interiority or crucial story reveals were omitted at the table, <strong>the AI must STOP</strong>. Fabricating synthetic emotions, grief, or retroactive dialogue outside what the players delivered violates player agency. Addressing these gaps belongs directly to the players and GM at the table in their next session.
+                    <!-- Editorial Summary Quote -->
+                    <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 text-xs">
+                        <p class="text-slate-200 italic font-serif leading-relaxed">
+                            "{analysis}"
                         </p>
                     </div>
-
-                    <!-- 🎭 Table Performance & Character Consistency Ledger -->
-                    <div class="space-y-2.5 pt-1">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-800/80 pb-2">
-                            <div class="flex items-center gap-2">
-                                <span class="text-base">🎭</span>
-                                <h4 class="text-xs sm:text-sm font-bold text-amber-300 font-serif uppercase tracking-wider">
-                                    Table Performance & Character Consistency Ledger
-                                </h4>
-                            </div>
-                            <span class="text-[10px] font-mono text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-800/50">
-                                ✒️ Red-Ink Acquisitions Editor Audit
-                            </span>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                            Holding both the Game Master and players to commercial publishing standards. Evaluates scene presence, dialogue voice fidelity, what propelled the fiction, and what stalled the narrative.
-                        </p>
-                        <div class="space-y-3 pt-1">
-                            {participant_cards_html}
-                        </div>
-                    </div>
-
-                    <!-- What Helped the Novel (Player MVPs) -->
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-emerald-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>🌟</span> <span>What Helped the Novel (Player MVPs & Story Fuel)</span>
-                        </span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {helped_cards_html}
-                        </div>
-                    </div>
-
-                    <!-- The Anti-Hallucination Wall -->
-                    <div class="space-y-2 pt-1">
-                        <span class="text-xs font-bold text-rose-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>🛑</span> <span>The Anti-Hallucination Wall (Where AI Cannot Tread)</span>
-                        </span>
-                        <div class="space-y-2">
-                            {wall_cards_html}
-                        </div>
-                    </div>
-
-                    <!-- Directives for Next Session (Player & GM Coaching) -->
-                    <div class="space-y-2 pt-1">
-                        <span class="text-xs font-bold text-amber-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>🎯</span> <span>Directives for Next Session (Player & GM Coaching)</span>
-                        </span>
-                        <div class="space-y-2">
-                            {directives_cards_html}
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- SECTION 2: CRAFT SPECTRUM & EDITORIAL ANALYSIS -->
-                <div class="p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 space-y-3 shadow-sm">
-                    
-                    <!-- Narrative Element Score Spectrum Cards -->
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>📊</span> <span>Narrative Elements Spectrum</span>
-                        </span>
-                        <div class="space-y-2">
-                            {spectrum_cards_html}
+                <!-- SECTION 2: TABBED PLAYER PERFORMANCE BREAKDOWN -->
+                <div class="space-y-3 pt-1">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🎭</span>
+                            <h4 class="text-xs sm:text-sm font-bold text-amber-400 font-serif uppercase tracking-wider">
+                                Player-by-Player Critique & Scorecards
+                            </h4>
                         </div>
+                        <span class="text-[10px] text-slate-400 font-mono">Select a player to view audit critique</span>
                     </div>
 
-                    <!-- Editorial Analysis Prose -->
-                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
-                        <span class="text-xs font-bold font-serif text-amber-400 block flex items-center gap-1.5">
-                            <span>📖</span> <span>Editorial Story Analysis</span>
-                        </span>
-                        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif">{analysis}</p>
+                    <!-- Player Navigation Tab Bar -->
+                    <div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                        {tab_buttons_html}
                     </div>
 
-                    <!-- Creative Choices & Trade-offs Matrix -->
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>⚖️</span> <span>Creative Story Choices & Narrative Trade-offs</span>
-                        </span>
-                        <div class="space-y-2">
-                            {trade_offs_html}
-                        </div>
+                    <!-- Player Panels Container -->
+                    <div class="pt-1">
+                        {tab_panels_html}
                     </div>
-
-                    <!-- Narrative Nuances & What to Watch -->
-                    <div class="space-y-2 pt-1">
-                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>💡</span> <span>Story Nuances & Character Balance</span>
-                        </span>
-                        <div class="space-y-2">
-                            {risks_html}
-                        </div>
-                    </div>
-
-                    {retcon_section}
                 </div>
 
-                {revisions_section}
+                <!-- Collapsible Craft Spectrum & Trade-offs -->
+                {craft_accordion_html}
 
-                <!-- SECTION 3: DISAGREE WITH THE CRITIC? READER REACTION BOX -->
+                <!-- Reader Take Box -->
                 <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <div class="flex items-center gap-1.5">
@@ -1760,7 +1602,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                         <span class="text-[10px] font-mono text-amber-400">Reader Voice</span>
                     </div>
                     <p class="text-xs text-slate-300 leading-relaxed">
-                        What did you think of this session's pacing, dialogue, or trade-offs? Leave your thoughts below or use <strong>Critique Mode</strong> to annotate exact lines in the story!
+                        What did you think of this session's pacing, dialogue, or trade-offs? Leave your thoughts below or tap anywhere in the story to annotate feedback!
                     </p>
                     <div class="space-y-2">
                         <textarea id="forumCommentInput" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500" placeholder="Share your take on the story, character moments, or feedback on the critic score..."></textarea>
@@ -1792,7 +1634,7 @@ def build_diff_inspector_html(session_num: int) -> str:
     <!-- ========================================================= -->
     <!-- SYNCHRONIZED NARRATIVE VS. SOURCE DIFF INSPECTOR -->
     <!-- ========================================================= -->
-    <div id="diffInspectorOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col opacity-0 pointer-events-none transition-opacity duration-200 box-border">
+    <div id="diffInspectorOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[90] flex flex-col opacity-0 pointer-events-none transition-opacity duration-200 box-border">
         
         <!-- Inspector Top Header Bar -->
         <header class="flex-shrink-0 bg-slate-900/98 border-b border-slate-800 px-3 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-3 shadow-md">
@@ -2838,8 +2680,21 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </div>
             </div>
 
-            <!-- Header Controls: Chapters Button, Mode Toggle & Settings Cog -->
+            <!-- Header Controls: Cut Switcher, Chapters Button, Mode Toggle & Settings Cog -->
             <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <!-- Sticky Cut Switcher (Always accessible in Raw, Cinematic, Tabletop) -->
+                <div class="inline-flex items-center p-0.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-medium">
+                    <button type="button" class="header-cut-btn cut-btn-cinematic px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1" data-cut="cinematic" onclick="switchGlobalCut('cinematic')">
+                        <span>🎬</span> <span class="hidden sm:inline">Cinematic</span>
+                    </button>
+                    <button type="button" class="header-cut-btn cut-btn-tabletop px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1" data-cut="tabletop" onclick="switchGlobalCut('tabletop')">
+                        <span>🎲</span> <span class="hidden sm:inline">Tabletop</span>
+                    </button>
+                    <button type="button" class="header-cut-btn cut-btn-raw px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1" data-cut="raw" onclick="switchGlobalCut('raw')">
+                        <span>🎙️</span> <span class="hidden sm:inline">Raw</span>
+                    </button>
+                </div>
+
                 <button id="toggleChaptersBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Breakdown" aria-label="Open Chapters Table of Contents">
                     <svg class="w-3.5 h-3.5 flex-shrink-0 text-amber-400" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
                         <line x1="9" y1="6" x2="20" y2="6"></line>
@@ -3297,8 +3152,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 <button id="modalDeleteBtn" type="button" class="px-3 py-2 bg-rose-950/50 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded-xl text-xs font-bold transition-colors hidden">
                     🗑️ Delete Note
                 </button>
-                <button id="modalOpenDiffBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="Open full synchronized side-by-side diff inspector">
-                    <span>🔍</span> <span class="hidden xs:inline">Full Diff View</span>
+                <button id="modalOpenDiffBtn" type="button" class="px-3.5 py-2 bg-gradient-to-r from-cyan-950/70 to-slate-900 hover:from-cyan-900/80 hover:to-slate-800 border border-cyan-700/60 text-cyan-300 hover:text-cyan-100 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="Open full synchronized side-by-side view (Novel vs Raw Source)">
+                    <span>⚖️</span> <span>Side-by-Side View</span>
                 </button>
                 <div class="flex-1"></div>
                 <button id="modalSaveBtn" type="button" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5 active:scale-98">
@@ -3482,6 +3337,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </button>
             </div>
         </div>
+    </div>
     <!-- Floating Return to Story Banner (Active only in Raw view) -->
     <div id="rawReturnBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden transition-all duration-200">
         <button type="button" onclick="returnToLastReadingBlock()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold text-xs sm:text-sm shadow-2xl flex items-center gap-2 border border-amber-300 active:scale-95 transition-all">
@@ -3553,6 +3409,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         }}
                     }});
                 }};
+                updateButtonStyles('.header-cut-btn');
                 updateButtonStyles('.chapter-cut-btn');
                 updateButtonStyles('.global-cut-btn');
 
@@ -4126,6 +3983,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 if (index < 0 || index >= blocks.length) return;
                 initDiffInspector();
                 if (diffInspectorOverlay) {{
+                    diffInspectorOverlay.classList.remove('opacity-0', 'pointer-events-none');
                     diffInspectorOverlay.classList.add('visible');
                     setBodyScrollLock(true);
                 }}
@@ -4134,6 +3992,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             window.closeDiffInspector = function() {{
                 if (diffInspectorOverlay) {{
+                    diffInspectorOverlay.classList.add('opacity-0', 'pointer-events-none');
                     diffInspectorOverlay.classList.remove('visible');
                     diffInspectorOverlay.style.height = '';
                     diffInspectorOverlay.style.transform = '';
@@ -4574,7 +4433,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         const cid = Object.keys(chars).find(k => (chars[k].name && chars[k].name.toLowerCase() === spkName.toLowerCase()) || k === spkName.toLowerCase()) || "";
                         const spkColor = (chars[cid] && chars[cid].color) || "#38bdf8";
                         const isNpc = (chars[cid] && chars[cid].type === 'npc');
-                        const lineBadge = prim.line ? `<span class="text-[9px] font-mono text-slate-500 font-bold ml-auto">L${{prim.line}}</span>` : "";
+                        const lineBadge = prim.line ? `<span class="text-[9px] font-mono text-slate-500 font-bold ml-auto">L${{prim.line}}</span> <button type="button" onclick="document.getElementById('modalOpenDiffBtn').click()" class="text-[10px] text-cyan-400 hover:text-cyan-200 underline decoration-cyan-500/50 font-mono font-medium ml-1.5" title="Open Side-by-Side View">⚖️ Side-by-Side</button>` : "";
 
                         let bundledHtml = "";
                         const bundled = mapData.bundledLines || [];
@@ -4631,7 +4490,11 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     modalOpenDiffBtn.onclick = function() {{
                         const targetIdx = activeBlockIndex;
                         closeModal();
-                        setTimeout(() => openDiffInspector(targetIdx), 80);
+                        if (modalOverlay) {{
+                            modalOverlay.classList.remove('visible');
+                            modalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                        }}
+                        setTimeout(() => openDiffInspector(targetIdx), 40);
                     }};
                 }}
 
@@ -4839,11 +4702,40 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             }};
 
             document.querySelectorAll('.story-block').forEach((b) => {{
-                b.onclick = function() {{
-                    if (document.body.classList.contains('mode-critique')) {{
-                        updateBlocksReference();
-                        const idx = blocks.indexOf(b);
-                        if (idx >= 0) openModalForBlock(idx);
+                b.onclick = function(e) {{
+                    if (e.target.closest('button, a')) return;
+                    updateBlocksReference();
+                    const idx = blocks.indexOf(b);
+                    if (idx >= 0) openModalForBlock(idx);
+                }};
+            }});
+
+            document.querySelectorAll('.raw-turn').forEach((rt) => {{
+                rt.onclick = function(e) {{
+                    if (e.target.closest('button, a')) return;
+                    const lineNum = rt.dataset.lineNum;
+                    updateBlocksReference();
+                    let targetIdx = -1;
+                    if (lineNum && window.SOURCE_TRANSCRIPT_MAP) {{
+                        for (let i = 0; i < blocks.length; i++) {{
+                            const bid = blocks[i].id;
+                            const mapData = window.SOURCE_TRANSCRIPT_MAP[bid];
+                            if (mapData) {{
+                                if (mapData.primaryLine && String(mapData.primaryLine.line) === String(lineNum)) {{
+                                    targetIdx = i;
+                                    break;
+                                }}
+                                if (mapData.bundledLines && mapData.bundledLines.some(bl => String(bl.line) === String(lineNum))) {{
+                                    targetIdx = i;
+                                    break;
+                                }}
+                            }}
+                        }}
+                    }}
+                    if (targetIdx >= 0) {{
+                        openModalForBlock(targetIdx);
+                    }} else if (blocks.length > 0) {{
+                        openModalForBlock(0);
                     }}
                 }};
             }});
@@ -5337,6 +5229,19 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             // =========================================================
             // CRITIC & EDITORIAL FORUM CONTROLLER
             // =========================================================
+            window.switchPlayerCritiqueTab = function(playerId) {{
+                document.querySelectorAll('.player-critique-tab-btn').forEach(btn => {{
+                    const isTarget = (btn.dataset.playerId === playerId);
+                    if (isTarget) {{
+                        btn.className = "player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-amber-500 bg-slate-800 text-amber-300 shadow-md";
+                    }} else {{
+                        btn.className = "player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700";
+                    }}
+                }});
+                document.querySelectorAll('.player-critique-panel').forEach(panel => {{
+                    panel.classList.toggle('hidden', panel.dataset.playerId !== playerId);
+                }});
+            }};
             function showCriticForumModal() {{
                 if (criticForumModalOverlay) {{
                     criticForumModalOverlay.classList.remove('opacity-0', 'pointer-events-none');

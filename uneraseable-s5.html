@@ -553,8 +553,21 @@
                 </div>
             </div>
 
-            <!-- Header Controls: Chapters Button, Mode Toggle & Settings Cog -->
+            <!-- Header Controls: Cut Switcher, Chapters Button, Mode Toggle & Settings Cog -->
             <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <!-- Sticky Cut Switcher (Always accessible in Raw, Cinematic, Tabletop) -->
+                <div class="inline-flex items-center p-0.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-medium">
+                    <button type="button" class="header-cut-btn cut-btn-cinematic px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1" data-cut="cinematic" onclick="switchGlobalCut('cinematic')">
+                        <span>🎬</span> <span class="hidden sm:inline">Cinematic</span>
+                    </button>
+                    <button type="button" class="header-cut-btn cut-btn-tabletop px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1" data-cut="tabletop" onclick="switchGlobalCut('tabletop')">
+                        <span>🎲</span> <span class="hidden sm:inline">Tabletop</span>
+                    </button>
+                    <button type="button" class="header-cut-btn cut-btn-raw px-2 sm:px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1" data-cut="raw" onclick="switchGlobalCut('raw')">
+                        <span>🎙️</span> <span class="hidden sm:inline">Raw</span>
+                    </button>
+                </div>
+
                 <button id="toggleChaptersBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="View Table of Contents & Chapter Breakdown" aria-label="Open Chapters Table of Contents">
                     <svg class="w-3.5 h-3.5 flex-shrink-0 text-amber-400" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
                         <line x1="9" y1="6" x2="20" y2="6"></line>
@@ -19054,7 +19067,7 @@
     <!-- END-OF-SESSION ROTTEN TOMATOES CRITIC & TABLE DEBRIEF CARD -->
     <!-- ========================================================= -->
     <section class="mt-12 mb-8">
-        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view Rotten Tomatoes story debrief, anti-hallucination wall and player directives">
+        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
             
             <!-- Card Header: Title & Dual Rotten Tomatoes Badges -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
@@ -19065,10 +19078,10 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Rotten Tomatoes Post-Mortem</span>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Table Debrief</span>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Story Review</span>
                         </div>
                         <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-amber-300 transition-colors">
-                            Session 5 Story Review & Directives
+                            Session 5 Story Review & Player Critique
                         </h3>
                     </div>
                 </div>
@@ -19100,29 +19113,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Anti-Hallucination Convergence Boundary Callout -->
-            <div class="mt-3.5 p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-rose-950/30 via-slate-950/60 to-amber-950/30 border border-rose-800/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span class="text-rose-400 text-sm">🧱</span>
-                        <strong class="text-xs sm:text-sm font-bold text-rose-300 font-serif">The Anti-Hallucination Boundary Reached</strong>
-                        <span class="text-[10px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">Quality Gate Stop</span>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                        Rather than having AI authoring hallucinate missing character beats or internal grief, the authoring pipeline stops here and delivers direct coaching for the players and GM to resolve next session.
-                    </p>
-                </div>
-                <div class="flex-shrink-0 self-start sm:self-center">
-                    <span class="text-xs text-rose-200 bg-rose-900/60 border border-rose-700/80 px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 group-hover:bg-rose-800 transition-colors shadow-sm">
-                        <span>Read Debrief</span>
-                        <span>→</span>
-                    </span>
-                </div>
-            </div>
-
-            <!-- Quick Table MVPs (if present) -->
-            <div class="flex flex-wrap items-center gap-1.5 pt-1"><span class="text-[10px] uppercase font-mono font-bold text-slate-400 mr-1">Table MVPs:</span><span class="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-300"><strong class="text-amber-400">Luke</strong>: The Jury Duty vs. Guillotine Rant</span><span class="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-300"><strong class="text-amber-400">John</strong>: 1948 Refrigeration Grilling</span><span class="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-300"><strong class="text-amber-400">William</strong>: The 'Visual Learners' Pedagogical Bluff</span><span class="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-300"><strong class="text-amber-400">Sophie</strong>: 'Not again. Not me again!'</span></div>
 
             <!-- Participant Report Card Strip -->
             
@@ -19189,76 +19179,25 @@
         </div>
         
 
-            <!-- Narrative Elements Quick Spectrum Grid -->
-            <div class="pt-3 space-y-3">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    
-        <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px]">
-            <span class="flex items-center gap-1.5 font-medium text-slate-300">
-                <span>⚡</span>
-                <span class="truncate">Pacing & Story Momentum</span>
-            </span>
-            <span class="font-mono font-bold text-amber-300 text-[10px] flex-shrink-0 px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30">
-                92% · Propulsive Adventure Velocity
-            </span>
-        </div>
-        
-        <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px]">
-            <span class="flex items-center gap-1.5 font-medium text-slate-300">
-                <span>🎭</span>
-                <span class="truncate">Character Voice & Dialogue Dynamics</span>
-            </span>
-            <span class="font-mono font-bold text-amber-300 text-[10px] flex-shrink-0 px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30">
-                33.2% Spoken · Distinct Character Cadence
-            </span>
-        </div>
-        
-        <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px]">
-            <span class="flex items-center gap-1.5 font-medium text-slate-300">
-                <span>🌌</span>
-                <span class="truncate">World-Building & Sensory Depth</span>
-            </span>
-            <span class="font-mono font-bold text-amber-300 text-[10px] flex-shrink-0 px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30">
-                95 Registers · Visceral Planar Atmosphere
-            </span>
-        </div>
-        
-        <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px]">
-            <span class="flex items-center gap-1.5 font-medium text-slate-300">
-                <span>⚔️</span>
-                <span class="truncate">Action Staging & Combat Blocking</span>
-            </span>
-            <span class="font-mono font-bold text-amber-300 text-[10px] flex-shrink-0 px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30">
-                Dynamic · Kinetic Physical Movement
-            </span>
-        </div>
-        
-        <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px]">
-            <span class="flex items-center gap-1.5 font-medium text-slate-300">
-                <span>🎲</span>
-                <span class="truncate">Tabletop Canon & Dice Fidelity</span>
-            </span>
-            <span class="font-mono font-bold text-amber-300 text-[10px] flex-shrink-0 px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30">
-                100% Faithful · Authentic Table Agency
-            </span>
-        </div>
-        
+            <!-- High-Level Editorial Summary -->
+            <div class="mt-4 p-4 rounded-xl bg-slate-950/70 border border-slate-800/90 space-y-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400">Editorial Summary:</span>
                 </div>
+                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif italic">
+                    "Audit Score: 62/100 (Tomatometer: 62%, Popcornmeter: 94%). Session 5 has peak table energy (94%) but stalls in prose (62%) due to missing Track B (Cinematic Cut) and dropped Persephone interiority. Cinematic Cut Omission: Zero authorial scene files found in 'd:\Code\dnd-scribe\sessions\data\clean\blocks_authorial/s5-scene-*-alt.md'! Downstream reader 3-lens contract requires both Tabletop and Cinematic cuts. Upstream pipeline abandoned Track B! Speaker Misattribution in Block #8 (uneraseable_s05_b008): Manifest has speakerId='dravin', but prose says 'pierre': "A delightful thought over breakfast, Professor," Pierre murmured, sliding a finished rum crepe onto..."
+                </p>
+            </div>
 
-                <!-- Review Quick Take & Prompt to Weigh in -->
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2">
-                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-serif italic">
-                        "Audit Score: 62/100 (Tomatometer: 62%, Popcornmeter: 94%). Session 5 has peak table energy (94%) but stalls in prose (62%) due to missing Track B (Cinematic Cut) and dropped Persephone interiority. Cinematic Cut Omission: Zero authorial scene files found in 'd:\Code\dnd-scribe\sessions\data\clean\blocks_authorial/s5-scene-*-alt.md'! Downstream reader 3-lens contract requires both Tabletop and Cinematic cuts. Upstream pipeline abandoned Track B! Speaker Misattribution in Block #8 (uneraseable_s05_b008): Manifest has speakerId='dravin', but prose says 'pierre': "A delightful thought over breakfast, Professor," Pierre murmured, sliding a finished rum crepe onto..."
-                    </p>
-                    <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-slate-400 font-sans border-t border-slate-800/60">
-                        <span class="flex items-center gap-1.5 text-amber-400 font-medium">
-                            <span>⚖️</span> <span>Story Choices, Player MVPs & Directives Ready</span>
-                        </span>
-                        <span class="text-rose-400 group-hover:text-rose-300 font-medium underline decoration-rose-500/40 underline-offset-2 flex items-center gap-1">
-                            <span>Tap to view full debrief & directives</span> <span>💬</span>
-                        </span>
-                    </div>
+            <!-- Action Prompt -->
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                    <span class="text-amber-400">🎭</span>
+                    <span>Tap to view tabbed player critiques, audit shortcomings & directives</span>
                 </div>
+                <span class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-900/80 to-amber-900/80 hover:from-rose-800 hover:to-amber-800 border border-rose-700/60 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
+                    <span>Read Player Breakdown</span> <span>→</span>
+                </span>
             </div>
         </div>
     </section>
@@ -20020,7 +19959,7 @@
     <!-- ========================================================= -->
     <!-- SYNCHRONIZED NARRATIVE VS. SOURCE DIFF INSPECTOR -->
     <!-- ========================================================= -->
-    <div id="diffInspectorOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col opacity-0 pointer-events-none transition-opacity duration-200 box-border">
+    <div id="diffInspectorOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[90] flex flex-col opacity-0 pointer-events-none transition-opacity duration-200 box-border">
         
         <!-- Inspector Top Header Bar -->
         <header class="flex-shrink-0 bg-slate-900/98 border-b border-slate-800 px-3 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-3 shadow-md">
@@ -20177,8 +20116,8 @@
                 <button id="modalDeleteBtn" type="button" class="px-3 py-2 bg-rose-950/50 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded-xl text-xs font-bold transition-colors hidden">
                     🗑️ Delete Note
                 </button>
-                <button id="modalOpenDiffBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="Open full synchronized side-by-side diff inspector">
-                    <span>🔍</span> <span class="hidden xs:inline">Full Diff View</span>
+                <button id="modalOpenDiffBtn" type="button" class="px-3.5 py-2 bg-gradient-to-r from-cyan-950/70 to-slate-900 hover:from-cyan-900/80 hover:to-slate-800 border border-cyan-700/60 text-cyan-300 hover:text-cyan-100 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="Open full synchronized side-by-side view (Novel vs Raw Source)">
+                    <span>⚖️</span> <span>Side-by-Side View</span>
                 </button>
                 <div class="flex-1"></div>
                 <button id="modalSaveBtn" type="button" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5 active:scale-98">
@@ -20362,6 +20301,7 @@
                 </button>
             </div>
         </div>
+    </div>
     <!-- Floating Return to Story Banner (Active only in Raw view) -->
     <div id="rawReturnBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden transition-all duration-200">
         <button type="button" onclick="returnToLastReadingBlock()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold text-xs sm:text-sm shadow-2xl flex items-center gap-2 border border-amber-300 active:scale-95 transition-all">
@@ -20385,10 +20325,10 @@
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Rotten Tomatoes Post-Mortem & Debrief</h3>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Player Coaching</span>
+                            <h3 class="text-slate-100 font-bold text-sm sm:text-base font-serif truncate">Session 5 Story Review & Player Critique</h3>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Table Debrief</span>
                         </div>
-                        <p class="text-[11px] text-slate-400 font-mono">Session 5 · Anti-Hallucination Quality Gate & Directives</p>
+                        <p class="text-[11px] text-slate-400 font-mono">Acquisitions Editor Audit · Player-by-Player Breakdown</p>
                     </div>
                 </div>
                 <button id="closeCriticForumBtn" type="button" class="text-slate-400 hover:text-slate-200 text-xl font-bold p-1 leading-none transition-colors" title="Close">&times;</button>
@@ -20397,14 +20337,12 @@
             <!-- Scrollable Content Stream -->
             <div class="flex-1 overflow-y-auto space-y-4 pr-1 min-h-0 custom-scrollbar">
 
-                <!-- SECTION 1: ROTTEN TOMATOES STORY POST-MORTEM & PLAYER DEBRIEF -->
-                <div class="p-4 rounded-xl bg-slate-950/80 border border-rose-500/30 space-y-3.5 shadow-sm">
-                    
-                    <!-- Dual Score Header -->
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <!-- SECTION 1: HIGH-LEVEL STORY SCORE & VERDICT -->
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-2.5">
                         <div class="flex items-center gap-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-rose-400 animate-pulse"></span>
-                            <span class="text-xs font-bold font-serif uppercase tracking-wider text-rose-400">Editorial Story Critic</span>
+                            <span class="text-xs font-bold font-serif uppercase tracking-wider text-rose-400">Acquisitions Editor Audit</span>
                         </div>
                         <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-700 font-mono font-bold">BLOCKED — CRITICAL FAILURES REQUIRE REVISION</span>
                     </div>
@@ -20419,7 +20357,7 @@
                                     <span class="text-xl sm:text-2xl font-bold font-mono text-slate-100">62%</span>
                                     <span class="text-[10px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border-emerald-800/80">Rotten (D)</span>
                                 </div>
-                                <span class="text-[10px] text-slate-400 font-mono block">Tomatometer · Prose & Contract Critique</span>
+                                <span class="text-[10px] text-slate-400 font-mono block">Tomatometer · Narrative Execution</span>
                             </div>
                         </div>
 
@@ -20436,677 +20374,518 @@
                         </div>
                     </div>
 
-                    <!-- The Anti-Hallucination Convergence Boundary Banner -->
-                    <div class="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border border-rose-500/40 space-y-2">
-                        <div class="flex items-center gap-2 text-rose-300 font-bold text-xs sm:text-sm font-serif">
-                            <span class="text-base">🧱</span>
-                            <span>The Anti-Hallucination Convergence Boundary</span>
-                        </div>
-                        <p class="text-xs text-slate-200 leading-relaxed font-sans">
-                            Upstream AI authoring can refine prose, tune sentence cadence, and trim dead silence. However, when character interiority or crucial story reveals were omitted at the table, <strong>the AI must STOP</strong>. Fabricating synthetic emotions, grief, or retroactive dialogue outside what the players delivered violates player agency. Addressing these gaps belongs directly to the players and GM at the table in their next session.
+                    <!-- Editorial Summary Quote -->
+                    <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 text-xs">
+                        <p class="text-slate-200 italic font-serif leading-relaxed">
+                            "Audit Score: 62/100 (Tomatometer: 62%, Popcornmeter: 94%). Session 5 has peak table energy (94%) but stalls in prose (62%) due to missing Track B (Cinematic Cut) and dropped Persephone interiority. Cinematic Cut Omission: Zero authorial scene files found in 'd:\Code\dnd-scribe\sessions\data\clean\blocks_authorial/s5-scene-*-alt.md'! Downstream reader 3-lens contract requires both Tabletop and Cinematic cuts. Upstream pipeline abandoned Track B! Speaker Misattribution in Block #8 (uneraseable_s05_b008): Manifest has speakerId='dravin', but prose says 'pierre': "A delightful thought over breakfast, Professor," Pierre murmured, sliding a finished rum crepe onto..."
                         </p>
                     </div>
+                </div>
 
-                    <!-- 🎭 Table Performance & Character Consistency Ledger -->
-                    <div class="space-y-2.5 pt-1">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-800/80 pb-2">
-                            <div class="flex items-center gap-2">
-                                <span class="text-base">🎭</span>
-                                <h4 class="text-xs sm:text-sm font-bold text-amber-300 font-serif uppercase tracking-wider">
-                                    Table Performance & Character Consistency Ledger
-                                </h4>
-                            </div>
-                            <span class="text-[10px] font-mono text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-800/50">
-                                ✒️ Red-Ink Acquisitions Editor Audit
-                            </span>
+                <!-- SECTION 2: TABBED PLAYER PERFORMANCE BREAKDOWN -->
+                <div class="space-y-3 pt-1">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🎭</span>
+                            <h4 class="text-xs sm:text-sm font-bold text-amber-400 font-serif uppercase tracking-wider">
+                                Player-by-Player Critique & Scorecards
+                            </h4>
                         </div>
-                        <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                            Holding both the Game Master and players to commercial publishing standards. Evaluates scene presence, dialogue voice fidelity, what propelled the fiction, and what stalled the narrative.
-                        </p>
-                        <div class="space-y-3 pt-1">
-                            
-        <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700/80 space-y-3 transition-colors shadow-sm" style="border-left: 4px solid #94a3b8;">
-            <!-- Participant Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/60 pb-2.5">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-slate-900 border border-slate-700">
+                        <span class="text-[10px] text-slate-400 font-mono">Select a player to view audit critique</span>
+                    </div>
+
+                    <!-- Player Navigation Tab Bar -->
+                    <div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                        
+        <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-amber-500 bg-slate-800 text-amber-300 shadow-md"
+                data-player-id="gm" onclick="switchPlayerCritiqueTab('gm')">
+            <span>👑</span>
+            <span>GM</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">B-</span>
+        </button>
+        
+        <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                data-player-id="pierre" onclick="switchPlayerCritiqueTab('pierre')">
+            <span>🥖</span>
+            <span>Pierre</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">A-</span>
+        </button>
+        
+        <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                data-player-id="dravin" onclick="switchPlayerCritiqueTab('dravin')">
+            <span>📚</span>
+            <span>Dravin</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/80">C+</span>
+        </button>
+        
+        <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                data-player-id="eusacles" onclick="switchPlayerCritiqueTab('eusacles')">
+            <span>🎲</span>
+            <span>Eusacles</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">A</span>
+        </button>
+        
+        <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                data-player-id="alfie" onclick="switchPlayerCritiqueTab('alfie')">
+            <span>🪆</span>
+            <span>Alfie</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">B</span>
+        </button>
+        
+                    </div>
+
+                    <!-- Player Panels Container -->
+                    <div class="pt-1">
+                        
+        <div id="playerPanel_gm" class="player-critique-panel  space-y-3.5" data-player-id="gm">
+            <!-- Player Header & Metrics -->
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #94a3b8;">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         👑
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-bold text-slate-100 font-serif text-sm truncate">Luke Foreman</span>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #94a3b8;">
+                            <h4 class="font-bold text-slate-100 font-serif text-sm sm:text-base">Luke Foreman</h4>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #94a3b8;">
                                 Game Master
                             </span>
-                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
                                 The Architect
                             </span>
                         </div>
-                        <div class="text-[11px] text-slate-400 font-sans truncate">
-                            Game Master & World Architect
-                        </div>
+                        <p class="text-xs text-slate-400 font-sans mt-0.5">Game Master & World Architect</p>
                     </div>
                 </div>
 
-                <!-- Grade & Metrics Badge -->
-                <div class="flex items-center gap-2.5 self-start sm:self-center flex-shrink-0">
-                    <div class="text-right hidden sm:block">
+                <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-[10px] text-slate-300 font-mono font-semibold">38%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">38%</span>
                     </div>
-                    <div class="text-right hidden sm:block">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-[10px] text-emerald-400 font-mono font-semibold">85%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">85%</span>
                     </div>
-                    <!-- Big Letter Grade Pill -->
-                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-cyan-950/80 border border-cyan-700/80">
-                        <span class="text-base sm:text-lg font-bold font-mono text-cyan-300">B-</span>
-                        <span class="text-[10px] font-mono text-cyan-400/80">(80%)</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/80 border border-cyan-700/80">
+                        <span class="text-lg font-bold font-mono text-cyan-300">B-</span>
+                        <span class="text-xs font-mono text-cyan-400/80">(80%)</span>
                     </div>
                 </div>
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-900/40 text-xs space-y-1">
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
                 <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict:</span>
+                    <span>✒️</span> <span>The Red-Ink Verdict</span>
                 </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-rose-600/60">
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
                     "Masterclass in 1948 mid-century gothic horror and psychiatric dread, held back by meandering highway transit and an abrupt satyr cliffhanger thrown to beat the session clock."
                 </p>
             </div>
 
-            <!-- What Helped & What Hurt Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 font-mono flex items-center gap-1">
-                        <span>🌟</span> <span>What Helped (Story Fuel)</span>
+            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
+            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
+                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
+                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        The subterranean clinical trial ward: the smell of ozone, the catatonic milk-eyed patients in iron cots, and the shifting ink from STABLE to STALE in Thorne's handwritten binder was haunting, unforgettable atmosphere.
-                    </p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-amber-400 font-mono flex items-center gap-1">
-                        <span>⚠️</span> <span>What Hurt (Narrative Drag)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                        Audit Finding
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        Pacing drift on the Pennsylvania turnpike (Scenes 4–5), followed by clock-management panic at the end—dropping three armed satyrs into the lecture hall with zero acoustic or atmospheric runway.
-                    </p>
                 </div>
+                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    Pacing drift on the Pennsylvania turnpike (Scenes 4–5), followed by clock-management panic at the end—dropping three armed satyrs into the lecture hall with zero acoustic or atmospheric runway.
+                </p>
             </div>
 
-            <!-- Actionable Coaching Directive -->
-            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-amber-500/30 text-xs space-y-1">
+            <!-- What They Did Well (Story Fuel) -->
+            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
+                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+                </span>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    The subterranean clinical trial ward: the smell of ozone, the catatonic milk-eyed patients in iron cots, and the shifting ink from STABLE to STALE in Thorne's handwritten binder was haunting, unforgettable atmosphere.
+                </p>
+            </div>
+
+            <!-- Next Session Directive / Coaching Mandate -->
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
                 <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-[10px] uppercase tracking-wide flex items-center gap-1">
-                        <span>🎯</span> <span>Session 6 Directive</span>
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
+                        <span>🎯</span> <span>Session Coaching Directive</span>
                     </span>
-                    <span class="text-[9px] font-mono text-slate-400">Coaching Order</span>
+                    <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
-                <p class="text-slate-200 text-[11px] leading-relaxed pl-3 border-l-2 border-amber-500/60 font-sans">
+                <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
                     👉 Give combat thresholds at least 2 minutes of atmospheric build-up. In Session 6, immediately establish why the satyrs tracked the party, what their faction wants, and stop using combat encounters as arbitrary session cutoffs.
                 </p>
             </div>
         </div>
         
-        <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700/80 space-y-3 transition-colors shadow-sm" style="border-left: 4px solid #3b82f6;">
-            <!-- Participant Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/60 pb-2.5">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-slate-900 border border-slate-700">
+        <div id="playerPanel_pierre" class="player-critique-panel hidden space-y-3.5" data-player-id="pierre">
+            <!-- Player Header & Metrics -->
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #3b82f6;">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         🥖
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-bold text-slate-100 font-serif text-sm truncate">Luke S</span>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #3b82f6;">
+                            <h4 class="font-bold text-slate-100 font-serif text-sm sm:text-base">Luke S</h4>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #3b82f6;">
                                 Pierre
                             </span>
-                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
                                 The Artisan
                             </span>
                         </div>
-                        <div class="text-[11px] text-slate-400 font-sans truncate">
-                            Parisian Stonemason & Skeptic
-                        </div>
+                        <p class="text-xs text-slate-400 font-sans mt-0.5">Parisian Stonemason & Skeptic</p>
                     </div>
                 </div>
 
-                <!-- Grade & Metrics Badge -->
-                <div class="flex items-center gap-2.5 self-start sm:self-center flex-shrink-0">
-                    <div class="text-right hidden sm:block">
+                <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-[10px] text-slate-300 font-mono font-semibold">19%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">19%</span>
                     </div>
-                    <div class="text-right hidden sm:block">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-[10px] text-emerald-400 font-mono font-semibold">95%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">95%</span>
                     </div>
-                    <!-- Big Letter Grade Pill -->
-                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-950/80 border border-emerald-700/80">
-                        <span class="text-base sm:text-lg font-bold font-mono text-emerald-300">A-</span>
-                        <span class="text-[10px] font-mono text-emerald-400/80">(90%)</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-700/80">
+                        <span class="text-lg font-bold font-mono text-emerald-300">A-</span>
+                        <span class="text-xs font-mono text-emerald-400/80">(90%)</span>
                     </div>
                 </div>
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-900/40 text-xs space-y-1">
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
                 <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict:</span>
+                    <span>✒️</span> <span>The Red-Ink Verdict</span>
                 </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-rose-600/60">
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
                     "Masterclass in physical misdirection and comic timing—from the guillotine breakfast to the sculpture classroom mic drop—but wears his Parisian cynicism as impenetrable emotional armor, treating visceral horror like a minor aesthetic inconvenience."
                 </p>
             </div>
 
-            <!-- What Helped & What Hurt Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 font-mono flex items-center gap-1">
-                        <span>🌟</span> <span>What Helped (Story Fuel)</span>
+            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
+            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
+                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
+                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        Executed the session's premier tactical distractions: weaponizing Hellenic art snobbery to pickpocket Rick Ready's keys, and brazenly taking the Q&A microphone to declare Dr. Thorne boring while nudging her bag to Alfie under the desk. Yielded the highway transit to Dravin with mature ensemble restraint.
-                    </p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-amber-400 font-mono flex items-center gap-1">
-                        <span>⚠️</span> <span>What Hurt (Narrative Drag)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                        Audit Finding
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        Impenetrable emotional armor. When the subterranean 1948 psychiatric ward vision struck and comatose patients filled the room, Pierre remained ironically detached. Even during cosmic terror, he treated the nightmare as an uncivilized American curiosity rather than letting the horror crack his shell.
-                    </p>
                 </div>
+                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    Impenetrable emotional armor. When the subterranean 1948 psychiatric ward vision struck and comatose patients filled the room, Pierre remained ironically detached. Even during cosmic terror, he treated the nightmare as an uncivilized American curiosity rather than letting the horror crack his shell.
+                </p>
             </div>
 
-            <!-- Actionable Coaching Directive -->
-            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-amber-500/30 text-xs space-y-1">
+            <!-- What They Did Well (Story Fuel) -->
+            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
+                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+                </span>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    Executed the session's premier tactical distractions: weaponizing Hellenic art snobbery to pickpocket Rick Ready's keys, and brazenly taking the Q&A microphone to declare Dr. Thorne boring while nudging her bag to Alfie under the desk. Yielded the highway transit to Dravin with mature ensemble restraint.
+                </p>
+            </div>
+
+            <!-- Next Session Directive / Coaching Mandate -->
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
                 <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-[10px] uppercase tracking-wide flex items-center gap-1">
-                        <span>🎯</span> <span>Session 6 Directive</span>
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
+                        <span>🎯</span> <span>Session Coaching Directive</span>
                     </span>
-                    <span class="text-[9px] font-mono text-slate-400">Coaching Order</span>
+                    <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
-                <p class="text-slate-200 text-[11px] leading-relaxed pl-3 border-l-2 border-amber-500/60 font-sans">
+                <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
                     👉 Let the horror crack the snobbery! When the satyrs splinter the lecture hall doors in Session 6, stop using French cynicism as bulletproof armor. Show what Pierre genuinely fears when classical beauty meets primal violence.
                 </p>
             </div>
         </div>
         
-        <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700/80 space-y-3 transition-colors shadow-sm" style="border-left: 4px solid #8b5cf6;">
-            <!-- Participant Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/60 pb-2.5">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-slate-900 border border-slate-700">
+        <div id="playerPanel_dravin" class="player-critique-panel hidden space-y-3.5" data-player-id="dravin">
+            <!-- Player Header & Metrics -->
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #8b5cf6;">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         📚
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-bold text-slate-100 font-serif text-sm truncate">William Webb</span>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #8b5cf6;">
+                            <h4 class="font-bold text-slate-100 font-serif text-sm sm:text-base">William Webb</h4>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #8b5cf6;">
                                 Prof. Edward Dravin
                             </span>
-                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
                                 The Professor
                             </span>
                         </div>
-                        <div class="text-[11px] text-slate-400 font-sans truncate">
-                            Stanford Academic & Demigod
-                        </div>
+                        <p class="text-xs text-slate-400 font-sans mt-0.5">Stanford Academic & Demigod</p>
                     </div>
                 </div>
 
-                <!-- Grade & Metrics Badge -->
-                <div class="flex items-center gap-2.5 self-start sm:self-center flex-shrink-0">
-                    <div class="text-right hidden sm:block">
+                <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-[10px] text-slate-300 font-mono font-semibold">26%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">26%</span>
                     </div>
-                    <div class="text-right hidden sm:block">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-[10px] text-emerald-400 font-mono font-semibold">72%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">72%</span>
                     </div>
-                    <!-- Big Letter Grade Pill -->
-                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-950/80 border border-amber-700/80">
-                        <span class="text-base sm:text-lg font-bold font-mono text-amber-300">C+</span>
-                        <span class="text-[10px] font-mono text-amber-400/80">(75%)</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/80 border border-amber-700/80">
+                        <span class="text-lg font-bold font-mono text-amber-300">C+</span>
+                        <span class="text-xs font-mono text-amber-400/80">(75%)</span>
                     </div>
                 </div>
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-900/40 text-xs space-y-1">
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
                 <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict:</span>
+                    <span>✒️</span> <span>The Red-Ink Verdict</span>
                 </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-rose-600/60">
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
                     "Brilliant pedagogical manipulation at the podium, but committed the cardinal sin of pocketing a divine underworld heritage revelation like a dry dry-cleaning receipt."
                 </p>
             </div>
 
-            <!-- What Helped & What Hurt Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 font-mono flex items-center gap-1">
-                        <span>🌟</span> <span>What Helped (Story Fuel)</span>
+            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
+            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
+                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
+                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        The 'visual learners' bluff against Dr. Thorne in Scene 9 was masterful academic maneuvering, and his smooth pickpocketing of Rick Ready's keys gave the heist early momentum.
-                    </p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-amber-400 font-mono flex items-center gap-1">
-                        <span>⚠️</span> <span>What Hurt (Narrative Drag)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                        Audit Finding
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        Absolute emotional evasion. When handed a wax-sealed letter confirming Persephone is his divine mother descending into Hades, Dravin shelved the world-shattering revelation without a single syllable of existential weight.
-                    </p>
                 </div>
+                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    Absolute emotional evasion. When handed a wax-sealed letter confirming Persephone is his divine mother descending into Hades, Dravin shelved the world-shattering revelation without a single syllable of existential weight.
+                </p>
             </div>
 
-            <!-- Actionable Coaching Directive -->
-            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-amber-500/30 text-xs space-y-1">
+            <!-- What They Did Well (Story Fuel) -->
+            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
+                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+                </span>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    The 'visual learners' bluff against Dr. Thorne in Scene 9 was masterful academic maneuvering, and his smooth pickpocketing of Rick Ready's keys gave the heist early momentum.
+                </p>
+            </div>
+
+            <!-- Next Session Directive / Coaching Mandate -->
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
                 <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-[10px] uppercase tracking-wide flex items-center gap-1">
-                        <span>🎯</span> <span>Session 6 Directive</span>
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
+                        <span>🎯</span> <span>Session Coaching Directive</span>
                     </span>
-                    <span class="text-[9px] font-mono text-slate-400">Coaching Order</span>
+                    <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
-                <p class="text-slate-200 text-[11px] leading-relaxed pl-3 border-l-2 border-amber-500/60 font-sans">
+                <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
                     👉 Reckon with the goddess mother. In Session 6, pull Pierre or Eusacles aside at the first quiet threshold and break the academic facade—tell them what was in that letter and what it feels like to be the son of the Underworld.
                 </p>
             </div>
         </div>
         
-        <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700/80 space-y-3 transition-colors shadow-sm" style="border-left: 4px solid #f59e0b;">
-            <!-- Participant Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/60 pb-2.5">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-slate-900 border border-slate-700">
+        <div id="playerPanel_eusacles" class="player-critique-panel hidden space-y-3.5" data-player-id="eusacles">
+            <!-- Player Header & Metrics -->
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #f59e0b;">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         🎲
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-bold text-slate-100 font-serif text-sm truncate">John Hagey</span>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #f59e0b;">
+                            <h4 class="font-bold text-slate-100 font-serif text-sm sm:text-base">John Hagey</h4>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #f59e0b;">
                                 Eusacles
                             </span>
-                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
                                 The Gambler
                             </span>
                         </div>
-                        <div class="text-[11px] text-slate-400 font-sans truncate">
-                            Blue-Collar Gambler & Cynic
-                        </div>
+                        <p class="text-xs text-slate-400 font-sans mt-0.5">Blue-Collar Gambler & Cynic</p>
                     </div>
                 </div>
 
-                <!-- Grade & Metrics Badge -->
-                <div class="flex items-center gap-2.5 self-start sm:self-center flex-shrink-0">
-                    <div class="text-right hidden sm:block">
+                <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-[10px] text-slate-300 font-mono font-semibold">24%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">24%</span>
                     </div>
-                    <div class="text-right hidden sm:block">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-[10px] text-emerald-400 font-mono font-semibold">96%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">96%</span>
                     </div>
-                    <!-- Big Letter Grade Pill -->
-                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-950/80 border border-emerald-700/80">
-                        <span class="text-base sm:text-lg font-bold font-mono text-emerald-300">A</span>
-                        <span class="text-[10px] font-mono text-emerald-400/80">(93%)</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-700/80">
+                        <span class="text-lg font-bold font-mono text-emerald-300">A</span>
+                        <span class="text-xs font-mono text-emerald-400/80">(93%)</span>
                     </div>
                 </div>
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-900/40 text-xs space-y-1">
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
                 <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict:</span>
+                    <span>✒️</span> <span>The Red-Ink Verdict</span>
                 </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-rose-600/60">
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
                     "The gold standard of ensemble timing: hung back in the shadows until the heist stalled, then strode down the center aisle with devastating blue-collar cross-examination."
                 </p>
             </div>
 
-            <!-- What Helped & What Hurt Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 font-mono flex items-center gap-1">
-                        <span>🌟</span> <span>What Helped (Story Fuel)</span>
+            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
+            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
+                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
+                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        Patience and acoustic dominance. Sitting quietly until Dr. Thorne finished, then grilling her relentlessly on 1948 freon coolant and ice-box mechanics completely dismantled her academic composure and bought Alfie the room to strike.
-                    </p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-amber-400 font-mono flex items-center gap-1">
-                        <span>⚠️</span> <span>What Hurt (Narrative Drag)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                        Audit Finding
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        The Thanatos mystery debt. Exited the Margin fog with a pocket-watch chain bound to the god of death, but keeps evading what he ante'd up or who held the house odds.
-                    </p>
                 </div>
+                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    The Thanatos mystery debt. Exited the Margin fog with a pocket-watch chain bound to the god of death, but keeps evading what he ante'd up or who held the house odds.
+                </p>
             </div>
 
-            <!-- Actionable Coaching Directive -->
-            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-amber-500/30 text-xs space-y-1">
+            <!-- What They Did Well (Story Fuel) -->
+            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
+                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+                </span>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    Patience and acoustic dominance. Sitting quietly until Dr. Thorne finished, then grilling her relentlessly on 1948 freon coolant and ice-box mechanics completely dismantled her academic composure and bought Alfie the room to strike.
+                </p>
+            </div>
+
+            <!-- Next Session Directive / Coaching Mandate -->
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
                 <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-[10px] uppercase tracking-wide flex items-center gap-1">
-                        <span>🎯</span> <span>Session 6 Directive</span>
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
+                        <span>🎯</span> <span>Session Coaching Directive</span>
                     </span>
-                    <span class="text-[9px] font-mono text-slate-400">Coaching Order</span>
+                    <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
-                <p class="text-slate-200 text-[11px] leading-relaxed pl-3 border-l-2 border-amber-500/60 font-sans">
+                <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
                     👉 Call the bet. In Session 6, reveal to the party what you staked against Thanatos, and what debts are coming due when the dice stop rolling.
                 </p>
             </div>
         </div>
         
-        <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800/80 hover:border-slate-700/80 space-y-3 transition-colors shadow-sm" style="border-left: 4px solid #10b981;">
-            <!-- Participant Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/60 pb-2.5">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-slate-900 border border-slate-700">
+        <div id="playerPanel_alfie" class="player-critique-panel hidden space-y-3.5" data-player-id="alfie">
+            <!-- Player Header & Metrics -->
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #10b981;">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         🪆
                     </div>
                     <div class="min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-bold text-slate-100 font-serif text-sm truncate">Sophie Foreman Noone</span>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #10b981;">
+                            <h4 class="font-bold text-slate-100 font-serif text-sm sm:text-base">Sophie Foreman Noone</h4>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full font-mono font-medium bg-slate-900 border border-slate-700" style="color: #10b981;">
                                 Alfie
                             </span>
-                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
+                            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 font-mono">
                                 The Rogue
                             </span>
                         </div>
-                        <div class="text-[11px] text-slate-400 font-sans truncate">
-                            Driftwood Doll & Rogue Heart
-                        </div>
+                        <p class="text-xs text-slate-400 font-sans mt-0.5">Driftwood Doll & Rogue Heart</p>
                     </div>
                 </div>
 
-                <!-- Grade & Metrics Badge -->
-                <div class="flex items-center gap-2.5 self-start sm:self-center flex-shrink-0">
-                    <div class="text-right hidden sm:block">
+                <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-[10px] text-slate-300 font-mono font-semibold">13%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">13%</span>
                     </div>
-                    <div class="text-right hidden sm:block">
+                    <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-[10px] text-emerald-400 font-mono font-semibold">89%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">89%</span>
                     </div>
-                    <!-- Big Letter Grade Pill -->
-                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-cyan-950/80 border border-cyan-700/80">
-                        <span class="text-base sm:text-lg font-bold font-mono text-cyan-300">B</span>
-                        <span class="text-[10px] font-mono text-cyan-400/80">(84%)</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/80 border border-cyan-700/80">
+                        <span class="text-lg font-bold font-mono text-cyan-300">B</span>
+                        <span class="text-xs font-mono text-cyan-400/80">(84%)</span>
                     </div>
                 </div>
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-2.5 rounded-lg bg-rose-950/20 border border-rose-900/40 text-xs space-y-1">
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
                 <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict:</span>
+                    <span>✒️</span> <span>The Red-Ink Verdict</span>
                 </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-rose-600/60">
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
                     "Delivered the undisputed emotional gut-punch of the session at the relic table, but held her cards so close to the vest during the transit that her climactic terror felt like an abrupt spike rather than a simmering dread."
                 </p>
             </div>
 
-            <!-- What Helped & What Hurt Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 font-mono flex items-center gap-1">
-                        <span>🌟</span> <span>What Helped (Story Fuel)</span>
+            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
+            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
+                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
+                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        The green room heist agility (pilfering the soccer scarf) and the shattering vulnerability in Scene 10 ('Not again. Not me again!') when touching the temporal relic, injecting genuine human stakes into an academic caper.
-                    </p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-amber-950/20 border border-amber-900/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-amber-400 font-mono flex items-center gap-1">
-                        <span>⚠️</span> <span>What Hurt (Narrative Drag)</span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                        Audit Finding
                     </span>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">
-                        Total radio silence during the Lost Roads transit. While staying out of sight in Dravin's coat made tactical sense for a driftwood doll, hoarding her dread left the reader unprepared for the emotional avalanche at the climax.
-                    </p>
                 </div>
+                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    Total radio silence during the Lost Roads transit. While staying out of sight in Dravin's coat made tactical sense for a driftwood doll, hoarding her dread left the reader unprepared for the emotional avalanche at the climax.
+                </p>
             </div>
 
-            <!-- Actionable Coaching Directive -->
-            <div class="p-2.5 rounded-lg bg-slate-900/90 border border-amber-500/30 text-xs space-y-1">
+            <!-- What They Did Well (Story Fuel) -->
+            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
+                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+                </span>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                    The green room heist agility (pilfering the soccer scarf) and the shattering vulnerability in Scene 10 ('Not again. Not me again!') when touching the temporal relic, injecting genuine human stakes into an academic caper.
+                </p>
+            </div>
+
+            <!-- Next Session Directive / Coaching Mandate -->
+            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
                 <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-[10px] uppercase tracking-wide flex items-center gap-1">
-                        <span>🎯</span> <span>Session 6 Directive</span>
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
+                        <span>🎯</span> <span>Session Coaching Directive</span>
                     </span>
-                    <span class="text-[9px] font-mono text-slate-400">Coaching Order</span>
+                    <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
-                <p class="text-slate-200 text-[11px] leading-relaxed pl-3 border-l-2 border-amber-500/60 font-sans">
+                <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
                     👉 Telegraph the simmer before the boil. In Session 6 combat, give us physical micro-actions from the floor—tugging Dravin's hem, warning the giants about hoofsteps—so your emotional weight stays continuously anchored in the fight.
                 </p>
             </div>
         </div>
         
-                        </div>
                     </div>
-
-                    <!-- What Helped the Novel (Player MVPs) -->
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-emerald-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>🌟</span> <span>What Helped the Novel (Player MVPs & Story Fuel)</span>
-                        </span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-emerald-800/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-1.5">
-                <span class="font-bold text-emerald-300 font-serif">Luke S (Pierre)</span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-mono font-semibold truncate max-w-[140px]">Cultural Anchor / Comic Timing</span>
-            </div>
-            <div class="text-[11px] font-mono text-amber-300">
-                ✨ "The Jury Duty vs. Guillotine Rant"
-            </div>
-            <p class="text-[11px] text-slate-300 leading-relaxed font-sans pt-0.5">
-                When asked how France handles civic duty, Luke S delivered an impromptu philosophical defense of the guillotine over bureaucracy. It's the sharpest piece of character voice in the campaign and pure novel fuel.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-emerald-800/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-1.5">
-                <span class="font-bold text-emerald-300 font-serif">John Hagey (Eusacles)</span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-mono font-semibold truncate max-w-[140px]">Tactical Interrogator / Chaos Agent</span>
-            </div>
-            <div class="text-[11px] font-mono text-amber-300">
-                ✨ "1948 Refrigeration Grilling"
-            </div>
-            <p class="text-[11px] text-slate-300 leading-relaxed font-sans pt-0.5">
-                John's unrelenting cross-examination of Dr. Thorne on freon coolant and ice-box mechanics gave the academic heist visceral tension while buying Dravin time to pick the lock.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-emerald-800/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-1.5">
-                <span class="font-bold text-emerald-300 font-serif">William Webb (Dravin)</span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-mono font-semibold truncate max-w-[140px]">Scholarly Schemer</span>
-            </div>
-            <div class="text-[11px] font-mono text-amber-300">
-                ✨ "The 'Visual Learners' Pedagogical Bluff"
-            </div>
-            <p class="text-[11px] text-slate-300 leading-relaxed font-sans pt-0.5">
-                William smoothly pivoted from passive listener to academic heavyweight, trapping Dr. Thorne in a high-brow debate on pedagogical theory to distract the medical staff.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-emerald-800/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-1.5">
-                <span class="font-bold text-emerald-300 font-serif">Sophie Foreman Noone (Alfie)</span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-mono font-semibold truncate max-w-[140px]">Emotional High-Water Mark</span>
-            </div>
-            <div class="text-[11px] font-mono text-amber-300">
-                ✨ "'Not again. Not me again!'"
-            </div>
-            <p class="text-[11px] text-slate-300 leading-relaxed font-sans pt-0.5">
-                Sophie's gut-wrenching reluctance when forced to touch the timeline relic shattered the cozy heist vibe and injected raw psychological stakes into the scene.
-            </p>
-        </div>
-        
-                        </div>
-                    </div>
-
-                    <!-- The Anti-Hallucination Wall -->
-                    <div class="space-y-2 pt-1">
-                        <span class="text-xs font-bold text-rose-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>🛑</span> <span>The Anti-Hallucination Wall (Where AI Cannot Tread)</span>
-                        </span>
-                        <div class="space-y-2">
-                            
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-rose-800/50 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-rose-300 font-serif flex items-center gap-1.5">
-                    <span>🛑</span> <span>Dravin's Dropped Divine Parentage</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">STOP AUTHORING. Do not invent Dravin's inner psychology. Pass the note to William for Session 6.</span>
-            </div>
-            <p class="text-[11px] text-slate-400 leading-normal pl-4 border-l border-slate-800">
-                <strong class="text-slate-300">Table Origin:</strong> In Scene 3, Dravin received a wax-sealed letter from Persephone confirming he is her demigod son. William pocketed it without roleplaying Dravin's reaction.
-            </p>
-            <p class="text-[11px] text-slate-300 leading-normal pl-4 border-l border-rose-900/50">
-                <strong class="text-rose-400">Hallucination Risk:</strong> If upstream AI writes deep internal grief, resentment, or childhood memories of Persephone, it is 100% synthetic hallucination violating player agency.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-rose-800/50 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-rose-300 font-serif flex items-center gap-1.5">
-                    <span>🛑</span> <span>Alfie's 'Luggage Syndrome' in Transit</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">STOP AUTHORING. Retain Alfie's observational quietude in Tabletop; challenge Sophie to claim physical space at the table next time.</span>
-            </div>
-            <p class="text-[11px] text-slate-400 leading-normal pl-4 border-l border-slate-800">
-                <strong class="text-slate-300">Table Origin:</strong> Sophie sat back quietly during Scenes 4–7 while the guys argued about driving and college pamphlets.
-            </p>
-            <p class="text-[11px] text-slate-300 leading-normal pl-4 border-l border-rose-900/50">
-                <strong class="text-rose-400">Hallucination Risk:</strong> If upstream AI invents puppet dialogue or whimsical doll antics for Alfie in the car, it puts unauthorized words in the player's mouth.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-rose-800/50 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-rose-300 font-serif flex items-center gap-1.5">
-                    <span>🛑</span> <span>Eusacles' Unexplained Fog Excursion</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">STOP AUTHORING. Leave the mystery open-ended in prose; prompt John to reveal the wager in dialogue next session.</span>
-            </div>
-            <p class="text-[11px] text-slate-400 leading-normal pl-4 border-l border-slate-800">
-                <strong class="text-slate-300">Table Origin:</strong> John declared Eusacles stepped into the fog and returned with a Thanatos watch-chain, but never detailed the dice bet or the entity.
-            </p>
-            <p class="text-[11px] text-slate-300 leading-normal pl-4 border-l border-rose-900/50">
-                <strong class="text-rose-400">Hallucination Risk:</strong> If upstream AI invents an encounter with an underworld bookie or Thanatos avatar, it fabricates setting canon out of whole cloth.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-rose-800/50 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-rose-300 font-serif flex items-center gap-1.5">
-                    <span>🛑</span> <span>The Clock-Management Ambush</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">STOP AUTHORING. Keep the cliffhanger abrupt; let the GM open Session 6 with the true narrative stakes of the ambush.</span>
-            </div>
-            <p class="text-[11px] text-slate-400 leading-normal pl-4 border-l border-slate-800">
-                <strong class="text-slate-300">Table Origin:</strong> The session ran out of time; Luke Foreman abruptly announced three satyrs kicking down the clinic door and called for initiative to end the recording.
-            </p>
-            <p class="text-[11px] text-slate-300 leading-normal pl-4 border-l border-rose-900/50">
-                <strong class="text-rose-400">Hallucination Risk:</strong> If upstream AI artificially stages a 3-page tactical standoff or explains the satyrs' employer, it misrepresents table reality.
-            </p>
-        </div>
-        
-                        </div>
-                    </div>
-
-                    <!-- Directives for Next Session (Player & GM Coaching) -->
-                    <div class="space-y-2 pt-1">
-                        <span class="text-xs font-bold text-amber-300 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>🎯</span> <span>Directives for Next Session (Player & GM Coaching)</span>
-                        </span>
-                        <div class="space-y-2">
-                            
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-amber-500/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif flex items-center gap-1.5">
-                    <span>🎯</span> <span>Explore the Persephone Revelation at the Campfire</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono font-bold truncate max-w-[150px]">William Webb (Prof. Edward Dravin)</span>
-            </div>
-            <p class="text-[11px] text-slate-200 leading-relaxed pl-4 border-l border-amber-500/40 font-sans">
-                👉 <strong>Actionable Coaching:</strong> You received a divine letter from your mother, the Queen of the Underworld. Don't leave it in your pocket! In Session 6, pull Pierre or Eusacles aside. Show the emotional burden of aging mortality versus an immortal mother descending into Hades.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-amber-500/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif flex items-center gap-1.5">
-                    <span>🎯</span> <span>Break Out of the Pocket During Transit</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono font-bold truncate max-w-[150px]">Sophie Foreman Noone (Alfie)</span>
-            </div>
-            <p class="text-[11px] text-slate-200 leading-relaxed pl-4 border-l border-amber-500/40 font-sans">
-                👉 <strong>Actionable Coaching:</strong> Your emotional high in Scene 10 was the best moment in the book, but you were invisible during the 40-minute drive. Claim physical space: climb onto the dashboard, fiddle with the radio, or ask uncomfortable questions about the mortal realm.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-amber-500/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif flex items-center gap-1.5">
-                    <span>🎯</span> <span>Cash In the Thanatos Fog Wager</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono font-bold truncate max-w-[150px]">John Hagey (Eusacles)</span>
-            </div>
-            <p class="text-[11px] text-slate-200 leading-relaxed pl-4 border-l border-amber-500/40 font-sans">
-                👉 <strong>Actionable Coaching:</strong> Your blue-collar skepticism and refrigeration grilling were gold. Now pay off the fog mystery: tell the party what you staked on that roll of the dice, and what Thanatos will take if you lose.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-amber-500/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif flex items-center gap-1.5">
-                    <span>🎯</span> <span>Sustain the Satirical Edge into the Mid-Game</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono font-bold truncate max-w-[150px]">Luke S (Pierre)</span>
-            </div>
-            <p class="text-[11px] text-slate-200 leading-relaxed pl-4 border-l border-amber-500/40 font-sans">
-                👉 <strong>Actionable Coaching:</strong> Your opening scene with the crepes and jury duty set an elite benchmark. Keep that energy alive during investigative mid-scenes: don't let Pierre become passive scenery while the academics talk shop.
-            </p>
-        </div>
-        
-        <div class="p-3 rounded-xl bg-slate-950/70 border border-amber-500/40 space-y-1.5 text-xs">
-            <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif flex items-center gap-1.5">
-                    <span>🎯</span> <span>Give Combat Thresholds 2 Minutes of Narrative Runway</span>
-                </span>
-                <span class="text-[9px] px-2 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono font-bold truncate max-w-[150px]">Luke Foreman (Game Master)</span>
-            </div>
-            <p class="text-[11px] text-slate-200 leading-relaxed pl-4 border-l border-amber-500/40 font-sans">
-                👉 <strong>Actionable Coaching:</strong> When closing near the session time limit, avoid dropping combatants like a sudden jump-scare. Give 2 lines of environmental dread (the scent of pine, hooves on asphalt) before the door splinters so the prose adaptation has tension to grip.
-            </p>
-        </div>
-        
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- SECTION 2: CRAFT SPECTRUM & EDITORIAL ANALYSIS -->
-                <div class="p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 space-y-3 shadow-sm">
+                <!-- Collapsible Craft Spectrum & Trade-offs -->
+                
+    <details class="group mt-3 rounded-xl bg-slate-950/60 border border-slate-800 p-3 text-xs">
+        <summary class="cursor-pointer font-bold font-mono text-slate-400 hover:text-amber-400 flex items-center justify-between select-none">
+            <span class="flex items-center gap-2">
+                <span>📊</span> <span>Explore Technical Craft, Trade-offs & Sensory Registers</span>
+            </span>
+            <span class="text-slate-500 group-open:rotate-180 transition-transform text-sm">▼</span>
+        </summary>
+        <div class="mt-3 space-y-4 pt-3 border-t border-slate-800">
+            <div class="space-y-2">
+                <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                    <span>📊</span> <span>Narrative Elements Spectrum</span>
+                </span>
+                <div class="space-y-2">
                     
-                    <!-- Narrative Element Score Spectrum Cards -->
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>📊</span> <span>Narrative Elements Spectrum</span>
-                        </span>
-                        <div class="space-y-2">
-                            
         <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
             <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-1.5 min-w-0">
@@ -21117,8 +20896,6 @@
                     92% · Propulsive Adventure Velocity
                 </span>
             </div>
-
-            <!-- Spectrum Track with Glowing Position Pip -->
             <div class="space-y-1 pt-1">
                 <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden border border-slate-800">
                     <div class="h-full bg-gradient-to-r from-slate-700 via-amber-500/70 to-emerald-400 rounded-full" style="width: 84%;"></div>
@@ -21128,7 +20905,6 @@
                     <span class="text-slate-400 font-medium">Fast Cinematic Thriller</span>
                 </div>
             </div>
-
             <p class="text-[11px] text-slate-400 leading-normal pt-1 border-t border-slate-800/80">
                 Urgent scene pacing prioritizing forward adventure stakes over slow room exploration.
             </p>
@@ -21144,8 +20920,6 @@
                     33.2% Spoken · Distinct Character Cadence
                 </span>
             </div>
-
-            <!-- Spectrum Track with Glowing Position Pip -->
             <div class="space-y-1 pt-1">
                 <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden border border-slate-800">
                     <div class="h-full bg-gradient-to-r from-slate-700 via-amber-500/70 to-emerald-400 rounded-full" style="width: 78%;"></div>
@@ -21155,7 +20929,6 @@
                     <span class="text-slate-400 font-medium">Vivid Personality Contrasts</span>
                 </div>
             </div>
-
             <p class="text-[11px] text-slate-400 leading-normal pt-1 border-t border-slate-800/80">
                 Crisp verbal personality contrasts (Pierre's dry humor vs. Dravin's formal academic curiosity).
             </p>
@@ -21171,8 +20944,6 @@
                     95 Registers · Visceral Planar Atmosphere
                 </span>
             </div>
-
-            <!-- Spectrum Track with Glowing Position Pip -->
             <div class="space-y-1 pt-1">
                 <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden border border-slate-800">
                     <div class="h-full bg-gradient-to-r from-slate-700 via-amber-500/70 to-emerald-400 rounded-full" style="width: 92%;"></div>
@@ -21182,7 +20953,6 @@
                     <span class="text-slate-400 font-medium">Rich Multi-Sensory Immersion</span>
                 </div>
             </div>
-
             <p class="text-[11px] text-slate-400 leading-normal pt-1 border-t border-slate-800/80">
                 Sensory immersion spanning desert heat, dimensional ozone tears, and cosmic loom threads.
             </p>
@@ -21198,8 +20968,6 @@
                     Dynamic · Kinetic Physical Movement
                 </span>
             </div>
-
-            <!-- Spectrum Track with Glowing Position Pip -->
             <div class="space-y-1 pt-1">
                 <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden border border-slate-800">
                     <div class="h-full bg-gradient-to-r from-slate-700 via-amber-500/70 to-emerald-400 rounded-full" style="width: 86%;"></div>
@@ -21209,7 +20977,6 @@
                     <span class="text-slate-400 font-medium">Kinetic Choreography</span>
                 </div>
             </div>
-
             <p class="text-[11px] text-slate-400 leading-normal pt-1 border-t border-slate-800/80">
                 Dynamic environmental combat utilizing library book stacks, dimensional shifts, and spell tactics.
             </p>
@@ -21225,8 +20992,6 @@
                     100% Faithful · Authentic Table Agency
                 </span>
             </div>
-
-            <!-- Spectrum Track with Glowing Position Pip -->
             <div class="space-y-1 pt-1">
                 <div class="h-2 w-full bg-slate-900 rounded-full relative overflow-hidden border border-slate-800">
                     <div class="h-full bg-gradient-to-r from-slate-700 via-amber-500/70 to-emerald-400 rounded-full" style="width: 100%;"></div>
@@ -21236,82 +21001,65 @@
                     <span class="text-slate-400 font-medium">Strict Live Table Canon</span>
                 </div>
             </div>
-
             <p class="text-[11px] text-slate-400 leading-normal pt-1 border-t border-slate-800/80">
                 Every player dice roll, spell cast, and spontaneous table decision honored without retroactive rewriting.
             </p>
         </div>
         
-                        </div>
-                    </div>
-
-                    <!-- Editorial Analysis Prose -->
-                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
-                        <span class="text-xs font-bold font-serif text-amber-400 block flex items-center gap-1.5">
-                            <span>📖</span> <span>Editorial Story Analysis</span>
-                        </span>
-                        <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif">Audit Score: 62/100 (Tomatometer: 62%, Popcornmeter: 94%). Session 5 has peak table energy (94%) but stalls in prose (62%) due to missing Track B (Cinematic Cut) and dropped Persephone interiority. Cinematic Cut Omission: Zero authorial scene files found in 'd:\Code\dnd-scribe\sessions\data\clean\blocks_authorial/s5-scene-*-alt.md'! Downstream reader 3-lens contract requires both Tabletop and Cinematic cuts. Upstream pipeline abandoned Track B! Speaker Misattribution in Block #8 (uneraseable_s05_b008): Manifest has speakerId='dravin', but prose says 'pierre': "A delightful thought over breakfast, Professor," Pierre murmured, sliding a finished rum crepe onto...</p>
-                    </div>
-
-                    <!-- Creative Choices & Trade-offs Matrix -->
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>⚖️</span> <span>Creative Story Choices & Narrative Trade-offs</span>
-                        </span>
-                        <div class="space-y-2">
-                            
-        <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                </div>
+            </div>
+            <div class="space-y-2">
+                <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                    <span>⚖️</span> <span>Creative Story Choices & Narrative Trade-offs</span>
+                </span>
+                <div class="space-y-2">
+                    
+        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
             <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif text-xs sm:text-sm">#1 Faithful Transcript Chronicle vs High-Stakes Novelization</span>
-                <span class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 uppercase font-mono font-semibold">Story Choice</span>
+                <span class="font-bold text-amber-400 font-serif">Decision #1: Faithful Transcript Chronicle vs High-Stakes Novelization</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-                <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-800/60">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 block tracking-wider font-mono">Choice Made:</span>
-                    <p class="text-slate-200 mt-1 leading-relaxed">Tabletop Cut only</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1">
+                <div class="p-2 rounded bg-slate-900 border border-emerald-900/40 text-emerald-300">
+                    <strong class="block text-emerald-400 font-mono text-[9px] uppercase">Chosen Stance:</strong>
+                    Tabletop Cut only
                 </div>
-                <div class="p-2.5 rounded-lg bg-rose-950/30 border border-rose-800/40">
-                    <span class="text-[10px] uppercase font-bold text-rose-400 block tracking-wider font-mono">Alternative Style:</span>
-                    <p class="text-slate-300 mt-1 leading-relaxed">Dual-cut multi-lens delivery</p>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                    <strong class="block text-slate-500 font-mono text-[9px] uppercase">Alternative Stance:</strong>
+                    Dual-cut multi-lens delivery
                 </div>
             </div>
-            <div class="pt-1.5 border-t border-slate-800/80 flex items-start gap-1.5 text-[11px] text-slate-300">
-                <strong class="text-slate-400 uppercase text-[9px] font-mono font-bold flex-shrink-0 pt-0.5">The Trade-off:</strong>
-                <span class="leading-relaxed">Missing the Cinematic Cut robs readers of the elevated, fast-paced novel experience.</span>
-            </div>
+            <p class="text-[11px] text-amber-300/90 italic pt-1 pl-1">
+                Trade-off Impact: Missing the Cinematic Cut robs readers of the elevated, fast-paced novel experience.
+            </p>
         </div>
         
-        <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
             <div class="flex items-center justify-between gap-2">
-                <span class="font-bold text-amber-300 font-serif text-xs sm:text-sm">#2 Atmosphere & World-Building vs. Dialogue Volume</span>
-                <span class="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 uppercase font-mono font-semibold">Story Choice</span>
+                <span class="font-bold text-amber-400 font-serif">Decision #2: Dialogue Intimacy vs Setting Grounding</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-                <div class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-800/60">
-                    <span class="text-[10px] uppercase font-bold text-emerald-400 block tracking-wider font-mono">Choice Made:</span>
-                    <p class="text-slate-200 mt-1 leading-relaxed">Sensory Staging & Action (33.2% dialogue / 66.8% prose) — Rich environmental details, tactile combat, and weird planar atmosphere.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1">
+                <div class="p-2 rounded bg-slate-900 border border-emerald-900/40 text-emerald-300">
+                    <strong class="block text-emerald-400 font-mono text-[9px] uppercase">Chosen Stance:</strong>
+                    High spoken share
                 </div>
-                <div class="p-2.5 rounded-lg bg-rose-950/30 border border-rose-800/40">
-                    <span class="text-[10px] uppercase font-bold text-rose-400 block tracking-wider font-mono">Alternative Style:</span>
-                    <p class="text-slate-300 mt-1 leading-relaxed">Dialogue-Heavy Exchanges — Having characters talk through all exposition and reactions.</p>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                    <strong class="block text-slate-500 font-mono text-[9px] uppercase">Alternative Stance:</strong>
+                    Expanded physical description
                 </div>
             </div>
-            <div class="pt-1.5 border-t border-slate-800/80 flex items-start gap-1.5 text-[11px] text-slate-300">
-                <strong class="text-slate-400 uppercase text-[9px] font-mono font-bold flex-shrink-0 pt-0.5">The Trade-off:</strong>
-                <span class="leading-relaxed">Grounds the bizarre new realm vividly before longer character conversations begin.</span>
-            </div>
+            <p class="text-[11px] text-amber-300/90 italic pt-1 pl-1">
+                Trade-off Impact: Dialogue moves quickly but physical room description needs occasional reinforcement.
+            </p>
         </div>
         
-                        </div>
-                    </div>
-
-                    <!-- Narrative Nuances & What to Watch -->
-                    <div class="space-y-2 pt-1">
-                        <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
-                            <span>💡</span> <span>Story Nuances & Character Balance</span>
-                        </span>
-                        <div class="space-y-2">
-                            
+                </div>
+            </div>
+            <div class="space-y-2 pt-1">
+                <span class="text-xs font-bold text-slate-200 font-serif uppercase tracking-wider flex items-center gap-1.5">
+                    <span>💡</span> <span>Story Nuances & Character Balance</span>
+                </span>
+                <div class="space-y-2">
+                    
         <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1.5 text-xs">
             <div class="flex items-center gap-1.5 text-amber-400 font-bold font-serif">
                 <span>💡</span>
@@ -21336,14 +21084,10 @@
             </div>
         </div>
         
-                        </div>
-                    </div>
-
-                    
                 </div>
-
-                
-    <!-- STORY POLISH & REVISION LOG -->
+            </div>
+            
+            
     <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <span class="text-xs font-bold font-serif text-cyan-300 flex items-center gap-1.5">
@@ -21364,8 +21108,11 @@
         </div>
     </div>
     
+        </div>
+    </details>
+    
 
-                <!-- SECTION 3: DISAGREE WITH THE CRITIC? READER REACTION BOX -->
+                <!-- Reader Take Box -->
                 <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <div class="flex items-center gap-1.5">
@@ -21375,7 +21122,7 @@
                         <span class="text-[10px] font-mono text-amber-400">Reader Voice</span>
                     </div>
                     <p class="text-xs text-slate-300 leading-relaxed">
-                        What did you think of this session's pacing, dialogue, or trade-offs? Leave your thoughts below or use <strong>Critique Mode</strong> to annotate exact lines in the story!
+                        What did you think of this session's pacing, dialogue, or trade-offs? Leave your thoughts below or tap anywhere in the story to annotate feedback!
                     </p>
                     <div class="space-y-2">
                         <textarea id="forumCommentInput" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500" placeholder="Share your take on the story, character moments, or feedback on the critic score..."></textarea>
@@ -21463,6 +21210,7 @@
                         }
                     });
                 };
+                updateButtonStyles('.header-cut-btn');
                 updateButtonStyles('.chapter-cut-btn');
                 updateButtonStyles('.global-cut-btn');
 
@@ -22036,6 +21784,7 @@
                 if (index < 0 || index >= blocks.length) return;
                 initDiffInspector();
                 if (diffInspectorOverlay) {
+                    diffInspectorOverlay.classList.remove('opacity-0', 'pointer-events-none');
                     diffInspectorOverlay.classList.add('visible');
                     setBodyScrollLock(true);
                 }
@@ -22044,6 +21793,7 @@
 
             window.closeDiffInspector = function() {
                 if (diffInspectorOverlay) {
+                    diffInspectorOverlay.classList.add('opacity-0', 'pointer-events-none');
                     diffInspectorOverlay.classList.remove('visible');
                     diffInspectorOverlay.style.height = '';
                     diffInspectorOverlay.style.transform = '';
@@ -22484,7 +22234,7 @@
                         const cid = Object.keys(chars).find(k => (chars[k].name && chars[k].name.toLowerCase() === spkName.toLowerCase()) || k === spkName.toLowerCase()) || "";
                         const spkColor = (chars[cid] && chars[cid].color) || "#38bdf8";
                         const isNpc = (chars[cid] && chars[cid].type === 'npc');
-                        const lineBadge = prim.line ? `<span class="text-[9px] font-mono text-slate-500 font-bold ml-auto">L${prim.line}</span>` : "";
+                        const lineBadge = prim.line ? `<span class="text-[9px] font-mono text-slate-500 font-bold ml-auto">L${prim.line}</span> <button type="button" onclick="document.getElementById('modalOpenDiffBtn').click()" class="text-[10px] text-cyan-400 hover:text-cyan-200 underline decoration-cyan-500/50 font-mono font-medium ml-1.5" title="Open Side-by-Side View">⚖️ Side-by-Side</button>` : "";
 
                         let bundledHtml = "";
                         const bundled = mapData.bundledLines || [];
@@ -22541,7 +22291,11 @@
                     modalOpenDiffBtn.onclick = function() {
                         const targetIdx = activeBlockIndex;
                         closeModal();
-                        setTimeout(() => openDiffInspector(targetIdx), 80);
+                        if (modalOverlay) {
+                            modalOverlay.classList.remove('visible');
+                            modalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                        }
+                        setTimeout(() => openDiffInspector(targetIdx), 40);
                     };
                 }
 
@@ -22749,11 +22503,40 @@
             };
 
             document.querySelectorAll('.story-block').forEach((b) => {
-                b.onclick = function() {
-                    if (document.body.classList.contains('mode-critique')) {
-                        updateBlocksReference();
-                        const idx = blocks.indexOf(b);
-                        if (idx >= 0) openModalForBlock(idx);
+                b.onclick = function(e) {
+                    if (e.target.closest('button, a')) return;
+                    updateBlocksReference();
+                    const idx = blocks.indexOf(b);
+                    if (idx >= 0) openModalForBlock(idx);
+                };
+            });
+
+            document.querySelectorAll('.raw-turn').forEach((rt) => {
+                rt.onclick = function(e) {
+                    if (e.target.closest('button, a')) return;
+                    const lineNum = rt.dataset.lineNum;
+                    updateBlocksReference();
+                    let targetIdx = -1;
+                    if (lineNum && window.SOURCE_TRANSCRIPT_MAP) {
+                        for (let i = 0; i < blocks.length; i++) {
+                            const bid = blocks[i].id;
+                            const mapData = window.SOURCE_TRANSCRIPT_MAP[bid];
+                            if (mapData) {
+                                if (mapData.primaryLine && String(mapData.primaryLine.line) === String(lineNum)) {
+                                    targetIdx = i;
+                                    break;
+                                }
+                                if (mapData.bundledLines && mapData.bundledLines.some(bl => String(bl.line) === String(lineNum))) {
+                                    targetIdx = i;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (targetIdx >= 0) {
+                        openModalForBlock(targetIdx);
+                    } else if (blocks.length > 0) {
+                        openModalForBlock(0);
                     }
                 };
             });
@@ -23247,6 +23030,19 @@
             // =========================================================
             // CRITIC & EDITORIAL FORUM CONTROLLER
             // =========================================================
+            window.switchPlayerCritiqueTab = function(playerId) {
+                document.querySelectorAll('.player-critique-tab-btn').forEach(btn => {
+                    const isTarget = (btn.dataset.playerId === playerId);
+                    if (isTarget) {
+                        btn.className = "player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-amber-500 bg-slate-800 text-amber-300 shadow-md";
+                    } else {
+                        btn.className = "player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700";
+                    }
+                });
+                document.querySelectorAll('.player-critique-panel').forEach(panel => {
+                    panel.classList.toggle('hidden', panel.dataset.playerId !== playerId);
+                });
+            };
             function showCriticForumModal() {
                 if (criticForumModalOverlay) {
                     criticForumModalOverlay.classList.remove('opacity-0', 'pointer-events-none');

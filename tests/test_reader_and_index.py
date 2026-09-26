@@ -118,16 +118,78 @@ class TestReaderPages(unittest.TestCase):
             self.assertNotIn("criticForumModalOverlay.style.transform = 'translateY(", content,
                              f"{s.name} must not transform translateY on criticForumModalOverlay")
 
-    def test_focused_raw_transcript_feedback_wiring(self):
-        """Tapping story blocks in critique mode must open focused modal with raw transcript source."""
+    def test_sticky_header_cut_switcher(self):
+        """Header must have sticky cut switcher buttons for cinematic, tabletop, and raw."""
         for s in self.sessions:
             content = s.read_text(encoding="utf-8")
-            self.assertIn("openModalForBlock(idx)", content,
-                          f"{s.name} must call openModalForBlock on story block tap")
-            self.assertIn('id="modalRawSourceBody"', content,
-                          f"{s.name} must have modalRawSourceBody for raw transcript display")
-            self.assertIn('id="modalOpenDiffBtn"', content,
-                          f"{s.name} must provide optional Full Diff View button")
+            self.assertIn('class="header-cut-btn cut-btn-cinematic', content,
+                          f"{s.name} missing header cinematic button")
+            self.assertIn('class="header-cut-btn cut-btn-tabletop', content,
+                          f"{s.name} missing header tabletop button")
+            self.assertIn('class="header-cut-btn cut-btn-raw', content,
+                          f"{s.name} missing header raw button")
+            self.assertIn("updateButtonStyles('.header-cut-btn');", content,
+                          f"{s.name} switchGlobalCut must sync header-cut-btn")
+
+    def test_story_block_click_ungated(self):
+        """Clicking narrative blocks or raw turns must open feedback modal without requiring mode-critique toggle."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            # Verify block click listener does NOT gate on mode-critique
+            self.assertNotIn("if (document.body.classList.contains('mode-critique')) {\n                        updateBlocksReference();\n                        const idx = blocks.indexOf(b);",
+                             content, f"{s.name} story-block click must not be gated behind mode-critique")
+            self.assertIn("document.querySelectorAll('.raw-turn').forEach((rt)", content,
+                          f"{s.name} raw turns must have tap-to-feedback click listener")
+
+    def test_side_by_side_diff_button_wiring(self):
+        """Side-by-side diff view button must be accessible, z-[90], and toggle opacity/pointer-events."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            self.assertIn("Side-by-Side View", content,
+                          f"{s.name} modalOpenDiffBtn must display Side-by-Side View text")
+            self.assertIn('id="diffInspectorOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[90]',
+                          content, f"{s.name} diffInspectorOverlay must have z-[90]")
+            self.assertIn("diffInspectorOverlay.classList.remove('opacity-0', 'pointer-events-none');", content,
+                          f"{s.name} openDiffInspector must remove opacity-0 pointer-events-none")
+
+    def test_modal_dom_hierarchy_no_trapping(self):
+        """settingsModalOverlay must close cleanly before rawReturnBanner and criticForumModalOverlay."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            settings_idx = content.find('id="settingsModalOverlay"')
+            critic_idx = content.find('id="criticForumModalOverlay"')
+            raw_banner_idx = content.find('id="rawReturnBanner"')
+            self.assertTrue(settings_idx != -1 and critic_idx != -1 and raw_banner_idx != -1,
+                            f"{s.name} must contain settings, critic, and raw banner overlays")
+            # Ensure settingsModalOverlay closes with </div> before rawReturnBanner
+            settings_snippet = content[settings_idx:raw_banner_idx]
+            self.assertIn("</div>\n    </div>\n    <!-- Floating Return to Story Banner",
+                          settings_snippet,
+                          f"{s.name} settingsModalOverlay must be closed before rawReturnBanner")
+
+    def test_no_meta_hallucination_jargon(self):
+        """HTML must not contain meta jargon about anti-hallucination convergence boundaries or quality gate stops."""
+        forbidden_phrases = [
+            "Anti-Hallucination",
+            "Convergence Boundary",
+            "Quality Gate Stop",
+            "Where AI Cannot Tread",
+        ]
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            for phrase in forbidden_phrases:
+                self.assertNotIn(phrase, content, f"{s.name} must not contain meta jargon: '{phrase}'")
+
+    def test_player_critique_tabs_and_shortcomings(self):
+        """Critic modal must have tabbed player breakdown with prominent 'What They Sucked At' audit findings."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            self.assertIn("player-critique-tab-btn", content,
+                          f"{s.name} must contain player-critique-tab-btn tab bar")
+            self.assertIn("What They Sucked At (Critical Narrative Shortcomings)", content,
+                          f"{s.name} must highlight What They Sucked At")
+            self.assertIn("switchPlayerCritiqueTab", content,
+                          f"{s.name} must implement switchPlayerCritiqueTab")
 
     def test_session5_dialogue_calculation(self):
         """Session 5 must properly calculate spoken dialogue and display correct percentages."""
@@ -139,3 +201,4 @@ class TestReaderPages(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
