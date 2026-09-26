@@ -2846,9 +2846,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard, #diffInspectorCard {{
             overscroll-behavior: contain !important;
         }}
-        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible, #diffInspectorOverlay.visible {{
-            opacity: 1;
-            pointer-events: auto;
+        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible, #diffInspectorOverlay.visible, #ghModalOverlay.visible {{
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            visibility: visible !important;
         }}
 
         #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
@@ -3942,14 +3943,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     document.documentElement.style.overscrollBehavior = 'none';
                     document.body.style.overscrollBehavior = 'none';
                 }} else {{
-                    const isAnyModalOpen = (
-                        (diffInspectorOverlay && (diffInspectorOverlay.classList.contains('visible') || !diffInspectorOverlay.classList.contains('opacity-0'))) ||
+                    const isAnyModalOpen = Boolean(
+                        (diffInspectorOverlay && diffInspectorOverlay.classList.contains('visible')) ||
                         (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) ||
-                        (modalOverlay && (modalOverlay.classList.contains('visible') || !modalOverlay.classList.contains('opacity-0'))) ||
+                        (modalOverlay && modalOverlay.classList.contains('visible')) ||
                         (onboardingOverlay && onboardingOverlay.classList.contains('visible')) ||
                         (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) ||
                         (settingsModalOverlay && settingsModalOverlay.classList.contains('visible')) ||
-                        (typeof ghModalOverlay !== 'undefined' && ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0'))
+                        (typeof ghModalOverlay !== 'undefined' && ghModalOverlay && ghModalOverlay.classList.contains('visible'))
                     );
                     if (!isAnyModalOpen) {{
                         document.documentElement.style.overflow = '';
@@ -4334,6 +4335,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 diffSubmitFeedbackBtn.onclick = function() {{
                     const targetIdx = activeBlockIndex;
                     openedFromDiff = true;
+                    if (typeof window.closeDiffInspector === 'function') {{
+                        window.closeDiffInspector();
+                    }}
                     openModalForBlock(targetIdx);
                 }};
             }}
@@ -4806,12 +4810,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 if (modalOpenDiffBtn) {{
                     modalOpenDiffBtn.onclick = function() {{
                         const targetIdx = activeBlockIndex;
-                        closeModal();
                         if (modalOverlay) {{
                             modalOverlay.classList.remove('visible');
                             modalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                            modalOverlay.style.height = '';
+                            modalOverlay.style.transform = '';
                         }}
-                        setTimeout(() => openDiffInspector(targetIdx), 40);
+                        if (typeof window.openDiffInspector === 'function') {{
+                            window.openDiffInspector(targetIdx);
+                        }}
                     }};
                 }}
 
@@ -4845,13 +4852,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     modalNextBlockBtn.style.pointerEvents = (index === blocks.length - 1) ? "none" : "auto";
                 }}
                 if (modalOverlay) {{
+                    modalOverlay.classList.remove('opacity-0', 'pointer-events-none');
                     modalOverlay.classList.add('visible');
+                    modalOverlay.style.height = '';
                     setBodyScrollLock(true);
                 }}
                 if (critiqueTextInput) {{
                     setTimeout(() => {{
-                        critiqueTextInput.focus();
-                        critiqueTextInput.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }});
+                        try {{ critiqueTextInput.focus({{ preventScroll: true }}); }} catch(e) {{ critiqueTextInput.focus(); }}
                     }}, 80);
                 }}
             }}
@@ -4859,13 +4867,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             function closeModal() {{
                 if (modalOverlay) {{
                     modalOverlay.classList.remove('visible');
+                    modalOverlay.classList.add('opacity-0', 'pointer-events-none');
                     modalOverlay.style.height = '';
                     modalOverlay.style.transform = '';
                     if (openedFromDiff) {{
                         openedFromDiff = false;
-                        setBodyScrollLock(true);
-                        if (diffInspectorOverlay) {{
-                            diffInspectorOverlay.classList.add('visible');
+                        if (typeof window.openDiffInspector === 'function') {{
+                            window.openDiffInspector(activeBlockIndex);
+                        }} else {{
+                            setBodyScrollLock(false);
                         }}
                     }} else {{
                         setBodyScrollLock(false);
@@ -4914,16 +4924,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }};
             }}
 
-            // Lock background scrolling on backdrop wheel and touch events
-            [modalOverlay, chaptersModalOverlay, criticForumModalOverlay, settingsModalOverlay, ghModalOverlay].forEach(ov => {{
-                if (!ov) return;
-                ov.addEventListener('wheel', function(e) {{
-                    if (e.target === ov) e.preventDefault();
-                }}, {{ passive: false }});
-                ov.addEventListener('touchmove', function(e) {{
-                    if (e.target === ov) e.preventDefault();
-                }}, {{ passive: false }});
-            }});
+
 
             if (modalPrevBlockBtn) modalPrevBlockBtn.onclick = function() {{
                 if (activeBlockIndex > 0) openModalForBlock(activeBlockIndex - 1);
@@ -5320,6 +5321,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 if (ghStatusMsg) ghStatusMsg.className = "hidden";
                 if (ghModalOverlay) {{
                     ghModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                    ghModalOverlay.classList.add('visible');
                     setBodyScrollLock(true);
                 }}
             }}
@@ -5327,6 +5329,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             function hideGhModal() {{
                 if (ghModalOverlay) {{
                     ghModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    ghModalOverlay.classList.remove('visible');
                     ghModalOverlay.style.height = '';
                     ghModalOverlay.style.transform = '';
                     setBodyScrollLock(false);

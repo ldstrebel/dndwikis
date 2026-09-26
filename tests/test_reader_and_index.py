@@ -273,6 +273,23 @@ class TestReaderPages(unittest.TestCase):
             self.assertIn("Batch PR Confirmation", content,
                           f"{s.name} must provide batch PR confirmation context")
 
+    def test_modal_scroll_return_and_release(self):
+        """Returning to/from modals must not freeze scrolling or trap overlays."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            self.assertIn("closeDiffInspector();", content,
+                          f"{s.name} diffSubmitFeedbackBtn must closeDiffInspector before openModalForBlock")
+            self.assertIn("modalOverlay.classList.remove('visible');", content,
+                          f"{s.name} closeModal must remove visible class")
+            self.assertIn("modalOverlay.classList.add('opacity-0', 'pointer-events-none');", content,
+                          f"{s.name} closeModal must add opacity-0 pointer-events-none")
+            self.assertIn("modalOverlay.classList.remove('opacity-0', 'pointer-events-none');", content,
+                          f"{s.name} openModalForBlock must clean opacity-0 pointer-events-none")
+            self.assertIn("modalOverlay.classList.contains('visible')", content,
+                          f"{s.name} setBodyScrollLock must check visible class")
+            self.assertNotIn("if (e.target === ov) e.preventDefault();", content,
+                             f"{s.name} must not contain disruptive wheel/touchmove preventDefault on overlays")
+
 
 if __name__ == "__main__":
     unittest.main()
