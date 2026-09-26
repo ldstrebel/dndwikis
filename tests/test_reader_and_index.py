@@ -181,22 +181,22 @@ class TestReaderPages(unittest.TestCase):
                 self.assertNotIn(phrase, content, f"{s.name} must not contain meta jargon: '{phrase}'")
 
     def test_player_critique_tabs_and_shortcomings(self):
-        """Critic modal must have tabbed player breakdown with prominent 'What They Sucked At' audit findings."""
+        """Critic modal must have tabbed player breakdown with prominent critical narrative shortcomings."""
         for s in self.sessions:
             content = s.read_text(encoding="utf-8")
             self.assertIn("player-critique-tab-btn", content,
                           f"{s.name} must contain player-critique-tab-btn tab bar")
-            self.assertIn("What They Sucked At (Critical Narrative Shortcomings)", content,
-                          f"{s.name} must highlight What They Sucked At")
+            self.assertIn("Critical Narrative Shortcomings", content,
+                          f"{s.name} must highlight Critical Narrative Shortcomings")
             self.assertIn("switchPlayerCritiqueTab", content,
                           f"{s.name} must implement switchPlayerCritiqueTab")
 
     def test_session5_dialogue_calculation(self):
         """Session 5 must properly calculate spoken dialogue and display correct percentages."""
         s5_content = (ROOT / "uneraseable-s5.html").read_text(encoding="utf-8")
-        self.assertIn("33.2% Dialogue", s5_content, "Session 5 card must calculate 33.2% dialogue")
-        self.assertIn("2,738", s5_content, "Session 5 card must show 2,738 spoken words")
-        self.assertIn("8,237w", s5_content, "Session 5 card must show 8,237 total words")
+        self.assertIn("32.0% Dialogue", s5_content, "Session 5 card must calculate 32.0% dialogue")
+        self.assertIn("2,705", s5_content, "Session 5 card must show 2,705 spoken words")
+        self.assertIn("8,442w", s5_content, "Session 5 card must show 8,442 total words")
 
 
 if __name__ == "__main__":

@@ -408,10 +408,11 @@ def load_raw_transcript_data(session_num: int, manifest: dict, source_mapping: d
 
     return raw_lines, line_to_block, chapter_ranges
 
-def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
+def build_vertical_chapters_html(chapters: list, characters: dict, session_num: int = 1, editorial_forum: dict = None) -> str:
     """Builds a vertical chapter list with 2 lines per chapter:
     Line 1: # - Name - stacked horizontal dialogue bar
     Line 2: PCs and NPCs sorted by % (NPCs with red triangle ▲, no highlight pill)
+    Includes final Editorial Debrief & Critic Review entry.
     """
     max_dialogue = 1
     chapter_data = []
@@ -534,6 +535,51 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
         </div>
         """
         rows_html.append(row_item)
+
+    if editorial_forum:
+        bot_review = editorial_forum.get("initialBotReview", {})
+        table_debrief = bot_review.get("tableDebrief", {})
+        tomatometer = bot_review.get("tomatometer") or table_debrief.get("tomatometer", 92 if session_num < 5 else 62)
+        popcornmeter = bot_review.get("popcornmeter") or table_debrief.get("popcornmeter", 96 if session_num < 5 else 94)
+        grade = bot_review.get("grade", "A-" if session_num < 5 else "D")
+        t_icon = "🍅" if tomatometer >= 75 else "🟢"
+
+        critic_row = f"""
+        <div class="p-2.5 bg-slate-950/90 hover:bg-slate-900 border border-slate-800 hover:border-rose-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99] mt-3"
+             onclick="jumpToChapter('endSessionCriticCard');">
+            
+            <!-- Line 1: REVIEW Badge - Title - Dual Scores -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        REVIEW
+                    </span>
+                    <span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-700/80 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0">
+                        <span>{t_icon}</span> <span>{tomatometer}%</span>
+                    </span>
+                    <span class="px-1.5 py-0.5 rounded bg-slate-900 text-amber-300 border border-slate-700/80 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0">
+                        <span>🍿</span> <span>{popcornmeter}%</span>
+                    </span>
+                    <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
+                        Editorial Debrief & Critic Review
+                    </h4>
+                </div>
+                <span class="text-[10px] font-mono text-slate-400 group-hover:text-slate-200 flex-shrink-0">
+                    Audits & Directives →
+                </span>
+            </div>
+
+            <!-- Line 2: Explanatory Subtitle -->
+            <div class="flex items-center gap-2 text-[10px] text-slate-400 pt-1 border-t border-slate-900/60 font-mono">
+                <span>Dual Rotten Tomatoes Audit</span>
+                <span>·</span>
+                <span class="text-rose-400 font-bold">{grade}</span>
+                <span>·</span>
+                <span>Player Scorecards & Next Session Directives</span>
+            </div>
+        </div>
+        """
+        rows_html.append(critic_row)
 
     return f"""
     <div class="space-y-2">
@@ -794,14 +840,14 @@ def get_default_participant_scorecards(session_num: int) -> list:
                 "badge": "The Architect",
                 "color": "#94a3b8",
                 "icon": "👑",
-                "grade": "B-",
-                "score": 80,
+                "grade": "B",
+                "score": 83,
                 "spotlightShare": "38% narrative staging & framing",
-                "consistencyScore": "85%",
-                "ruthlessVerdict": "Masterclass in 1948 mid-century gothic horror and psychiatric dread, held back by meandering highway transit and an abrupt satyr cliffhanger thrown to beat the session clock.",
-                "whatHelped": "The subterranean clinical trial ward: the smell of ozone, the catatonic milk-eyed patients in iron cots, and the shifting ink from STABLE to STALE in Thorne's handwritten binder was haunting, unforgettable atmosphere.",
-                "whatHurt": "Pacing drift on the Pennsylvania turnpike (Scenes 4–5), followed by clock-management panic at the end—dropping three armed satyrs into the lecture hall with zero acoustic or atmospheric runway.",
-                "nextSessionDirectives": "Give combat thresholds at least 2 minutes of atmospheric build-up. In Session 6, immediately establish why the satyrs tracked the party, what their faction wants, and stop using combat encounters as arbitrary session cutoffs."
+                "consistencyScore": "88%",
+                "ruthlessVerdict": "Masterclass in 1948 psychiatric dread and reality-bending horror, slightly muddied by clock-management panic at the climactic satyr reveal.",
+                "whatHelped": "The chilling subterranean 1948 clinical trial ward: the damp masonry, bleach odor, milk-eyed patients on iron cots, and the horrifying ink stroke rewriting STABLE into STALE inside the doctor's binder was unforgettable atmospheric staging.",
+                "whatHurt": "Acoustic ambiguity right at the climactic cliffhanger ('satyrs vs. satans') caused comedic confusion when the table needed pure terror, and the Appalachian switchbacks in Scene 5 lacked physical terrain friction.",
+                "nextSessionDirectives": "Hit the party with terrifying temporal mechanics immediately in Session 6. Do not run the Reductor satyrs as generic frontline melee brutes—show how their cloven hooves shatter causality inside the lecture hall and force the players to coordinate their newfound abilities."
             },
             {
                 "id": "pierre",
@@ -811,14 +857,14 @@ def get_default_participant_scorecards(session_num: int) -> list:
                 "badge": "The Artisan",
                 "color": "#3b82f6",
                 "icon": "🥖",
-                "grade": "A-",
-                "score": 90,
-                "spotlightShare": "19% spoken dialogue (Disciplined Ensemble Modulation)",
-                "consistencyScore": "95%",
-                "ruthlessVerdict": "Masterclass in physical misdirection and comic timing—from the guillotine breakfast to the sculpture classroom mic drop—but wears his Parisian cynicism as impenetrable emotional armor, treating visceral horror like a minor aesthetic inconvenience.",
-                "whatHelped": "Executed the session's premier tactical distractions: weaponizing Hellenic art snobbery to pickpocket Rick Ready's keys, and brazenly taking the Q&A microphone to declare Dr. Thorne boring while nudging her bag to Alfie under the desk. Yielded the highway transit to Dravin with mature ensemble restraint.",
-                "whatHurt": "Impenetrable emotional armor. When the subterranean 1948 psychiatric ward vision struck and comatose patients filled the room, Pierre remained ironically detached. Even during cosmic terror, he treated the nightmare as an uncivilized American curiosity rather than letting the horror crack his shell.",
-                "nextSessionDirectives": "Let the horror crack the snobbery! When the satyrs splinter the lecture hall doors in Session 6, stop using French cynicism as bulletproof armor. Show what Pierre genuinely fears when classical beauty meets primal violence."
+                "grade": "A",
+                "score": 94,
+                "spotlightShare": "20% spoken dialogue (Authentic Impulsive Agency)",
+                "consistencyScore": "96%",
+                "ruthlessVerdict": "Pure, unadulterated character gold: Pierre didn't orchestrate a calculated heist diversion—he genuinely couldn't stomach American architectural barbarism, and that authentic Parisian fit produced the finest table beat of the night.",
+                "whatHelped": "Refusing to play the compliant heist rogue. Haranguing Rick Ready over sandpaper polishing on classical marble, admiring the tin-foil fedoras as 'rather nice hats', and marching up to the lecture microphone solely to ask where the sculpting studio was.",
+                "whatHurt": "Occasionally allowed table cross-talk to suggest his fit was planned collusion. Pierre's power is his genuine aristocratic arrogance—do not let prose writers sanitize it into generic tactical teamwork.",
+                "nextSessionDirectives": "Stay unapologetically Pierre. When the Reductor satyrs charge the stage in Session 6, do not coordinate a SWAT-style tactical retreat. React through Pierre's genuine fears: Gorgon petrification, damaged classical relics, and uncivilized violence."
             },
             {
                 "id": "dravin",
@@ -828,14 +874,14 @@ def get_default_participant_scorecards(session_num: int) -> list:
                 "badge": "The Professor",
                 "color": "#8b5cf6",
                 "icon": "📚",
-                "grade": "C+",
-                "score": 75,
-                "spotlightShare": "26% spoken dialogue",
-                "consistencyScore": "72%",
-                "ruthlessVerdict": "Brilliant pedagogical manipulation at the podium, but committed the cardinal sin of pocketing a divine underworld heritage revelation like a dry dry-cleaning receipt.",
-                "whatHelped": "The 'visual learners' bluff against Dr. Thorne in Scene 9 was masterful academic maneuvering, and his smooth pickpocketing of Rick Ready's keys gave the heist early momentum.",
-                "whatHurt": "Absolute emotional evasion. When handed a wax-sealed letter confirming Persephone is his divine mother descending into Hades, Dravin shelved the world-shattering revelation without a single syllable of existential weight.",
-                "nextSessionDirectives": "Reckon with the goddess mother. In Session 6, pull Pierre or Eusacles aside at the first quiet threshold and break the academic facade—tell them what was in that letter and what it feels like to be the son of the Underworld."
+                "grade": "B+",
+                "score": 86,
+                "spotlightShare": "25% spoken dialogue (Ruthless Academic Opportunism)",
+                "consistencyScore": "89%",
+                "ruthlessVerdict": "The consummate opportunist: watched his companion throw an aesthetic tantrum and picked the custodian's master keys, then usurped the podium and bodily slammed Alfie into the relic without flinching.",
+                "whatHelped": "Unflinching academic opportunism. Snatching Rick Ready's keys during Pierre's meltdown, adopting the stern dean baritone to order Pierre back to his seat when stealth failed, and unilaterally seizing Alfie by the waist to trigger the vision.",
+                "whatHurt": "Emotional avoidance regarding his divine parentage. Pocketed the wax-sealed letter confirming Persephone is his divine mother descending into Hades without letting the existential weight land on the party.",
+                "nextSessionDirectives": "Own the necromancer pedigree and the maternal curse. In Session 6, when the satyrs breach the hall, use your necromantic threshold magic to defend the anomaly, and force Dravin to reckon with why Persephone targeted him."
             },
             {
                 "id": "eusacles",
@@ -847,29 +893,29 @@ def get_default_participant_scorecards(session_num: int) -> list:
                 "icon": "🎲",
                 "grade": "A",
                 "score": 93,
-                "spotlightShare": "24% spoken dialogue",
-                "consistencyScore": "96%",
-                "ruthlessVerdict": "The gold standard of ensemble timing: hung back in the shadows until the heist stalled, then strode down the center aisle with devastating blue-collar cross-examination.",
-                "whatHelped": "Patience and acoustic dominance. Sitting quietly until Dr. Thorne finished, then grilling her relentlessly on 1948 freon coolant and ice-box mechanics completely dismantled her academic composure and bought Alfie the room to strike.",
-                "whatHurt": "The Thanatos mystery debt. Exited the Margin fog with a pocket-watch chain bound to the god of death, but keeps evading what he ante'd up or who held the house odds.",
-                "nextSessionDirectives": "Call the bet. In Session 6, reveal to the party what you staked against Thanatos, and what debts are coming due when the dice stop rolling."
+                "spotlightShare": "23% spoken dialogue (Acoustic Grounding)",
+                "consistencyScore": "95%",
+                "ruthlessVerdict": "The unshakeable anchor who grounds high-concept planar nonsense in gritty, blue-collar Vegas skepticism.",
+                "whatHelped": "Relentless cross-examination. Calling out the 'pirate crepe', grilling the tin-foil demonstrators on 1948 refrigeration, and the iconic 'Show me the research' face-off against Dr. Thorne that forced her to reveal the briefcase.",
+                "whatHurt": "Lingered in the back row too long before intervening. When demigod instincts prickle, close the distance faster.",
+                "nextSessionDirectives": "Take point immediately in Session 6 initiative. Eusacles' Thanatos heritage and heavy morningstar need to shatter the Reductor frontline before the beasts reach Dravin and Alfie."
             },
             {
                 "id": "alfie",
                 "name": "Sophie Foreman Noone",
                 "character": "Alfie",
-                "role": "Driftwood Doll & Rogue Heart",
+                "role": "Driftwood Duelist & Rogue Heart",
                 "badge": "The Rogue",
                 "color": "#10b981",
                 "icon": "🪆",
-                "grade": "B",
-                "score": 84,
-                "spotlightShare": "13% spoken dialogue (Tactical Infiltration & Emotional Climax)",
-                "consistencyScore": "89%",
-                "ruthlessVerdict": "Delivered the undisputed emotional gut-punch of the session at the relic table, but held her cards so close to the vest during the transit that her climactic terror felt like an abrupt spike rather than a simmering dread.",
-                "whatHelped": "The green room heist agility (pilfering the soccer scarf) and the shattering vulnerability in Scene 10 ('Not again. Not me again!') when touching the temporal relic, injecting genuine human stakes into an academic caper.",
-                "whatHurt": "Total radio silence during the Lost Roads transit. While staying out of sight in Dravin's coat made tactical sense for a driftwood doll, hoarding her dread left the reader unprepared for the emotional avalanche at the climax.",
-                "nextSessionDirectives": "Telegraph the simmer before the boil. In Session 6 combat, give us physical micro-actions from the floor—tugging Dravin's hem, warning the giants about hoofsteps—so your emotional weight stays continuously anchored in the fight."
+                "grade": "A-",
+                "score": 91,
+                "spotlightShare": "14% spoken dialogue (Tactical Infiltration & Emotional Climax)",
+                "consistencyScore": "93%",
+                "ruthlessVerdict": "The beating emotional heart and comedic anchor of the session, delivering a gut-wrenching cry at the moment of contact.",
+                "whatHelped": "Carving the Chaos Belt into her forearm timber with Wordcraft, looting the green-and-white soccer scarf from the green room, and the heartbreaking mid-air protest ('Not again! Not me again!') as Dravin plunged her into the relic.",
+                "whatHurt": "Passivity during the Appalachian switchbacks. While riding in Dravin's pocket makes tactical sense, staying completely silent during the transit left her climactic panic feeling like an abrupt spike rather than mounting dread.",
+                "nextSessionDirectives": "Unleash the Chaos Belt in combat! When the satyrs close in, reach down to the carved buckle and force the table to adapt to whatever chaotic tool the Fate Loom hands you."
             }
         ]
     else:
@@ -1010,6 +1056,13 @@ def get_grade_badge_styles(grade: str) -> dict:
             "subtext": "text-rose-400/80"
         }
 
+CAMPAIGN_ARC_IMPACTS = {
+    1: "The Inciting Incident: The unsealing of the subterranean vault and the initial temporal ripple that entangled our four strangers into a shared, fractured fate.",
+    2: "The Convergence: Fleeing into the Appalachian foothills, the party realizes their survival depends on mutual reliance, discovering that the anomalies are not accidental.",
+    3: "The Underworld Breach: The first manifestation of Persephone's emissaries and Thanatos's shadow; proving that ancient mythic powers are awake in modern America.",
+    4: "The Wordcraft Awakening: Alfie's living connection to the Fate Loom crystallizes with the forging of the Chaos Belt, shifting the party from reactive fugitives to active wielders of reality-altering magic.",
+    5: "The Historical Redaction & Planar War: Session 5 permanently elevates the campaign from fugitive survival in the Appalachian foothills to an active war over causality. Uncovering Dr. Thorne's altered 1948 trial binder (where 'STABLE' was overwritten to 'STALE' by an unseen hand) proves history itself is being actively edited. The simultaneous Reductor satyr ambush confirms their enemies possess cross-temporal reach across mortal academies and planar rifts. With Alfie's Fate-bound Chaos Belt and Dravin's sealed Persephone heritage, the party has become the primary target of organized timeline erasure."
+}
 
 def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, word_count: int, spoken_pct: float, narrative_pct: float, sensory: dict) -> str:
     bot_review = editorial_forum.get("initialBotReview", {})
@@ -1029,32 +1082,7 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
     if not analysis and table_debrief.get("summary"):
         analysis = table_debrief.get("summary")
 
-    elements = get_narrative_spectrum_elements(session_num, spoken_pct, narrative_pct, sensory)
-    mini_pills = ""
-    for el in elements:
-        mini_pills += f"""
-        <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px]">
-            <span class="flex items-center gap-1.5 font-medium text-slate-300">
-                <span>{el['icon']}</span>
-                <span class="truncate">{el['name']}</span>
-            </span>
-            <span class="font-mono font-bold text-amber-300 text-[10px] flex-shrink-0 px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30">
-                {el['score']} · {el['stance']}
-            </span>
-        </div>
-        """
-
-    # Highlights from whatHelped if present
-    mvp_pills = ""
-    what_helped = table_debrief.get("whatHelped", [])
-    if what_helped:
-        mvp_pills = '<div class="flex flex-wrap items-center gap-1.5 pt-1">'
-        mvp_pills += '<span class="text-[10px] uppercase font-mono font-bold text-slate-400 mr-1">Table MVPs:</span>'
-        for wh in what_helped[:4]:
-            p_name = wh.get("player", "").split()[0]
-            m_title = wh.get("moment", "")
-            mvp_pills += f'<span class="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-300"><strong class="text-amber-400">{p_name}</strong>: {m_title}</span>'
-        mvp_pills += '</div>'
+    campaign_impact_text = editorial_forum.get("campaignArcImpact") or bot_review.get("campaignArcImpact") or CAMPAIGN_ARC_IMPACTS.get(session_num, CAMPAIGN_ARC_IMPACTS.get(5, ""))
 
     # Participant Report Cards Mini Strip
     participant_scorecards = table_debrief.get("participantScorecards") or get_default_participant_scorecards(session_num)
@@ -1068,10 +1096,10 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
             c_name = sc.get("character") or sc.get("name", "")
             short_name = c_name.replace("Prof. Edward ", "").replace("Game Master", "GM")
             strip_pills += f"""
-            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1.5 min-w-0">
                     <span class="text-xs flex-shrink-0">{p_icon}</span>
-                    <span class="truncate text-slate-300 font-medium text-[10px]">{short_name}</span>
+                    <span class="truncate text-slate-300 font-medium text-[11px]">{short_name}</span>
                 </div>
                 <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 {g_style['bg']} {g_style['text']} border {g_style['border']}">
                     {g}
@@ -1079,14 +1107,14 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
             </div>
             """
         participant_strip_html = f"""
-        <div class="pt-2 border-t border-slate-800/60 space-y-1.5">
-            <div class="flex items-center justify-between text-[10px] font-mono">
-                <span class="flex items-center gap-1 font-bold text-slate-400 uppercase tracking-wider">
-                    <span>🎭</span> <span>Table Performance Report Cards:</span>
+        <div class="pt-3 border-t border-slate-800/70 space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono">
+                <span class="font-bold text-slate-300 uppercase tracking-wider">
+                    Table Performance Scorecards
                 </span>
                 <span class="text-rose-400 font-medium">Acquisitions Editor Audit</span>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {strip_pills}
             </div>
         </div>
@@ -1097,74 +1125,95 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
     <!-- END-OF-SESSION ROTTEN TOMATOES CRITIC & TABLE DEBRIEF CARD -->
     <!-- ========================================================= -->
     <section class="mt-12 mb-8">
-        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
+        <div id="endSessionCriticCard" class="bg-slate-900 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-5 sm:p-7 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
             
             <!-- Card Header: Title & Dual Rotten Tomatoes Badges -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                 <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform shadow-inner">
+                    <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-105 transition-transform shadow-inner">
                         🍅
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Rotten Tomatoes Post-Mortem</span>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Story Review</span>
+                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Editorial Debrief</span>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Review & Scorecard</span>
                         </div>
                         <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-amber-300 transition-colors">
-                            Session {session_num} Story Review & Player Critique
+                            Session {session_num} Editorial Debrief & Story Review
                         </h3>
                     </div>
                 </div>
 
                 <!-- Dual Rotten Tomatoes Score Meters -->
                 <div class="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
-                    <!-- Tomatometer (Critic Score) -->
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                    <!-- Tomatometer (Literary Craft) -->
+                    <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
                         <span class="text-2xl flex-shrink-0">{tomatometer_icon}</span>
                         <div>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-sm sm:text-base font-bold font-mono text-slate-100">{tomatometer}%</span>
-                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded {tomato_badge_classes}">{tomatometer_status}</span>
+                                <span class="text-base sm:text-lg font-bold font-mono text-slate-100">{tomatometer}%</span>
+                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded {tomato_badge_classes}">{tomatometer_status} ({grade})</span>
                             </div>
-                            <span class="text-[9px] text-slate-400 font-mono block">Tomatometer ({grade})</span>
+                            <span class="text-[9px] text-slate-400 font-mono block">Tomatometer · Novel Craft</span>
                         </div>
                     </div>
 
-                    <!-- Popcornmeter (Table Energy) -->
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                    <!-- Popcornmeter (Table Roleplay) -->
+                    <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
                         <span class="text-2xl flex-shrink-0">🍿</span>
                         <div>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-sm sm:text-base font-bold font-mono text-amber-300">{popcornmeter}%</span>
+                                <span class="text-base sm:text-lg font-bold font-mono text-amber-300">{popcornmeter}%</span>
                                 <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/80">{popcorn_status}</span>
                             </div>
-                            <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter</span>
+                            <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter · Table Energy</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Participant Report Card Strip -->
-            {participant_strip_html}
+            <!-- Score Meaning Explainer Ribbon -->
+            <div class="mt-3.5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] font-sans">
+                <div class="flex items-start gap-2 text-slate-300">
+                    <span class="text-sm flex-shrink-0">🍅</span>
+                    <span><strong>Tomatometer:</strong> Evaluates literary craft, dialogue grounding, and structural pacing fidelity.</span>
+                </div>
+                <div class="flex items-start gap-2 text-slate-300">
+                    <span class="text-sm flex-shrink-0">🍿</span>
+                    <span><strong>Popcornmeter:</strong> Evaluates live tabletop energy, player initiative, and unscripted ensemble chemistry.</span>
+                </div>
+            </div>
 
             <!-- High-Level Editorial Summary -->
-            <div class="mt-4 p-4 rounded-xl bg-slate-950/70 border border-slate-800/90 space-y-2">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400">Editorial Summary:</span>
-                </div>
+            <div class="mt-3.5 p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
+                <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400 block">Editorial Consensus:</span>
                 <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif italic">
                     "{analysis}"
                 </p>
             </div>
 
+            <!-- Campaign Trajectory & Arc Impact Snapshot -->
+            <div class="mt-3.5 p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-amber-400">Campaign Arc Impact (Sessions 1–{session_num}):</span>
+                    <span class="text-[10px] font-mono text-slate-400">Cosmic Stakes Escalation</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed font-sans">
+                    {campaign_impact_text}
+                </p>
+            </div>
+
+            <!-- Participant Report Card Strip -->
+            {participant_strip_html}
+
             <!-- Action Prompt -->
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
                 <div class="flex items-center gap-2 text-xs text-slate-400">
-                    <span class="text-amber-400">🎭</span>
-                    <span>Tap to view tabbed player critiques, audit shortcomings & directives</span>
+                    <span>📋</span>
+                    <span>Tap to view tabbed player scorecards, audit shortcomings & Session {session_num + 1} directives</span>
                 </div>
-                <span class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-900/80 to-amber-900/80 hover:from-rose-800 hover:to-amber-800 border border-rose-700/60 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
-                    <span>Read Player Breakdown</span> <span>→</span>
+                <span class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
+                    <span>Open Full Editorial Dossier</span> <span>→</span>
                 </span>
             </div>
         </div>
@@ -1192,6 +1241,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         analysis = table_debrief.get("summary")
 
     author = "Acquisitions Editor Audit"
+    campaign_impact_text = CAMPAIGN_ARC_IMPACTS.get(session_num, CAMPAIGN_ARC_IMPACTS.get(5, ""))
 
     # Tabbed Player Performance Scorecards
     participant_scorecards = table_debrief.get("participantScorecards") or get_default_participant_scorecards(session_num)
@@ -1230,9 +1280,9 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         directives_text = sc.get("nextSessionDirectives", "")
 
         tab_panels_html += f"""
-        <div id="playerPanel_{pid}" class="player-critique-panel {hidden_class} space-y-3.5" data-player-id="{pid}">
+        <div id="playerPanel_{pid}" class="player-critique-panel {hidden_class} space-y-3" data-player-id="{pid}">
             <!-- Player Header & Metrics -->
-            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid {p_color};">
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid {p_color};">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         {p_icon}
@@ -1268,45 +1318,43 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
-                <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict</span>
-                </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
+                <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
                     "{verdict_text}"
                 </p>
             </div>
 
-            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
-            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
-                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
-                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
+            <!-- Critical Narrative Shortcomings & Frictional Beats -->
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/50 space-y-1.5">
+                <div class="flex items-center justify-between border-b border-rose-900/40 pb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono">
+                        Critical Narrative Shortcomings (Audit Finding)
                     </span>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">
                         Audit Finding
                     </span>
                 </div>
-                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     {what_hurt_text}
                 </p>
             </div>
 
-            <!-- What They Did Well (Story Fuel) -->
-            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
-                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+            <!-- Standout Beats & Story Fuel -->
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono block">
+                    Standout Beats & Story Fuel
                 </span>
-                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     {what_helped_text}
                 </p>
             </div>
 
             <!-- Next Session Directive / Coaching Mandate -->
             <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
-                        <span>🎯</span> <span>Session Coaching Directive</span>
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wider">
+                        Session {session_num + 1} Action Directive
                     </span>
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
@@ -1558,6 +1606,18 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                         </div>
                     </div>
 
+                    <!-- Dual Meter Meaning Ribbon -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] font-sans">
+                        <div class="flex items-start gap-2 text-slate-300">
+                            <span class="text-sm flex-shrink-0">🍅</span>
+                            <span><strong>Tomatometer:</strong> Evaluates literary craft, dialogue grounding, and structural pacing fidelity.</span>
+                        </div>
+                        <div class="flex items-start gap-2 text-slate-300">
+                            <span class="text-sm flex-shrink-0">🍿</span>
+                            <span><strong>Popcornmeter:</strong> Evaluates live tabletop energy, player initiative, and unscripted ensemble chemistry.</span>
+                        </div>
+                    </div>
+
                     <!-- Editorial Summary Quote -->
                     <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 text-xs">
                         <p class="text-slate-200 italic font-serif leading-relaxed">
@@ -1566,7 +1626,23 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                     </div>
                 </div>
 
-                <!-- SECTION 2: TABBED PLAYER PERFORMANCE BREAKDOWN -->
+                <!-- SECTION 2: CAMPAIGN TRAJECTORY & ARC IMPACT -->
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2 shadow-sm">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🌌</span>
+                            <h4 class="text-xs sm:text-sm font-bold text-amber-400 font-serif uppercase tracking-wider">
+                                Campaign Trajectory & Arc Impact (Sessions 1–{session_num})
+                            </h4>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-mono">Macro Stakes Analysis</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed font-sans pt-1">
+                        {campaign_impact_text}
+                    </p>
+                </div>
+
+                <!-- SECTION 3: TABBED PLAYER PERFORMANCE BREAKDOWN -->
                 <div class="space-y-3 pt-1">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <div class="flex items-center gap-2">
@@ -1820,8 +1896,16 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         </a>
         """
 
+    if editorial_forum:
+        chapter_pills_html += f"""
+        <a href="#endSessionCriticCard" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/60 hover:border-rose-400 text-rose-300 hover:text-rose-200 transition-all flex items-center gap-1.5 flex-shrink-0">
+            <span class="text-xs">🍅</span>
+            <span>Critic Review</span>
+        </a>
+        """
+
     # Analytics Elements
-    vertical_chapters_html = build_vertical_chapters_html(chapters, characters)
+    vertical_chapters_html = build_vertical_chapters_html(chapters, characters, session_num, editorial_forum)
     session_line_chart_svg = build_session_line_chart_svg(chapters)
     campaign_whole_html = build_campaign_whole_html(session_num)
     camp_tab_label = "Campaign (S1)" if session_num == 1 else f"Campaign (S1–S{session_num})"

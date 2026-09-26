@@ -29518,108 +29518,139 @@
     <!-- END-OF-SESSION ROTTEN TOMATOES CRITIC & TABLE DEBRIEF CARD -->
     <!-- ========================================================= -->
     <section class="mt-12 mb-8">
-        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
+        <div id="endSessionCriticCard" class="bg-slate-900 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-5 sm:p-7 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
             
             <!-- Card Header: Title & Dual Rotten Tomatoes Badges -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                 <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform shadow-inner">
+                    <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-105 transition-transform shadow-inner">
                         🍅
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Rotten Tomatoes Post-Mortem</span>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Story Review</span>
+                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Editorial Debrief</span>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Review & Scorecard</span>
                         </div>
                         <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-amber-300 transition-colors">
-                            Session 1 Story Review & Player Critique
+                            Session 1 Editorial Debrief & Story Review
                         </h3>
                     </div>
                 </div>
 
                 <!-- Dual Rotten Tomatoes Score Meters -->
                 <div class="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
-                    <!-- Tomatometer (Critic Score) -->
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                    <!-- Tomatometer (Literary Craft) -->
+                    <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
                         <span class="text-2xl flex-shrink-0">🍅</span>
                         <div>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-sm sm:text-base font-bold font-mono text-slate-100">92%</span>
-                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-rose-950/80 text-rose-300 border-rose-800/80">Certified Fresh</span>
+                                <span class="text-base sm:text-lg font-bold font-mono text-slate-100">92%</span>
+                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-rose-950/80 text-rose-300 border-rose-800/80">Certified Fresh (A-)</span>
                             </div>
-                            <span class="text-[9px] text-slate-400 font-mono block">Tomatometer (A-)</span>
+                            <span class="text-[9px] text-slate-400 font-mono block">Tomatometer · Novel Craft</span>
                         </div>
                     </div>
 
-                    <!-- Popcornmeter (Table Energy) -->
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                    <!-- Popcornmeter (Table Roleplay) -->
+                    <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
                         <span class="text-2xl flex-shrink-0">🍿</span>
                         <div>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-sm sm:text-base font-bold font-mono text-amber-300">96%</span>
+                                <span class="text-base sm:text-lg font-bold font-mono text-amber-300">96%</span>
                                 <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/80">Certified Fresh</span>
                             </div>
-                            <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter</span>
+                            <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter · Table Energy</span>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Score Meaning Explainer Ribbon -->
+            <div class="mt-3.5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] font-sans">
+                <div class="flex items-start gap-2 text-slate-300">
+                    <span class="text-sm flex-shrink-0">🍅</span>
+                    <span><strong>Tomatometer:</strong> Evaluates literary craft, dialogue grounding, and structural pacing fidelity.</span>
+                </div>
+                <div class="flex items-start gap-2 text-slate-300">
+                    <span class="text-sm flex-shrink-0">🍿</span>
+                    <span><strong>Popcornmeter:</strong> Evaluates live tabletop energy, player initiative, and unscripted ensemble chemistry.</span>
+                </div>
+            </div>
+
+            <!-- High-Level Editorial Summary -->
+            <div class="mt-3.5 p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
+                <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400 block">Editorial Consensus:</span>
+                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif italic">
+                    "Fast-paced dimensional transit and brisk ink-beast combat. While the prose velocity is high, early chapters place heavy dialogue focus on Pierre and Dravin before Alfie enters in Scene 6. The transition from bus displacement to the cosmic library trades deep character introspection for high sensory action."
+                </p>
+            </div>
+
+            <!-- Campaign Trajectory & Arc Impact Snapshot -->
+            <div class="mt-3.5 p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-amber-400">Campaign Arc Impact (Sessions 1–1):</span>
+                    <span class="text-[10px] font-mono text-slate-400">Cosmic Stakes Escalation</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed font-sans">
+                    The Inciting Incident: The unsealing of the subterranean vault and the initial temporal ripple that entangled our four strangers into a shared, fractured fate.
+                </p>
+            </div>
+
             <!-- Participant Report Card Strip -->
             
-        <div class="pt-2 border-t border-slate-800/60 space-y-1.5">
-            <div class="flex items-center justify-between text-[10px] font-mono">
-                <span class="flex items-center gap-1 font-bold text-slate-400 uppercase tracking-wider">
-                    <span>🎭</span> <span>Table Performance Report Cards:</span>
+        <div class="pt-3 border-t border-slate-800/70 space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono">
+                <span class="font-bold text-slate-300 uppercase tracking-wider">
+                    Table Performance Scorecards
                 </span>
                 <span class="text-rose-400 font-medium">Acquisitions Editor Audit</span>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 
-            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1.5 min-w-0">
                     <span class="text-xs flex-shrink-0">👑</span>
-                    <span class="truncate text-slate-300 font-medium text-[10px]">GM</span>
+                    <span class="truncate text-slate-300 font-medium text-[11px]">GM</span>
                 </div>
                 <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">
                     A-
                 </span>
             </div>
             
-            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1.5 min-w-0">
                     <span class="text-xs flex-shrink-0">🥖</span>
-                    <span class="truncate text-slate-300 font-medium text-[10px]">Pierre</span>
+                    <span class="truncate text-slate-300 font-medium text-[11px]">Pierre</span>
                 </div>
                 <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">
                     A
                 </span>
             </div>
             
-            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1.5 min-w-0">
                     <span class="text-xs flex-shrink-0">📚</span>
-                    <span class="truncate text-slate-300 font-medium text-[10px]">Dravin</span>
+                    <span class="truncate text-slate-300 font-medium text-[11px]">Dravin</span>
                 </div>
                 <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">
                     B+
                 </span>
             </div>
             
-            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1.5 min-w-0">
                     <span class="text-xs flex-shrink-0">🎲</span>
-                    <span class="truncate text-slate-300 font-medium text-[10px]">Eusacles</span>
+                    <span class="truncate text-slate-300 font-medium text-[11px]">Eusacles</span>
                 </div>
                 <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">
                     A-
                 </span>
             </div>
             
-            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1.5 min-w-0">
                     <span class="text-xs flex-shrink-0">🪆</span>
-                    <span class="truncate text-slate-300 font-medium text-[10px]">Alfie</span>
+                    <span class="truncate text-slate-300 font-medium text-[11px]">Alfie</span>
                 </div>
                 <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">
                     A-
@@ -29630,24 +29661,14 @@
         </div>
         
 
-            <!-- High-Level Editorial Summary -->
-            <div class="mt-4 p-4 rounded-xl bg-slate-950/70 border border-slate-800/90 space-y-2">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400">Editorial Summary:</span>
-                </div>
-                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif italic">
-                    "Fast-paced dimensional transit and brisk ink-beast combat. While the prose velocity is high, early chapters place heavy dialogue focus on Pierre and Dravin before Alfie enters in Scene 6. The transition from bus displacement to the cosmic library trades deep character introspection for high sensory action."
-                </p>
-            </div>
-
             <!-- Action Prompt -->
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
                 <div class="flex items-center gap-2 text-xs text-slate-400">
-                    <span class="text-amber-400">🎭</span>
-                    <span>Tap to view tabbed player critiques, audit shortcomings & directives</span>
+                    <span>📋</span>
+                    <span>Tap to view tabbed player scorecards, audit shortcomings & Session 2 directives</span>
                 </div>
-                <span class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-900/80 to-amber-900/80 hover:from-rose-800 hover:to-amber-800 border border-rose-700/60 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
-                    <span>Read Player Breakdown</span> <span>→</span>
+                <span class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
+                    <span>Open Full Editorial Dossier</span> <span>→</span>
                 </span>
             </div>
         </div>
@@ -30457,6 +30478,40 @@
             </div>
         </div>
         
+        <div class="p-2.5 bg-slate-950/90 hover:bg-slate-900 border border-slate-800 hover:border-rose-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99] mt-3"
+             onclick="jumpToChapter('endSessionCriticCard');">
+            
+            <!-- Line 1: REVIEW Badge - Title - Dual Scores -->
+            <div class="flex items-center justify-between gap-2.5 min-w-0">
+                <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                    <span class="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/30 text-[10px] font-mono font-bold flex-shrink-0">
+                        REVIEW
+                    </span>
+                    <span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-700/80 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0">
+                        <span>🍅</span> <span>92%</span>
+                    </span>
+                    <span class="px-1.5 py-0.5 rounded bg-slate-900 text-amber-300 border border-slate-700/80 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0">
+                        <span>🍿</span> <span>96%</span>
+                    </span>
+                    <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
+                        Editorial Debrief & Critic Review
+                    </h4>
+                </div>
+                <span class="text-[10px] font-mono text-slate-400 group-hover:text-slate-200 flex-shrink-0">
+                    Audits & Directives →
+                </span>
+            </div>
+
+            <!-- Line 2: Explanatory Subtitle -->
+            <div class="flex items-center gap-2 text-[10px] text-slate-400 pt-1 border-t border-slate-900/60 font-mono">
+                <span>Dual Rotten Tomatoes Audit</span>
+                <span>·</span>
+                <span class="text-rose-400 font-bold">A-</span>
+                <span>·</span>
+                <span>Player Scorecards & Next Session Directives</span>
+            </div>
+        </div>
+        
         </div>
     </div>
     
@@ -30886,6 +30941,18 @@
                         </div>
                     </div>
 
+                    <!-- Dual Meter Meaning Ribbon -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] font-sans">
+                        <div class="flex items-start gap-2 text-slate-300">
+                            <span class="text-sm flex-shrink-0">🍅</span>
+                            <span><strong>Tomatometer:</strong> Evaluates literary craft, dialogue grounding, and structural pacing fidelity.</span>
+                        </div>
+                        <div class="flex items-start gap-2 text-slate-300">
+                            <span class="text-sm flex-shrink-0">🍿</span>
+                            <span><strong>Popcornmeter:</strong> Evaluates live tabletop energy, player initiative, and unscripted ensemble chemistry.</span>
+                        </div>
+                    </div>
+
                     <!-- Editorial Summary Quote -->
                     <div class="p-3 rounded-lg bg-slate-900/90 border border-slate-800 text-xs">
                         <p class="text-slate-200 italic font-serif leading-relaxed">
@@ -30894,7 +30961,23 @@
                     </div>
                 </div>
 
-                <!-- SECTION 2: TABBED PLAYER PERFORMANCE BREAKDOWN -->
+                <!-- SECTION 2: CAMPAIGN TRAJECTORY & ARC IMPACT -->
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2 shadow-sm">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🌌</span>
+                            <h4 class="text-xs sm:text-sm font-bold text-amber-400 font-serif uppercase tracking-wider">
+                                Campaign Trajectory & Arc Impact (Sessions 1–1)
+                            </h4>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-mono">Macro Stakes Analysis</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed font-sans pt-1">
+                        The Inciting Incident: The unsealing of the subterranean vault and the initial temporal ripple that entangled our four strangers into a shared, fractured fate.
+                    </p>
+                </div>
+
+                <!-- SECTION 3: TABBED PLAYER PERFORMANCE BREAKDOWN -->
                 <div class="space-y-3 pt-1">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <div class="flex items-center gap-2">
@@ -30949,9 +31032,9 @@
                     <!-- Player Panels Container -->
                     <div class="pt-1">
                         
-        <div id="playerPanel_gm" class="player-critique-panel  space-y-3.5" data-player-id="gm">
+        <div id="playerPanel_gm" class="player-critique-panel  space-y-3" data-player-id="gm">
             <!-- Player Header & Metrics -->
-            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #94a3b8;">
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #94a3b8;">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         👑
@@ -30987,45 +31070,43 @@
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
-                <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict</span>
-                </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
+                <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
                     "Strong atmospheric tension and sharp encounter pacing throughout the early chapter arc."
                 </p>
             </div>
 
-            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
-            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
-                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
-                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
+            <!-- Critical Narrative Shortcomings & Frictional Beats -->
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/50 space-y-1.5">
+                <div class="flex items-center justify-between border-b border-rose-900/40 pb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono">
+                        Critical Narrative Shortcomings (Audit Finding)
                     </span>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">
                         Audit Finding
                     </span>
                 </div>
-                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Occasionally allowed lore exposition to interrupt natural party banter.
                 </p>
             </div>
 
-            <!-- What They Did Well (Story Fuel) -->
-            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
-                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+            <!-- Standout Beats & Story Fuel -->
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono block">
+                    Standout Beats & Story Fuel
                 </span>
-                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Kept scene transitions brisk and evocative, giving each party member distinctive space to establish character.
                 </p>
             </div>
 
             <!-- Next Session Directive / Coaching Mandate -->
             <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
-                        <span>🎯</span> <span>Session Coaching Directive</span>
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wider">
+                        Session 2 Action Directive
                     </span>
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
@@ -31035,9 +31116,9 @@
             </div>
         </div>
         
-        <div id="playerPanel_pierre" class="player-critique-panel hidden space-y-3.5" data-player-id="pierre">
+        <div id="playerPanel_pierre" class="player-critique-panel hidden space-y-3" data-player-id="pierre">
             <!-- Player Header & Metrics -->
-            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #3b82f6;">
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #3b82f6;">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         🥖
@@ -31073,45 +31154,43 @@
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
-                <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict</span>
-                </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
+                <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
                     "Anchored high-magic surreality with sharp European cynicism and deadpan comedic timing."
                 </p>
             </div>
 
-            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
-            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
-                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
-                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
+            <!-- Critical Narrative Shortcomings & Frictional Beats -->
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/50 space-y-1.5">
+                <div class="flex items-center justify-between border-b border-rose-900/40 pb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono">
+                        Critical Narrative Shortcomings (Audit Finding)
                     </span>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">
                         Audit Finding
                     </span>
                 </div>
-                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Leaned heavily into passive observation during certain fast-paced transitions.
                 </p>
             </div>
 
-            <!-- What They Did Well (Story Fuel) -->
-            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
-                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+            <!-- Standout Beats & Story Fuel -->
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono block">
+                    Standout Beats & Story Fuel
                 </span>
-                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Distinctive Parisian voice and architectural sensibility gave the party an unmistakable moral center.
                 </p>
             </div>
 
             <!-- Next Session Directive / Coaching Mandate -->
             <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
-                        <span>🎯</span> <span>Session Coaching Directive</span>
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wider">
+                        Session 2 Action Directive
                     </span>
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
@@ -31121,9 +31200,9 @@
             </div>
         </div>
         
-        <div id="playerPanel_dravin" class="player-critique-panel hidden space-y-3.5" data-player-id="dravin">
+        <div id="playerPanel_dravin" class="player-critique-panel hidden space-y-3" data-player-id="dravin">
             <!-- Player Header & Metrics -->
-            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #8b5cf6;">
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #8b5cf6;">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         📚
@@ -31159,45 +31238,43 @@
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
-                <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict</span>
-                </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
+                <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
                     "Treats planar phenomena as rigorous fieldwork, elevating high-magic tension through scholarly arrogance."
                 </p>
             </div>
 
-            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
-            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
-                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
-                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
+            <!-- Critical Narrative Shortcomings & Frictional Beats -->
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/50 space-y-1.5">
+                <div class="flex items-center justify-between border-b border-rose-900/40 pb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono">
+                        Critical Narrative Shortcomings (Audit Finding)
                     </span>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">
                         Audit Finding
                     </span>
                 </div>
-                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Held cards too close to the chest regarding personal backstory.
                 </p>
             </div>
 
-            <!-- What They Did Well (Story Fuel) -->
-            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
-                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+            <!-- Standout Beats & Story Fuel -->
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono block">
+                    Standout Beats & Story Fuel
                 </span>
-                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Weaponized pedantic academic authority to control NPC negotiations.
                 </p>
             </div>
 
             <!-- Next Session Directive / Coaching Mandate -->
             <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
-                        <span>🎯</span> <span>Session Coaching Directive</span>
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wider">
+                        Session 2 Action Directive
                     </span>
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
@@ -31207,9 +31284,9 @@
             </div>
         </div>
         
-        <div id="playerPanel_eusacles" class="player-critique-panel hidden space-y-3.5" data-player-id="eusacles">
+        <div id="playerPanel_eusacles" class="player-critique-panel hidden space-y-3" data-player-id="eusacles">
             <!-- Player Header & Metrics -->
-            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #f59e0b;">
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #f59e0b;">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         🎲
@@ -31245,45 +31322,43 @@
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
-                <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict</span>
-                </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
+                <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
                     "Punctures esoteric pretense with streetwise questions and gamble-ready swagger."
                 </p>
             </div>
 
-            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
-            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
-                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
-                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
+            <!-- Critical Narrative Shortcomings & Frictional Beats -->
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/50 space-y-1.5">
+                <div class="flex items-center justify-between border-b border-rose-900/40 pb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono">
+                        Critical Narrative Shortcomings (Audit Finding)
                     </span>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">
                         Audit Finding
                     </span>
                 </div>
-                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Rushed some social interactions with impulsive bets.
                 </p>
             </div>
 
-            <!-- What They Did Well (Story Fuel) -->
-            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
-                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+            <!-- Standout Beats & Story Fuel -->
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono block">
+                    Standout Beats & Story Fuel
                 </span>
-                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Brought authentic working-class skepticism to high-concept magical dilemmas.
                 </p>
             </div>
 
             <!-- Next Session Directive / Coaching Mandate -->
             <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
-                        <span>🎯</span> <span>Session Coaching Directive</span>
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wider">
+                        Session 2 Action Directive
                     </span>
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
@@ -31293,9 +31368,9 @@
             </div>
         </div>
         
-        <div id="playerPanel_alfie" class="player-critique-panel hidden space-y-3.5" data-player-id="alfie">
+        <div id="playerPanel_alfie" class="player-critique-panel hidden space-y-3" data-player-id="alfie">
             <!-- Player Header & Metrics -->
-            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #10b981;">
+            <div class="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm" style="border-left: 4px solid #10b981;">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-slate-900 border border-slate-700 shadow-inner">
                         🪆
@@ -31331,45 +31406,43 @@
             </div>
 
             <!-- The Red-Ink Acquisitions Editor Verdict -->
-            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs space-y-1.5">
-                <div class="flex items-center gap-1.5 font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wide">
-                    <span>✒️</span> <span>The Red-Ink Verdict</span>
-                </div>
-                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-600/60">
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
+                <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
+                <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
                     "Injects physical stakes and raw empathy into every dangerous encounter."
                 </p>
             </div>
 
-            <!-- What They Sucked At / Critical Audit Findings (PRIMARY EMPHASIS) -->
-            <div class="p-4 rounded-xl bg-gradient-to-br from-rose-950/40 via-slate-950 to-amber-950/30 border-2 border-rose-700/70 shadow-md space-y-2">
-                <div class="flex items-center justify-between gap-2 border-b border-rose-900/50 pb-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono flex items-center gap-1.5">
-                        <span>⚠️</span> <span>What They Sucked At (Critical Narrative Shortcomings)</span>
+            <!-- Critical Narrative Shortcomings & Frictional Beats -->
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/50 space-y-1.5">
+                <div class="flex items-center justify-between border-b border-rose-900/40 pb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono">
+                        Critical Narrative Shortcomings (Audit Finding)
                     </span>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-semibold">
                         Audit Finding
                     </span>
                 </div>
-                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Remained silent during extended vehicular transit.
                 </p>
             </div>
 
-            <!-- What They Did Well (Story Fuel) -->
-            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-900/40 space-y-1.5">
-                <span class="text-xs uppercase font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-                    <span>🌟</span> <span>What They Did Well (Story Fuel & Standout Beats)</span>
+            <!-- Standout Beats & Story Fuel -->
+            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-1.5">
+                <span class="text-xs uppercase font-bold text-emerald-400 font-mono block">
+                    Standout Beats & Story Fuel
                 </span>
-                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans pt-0.5">
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     Brought visceral emotional honesty that prevented scenes from lapsing into pure satire.
                 </p>
             </div>
 
             <!-- Next Session Directive / Coaching Mandate -->
             <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-xs space-y-1.5 shadow-sm">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wide flex items-center gap-1.5">
-                        <span>🎯</span> <span>Session Coaching Directive</span>
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-amber-300 font-mono text-xs uppercase tracking-wider">
+                        Session 2 Action Directive
                     </span>
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
