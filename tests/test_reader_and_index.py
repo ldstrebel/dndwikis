@@ -88,14 +88,16 @@ class TestReaderPages(unittest.TestCase):
         for s in self.sessions:
             self.assertTrue(s.exists(), f"{s.name} must exist")
 
-    def test_mode_critique_active_by_default(self):
-        """Every session must have mode-critique active on body so narrative blocks can be tapped for feedback."""
+    def test_default_reading_mode_and_cinematic_cut(self):
+        """Readers must always default to clean Read Mode and Cinematic Cut when they start."""
         for s in self.sessions:
             content = s.read_text(encoding="utf-8")
-            self.assertIn('body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique"', content,
-                          f"{s.name} must have mode-critique on body tag")
-            self.assertIn("setReadingMode(currentReadingMode || 'critique')", content,
-                          f"{s.name} must initialize setReadingMode on startup")
+            self.assertIn('body class="bg-slate-950 text-slate-100 min-h-screen pb-24"', content,
+                          f"{s.name} must start with clean reading mode on body")
+            self.assertIn("setReadingMode(currentReadingMode || 'read')", content,
+                          f"{s.name} must default to read mode on startup")
+            self.assertIn("currentActiveCut = 'cinematic'", content,
+                          f"{s.name} must default to cinematic cut")
 
     def test_no_horizontal_overflow_risks(self):
         """html, body must have overflow-x: hidden, and story-block hover must not have negative right margin."""
@@ -113,16 +115,26 @@ class TestReaderPages(unittest.TestCase):
             self.assertIn('id="criticForumModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[80]',
                           content, f"{s.name} criticForumModalOverlay must be z-[80]")
             self.assertIn('overflow-y-auto', content)
-            # Ensure no buggy visualViewport.offsetTop transforms are applied to fixed modals
             self.assertNotIn("criticForumModalOverlay.style.transform = 'translateY(", content,
                              f"{s.name} must not transform translateY on criticForumModalOverlay")
 
-    def test_story_block_click_wiring(self):
-        """Story blocks must have click listener that triggers openDiffInspector in critique mode."""
+    def test_focused_raw_transcript_feedback_wiring(self):
+        """Tapping story blocks in critique mode must open focused modal with raw transcript source."""
         for s in self.sessions:
             content = s.read_text(encoding="utf-8")
-            self.assertIn("openDiffInspector(idx)", content,
-                          f"{s.name} must call openDiffInspector on story block tap")
+            self.assertIn("openModalForBlock(idx)", content,
+                          f"{s.name} must call openModalForBlock on story block tap")
+            self.assertIn('id="modalRawSourceBody"', content,
+                          f"{s.name} must have modalRawSourceBody for raw transcript display")
+            self.assertIn('id="modalOpenDiffBtn"', content,
+                          f"{s.name} must provide optional Full Diff View button")
+
+    def test_session5_dialogue_calculation(self):
+        """Session 5 must properly calculate spoken dialogue and display correct percentages."""
+        s5_content = (ROOT / "uneraseable-s5.html").read_text(encoding="utf-8")
+        self.assertIn("33.2% Dialogue", s5_content, "Session 5 card must calculate 33.2% dialogue")
+        self.assertIn("2,738", s5_content, "Session 5 card must show 2,738 spoken words")
+        self.assertIn("8,237w", s5_content, "Session 5 card must show 8,237 total words")
 
 
 if __name__ == "__main__":

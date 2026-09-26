@@ -537,7 +537,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-24">
 
     <!-- STICKY TOP APP BAR (Clean & Content-Focused with Minimal Reading Progress) -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
@@ -568,9 +568,9 @@
                 </button>
 
                 <!-- Combined Single Mode Toggle: Switches dynamically between Read Mode and Critique Mode -->
-                <button id="modeToggleBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 text-slate-950 border border-amber-300 shadow-md ring-2 ring-amber-400/30 transition-all flex items-center gap-1.5 active:scale-95" title="Critique Mode Active — tap to toggle to Read Mode">
-                    <span id="modeToggleIcon">✍️</span>
-                    <span id="modeToggleLabel" class="hidden sm:inline">Critique</span>
+                <button id="modeToggleBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-1.5 active:scale-95" title="Read Mode is Active — tap to enable Critique Mode">
+                    <span id="modeToggleIcon">📖</span>
+                    <span id="modeToggleLabel" class="hidden sm:inline">Read</span>
                 </button>
 
                 <!-- Reading Settings Cog -->
@@ -19635,9 +19635,9 @@
     <div class="w-full space-y-2.5">
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
             <span>Campaign to Date (Sessions 1–5)</span>
-            <span class="text-[10px] text-amber-400 font-mono">19,755 Total Words · 7,058 Spoken (35.7%)</span>
+            <span class="text-[10px] text-amber-400 font-mono">27,992 Total Words · 9,796 Spoken (35.0%)</span>
         </div>
-        <div class="grid grid-cols-3 gap-2">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             
         <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
             <div class="flex justify-between items-center">
@@ -19690,12 +19690,12 @@
         <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
             <div class="flex justify-between items-center">
                 <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 5</span>
-                <span class="text-[10px] font-mono text-slate-400">0w</span>
+                <span class="text-[10px] font-mono text-slate-400">8,237w</span>
             </div>
-            <div class="text-[11px] font-bold text-slate-200 mt-0.5">0 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
-            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">0% Dialogue</div>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">2,738 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">33.2% Dialogue</div>
             <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
-                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 0%;"></div>
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 33.2%;"></div>
             </div>
         </div>
         
@@ -19709,7 +19709,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #3b82f6;"></span>
                 <span class="font-medium text-slate-300 truncate">Pierre</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">3,806w <span class="text-[9px] text-amber-400/90">(53.9%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">5,070w <span class="text-[9px] text-amber-400/90">(51.8%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19717,7 +19717,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #8b5cf6;"></span>
                 <span class="font-medium text-slate-300 truncate">Dravin</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">1,832w <span class="text-[9px] text-amber-400/90">(26.0%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">2,678w <span class="text-[9px] text-amber-400/90">(27.3%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19725,23 +19725,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #10b981;"></span>
                 <span class="font-medium text-slate-300 truncate">Alfie</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">1,750w <span class="text-[9px] text-amber-400/90">(24.8%)</span></span>
-        </div>
-        
-        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
-            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
-                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #64748b;"></span>
-                <span class="font-medium text-slate-300 truncate">Mike</span>
-            </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">1,067w <span class="text-[9px] text-amber-400/90">(15.1%)</span></span>
-        </div>
-        
-        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
-            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
-                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #ec4899;"></span>
-                <span class="font-medium text-slate-300 truncate">Naomi</span>
-            </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">869w <span class="text-[9px] text-amber-400/90">(12.3%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">2,288w <span class="text-[9px] text-amber-400/90">(23.4%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19749,23 +19733,23 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f59e0b;"></span>
                 <span class="font-medium text-slate-300 truncate">Eusacles</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">707w <span class="text-[9px] text-amber-400/90">(10.0%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">1,502w <span class="text-[9px] text-amber-400/90">(15.3%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
             <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
-                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
-                <span class="font-medium text-slate-300 truncate">Nincy</span>
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #64748b;"></span>
+                <span class="font-medium text-slate-300 truncate">Mike</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">377w <span class="text-[9px] text-amber-400/90">(5.3%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">1,067w <span class="text-[9px] text-amber-400/90">(10.9%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
             <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
-                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #d97706;"></span>
-                <span class="font-medium text-slate-300 truncate">Theodore</span>
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #ec4899;"></span>
+                <span class="font-medium text-slate-300 truncate">Naomi</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">360w <span class="text-[9px] text-amber-400/90">(5.1%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">973w <span class="text-[9px] text-amber-400/90">(9.9%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19773,7 +19757,47 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
                 <span class="font-medium text-slate-300 truncate">Attendant</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">329w <span class="text-[9px] text-amber-400/90">(4.7%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">582w <span class="text-[9px] text-amber-400/90">(5.9%)</span></span>
+        </div>
+        
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #d97706;"></span>
+                <span class="font-medium text-slate-300 truncate">Theodore</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">495w <span class="text-[9px] text-amber-400/90">(5.1%)</span></span>
+        </div>
+        
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Nincy</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">377w <span class="text-[9px] text-amber-400/90">(3.8%)</span></span>
+        </div>
+        
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Protester</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">244w <span class="text-[9px] text-amber-400/90">(2.5%)</span></span>
+        </div>
+        
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Hermes</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">227w <span class="text-[9px] text-amber-400/90">(2.3%)</span></span>
+        </div>
+        
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Thorne</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">224w <span class="text-[9px] text-amber-400/90">(2.3%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19781,7 +19805,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #78716c;"></span>
                 <span class="font-medium text-slate-300 truncate">Clerk</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">178w <span class="text-[9px] text-amber-400/90">(2.5%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">178w <span class="text-[9px] text-amber-400/90">(1.8%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19789,7 +19813,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
                 <span class="font-medium text-slate-300 truncate">Gordon</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">159w <span class="text-[9px] text-amber-400/90">(2.3%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">159w <span class="text-[9px] text-amber-400/90">(1.6%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19797,7 +19821,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #a855f7;"></span>
                 <span class="font-medium text-slate-300 truncate">Fates</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">146w <span class="text-[9px] text-amber-400/90">(2.1%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">146w <span class="text-[9px] text-amber-400/90">(1.5%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19805,7 +19829,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
                 <span class="font-medium text-slate-300 truncate">Anna</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">141w <span class="text-[9px] text-amber-400/90">(2.0%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">141w <span class="text-[9px] text-amber-400/90">(1.4%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19813,7 +19837,15 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #0284c7;"></span>
                 <span class="font-medium text-slate-300 truncate">Thomas</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">75w <span class="text-[9px] text-amber-400/90">(1.1%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">75w <span class="text-[9px] text-amber-400/90">(0.8%)</span></span>
+        </div>
+        
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Child</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">73w <span class="text-[9px] text-amber-400/90">(0.7%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19821,7 +19853,15 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
                 <span class="font-medium text-slate-300 truncate">Ally</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">64w <span class="text-[9px] text-amber-400/90">(0.9%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">64w <span class="text-[9px] text-amber-400/90">(0.7%)</span></span>
+        </div>
+        
+        <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
+            <span class="flex items-center gap-1.5 truncate min-w-0 mr-1">
+                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f87171;"></span>
+                <span class="font-medium text-slate-300 truncate">Persephone</span>
+            </span>
+            <span class="font-mono text-slate-400 flex-shrink-0">62w <span class="text-[9px] text-amber-400/90">(0.6%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19829,7 +19869,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #64748b;"></span>
                 <span class="font-medium text-slate-300 truncate">Anchor</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">49w <span class="text-[9px] text-amber-400/90">(0.7%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">49w <span class="text-[9px] text-amber-400/90">(0.5%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19837,7 +19877,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #e11d48;"></span>
                 <span class="font-medium text-slate-300 truncate">Beast</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">37w <span class="text-[9px] text-amber-400/90">(0.5%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">37w <span class="text-[9px] text-amber-400/90">(0.4%)</span></span>
         </div>
         
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -19845,7 +19885,7 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: #f43f5e;"></span>
                 <span class="font-medium text-slate-300 truncate">Rosa</span>
             </span>
-            <span class="font-mono text-slate-400 flex-shrink-0">25w <span class="text-[9px] text-amber-400/90">(0.4%)</span></span>
+            <span class="font-mono text-slate-400 flex-shrink-0">25w <span class="text-[9px] text-amber-400/90">(0.3%)</span></span>
         </div>
         
             </div>
@@ -20047,10 +20087,10 @@
     
 
     <!-- ========================================================= -->
-    <!-- MOBILE CRITIQUE MODAL / PASSAGE EDITOR -->
+    <!-- MOBILE & DESKTOP CRITIQUE MODAL / PASSAGE & RAW SOURCE INSPECTOR -->
     <!-- ========================================================= -->
-    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-[60] flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto box-border">
-        <div id="critiqueBottomSheet" class="w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl p-3.5 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[85vh] sm:max-h-[82vh] box-border">
+    <div id="critiqueModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-[80] flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto box-border">
+        <div id="critiqueBottomSheet" class="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl p-3.5 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[88vh] sm:max-h-[85vh] box-border">
             
             <!-- Top Header with Speaker, Block ID, and Prev/Next Passage Navigation -->
             <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3 gap-2 flex-shrink-0">
@@ -20059,7 +20099,6 @@
                     <span id="modalBlockIndex" class="text-xs text-slate-400 font-mono flex-shrink-0"></span>
                 </div>
                 <div class="flex items-center gap-1 flex-shrink-0">
-                    <!-- Shifted Arrow Keys to Top for rapid passage jumping -->
                     <button id="modalPrevBlockBtn" type="button" class="px-2 sm:px-2.5 py-1 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all" title="Previous passage">
                         <span>◀</span> <span class="hidden sm:inline text-[11px]">Prev</span>
                     </button>
@@ -20070,14 +20109,28 @@
                 </div>
             </div>
 
-            <!-- Scrollable Content Body (Expands & Scrolls Gracefully) -->
+            <!-- Scrollable Content Body -->
             <div class="overflow-y-auto space-y-3 pr-1 flex-1 min-h-0 custom-scrollbar box-border">
-                <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 box-border">
-                    <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                        <span>Target Passage:</span>
-                        <span id="modalSourceProvenance" class="font-mono text-amber-400 normal-case"></span>
+                
+                <!-- PASSAGE & RAW TABLETOP SOURCE COMPARISON -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <!-- Left: Target Novel Passage -->
+                    <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 flex flex-col box-border">
+                        <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                            <span>📖 Novel Passage</span>
+                            <span class="text-[9px] text-amber-500/80 font-mono">Novel Cut</span>
+                        </div>
+                        <p id="modalPassageText" class="text-xs sm:text-sm text-slate-200 italic leading-relaxed max-h-36 overflow-y-auto custom-scrollbar"></p>
                     </div>
-                    <p id="modalPassageText" class="text-xs sm:text-sm text-slate-200 italic leading-relaxed max-h-28 overflow-y-auto custom-scrollbar"></p>
+
+                    <!-- Right: Raw Tabletop Source -->
+                    <div class="bg-slate-950/80 p-3 rounded-xl border border-cyan-900/40 flex flex-col box-border">
+                        <div class="flex items-center justify-between text-[10px] font-semibold text-cyan-400 uppercase tracking-wider mb-1">
+                            <span class="flex items-center gap-1"><span>🎲</span> <span>Raw Source Transcript</span></span>
+                            <span id="modalSourceProvenance" class="font-mono text-cyan-300/80 text-[10px] normal-case"></span>
+                        </div>
+                        <div id="modalRawSourceBody" class="max-h-36 overflow-y-auto custom-scrollbar text-xs"></div>
+                    </div>
                 </div>
 
                 <!-- Speaker Attribution & Voice Model Selector -->
@@ -20119,10 +20172,13 @@
                 </div>
             </div>
 
-            <!-- Action Footer with Delete and Save Changes -->
+            <!-- Action Footer with Delete, Full Diff View, and Save Changes -->
             <div class="pt-3 mt-2 border-t border-slate-800 flex items-center justify-between gap-2 flex-shrink-0">
                 <button id="modalDeleteBtn" type="button" class="px-3 py-2 bg-rose-950/50 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded-xl text-xs font-bold transition-colors hidden">
                     🗑️ Delete Note
+                </button>
+                <button id="modalOpenDiffBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="Open full synchronized side-by-side diff inspector">
+                    <span>🔍</span> <span class="hidden xs:inline">Full Diff View</span>
                 </button>
                 <div class="flex-1"></div>
                 <button id="modalSaveBtn" type="button" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5 active:scale-98">
@@ -22247,7 +22303,13 @@
             }
 
             const onbModeDesc = document.getElementById('onboardingModeDesc');
-            let currentReadingMode = "critique";
+            let currentReadingMode = "read";
+            try {
+                const savedMode = localStorage.getItem('dnd_reading_mode');
+                if (savedMode === 'read' || savedMode === 'critique') {
+                    currentReadingMode = savedMode;
+                }
+            } catch(e) {}
 
             window.toggleReadingMode = function() {
                 const nextMode = (currentReadingMode === 'critique') ? 'read' : 'critique';
@@ -22256,6 +22318,7 @@
 
             window.setReadingMode = function(mode) {
                 currentReadingMode = mode;
+                try { localStorage.setItem('dnd_reading_mode', mode); } catch(e) {}
                 const isCritique = (mode === 'critique');
                 if (isCritique) {
                     if (currentActiveCut === 'raw') {
@@ -22404,12 +22467,82 @@
                 const mapData = (window.SOURCE_TRANSCRIPT_MAP && window.SOURCE_TRANSCRIPT_MAP[blockId]) || null;
                 if (modalSourceProvenance) {
                     if (selectedSourceLine) {
-                        modalSourceProvenance.textContent = `· L${selectedSourceLine.line} (${selectedSourceLine.speaker})`;
+                        modalSourceProvenance.textContent = `L${selectedSourceLine.line} (${selectedSourceLine.speaker})`;
                     } else if (mapData && mapData.primaryLine) {
-                        modalSourceProvenance.textContent = `· L${mapData.primaryLine.line} (${mapData.primaryLine.speaker})`;
+                        modalSourceProvenance.textContent = `L${mapData.primaryLine.line} (${mapData.primaryLine.speaker})`;
                     } else {
-                        modalSourceProvenance.textContent = '';
+                        modalSourceProvenance.textContent = 'Synthesis';
                     }
+                }
+
+                const modalRawSourceBody = document.getElementById('modalRawSourceBody');
+                if (modalRawSourceBody) {
+                    if (mapData && mapData.primaryLine) {
+                        const prim = selectedSourceLine || mapData.primaryLine;
+                        const spkName = prim.speaker || "Table Voice";
+                        const chars = window.SESSION_CHARACTERS || {};
+                        const cid = Object.keys(chars).find(k => (chars[k].name && chars[k].name.toLowerCase() === spkName.toLowerCase()) || k === spkName.toLowerCase()) || "";
+                        const spkColor = (chars[cid] && chars[cid].color) || "#38bdf8";
+                        const isNpc = (chars[cid] && chars[cid].type === 'npc');
+                        const lineBadge = prim.line ? `<span class="text-[9px] font-mono text-slate-500 font-bold ml-auto">L${prim.line}</span>` : "";
+
+                        let bundledHtml = "";
+                        const bundled = mapData.bundledLines || [];
+                        if (bundled.length > 0) {
+                            const bundledItems = bundled.map(bl => {
+                                const bCid = Object.keys(chars).find(k => (chars[k].name && chars[k].name.toLowerCase() === bl.speaker.toLowerCase()) || k === bl.speaker.toLowerCase()) || "";
+                                const bCol = (chars[bCid] && chars[bCid].color) || "#94a3b8";
+                                return `
+                                    <div class="flex items-start gap-1.5 py-1 border-t border-slate-800/60 text-[11px] font-mono leading-relaxed">
+                                        <span class="text-[9px] text-slate-500 font-bold flex-shrink-0 pt-0.5">L${bl.line}</span>
+                                        <span class="font-bold flex-shrink-0" style="color: ${bCol};">${escapeHtml(bl.speaker)}:</span>
+                                        <span class="text-slate-300 break-words">${escapeHtml(bl.text)}</span>
+                                    </div>
+                                `;
+                            }).join('');
+                            bundledHtml = `
+                                <details class="mt-2 text-xs group">
+                                    <summary class="cursor-pointer text-[10px] text-cyan-400 hover:text-cyan-300 font-mono font-semibold flex items-center gap-1 select-none">
+                                        <span>▶</span> <span>Show +${bundled.length} surrounding table turns</span>
+                                    </summary>
+                                    <div class="mt-1.5 pl-2 space-y-1 bg-slate-950/60 p-2 rounded-lg border border-slate-800/80">
+                                        ${bundledItems}
+                                    </div>
+                                </details>
+                            `;
+                        }
+
+                        modalRawSourceBody.innerHTML = `
+                            <div class="space-y-1.5">
+                                <div class="flex items-center gap-1.5 text-[11px] font-mono">
+                                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: ${spkColor};"></span>
+                                    <strong style="color: ${spkColor}; font-weight: 700;">${escapeHtml(spkName)}</strong>
+                                    ${isNpc ? '<span class="text-[8px] px-1 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold">NPC</span>' : ''}
+                                    ${lineBadge}
+                                </div>
+                                <div class="p-2 rounded-lg bg-slate-950 border border-cyan-900/40 text-xs font-mono text-cyan-200/90 leading-relaxed break-words">
+                                    ${escapeHtml(prim.text)}
+                                </div>
+                                ${bundledHtml}
+                            </div>
+                        `;
+                    } else {
+                        modalRawSourceBody.innerHTML = `
+                            <div class="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 text-xs font-mono text-slate-400 flex items-center gap-2">
+                                <span class="text-amber-400 text-sm">🔮</span>
+                                <span><strong>Narrative Synthesis:</strong> Tabletop atmosphere and descriptive bridge across scene action.</span>
+                            </div>
+                        `;
+                    }
+                }
+
+                const modalOpenDiffBtn = document.getElementById('modalOpenDiffBtn');
+                if (modalOpenDiffBtn) {
+                    modalOpenDiffBtn.onclick = function() {
+                        const targetIdx = activeBlockIndex;
+                        closeModal();
+                        setTimeout(() => openDiffInspector(targetIdx), 80);
+                    };
                 }
 
                 if (existing) {
@@ -22620,7 +22753,7 @@
                     if (document.body.classList.contains('mode-critique')) {
                         updateBlocksReference();
                         const idx = blocks.indexOf(b);
-                        if (idx >= 0) openDiffInspector(idx);
+                        if (idx >= 0) openModalForBlock(idx);
                     }
                 };
             });
@@ -23677,7 +23810,7 @@
                 }
             }, { passive: true });
 
-            window.setReadingMode(currentReadingMode || 'critique');
+            window.setReadingMode(currentReadingMode || 'read');
             window.switchGlobalCut(currentActiveCut);
             refreshMarkers();
         })();
