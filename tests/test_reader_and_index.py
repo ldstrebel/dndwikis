@@ -198,6 +198,81 @@ class TestReaderPages(unittest.TestCase):
         self.assertIn("2,705", s5_content, "Session 5 card must show 2,705 spoken words")
         self.assertIn("8,442w", s5_content, "Session 5 card must show 8,442 total words")
 
+    def test_feedback_modal_scroll_lock_and_containment(self):
+        """Feedback bottom sheet and modal overlays must lock html/body scroll and contain overscroll."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            self.assertIn("function setBodyScrollLock(locked)", content,
+                          f"{s.name} must define setBodyScrollLock")
+            self.assertIn("document.documentElement.style.overflow = 'hidden';", content,
+                          f"{s.name} setBodyScrollLock must lock documentElement")
+            self.assertIn("document.body.style.overflow = 'hidden';", content,
+                          f"{s.name} setBodyScrollLock must lock body")
+            self.assertIn("overscroll-behavior: contain !important;", content,
+                          f"{s.name} must specify overscroll-behavior: contain in CSS")
+            self.assertIn("setBodyScrollLock(true)", content,
+                          f"{s.name} must call setBodyScrollLock(true) on open")
+            self.assertIn("setBodyScrollLock(false)", content,
+                          f"{s.name} must call setBodyScrollLock(false) on close")
+
+    def test_campaign_overall_all_five_sessions(self):
+        """Campaign overall view must list all 5 sessions (S1-S5) on every reader, sorted recent to earliest."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            self.assertIn("Campaign (S1–S5)", content,
+                          f"{s.name} campaign tab label must show Campaign (S1–S5)")
+            for target_s in range(1, 6):
+                self.assertIn(f"uneraseable-s{target_s}.html", content,
+                              f"{s.name} campaign whole must link to uneraseable-s{target_s}.html")
+            self.assertIn("in Dialogue", content,
+                          f"{s.name} campaign whole must rank sessions by dialogue percentage")
+            
+            # Verify recent-to-earliest order in campaign whole
+            idx_s5 = content.find('href="uneraseable-s5.html"')
+            idx_s4 = content.find('href="uneraseable-s4.html"')
+            idx_s3 = content.find('href="uneraseable-s3.html"')
+            idx_s2 = content.find('href="uneraseable-s2.html"')
+            idx_s1 = content.find('href="uneraseable-s1.html"')
+            self.assertTrue(idx_s5 < idx_s4 < idx_s3 < idx_s2 < idx_s1,
+                            f"{s.name} campaign whole session cards must be ordered S5 down to S1")
+
+    def test_three_lens_reading_guide(self):
+        """Chapters modal must provide a 3-lens guide with quick 1-click cut switchers."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            self.assertIn("Choose Your Reading Lens", content,
+                          f"{s.name} chapters modal must have 3-lens reading guide header")
+            self.assertIn("switchGlobalCut('cinematic')", content,
+                          f"{s.name} lens guide must have cinematic switch button")
+            self.assertIn("switchGlobalCut('tabletop')", content,
+                          f"{s.name} lens guide must have tabletop switch button")
+            self.assertIn("switchGlobalCut('raw')", content,
+                          f"{s.name} lens guide must have raw switch button")
+            self.assertIn("The Curated Novel", content,
+                          f"{s.name} lens guide must explain cinematic cut")
+            self.assertIn("The Live Table", content,
+                          f"{s.name} lens guide must explain tabletop cut")
+
+    def test_player_story_fuel_leaderboard(self):
+        """Stats accordion must feature Player Story Fuel & Spotlight Share leaderboard."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            self.assertIn("Player Story Fuel & Spotlight Share", content,
+                          f"{s.name} stats must include player story fuel leaderboard")
+            self.assertIn("Ranked Leaderboard", content,
+                          f"{s.name} player story fuel must have ranked leaderboard tag")
+
+    def test_batch_pr_confirmation_drawer(self):
+        """GitHub PR modal must support batch confirmation to prevent single-note PR spam."""
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            self.assertIn('id="ghWaitUntilEndBtn"', content,
+                          f"{s.name} must have ghWaitUntilEndBtn for waiting until end of session")
+            self.assertIn("Submit 1 Batch PR", content,
+                          f"{s.name} must have batch PR submit button")
+            self.assertIn("Batch PR Confirmation", content,
+                          f"{s.name} must provide batch PR confirmation context")
+
 
 if __name__ == "__main__":
     unittest.main()

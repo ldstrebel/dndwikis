@@ -411,6 +411,10 @@
             padding: 1rem !important;
             max-width: 100vw !important;
             overflow-x: hidden !important;
+            overscroll-behavior: contain !important;
+        }
+        #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard, #diffInspectorCard {
+            overscroll-behavior: contain !important;
         }
         #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible, #diffInspectorOverlay.visible {
             opacity: 1;
@@ -21207,142 +21211,111 @@
     <!-- END-OF-SESSION ROTTEN TOMATOES CRITIC & TABLE DEBRIEF CARD -->
     <!-- ========================================================= -->
     <section class="mt-12 mb-8">
-        <div id="endSessionCriticCard" class="bg-slate-900 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-5 sm:p-7 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
+        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
             
             <!-- Card Header: Title & Dual Rotten Tomatoes Badges -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                 <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-105 transition-transform shadow-inner">
+                    <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform shadow-inner">
                         🍅
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Editorial Debrief</span>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Review & Scorecard</span>
+                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Rotten Tomatoes Post-Mortem</span>
+                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Story Review</span>
                         </div>
                         <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-amber-300 transition-colors">
-                            Session 5 Editorial Debrief & Story Review
+                            Session 5 Story Review & Player Critique
                         </h3>
                     </div>
                 </div>
 
                 <!-- Dual Rotten Tomatoes Score Meters -->
                 <div class="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
-                    <!-- Tomatometer (Literary Craft) -->
-                    <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                    <!-- Tomatometer (Critic Score) -->
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
                         <span class="text-2xl flex-shrink-0">🟢</span>
                         <div>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-base sm:text-lg font-bold font-mono text-slate-100">62%</span>
-                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border-emerald-800/80">Rotten (D)</span>
+                                <span class="text-sm sm:text-base font-bold font-mono text-emerald-400">62%</span>
+                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border-emerald-800/80">Rotten</span>
                             </div>
-                            <span class="text-[9px] text-slate-400 font-mono block">Tomatometer · Novel Craft</span>
+                            <span class="text-[9px] text-slate-400 font-mono block">Tomatometer</span>
                         </div>
                     </div>
 
-                    <!-- Popcornmeter (Table Roleplay) -->
-                    <div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                    <!-- Popcornmeter (Audience Score) -->
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
                         <span class="text-2xl flex-shrink-0">🍿</span>
                         <div>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-base sm:text-lg font-bold font-mono text-amber-300">94%</span>
+                                <span class="text-sm sm:text-base font-bold font-mono text-amber-300">94%</span>
                                 <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/80">Certified Fresh</span>
                             </div>
-                            <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter · Table Energy</span>
+                            <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter</span>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Score Meaning Explainer Ribbon -->
-            <div class="mt-3.5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] font-sans">
-                <div class="flex items-start gap-2 text-slate-300">
-                    <span class="text-sm flex-shrink-0">🍅</span>
-                    <span><strong>Tomatometer:</strong> Evaluates literary craft, dialogue grounding, and structural pacing fidelity.</span>
-                </div>
-                <div class="flex items-start gap-2 text-slate-300">
-                    <span class="text-sm flex-shrink-0">🍿</span>
-                    <span><strong>Popcornmeter:</strong> Evaluates live tabletop energy, player initiative, and unscripted ensemble chemistry.</span>
-                </div>
-            </div>
-
-            <!-- High-Level Editorial Summary -->
-            <div class="mt-3.5 p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
-                <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400 block">Editorial Consensus:</span>
-                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif italic">
-                    "Forensic audit verified."
-                </p>
-            </div>
-
-            <!-- Campaign Trajectory & Arc Impact Snapshot -->
-            <div class="mt-3.5 p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-amber-400">Campaign Arc Impact (Sessions 1–5):</span>
-                    <span class="text-[10px] font-mono text-slate-400">Cosmic Stakes Escalation</span>
-                </div>
-                <p class="text-xs text-slate-300 leading-relaxed font-sans">
-                    The Historical Redaction & Planar War: Session 5 permanently elevates the campaign from fugitive survival in the Appalachian foothills to an active war over causality. Uncovering Dr. Thorne's altered 1948 trial binder (where 'STABLE' was overwritten to 'STALE' by an unseen hand) proves history itself is being actively edited. The simultaneous Reductor satyr ambush confirms their enemies possess cross-temporal reach across mortal academies and planar rifts. With Alfie's Fate-bound Chaos Belt and Dravin's sealed Persephone heritage, the party has become the primary target of organized timeline erasure.
-                </p>
             </div>
 
             <!-- Participant Report Card Strip -->
             
-        <div class="pt-3 border-t border-slate-800/70 space-y-2">
-            <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="font-bold text-slate-300 uppercase tracking-wider">
-                    Table Performance Scorecards
+        <div class="pt-2 border-t border-slate-800/60 space-y-1.5">
+            <div class="flex items-center justify-between text-[10px] font-mono">
+                <span class="flex items-center gap-1 font-bold text-slate-400 uppercase tracking-wider">
+                    <span>🎭</span> <span>Table Performance Report Cards:</span>
                 </span>
                 <span class="text-rose-400 font-medium">Acquisitions Editor Audit</span>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
                 
-            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1.5 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1 min-w-0">
                     <span class="text-xs flex-shrink-0">👑</span>
-                    <span class="truncate text-slate-300 font-medium text-[11px]">GM</span>
+                    <span class="truncate text-slate-300 font-medium text-[10px]">GM</span>
                 </div>
                 <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">
-                    B
+                    B-
                 </span>
             </div>
             
-            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1.5 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1 min-w-0">
                     <span class="text-xs flex-shrink-0">🥖</span>
-                    <span class="truncate text-slate-300 font-medium text-[11px]">Pierre</span>
-                </div>
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">
-                    A
-                </span>
-            </div>
-            
-            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="text-xs flex-shrink-0">📚</span>
-                    <span class="truncate text-slate-300 font-medium text-[11px]">Dravin</span>
-                </div>
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">
-                    B+
-                </span>
-            </div>
-            
-            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="text-xs flex-shrink-0">🎲</span>
-                    <span class="truncate text-slate-300 font-medium text-[11px]">Eusacles</span>
-                </div>
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">
-                    A
-                </span>
-            </div>
-            
-            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="text-xs flex-shrink-0">🪆</span>
-                    <span class="truncate text-slate-300 font-medium text-[11px]">Alfie</span>
+                    <span class="truncate text-slate-300 font-medium text-[10px]">Pierre</span>
                 </div>
                 <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">
                     A-
+                </span>
+            </div>
+            
+            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1 min-w-0">
+                    <span class="text-xs flex-shrink-0">📚</span>
+                    <span class="truncate text-slate-300 font-medium text-[10px]">Dravin</span>
+                </div>
+                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-amber-950/80 text-amber-300 border border-amber-700/80">
+                    C+
+                </span>
+            </div>
+            
+            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1 min-w-0">
+                    <span class="text-xs flex-shrink-0">🎲</span>
+                    <span class="truncate text-slate-300 font-medium text-[10px]">Eusacles</span>
+                </div>
+                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">
+                    A
+                </span>
+            </div>
+            
+            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
+                <div class="flex items-center gap-1 min-w-0">
+                    <span class="text-xs flex-shrink-0">🪆</span>
+                    <span class="truncate text-slate-300 font-medium text-[10px]">Alfie</span>
+                </div>
+                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">
+                    B
                 </span>
             </div>
             
@@ -21350,14 +21323,24 @@
         </div>
         
 
+            <!-- High-Level Editorial Summary -->
+            <div class="mt-4 p-4 rounded-xl bg-slate-950/70 border border-slate-800/90 space-y-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400">Editorial Summary:</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif italic">
+                    "Forensic audit verified."
+                </p>
+            </div>
+
             <!-- Action Prompt -->
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
                 <div class="flex items-center gap-2 text-xs text-slate-400">
-                    <span>📋</span>
-                    <span>Tap to view tabbed player scorecards, audit shortcomings & Session 6 directives</span>
+                    <span class="text-amber-400">🎭</span>
+                    <span>Tap to view tabbed player critiques, audit shortcomings & directives</span>
                 </div>
-                <span class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
-                    <span>Open Full Editorial Dossier</span> <span>→</span>
+                <span class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-900/80 to-amber-900/80 hover:from-rose-800 hover:to-amber-800 border border-rose-700/60 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
+                    <span>Read Player Breakdown</span> <span>→</span>
                 </span>
             </div>
         </div>
@@ -21414,6 +21397,105 @@
             <!-- Scrollable Content Body -->
             <div class="overflow-y-auto space-y-3.5 pr-1 flex-1 min-h-0 custom-scrollbar">
                 
+                
+    <!-- 3-LENS READING GUIDE & VIBE CHECK -->
+    <div class="bg-slate-950/80 p-3 sm:p-4 rounded-xl border border-slate-800 space-y-3 shadow-md">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+                <span class="text-base">🔀</span>
+                <div>
+                    <h4 class="text-xs sm:text-sm font-bold text-slate-100 font-serif">Choose Your Reading Lens</h4>
+                    <p class="text-[10px] text-slate-400 font-mono">3 Formats · Tailored to Your Reading Style</p>
+                </div>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-amber-300 border border-slate-700">Dynamic Adaptation</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <!-- Lens 1: Cinematic Cut -->
+            <div class="lens-card bg-slate-900/90 p-3 rounded-xl border border-cyan-800/50 hover:border-cyan-500/80 transition-all flex flex-col justify-between space-y-2 group" data-cut="cinematic">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-cyan-300 font-serif flex items-center gap-1">
+                            <span>🎬</span> <span>Cinematic Cut</span>
+                        </span>
+                        <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-semibold">Novel Vibe</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 leading-snug">
+                        <strong>The Curated Novel:</strong> Pure dramatic fiction, immersive sensory prose, and polished character dialogue. Zero table mechanics.
+                    </p>
+                </div>
+                <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
+                    <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                        <span>⏱️ ~34m Read</span>
+                        <span class="text-cyan-300 font-semibold">8,442w</span>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-400">
+                        💬 32.0% Dialogue / 68.0% Prose
+                    </div>
+                    <button type="button" onclick="switchGlobalCut('cinematic'); closeChaptersModal();" class="w-full py-1.5 px-2 rounded-lg bg-cyan-950/70 hover:bg-cyan-900/90 text-cyan-200 border border-cyan-700/60 font-mono text-[10px] font-bold transition-all flex items-center justify-center gap-1 active:scale-95">
+                        <span>Read Cinematic</span> ➔
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lens 2: Tabletop Cut -->
+            <div class="lens-card bg-slate-900/90 p-3 rounded-xl border border-amber-800/50 hover:border-amber-500/80 transition-all flex flex-col justify-between space-y-2 group" data-cut="tabletop">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-amber-300 font-serif flex items-center gap-1">
+                            <span>🎲</span> <span>Tabletop Cut</span>
+                        </span>
+                        <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-800 font-semibold">Actual Play</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 leading-snug">
+                        <strong>The Live Table:</strong> Weaves natural player banter, clutch Nat 20s, and table chemistry directly into the story fiction.
+                    </p>
+                </div>
+                <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
+                    <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                        <span>⏱️ ~45m Read</span>
+                        <span class="text-amber-300 font-semibold">11,143w</span>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-400">
+                        💬 44.2% Dialogue / Table Talk
+                    </div>
+                    <button type="button" onclick="switchGlobalCut('tabletop'); closeChaptersModal();" class="w-full py-1.5 px-2 rounded-lg bg-amber-950/70 hover:bg-amber-900/90 text-amber-200 border border-amber-700/60 font-mono text-[10px] font-bold transition-all flex items-center justify-center gap-1 active:scale-95">
+                        <span>Read Tabletop</span> ➔
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lens 3: Raw Transcript -->
+            <div class="lens-card bg-slate-900/90 p-3 rounded-xl border border-emerald-800/50 hover:border-emerald-500/80 transition-all flex flex-col justify-between space-y-2 group" data-cut="raw">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-emerald-300 font-serif flex items-center gap-1">
+                            <span>🎙️</span> <span>Raw Transcript</span>
+                        </span>
+                        <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-semibold">Uncut Mics</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 leading-snug">
+                        <strong>The Verbatim Audio:</strong> Line-by-line verbatim transcript straight from the mics with full provenance and speaker attribution.
+                    </p>
+                </div>
+                <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
+                    <div class="flex justify-between text-[10px] font-mono text-slate-400">
+                        <span>⏱️ ~84m Skim</span>
+                        <span class="text-emerald-300 font-semibold">18,572w</span>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-400">
+                        💬 100% Spoken Table Speech
+                    </div>
+                    <button type="button" onclick="switchGlobalCut('raw'); closeChaptersModal();" class="w-full py-1.5 px-2 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/90 text-emerald-200 border border-emerald-700/60 font-mono text-[10px] font-bold transition-all flex items-center justify-center gap-1 active:scale-95">
+                        <span>Read Raw Mics</span> ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
                 <!-- 1. STATS ACCORDION (Clean Elevated Dark Panel) -->
                 <div class="bg-slate-950/80 border border-slate-800 rounded-xl overflow-hidden shadow-md">
                     <button id="toggleStatsAccordionBtn" type="button" class="w-full p-3 flex items-center justify-between text-left bg-slate-950/90 hover:bg-slate-900 transition-colors select-none">
@@ -21701,6 +21783,190 @@
 
                             </div>
 
+                            
+    <!-- PLAYER STORY FUEL & SPOTLIGHT LEADERBOARD -->
+    <div class="bg-slate-900/80 p-3 sm:p-3.5 rounded-xl border border-slate-800 space-y-2.5 shadow-sm">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2 text-amber-400">
+                <span class="text-base">🎭</span>
+                <div>
+                    <h4 class="text-xs sm:text-sm font-bold font-serif text-slate-100">Player Story Fuel & Spotlight Share</h4>
+                    <p class="text-[10px] text-slate-400 font-mono">Who drove the fiction vs. who drove the table</p>
+                </div>
+            </div>
+            <span class="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">Ranked Leaderboard</span>
+        </div>
+        <div class="space-y-2">
+            
+        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5 shadow-sm" style="border-left: 3px solid #94a3b8;">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-base flex-shrink-0">👑</span>
+                    <div class="min-w-0 truncate">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="font-bold text-slate-100 font-serif text-xs truncate">Luke Foreman</span>
+                            <span class="text-[10px] px-1.5 py-0.2 rounded font-mono font-medium" style="color: #94a3b8; background-color: #94a3b815;">GM</span>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800">The Architect</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right flex-shrink-0 font-mono">
+                    <span class="text-xs font-bold text-amber-300">#1 Spotlight</span>
+                    <span class="text-[10px] text-slate-400 block">38% narrative staging & framing</span>
+                </div>
+            </div>
+            
+            <div class="space-y-1 pt-0.5">
+                <div class="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div class="h-full rounded-full transition-all duration-300" style="width: 38.0%; background-color: #94a3b8;"></div>
+                </div>
+                <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                    <span>Game Master & World Architect</span>
+                    <span class="text-slate-400 font-medium">38% narrative staging & framing</span>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-slate-300 italic pl-2 border-l border-slate-800 line-clamp-2">
+                "The subterranean clinical trial ward: the smell of ozone, the catatonic milk-eyed patients in iron cots, and the shifting ink from STABLE to STALE in Thorne's handwritten binder was haunting, unforgettable atmosphere."
+            </p>
+        </div>
+        
+        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5 shadow-sm" style="border-left: 3px solid #3b82f6;">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-base flex-shrink-0">🥖</span>
+                    <div class="min-w-0 truncate">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="font-bold text-slate-100 font-serif text-xs truncate">Luke S</span>
+                            <span class="text-[10px] px-1.5 py-0.2 rounded font-mono font-medium" style="color: #3b82f6; background-color: #3b82f615;">Pierre</span>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800">The Artisan</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right flex-shrink-0 font-mono">
+                    <span class="text-xs font-bold text-amber-300">#2 Spotlight</span>
+                    <span class="text-[10px] text-slate-400 block">19% spoken dialogue (Disciplined Ensemble Modulation)</span>
+                </div>
+            </div>
+            
+            <div class="space-y-1 pt-0.5">
+                <div class="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div class="h-full rounded-full transition-all duration-300" style="width: 19.0%; background-color: #3b82f6;"></div>
+                </div>
+                <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                    <span>Parisian Stonemason & Skeptic</span>
+                    <span class="text-slate-400 font-medium">19% spoken dialogue (Disciplined Ensemble Modulation)</span>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-slate-300 italic pl-2 border-l border-slate-800 line-clamp-2">
+                "Executed the session's premier tactical distractions: weaponizing Hellenic art snobbery to pickpocket Rick Ready's keys, and brazenly taking the Q&A microphone to declare Dr. Thorne boring while nudging her bag to Alfie under the desk. Yielded the highway transit to Dravin with mature ensemble restraint."
+            </p>
+        </div>
+        
+        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5 shadow-sm" style="border-left: 3px solid #8b5cf6;">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-base flex-shrink-0">📚</span>
+                    <div class="min-w-0 truncate">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="font-bold text-slate-100 font-serif text-xs truncate">William Webb</span>
+                            <span class="text-[10px] px-1.5 py-0.2 rounded font-mono font-medium" style="color: #8b5cf6; background-color: #8b5cf615;">Dravin</span>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800">The Professor</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right flex-shrink-0 font-mono">
+                    <span class="text-xs font-bold text-amber-300">#3 Spotlight</span>
+                    <span class="text-[10px] text-slate-400 block">26% spoken dialogue</span>
+                </div>
+            </div>
+            
+            <div class="space-y-1 pt-0.5">
+                <div class="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div class="h-full rounded-full transition-all duration-300" style="width: 26.0%; background-color: #8b5cf6;"></div>
+                </div>
+                <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                    <span>Stanford Academic & Demigod</span>
+                    <span class="text-slate-400 font-medium">26% spoken dialogue</span>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-slate-300 italic pl-2 border-l border-slate-800 line-clamp-2">
+                "The 'visual learners' bluff against Dr. Thorne in Scene 9 was masterful academic maneuvering, and his smooth pickpocketing of Rick Ready's keys gave the heist early momentum."
+            </p>
+        </div>
+        
+        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5 shadow-sm" style="border-left: 3px solid #f59e0b;">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-base flex-shrink-0">🎲</span>
+                    <div class="min-w-0 truncate">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="font-bold text-slate-100 font-serif text-xs truncate">John Hagey</span>
+                            <span class="text-[10px] px-1.5 py-0.2 rounded font-mono font-medium" style="color: #f59e0b; background-color: #f59e0b15;">Eusacles</span>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800">The Gambler</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right flex-shrink-0 font-mono">
+                    <span class="text-xs font-bold text-amber-300">#4 Spotlight</span>
+                    <span class="text-[10px] text-slate-400 block">24% spoken dialogue</span>
+                </div>
+            </div>
+            
+            <div class="space-y-1 pt-0.5">
+                <div class="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div class="h-full rounded-full transition-all duration-300" style="width: 24.0%; background-color: #f59e0b;"></div>
+                </div>
+                <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                    <span>Blue-Collar Gambler & Cynic</span>
+                    <span class="text-slate-400 font-medium">24% spoken dialogue</span>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-slate-300 italic pl-2 border-l border-slate-800 line-clamp-2">
+                "Patience and acoustic dominance. Sitting quietly until Dr. Thorne finished, then grilling her relentlessly on 1948 freon coolant and ice-box mechanics completely dismantled her academic composure and bought Alfie the room to strike."
+            </p>
+        </div>
+        
+        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5 shadow-sm" style="border-left: 3px solid #10b981;">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-base flex-shrink-0">🪆</span>
+                    <div class="min-w-0 truncate">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="font-bold text-slate-100 font-serif text-xs truncate">Sophie Foreman Noone</span>
+                            <span class="text-[10px] px-1.5 py-0.2 rounded font-mono font-medium" style="color: #10b981; background-color: #10b98115;">Alfie</span>
+                            <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800">The Rogue</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right flex-shrink-0 font-mono">
+                    <span class="text-xs font-bold text-amber-300">#5 Spotlight</span>
+                    <span class="text-[10px] text-slate-400 block">13% spoken dialogue (Tactical Infiltration & Emotional Climax)</span>
+                </div>
+            </div>
+            
+            <div class="space-y-1 pt-0.5">
+                <div class="h-2 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                    <div class="h-full rounded-full transition-all duration-300" style="width: 13.0%; background-color: #10b981;"></div>
+                </div>
+                <div class="flex justify-between text-[9px] font-mono text-slate-500">
+                    <span>Driftwood Doll & Rogue Heart</span>
+                    <span class="text-slate-400 font-medium">13% spoken dialogue (Tactical Infiltration & Emotional Climax)</span>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-slate-300 italic pl-2 border-l border-slate-800 line-clamp-2">
+                "The green room heist agility (pilfering the soccer scarf) and the shattering vulnerability in Scene 10 ('Not again. Not me again!') when touching the temporal relic, injecting genuine human stakes into an academic caper."
+            </p>
+        </div>
+        
+        </div>
+    </div>
+    
+
                             <!-- 3. Voice Velocity Line Chart in that subsection -->
                             <div class="w-full">
                                 
@@ -21734,74 +22000,99 @@
                             
     <div class="w-full space-y-2.5">
         <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
-            <span>Campaign to Date (Sessions 1–5)</span>
+            <span>Overall Campaign Analytics (Sessions 1–5)</span>
             <span class="text-[10px] text-amber-400 font-mono">28,197 Total Words · 9,763 Spoken (34.6%)</span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             
-        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
+        <a href="uneraseable-s5.html" class="border-amber-500 bg-amber-500/10 shadow-md ring-1 ring-amber-500/40 p-2.5 rounded-xl border flex-1 transition-all block group focus:outline-none focus:ring-1 focus:ring-amber-500 text-left">
             <div class="flex justify-between items-center">
-                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 1</span>
-                <span class="text-[10px] font-mono text-slate-400">4,650w</span>
-            </div>
-            <div class="text-[11px] font-bold text-slate-200 mt-0.5">863 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
-            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">18.6% Dialogue</div>
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
-                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 18.6%;"></div>
-            </div>
-        </div>
-        
-        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
-            <div class="flex justify-between items-center">
-                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 2</span>
-                <span class="text-[10px] font-mono text-slate-400">5,156w</span>
-            </div>
-            <div class="text-[11px] font-bold text-slate-200 mt-0.5">2,832 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
-            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">54.9% Dialogue</div>
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
-                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 54.9%;"></div>
-            </div>
-        </div>
-        
-        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
-            <div class="flex justify-between items-center">
-                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 3</span>
-                <span class="text-[10px] font-mono text-slate-400">2,870w</span>
-            </div>
-            <div class="text-[11px] font-bold text-slate-200 mt-0.5">975 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
-            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">34.0% Dialogue</div>
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
-                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 34.0%;"></div>
-            </div>
-        </div>
-        
-        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
-            <div class="flex justify-between items-center">
-                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 4</span>
-                <span class="text-[10px] font-mono text-slate-400">7,079w</span>
-            </div>
-            <div class="text-[11px] font-bold text-slate-200 mt-0.5">2,388 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
-            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">33.7% Dialogue</div>
-            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
-                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 33.7%;"></div>
-            </div>
-        </div>
-        
-        <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex-1">
-            <div class="flex justify-between items-center">
-                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold">Session 5</span>
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold group-hover:text-amber-400 flex items-center">
+                    Session 5 <span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold ml-1">Current</span>
+                </span>
                 <span class="text-[10px] font-mono text-slate-400">8,442w</span>
             </div>
             <div class="text-[11px] font-bold text-slate-200 mt-0.5">2,705 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
-            <div class="text-[10px] text-emerald-400 font-mono mt-0.5">32.0% Dialogue</div>
+            <div class="flex items-center justify-between mt-0.5">
+                <span class="text-[10px] text-emerald-400 font-mono font-medium">32.0% Dialogue</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800" title="Ranked #4 in dialogue ratio">#4 in Dialogue</span>
+            </div>
             <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
                 <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 32.0%;"></div>
             </div>
-        </div>
+        </a>
+        
+        <a href="uneraseable-s4.html" class="border-slate-800 bg-slate-950/80 hover:border-slate-700 hover:bg-slate-900/60 p-2.5 rounded-xl border flex-1 transition-all block group focus:outline-none focus:ring-1 focus:ring-amber-500 text-left">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold group-hover:text-amber-400 flex items-center">
+                    Session 4 
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">7,079w</span>
+            </div>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">2,388 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="flex items-center justify-between mt-0.5">
+                <span class="text-[10px] text-emerald-400 font-mono font-medium">33.7% Dialogue</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800" title="Ranked #3 in dialogue ratio">#3 in Dialogue</span>
+            </div>
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 33.7%;"></div>
+            </div>
+        </a>
+        
+        <a href="uneraseable-s3.html" class="border-slate-800 bg-slate-950/80 hover:border-slate-700 hover:bg-slate-900/60 p-2.5 rounded-xl border flex-1 transition-all block group focus:outline-none focus:ring-1 focus:ring-amber-500 text-left">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold group-hover:text-amber-400 flex items-center">
+                    Session 3 
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">2,870w</span>
+            </div>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">975 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="flex items-center justify-between mt-0.5">
+                <span class="text-[10px] text-emerald-400 font-mono font-medium">34.0% Dialogue</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800" title="Ranked #2 in dialogue ratio">#2 in Dialogue</span>
+            </div>
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 34.0%;"></div>
+            </div>
+        </a>
+        
+        <a href="uneraseable-s2.html" class="border-slate-800 bg-slate-950/80 hover:border-slate-700 hover:bg-slate-900/60 p-2.5 rounded-xl border flex-1 transition-all block group focus:outline-none focus:ring-1 focus:ring-amber-500 text-left">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold group-hover:text-amber-400 flex items-center">
+                    Session 2 
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">5,156w</span>
+            </div>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">2,832 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="flex items-center justify-between mt-0.5">
+                <span class="text-[10px] text-emerald-400 font-mono font-medium">54.9% Dialogue</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800" title="Ranked #1 in dialogue ratio">#1 in Dialogue</span>
+            </div>
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 54.9%;"></div>
+            </div>
+        </a>
+        
+        <a href="uneraseable-s1.html" class="border-slate-800 bg-slate-950/80 hover:border-slate-700 hover:bg-slate-900/60 p-2.5 rounded-xl border flex-1 transition-all block group focus:outline-none focus:ring-1 focus:ring-amber-500 text-left">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase font-mono text-amber-500 font-bold group-hover:text-amber-400 flex items-center">
+                    Session 1 
+                </span>
+                <span class="text-[10px] font-mono text-slate-400">4,650w</span>
+            </div>
+            <div class="text-[11px] font-bold text-slate-200 mt-0.5">863 <span class="text-[9px] text-slate-400 font-normal">spoken</span></div>
+            <div class="flex items-center justify-between mt-0.5">
+                <span class="text-[10px] text-emerald-400 font-mono font-medium">18.6% Dialogue</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 font-mono border border-slate-800" title="Ranked #5 in dialogue ratio">#5 in Dialogue</span>
+            </div>
+            <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mt-1.5 border border-slate-800">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full" style="width: 18.6%;"></div>
+            </div>
+        </a>
         
         </div>
         <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 space-y-1.5">
-            <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Campaign Voice Share (Through S5)</div>
+            <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Campaign Voice Share (Sessions 1–5)</div>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                 
         <div class="flex items-center justify-between text-[10px] p-1.5 rounded-lg bg-slate-950/60 border border-slate-800">
@@ -22601,7 +22892,7 @@
                         <span class="text-[10px] text-slate-400 font-mono">Macro Stakes Analysis</span>
                     </div>
                     <p class="text-xs text-slate-300 leading-relaxed font-sans pt-1">
-                        The Historical Redaction & Planar War: Session 5 permanently elevates the campaign from fugitive survival in the Appalachian foothills to an active war over causality. Uncovering Dr. Thorne's altered 1948 trial binder (where 'STABLE' was overwritten to 'STALE' by an unseen hand) proves history itself is being actively edited. The simultaneous Reductor satyr ambush confirms their enemies possess cross-temporal reach across mortal academies and planar rifts. With Alfie's Fate-bound Chaos Belt and Dravin's sealed Persephone heritage, the party has become the primary target of organized timeline erasure.
+                        The psychiatric ward clinical trials and Dr. Thorne's lecture connect the stolen epigraphy to human medical experimentation, culminating in an ambush by armed satyrs.
                     </p>
                 </div>
 
@@ -22624,21 +22915,21 @@
                 data-player-id="gm" onclick="switchPlayerCritiqueTab('gm')">
             <span>👑</span>
             <span>GM</span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">B</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">B-</span>
         </button>
         
         <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
                 data-player-id="pierre" onclick="switchPlayerCritiqueTab('pierre')">
             <span>🥖</span>
             <span>Pierre</span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">A</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">A-</span>
         </button>
         
         <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
                 data-player-id="dravin" onclick="switchPlayerCritiqueTab('dravin')">
             <span>📚</span>
             <span>Dravin</span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">B+</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/80">C+</span>
         </button>
         
         <button type="button" class="player-critique-tab-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
@@ -22652,7 +22943,7 @@
                 data-player-id="alfie" onclick="switchPlayerCritiqueTab('alfie')">
             <span>🪆</span>
             <span>Alfie</span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/80">A-</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-700/80">B</span>
         </button>
         
                     </div>
@@ -22688,11 +22979,11 @@
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-xs text-emerald-400 font-mono font-semibold">88%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">85%</span>
                     </div>
                     <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/80 border border-cyan-700/80">
-                        <span class="text-lg font-bold font-mono text-cyan-300">B</span>
-                        <span class="text-xs font-mono text-cyan-400/80">(83%)</span>
+                        <span class="text-lg font-bold font-mono text-cyan-300">B-</span>
+                        <span class="text-xs font-mono text-cyan-400/80">(80%)</span>
                     </div>
                 </div>
             </div>
@@ -22701,7 +22992,7 @@
             <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
                 <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
                 <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
-                    "Masterclass in 1948 psychiatric dread and reality-bending horror, slightly muddied by clock-management panic at the climactic satyr reveal."
+                    "Masterclass in 1948 mid-century gothic horror and psychiatric dread, held back by meandering highway transit and an abrupt satyr cliffhanger thrown to beat the session clock."
                 </p>
             </div>
 
@@ -22716,7 +23007,7 @@
                     </span>
                 </div>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Acoustic ambiguity right at the climactic cliffhanger ('satyrs vs. satans') caused comedic confusion when the table needed pure terror, and the Appalachian switchbacks in Scene 5 lacked physical terrain friction.
+                    Pacing drift on the Pennsylvania turnpike (Scenes 4–5), followed by clock-management panic at the end—dropping three armed satyrs into the lecture hall with zero acoustic or atmospheric runway.
                 </p>
             </div>
 
@@ -22726,7 +23017,7 @@
                     Standout Beats & Story Fuel
                 </span>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    The chilling subterranean 1948 clinical trial ward: the damp masonry, bleach odor, milk-eyed patients on iron cots, and the horrifying ink stroke rewriting STABLE into STALE inside the doctor's binder was unforgettable atmospheric staging.
+                    The subterranean clinical trial ward: the smell of ozone, the catatonic milk-eyed patients in iron cots, and the shifting ink from STABLE to STALE in Thorne's handwritten binder was haunting, unforgettable atmosphere.
                 </p>
             </div>
 
@@ -22739,7 +23030,7 @@
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
                 <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
-                    👉 Hit the party with terrifying temporal mechanics immediately in Session 6. Do not run the Reductor satyrs as generic frontline melee brutes—show how their cloven hooves shatter causality inside the lecture hall and force the players to coordinate their newfound abilities.
+                    👉 Give combat thresholds at least 2 minutes of atmospheric build-up. In Session 6, immediately establish why the satyrs tracked the party, what their faction wants, and stop using combat encounters as arbitrary session cutoffs.
                 </p>
             </div>
         </div>
@@ -22768,15 +23059,15 @@
                 <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-xs text-slate-300 font-mono font-semibold">20%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">19%</span>
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-xs text-emerald-400 font-mono font-semibold">96%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">95%</span>
                     </div>
                     <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-700/80">
-                        <span class="text-lg font-bold font-mono text-emerald-300">A</span>
-                        <span class="text-xs font-mono text-emerald-400/80">(94%)</span>
+                        <span class="text-lg font-bold font-mono text-emerald-300">A-</span>
+                        <span class="text-xs font-mono text-emerald-400/80">(90%)</span>
                     </div>
                 </div>
             </div>
@@ -22785,7 +23076,7 @@
             <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
                 <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
                 <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
-                    "Pure, unadulterated character gold: Pierre didn't orchestrate a calculated heist diversion—he genuinely couldn't stomach American architectural barbarism, and that authentic Parisian fit produced the finest table beat of the night."
+                    "Masterclass in physical misdirection and comic timing—from the guillotine breakfast to the sculpture classroom mic drop—but wears his Parisian cynicism as impenetrable emotional armor, treating visceral horror like a minor aesthetic inconvenience."
                 </p>
             </div>
 
@@ -22800,7 +23091,7 @@
                     </span>
                 </div>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Occasionally allowed table cross-talk to suggest his fit was planned collusion. Pierre's power is his genuine aristocratic arrogance—do not let prose writers sanitize it into generic tactical teamwork.
+                    Impenetrable emotional armor. When the subterranean 1948 psychiatric ward vision struck and comatose patients filled the room, Pierre remained ironically detached. Even during cosmic terror, he treated the nightmare as an uncivilized American curiosity rather than letting the horror crack his shell.
                 </p>
             </div>
 
@@ -22810,7 +23101,7 @@
                     Standout Beats & Story Fuel
                 </span>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Refusing to play the compliant heist rogue. Haranguing Rick Ready over sandpaper polishing on classical marble, admiring the tin-foil fedoras as 'rather nice hats', and marching up to the lecture microphone solely to ask where the sculpting studio was.
+                    Executed the session's premier tactical distractions: weaponizing Hellenic art snobbery to pickpocket Rick Ready's keys, and brazenly taking the Q&A microphone to declare Dr. Thorne boring while nudging her bag to Alfie under the desk. Yielded the highway transit to Dravin with mature ensemble restraint.
                 </p>
             </div>
 
@@ -22823,7 +23114,7 @@
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
                 <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
-                    👉 Stay unapologetically Pierre. When the Reductor satyrs charge the stage in Session 6, do not coordinate a SWAT-style tactical retreat. React through Pierre's genuine fears: Gorgon petrification, damaged classical relics, and uncivilized violence.
+                    👉 Let the horror crack the snobbery! When the satyrs splinter the lecture hall doors in Session 6, stop using French cynicism as bulletproof armor. Show what Pierre genuinely fears when classical beauty meets primal violence.
                 </p>
             </div>
         </div>
@@ -22852,15 +23143,15 @@
                 <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-xs text-slate-300 font-mono font-semibold">25%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">26%</span>
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-xs text-emerald-400 font-mono font-semibold">89%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">72%</span>
                     </div>
-                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/80 border border-cyan-700/80">
-                        <span class="text-lg font-bold font-mono text-cyan-300">B+</span>
-                        <span class="text-xs font-mono text-cyan-400/80">(86%)</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/80 border border-amber-700/80">
+                        <span class="text-lg font-bold font-mono text-amber-300">C+</span>
+                        <span class="text-xs font-mono text-amber-400/80">(75%)</span>
                     </div>
                 </div>
             </div>
@@ -22869,7 +23160,7 @@
             <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
                 <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
                 <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
-                    "The consummate opportunist: watched his companion throw an aesthetic tantrum and picked the custodian's master keys, then usurped the podium and bodily slammed Alfie into the relic without flinching."
+                    "Brilliant pedagogical manipulation at the podium, but committed the cardinal sin of pocketing a divine underworld heritage revelation like a dry dry-cleaning receipt."
                 </p>
             </div>
 
@@ -22884,7 +23175,7 @@
                     </span>
                 </div>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Emotional avoidance regarding his divine parentage. Pocketed the wax-sealed letter confirming Persephone is his divine mother descending into Hades without letting the existential weight land on the party.
+                    Absolute emotional evasion. When handed a wax-sealed letter confirming Persephone is his divine mother descending into Hades, Dravin shelved the world-shattering revelation without a single syllable of existential weight.
                 </p>
             </div>
 
@@ -22894,7 +23185,7 @@
                     Standout Beats & Story Fuel
                 </span>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Unflinching academic opportunism. Snatching Rick Ready's keys during Pierre's meltdown, adopting the stern dean baritone to order Pierre back to his seat when stealth failed, and unilaterally seizing Alfie by the waist to trigger the vision.
+                    The 'visual learners' bluff against Dr. Thorne in Scene 9 was masterful academic maneuvering, and his smooth pickpocketing of Rick Ready's keys gave the heist early momentum.
                 </p>
             </div>
 
@@ -22907,7 +23198,7 @@
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
                 <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
-                    👉 Own the necromancer pedigree and the maternal curse. In Session 6, when the satyrs breach the hall, use your necromantic threshold magic to defend the anomaly, and force Dravin to reckon with why Persephone targeted him.
+                    👉 Reckon with the goddess mother. In Session 6, pull Pierre or Eusacles aside at the first quiet threshold and break the academic facade—tell them what was in that letter and what it feels like to be the son of the Underworld.
                 </p>
             </div>
         </div>
@@ -22936,11 +23227,11 @@
                 <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-xs text-slate-300 font-mono font-semibold">23%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">24%</span>
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-xs text-emerald-400 font-mono font-semibold">95%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">96%</span>
                     </div>
                     <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-700/80">
                         <span class="text-lg font-bold font-mono text-emerald-300">A</span>
@@ -22953,7 +23244,7 @@
             <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
                 <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
                 <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
-                    "The unshakeable anchor who grounds high-concept planar nonsense in gritty, blue-collar Vegas skepticism."
+                    "The gold standard of ensemble timing: hung back in the shadows until the heist stalled, then strode down the center aisle with devastating blue-collar cross-examination."
                 </p>
             </div>
 
@@ -22968,7 +23259,7 @@
                     </span>
                 </div>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Lingered in the back row too long before intervening. When demigod instincts prickle, close the distance faster.
+                    The Thanatos mystery debt. Exited the Margin fog with a pocket-watch chain bound to the god of death, but keeps evading what he ante'd up or who held the house odds.
                 </p>
             </div>
 
@@ -22978,7 +23269,7 @@
                     Standout Beats & Story Fuel
                 </span>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Relentless cross-examination. Calling out the 'pirate crepe', grilling the tin-foil demonstrators on 1948 refrigeration, and the iconic 'Show me the research' face-off against Dr. Thorne that forced her to reveal the briefcase.
+                    Patience and acoustic dominance. Sitting quietly until Dr. Thorne finished, then grilling her relentlessly on 1948 freon coolant and ice-box mechanics completely dismantled her academic composure and bought Alfie the room to strike.
                 </p>
             </div>
 
@@ -22991,7 +23282,7 @@
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
                 <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
-                    👉 Take point immediately in Session 6 initiative. Eusacles' Thanatos heritage and heavy morningstar need to shatter the Reductor frontline before the beasts reach Dravin and Alfie.
+                    👉 Call the bet. In Session 6, reveal to the party what you staked against Thanatos, and what debts are coming due when the dice stop rolling.
                 </p>
             </div>
         </div>
@@ -23013,22 +23304,22 @@
                                 The Rogue
                             </span>
                         </div>
-                        <p class="text-xs text-slate-400 font-sans mt-0.5">Driftwood Duelist & Rogue Heart</p>
+                        <p class="text-xs text-slate-400 font-sans mt-0.5">Driftwood Doll & Rogue Heart</p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-3 self-start sm:self-center flex-shrink-0">
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Spotlight</span>
-                        <span class="text-xs text-slate-300 font-mono font-semibold">14%</span>
+                        <span class="text-xs text-slate-300 font-mono font-semibold">13%</span>
                     </div>
                     <div class="text-right">
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
-                        <span class="text-xs text-emerald-400 font-mono font-semibold">93%</span>
+                        <span class="text-xs text-emerald-400 font-mono font-semibold">89%</span>
                     </div>
-                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-700/80">
-                        <span class="text-lg font-bold font-mono text-emerald-300">A-</span>
-                        <span class="text-xs font-mono text-emerald-400/80">(91%)</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/80 border border-cyan-700/80">
+                        <span class="text-lg font-bold font-mono text-cyan-300">B</span>
+                        <span class="text-xs font-mono text-cyan-400/80">(84%)</span>
                     </div>
                 </div>
             </div>
@@ -23037,7 +23328,7 @@
             <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs space-y-1">
                 <span class="font-bold font-mono text-[10px] text-rose-400 uppercase tracking-wider block">The Red-Ink Verdict</span>
                 <p class="text-slate-200 italic font-serif leading-relaxed text-xs sm:text-sm pl-3 border-l-2 border-rose-500/80">
-                    "The beating emotional heart and comedic anchor of the session, delivering a gut-wrenching cry at the moment of contact."
+                    "Delivered the undisputed emotional gut-punch of the session at the relic table, but held her cards so close to the vest during the transit that her climactic terror felt like an abrupt spike rather than a simmering dread."
                 </p>
             </div>
 
@@ -23052,7 +23343,7 @@
                     </span>
                 </div>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Passivity during the Appalachian switchbacks. While riding in Dravin's pocket makes tactical sense, staying completely silent during the transit left her climactic panic feeling like an abrupt spike rather than mounting dread.
+                    Total radio silence during the Lost Roads transit. While staying out of sight in Dravin's coat made tactical sense for a driftwood doll, hoarding her dread left the reader unprepared for the emotional avalanche at the climax.
                 </p>
             </div>
 
@@ -23062,7 +23353,7 @@
                     Standout Beats & Story Fuel
                 </span>
                 <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
-                    Carving the Chaos Belt into her forearm timber with Wordcraft, looting the green-and-white soccer scarf from the green room, and the heartbreaking mid-air protest ('Not again! Not me again!') as Dravin plunged her into the relic.
+                    The green room heist agility (pilfering the soccer scarf) and the shattering vulnerability in Scene 10 ('Not again. Not me again!') when touching the temporal relic, injecting genuine human stakes into an academic caper.
                 </p>
             </div>
 
@@ -23075,7 +23366,7 @@
                     <span class="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">Action Mandate</span>
                 </div>
                 <p class="text-slate-100 text-xs sm:text-sm leading-relaxed pl-3 border-l-2 border-amber-500/70 font-sans">
-                    👉 Unleash the Chaos Belt in combat! When the satyrs close in, reach down to the carved buckle and force the table to adapt to whatever chaotic tool the Fate Loom hands you.
+                    👉 Telegraph the simmer before the boil. In Session 6 combat, give us physical micro-actions from the floor—tugging Dravin's hem, warning the giants about hoofsteps—so your emotional weight stays continuously anchored in the fight.
                 </p>
             </div>
         </div>
@@ -23690,19 +23981,25 @@
             // Modal Background Scroll Lock Helper
             function setBodyScrollLock(locked) {
                 if (locked) {
+                    document.documentElement.style.overflow = 'hidden';
                     document.body.style.overflow = 'hidden';
+                    document.documentElement.style.overscrollBehavior = 'none';
+                    document.body.style.overscrollBehavior = 'none';
                 } else {
                     const isAnyModalOpen = (
-                        (diffInspectorOverlay && diffInspectorOverlay.classList.contains('visible')) ||
+                        (diffInspectorOverlay && (diffInspectorOverlay.classList.contains('visible') || !diffInspectorOverlay.classList.contains('opacity-0'))) ||
                         (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) ||
-                        (modalOverlay && modalOverlay.classList.contains('visible')) ||
+                        (modalOverlay && (modalOverlay.classList.contains('visible') || !modalOverlay.classList.contains('opacity-0'))) ||
                         (onboardingOverlay && onboardingOverlay.classList.contains('visible')) ||
                         (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) ||
                         (settingsModalOverlay && settingsModalOverlay.classList.contains('visible')) ||
                         (typeof ghModalOverlay !== 'undefined' && ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0'))
                     );
                     if (!isAnyModalOpen) {
+                        document.documentElement.style.overflow = '';
                         document.body.style.overflow = '';
+                        document.documentElement.style.overscrollBehavior = '';
+                        document.body.style.overscrollBehavior = '';
                     }
                 }
             }
@@ -24661,6 +24958,17 @@
                 };
             }
 
+            // Lock background scrolling on backdrop wheel and touch events
+            [modalOverlay, chaptersModalOverlay, criticForumModalOverlay, settingsModalOverlay, ghModalOverlay].forEach(ov => {
+                if (!ov) return;
+                ov.addEventListener('wheel', function(e) {
+                    if (e.target === ov) e.preventDefault();
+                }, { passive: false });
+                ov.addEventListener('touchmove', function(e) {
+                    if (e.target === ov) e.preventDefault();
+                }, { passive: false });
+            });
+
             if (modalPrevBlockBtn) modalPrevBlockBtn.onclick = function() {
                 if (activeBlockIndex > 0) openModalForBlock(activeBlockIndex - 1);
             };
@@ -24845,19 +25153,24 @@
 
                     <div id="ghStatusMsg" class="hidden p-2.5 rounded-xl text-xs flex-shrink-0"></div>
 
-                    <!-- Action Footer -->
-                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800 flex-shrink-0">
-                        <div class="flex items-center gap-1.5">
-                            <button id="modalClearAllCritiquesBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-rose-950/60 hover:text-rose-300 hover:border-rose-800 border border-slate-700 text-slate-400 font-semibold rounded-xl text-xs transition-colors" title="Clear all recorded feedback">
+                    <!-- Action Footer with Batch PR Confirmation vs Wait Until End -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2 border-t border-slate-800 flex-shrink-0">
+                        <div class="flex items-center gap-1.5 order-2 sm:order-1">
+                            <button id="modalClearAllCritiquesBtn" type="button" class="px-2.5 py-2 bg-slate-800/80 hover:bg-rose-950/60 hover:text-rose-300 hover:border-rose-800 border border-slate-700 text-slate-400 font-semibold rounded-xl text-xs transition-colors" title="Clear all recorded feedback">
                                 🗑️ Clear All
                             </button>
-                            <button id="ghCopyJsonBtn" type="button" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold rounded-xl text-xs transition-colors" title="Copy feedback summary">
+                            <button id="ghCopyJsonBtn" type="button" class="px-2.5 py-2 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold rounded-xl text-xs transition-colors" title="Copy feedback summary">
                                 📋 Copy Notes
                             </button>
                         </div>
-                        <button id="ghSubmitPrBtn" type="button" class="flex-1 sm:flex-initial px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5 active:scale-98">
-                            <span>🚀</span> <span>Submit Feedback</span>
-                        </button>
+                        <div class="flex items-center gap-2 order-1 sm:order-2 w-full sm:w-auto">
+                            <button id="ghWaitUntilEndBtn" type="button" class="flex-1 sm:flex-initial px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white font-semibold rounded-xl text-xs transition-colors text-center" title="Close review drawer and continue collecting feedback notes">
+                                📖 Continue Reading (Wait Until End)
+                            </button>
+                            <button id="ghSubmitPrBtn" type="button" class="flex-1 sm:flex-initial px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-1.5 active:scale-98">
+                                <span>🚀</span> <span>Submit 1 Batch PR</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -24951,6 +25264,9 @@
 
                 const items = Object.values(critiques);
                 if (noteCountDisplay) noteCountDisplay.textContent = items.length + " note" + (items.length === 1 ? "" : "s");
+                if (ghSubmitPrBtn) {
+                    ghSubmitPrBtn.innerHTML = `<span>🚀</span> <span>Submit 1 Batch PR (${items.length} note${items.length === 1 ? '' : 's'})</span>`;
+                }
 
                 if (items.length === 0) {
                     container.innerHTML = `
@@ -25062,6 +25378,8 @@
             }
 
             if (closeGhModal) closeGhModal.onclick = hideGhModal;
+            const ghWaitUntilEndBtn = document.getElementById('ghWaitUntilEndBtn');
+            if (ghWaitUntilEndBtn) ghWaitUntilEndBtn.onclick = hideGhModal;
             if (ghModalOverlay) {
                 ghModalOverlay.onclick = function(e) {
                     if (e.target === ghModalOverlay) hideGhModal();
