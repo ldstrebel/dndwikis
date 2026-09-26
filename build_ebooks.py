@@ -3564,7 +3564,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
 
                 updateBlocksReference();
-                if (typeof diffInspectorInitialized !== 'undefined') diffInspectorInitialized = false;
+                diffInspectorInitialized = false;
             }};
 
             window.jumpToNovelBlock = function(blockId) {{
@@ -3645,9 +3645,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
                 document.querySelectorAll('.story-block').forEach(b => readingObserver.observe(b));
             }}
-
-            // Initialize global cut on load
-            window.switchGlobalCut(currentActiveCut);
 
             const chaptersModalOverlay = document.getElementById('chaptersModalOverlay');
             const toggleChaptersBtn = document.getElementById('toggleChaptersBtn');
