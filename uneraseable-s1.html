@@ -34,6 +34,11 @@
             --story-font-family: 'Outfit', sans-serif;
         }
 
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+
         body {
             background-color: #080c14;
             color: #f1f5f9;
@@ -63,27 +68,26 @@
             cursor: pointer;
         }
         body.mode-critique .story-block:hover {
-            transform: translateX(4px);
+            background-color: rgba(30, 41, 59, 0.5);
         }
         body.mode-critique .story-block::after {
             content: '💬';
             position: absolute;
-            right: -28px;
-            top: 50%;
-            transform: translateY(-50%);
+            right: 12px;
+            top: 10px;
             opacity: 0;
-            font-size: 14px;
+            font-size: 13px;
             transition: opacity 0.2s;
+            pointer-events: none;
         }
         @media (max-width: 640px) {
             body.mode-critique .story-block::after {
                 right: 8px;
                 top: 8px;
-                transform: none;
             }
         }
         body.mode-critique .story-block:hover::after {
-            opacity: 0.8;
+            opacity: 0.85;
         }
 
         .story-block.has-critique {
@@ -533,7 +537,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen pb-24">
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
 
     <!-- STICKY TOP APP BAR (Clean & Content-Focused with Minimal Reading Progress) -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
@@ -30866,8 +30870,8 @@
     <!-- ========================================================= -->
     <!-- EDITORIAL CRITIC REVIEW & ROTTEN TOMATOES DEBRIEF MODAL  -->
     <!-- ========================================================= -->
-    <div id="criticForumModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 transition-opacity duration-200">
-        <div id="criticForumModalCard" class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[90vh] sm:max-h-[90dvh] space-y-3.5">
+    <div id="criticForumModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[80] flex items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto transition-opacity duration-200">
+        <div id="criticForumModalCard" class="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl flex flex-col max-h-[90vh] sm:max-h-[90dvh] space-y-3.5 my-auto">
             
             <!-- Modal Header with Rotten-Tomatoes Style Tomato Badge -->
             <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-shrink-0">
@@ -32524,10 +32528,6 @@
                 initDiffInspector();
                 if (diffInspectorOverlay) {
                     diffInspectorOverlay.classList.add('visible');
-                    if (window.visualViewport) {
-                        diffInspectorOverlay.style.height = window.visualViewport.height + 'px';
-                        diffInspectorOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
-                    }
                     setBodyScrollLock(true);
                 }
                 highlightBlockInDiff(index, null, true);
@@ -32990,10 +32990,6 @@
                 }
                 if (modalOverlay) {
                     modalOverlay.classList.add('visible');
-                    if (window.visualViewport) {
-                        modalOverlay.style.height = window.visualViewport.height + 'px';
-                        modalOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
-                    }
                     setBodyScrollLock(true);
                 }
                 if (critiqueTextInput) {
@@ -33038,13 +33034,11 @@
                     overlays.forEach(ov => {
                         if (ov && (ov.classList.contains('visible') || (!ov.classList.contains('opacity-0') && !ov.classList.contains('pointer-events-none')))) {
                             ov.style.height = vh + 'px';
-                            ov.style.transform = 'translateY(' + vTop + 'px)';
                         }
                     });
                 }
 
                 window.visualViewport.addEventListener('resize', syncActiveModalWithViewport);
-                window.visualViewport.addEventListener('scroll', syncActiveModalWithViewport);
             }
 
             // Smoothly keep text inputs above keyboard when focused
@@ -33422,10 +33416,6 @@
                 if (ghStatusMsg) ghStatusMsg.className = "hidden";
                 if (ghModalOverlay) {
                     ghModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
-                    if (window.visualViewport) {
-                        ghModalOverlay.style.height = window.visualViewport.height + 'px';
-                        ghModalOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
-                    }
                     setBodyScrollLock(true);
                 }
             }
@@ -33675,10 +33665,6 @@
                 if (criticForumModalOverlay) {
                     criticForumModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
                     criticForumModalOverlay.classList.add('visible');
-                    if (window.visualViewport) {
-                        criticForumModalOverlay.style.height = window.visualViewport.height + 'px';
-                        criticForumModalOverlay.style.transform = 'translateY(' + window.visualViewport.offsetTop + 'px)';
-                    }
                     setBodyScrollLock(true);
                 }
             }
@@ -33687,8 +33673,6 @@
                 if (criticForumModalOverlay) {
                     criticForumModalOverlay.classList.add('opacity-0', 'pointer-events-none');
                     criticForumModalOverlay.classList.remove('visible');
-                    criticForumModalOverlay.style.height = '';
-                    criticForumModalOverlay.style.transform = '';
                     setBodyScrollLock(false);
                 }
             }
@@ -34240,6 +34224,7 @@
                 }
             }, { passive: true });
 
+            window.setReadingMode(currentReadingMode || 'critique');
             window.switchGlobalCut(currentActiveCut);
             refreshMarkers();
         })();

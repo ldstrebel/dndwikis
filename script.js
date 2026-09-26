@@ -254,13 +254,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalCloseBtn.focus();
             }
 
+            // Set chapter count on modal to enable dynamic relative sizing
+            modal.dataset.chapterCount = chapters.length;
+
             // Populate the modal
             if (modalImage) {
                 modalImage.src = posterImage;
                 modalImage.alt = `Artwork for ${title}`;
+                // Dynamically scale cover art down as chapter count grows so chapters show without scrolling
+                if (chapters.length >= 7) {
+                    modalImage.style.maxHeight = '70px';
+                } else if (chapters.length >= 5) {
+                    modalImage.style.maxHeight = '100px';
+                } else if (chapters.length >= 3) {
+                    modalImage.style.maxHeight = '150px';
+                } else {
+                    modalImage.style.maxHeight = '230px';
+                }
             }
             if (modalTitle) modalTitle.textContent = title;
-            if (modalSynopsis) modalSynopsis.textContent = fullSynopsis;
+            if (modalSynopsis) {
+                modalSynopsis.textContent = fullSynopsis;
+                if (chapters.length >= 5) {
+                    modalSynopsis.style.marginBottom = '12px';
+                    modalSynopsis.style.fontSize = '0.95em';
+                    modalSynopsis.style.lineHeight = '1.5';
+                } else {
+                    modalSynopsis.style.marginBottom = '';
+                    modalSynopsis.style.fontSize = '';
+                    modalSynopsis.style.lineHeight = '';
+                }
+            }
 
             // Populate genre tags
             if (modalGenreTagsContainer) {

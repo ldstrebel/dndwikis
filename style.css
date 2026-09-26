@@ -541,6 +541,25 @@ main {
 .modal-chapter-list {
     list-style: none;
     padding-left: 0;
+    max-height: 48vh;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--logo-teal) rgba(0, 0, 0, 0.2);
+}
+
+.modal-chapter-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-chapter-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.modal-chapter-list::-webkit-scrollbar-thumb {
+    background: var(--logo-teal);
+    border-radius: 3px;
 }
 
 .modal-chapter-list li {
@@ -549,17 +568,20 @@ main {
 
 .modal-chapter-list li a {
     font-family: var(--font-primary);
-    font-size: 1.1em;
+    font-size: 1.05em;
     color: var(--logo-bright-teal); /* Chapter links in bright teal */
     display: block;
     padding: 8px 10px;
     border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(var(--logo-teal-rgb), 0.2);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .modal-chapter-list li a:hover {
-    background-color: rgba(var(--logo-teal-rgb), 0.15);
-    color: var(--logo-teal);
+    background-color: rgba(var(--logo-teal-rgb), 0.25);
+    border-color: var(--logo-bright-teal);
+    color: #ffffff;
     text-decoration: none;
 }
 
