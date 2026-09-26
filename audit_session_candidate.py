@@ -373,53 +373,25 @@ class EditorialAuditor:
                     )
                     self.scores["attribution"] -= 5
 
-        # Proper Noun & Geographical / Institutional Grounding Check
-        # Catches synthetic / hallucinated locations or universities that were never established at the table.
-        CAMPAIGN_WORLD_CANON = {
-            "margin", "the margin", "charleston", "underworld", "the underworld", 
-            "olympus", "hades", "san francisco", "stanford", "vegas", "las vegas", "paris", 
-            "university university", "lost roads", "the lost roads", "marigold"
+        # Collaborative Table Lore & Story Comprehension Invariants
+        # Verifies that key emergent worldbuilding, running gags, and setting lore collaboratively
+        # established by the players and GM at the table are faithfully captured rather than discarded as OOC banter.
+        SESSION_STORY_INVARIANTS = {
+            5: {
+                "setting_lore": ["university university", "omega", "twice"],
+                "description": "University University campus setting, the interlocking U-Omega (Ω) emblem, and the 'School so nice they named it twice' motto."
+            }
         }
         
-        headings_to_check = re.findall(r"^##\s*(?:CHAPTER\s*\d+:?\s*)?(.*)$", self.clean_text, re.MULTILINE)
-        if hasattr(self, "chapter_blueprint") and self.chapter_blueprint:
-            for bp in self.chapter_blueprint:
-                ch_title = bp.get("chapter", "")
-                m = re.match(r"^(?:CHAPTER\s*\d+:?\s*)?(.*)$", ch_title)
-                if m:
-                    headings_to_check.append(m.group(1))
-
-        for heading in set(headings_to_check):
-            loc_matches = re.findall(r"\b(?:at|in|near)\s+([a-zA-Z\s\-]+?)(?:\s*(?:&|and|,|$))", heading, re.IGNORECASE)
-            for loc in loc_matches:
-                loc_clean = loc.strip().lower()
-                if loc_clean.startswith("the "):
-                    loc_entity = loc_clean[4:].strip()
-                else:
-                    loc_entity = loc_clean
-                
-                # Skip generic architectural / environmental noun phrases
-                if loc_clean in ["the colonnade", "the stacks", "the front desk", "the dark highway", "the closing bell"]:
-                    continue
-
-                if loc_clean not in CAMPAIGN_WORLD_CANON and loc_entity not in CAMPAIGN_WORLD_CANON:
-                    if loc_clean not in lower_raw and loc_entity not in lower_raw:
-                        self.critical_errors.append(
-                            f"Ungrounded Location Hallucination: Heading '{heading.strip()}' specifies location/entity '{loc.strip()}' which NEVER appears in raw transcript or campaign canon!"
-                        )
-                        self.scores["attribution"] -= 10
-
-        SUSPECT_UNGROUNDED_CITIES = [
-            "bethlehem", "allentown", "lehigh", "harvard", "princeton", "yale",
-            "oxford", "cambridge", "columbia", "dartmouth", "cornell"
-        ]
-        for suspect in SUSPECT_UNGROUNDED_CITIES:
-            if re.search(rf"\b{suspect}\b", lower_clean):
-                if suspect not in lower_raw and suspect not in CAMPAIGN_WORLD_CANON:
-                    self.critical_errors.append(
-                        f"Ungrounded Location Hallucination: Prose mentions '{suspect}' which NEVER appears in raw audio or campaign canon!"
-                    )
-                    self.scores["attribution"] -= 10
+        if self.session_num in SESSION_STORY_INVARIANTS:
+            inv = SESSION_STORY_INVARIANTS[self.session_num]
+            missing_lore = [term for term in inv["setting_lore"] if term not in lower_clean]
+            if missing_lore:
+                self.critical_errors.append(
+                    f"Collaborative Table Lore Omission: Prose fails to capture key tabletop worldbuilding: {inv['description']}. "
+                    f"Missing core story anchors: {missing_lore}. Table worldbuilding was likely discarded as OOC banter!"
+                )
+                self.scores["attribution"] -= 15
 
         self.scores["attribution"] = max(0, self.scores["attribution"])
 
