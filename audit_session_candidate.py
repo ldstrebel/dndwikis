@@ -236,7 +236,7 @@ class EditorialAuditor:
                     },
                     {
                         "act": "Act II",
-                        "chapter": "CHAPTER 30: THE CAMPUS AT BETHLEHEM & THE TIN-FOIL PROTEST",
+                        "chapter": "CHAPTER 30: THE CAMPUS AT UNIVERSITY UNIVERSITY & THE TIN-FOIL PROTEST",
                         "sceneRange": "Scenes 4–6 (Lines 0391–0790)",
                         "summary": "Lost Road highway transit, arrival at the collegiate quad, confrontation with paranoid conspiracists, and Pierre's limestone diplomacy."
                     },
@@ -372,6 +372,54 @@ class EditorialAuditor:
                         f"Anachronism / Tech Hallucination: Concrete term '{tech}' appears in novel prose but NEVER in raw audio!"
                     )
                     self.scores["attribution"] -= 5
+
+        # Proper Noun & Geographical / Institutional Grounding Check
+        # Catches synthetic / hallucinated locations or universities that were never established at the table.
+        CAMPAIGN_WORLD_CANON = {
+            "margin", "the margin", "charleston", "underworld", "the underworld", 
+            "olympus", "hades", "san francisco", "stanford", "vegas", "las vegas", "paris", 
+            "university university", "lost roads", "the lost roads", "marigold"
+        }
+        
+        headings_to_check = re.findall(r"^##\s*(?:CHAPTER\s*\d+:?\s*)?(.*)$", self.clean_text, re.MULTILINE)
+        if hasattr(self, "chapter_blueprint") and self.chapter_blueprint:
+            for bp in self.chapter_blueprint:
+                ch_title = bp.get("chapter", "")
+                m = re.match(r"^(?:CHAPTER\s*\d+:?\s*)?(.*)$", ch_title)
+                if m:
+                    headings_to_check.append(m.group(1))
+
+        for heading in set(headings_to_check):
+            loc_matches = re.findall(r"\b(?:at|in|near)\s+([a-zA-Z\s\-]+?)(?:\s*(?:&|and|,|$))", heading, re.IGNORECASE)
+            for loc in loc_matches:
+                loc_clean = loc.strip().lower()
+                if loc_clean.startswith("the "):
+                    loc_entity = loc_clean[4:].strip()
+                else:
+                    loc_entity = loc_clean
+                
+                # Skip generic architectural / environmental noun phrases
+                if loc_clean in ["the colonnade", "the stacks", "the front desk", "the dark highway", "the closing bell"]:
+                    continue
+
+                if loc_clean not in CAMPAIGN_WORLD_CANON and loc_entity not in CAMPAIGN_WORLD_CANON:
+                    if loc_clean not in lower_raw and loc_entity not in lower_raw:
+                        self.critical_errors.append(
+                            f"Ungrounded Location Hallucination: Heading '{heading.strip()}' specifies location/entity '{loc.strip()}' which NEVER appears in raw transcript or campaign canon!"
+                        )
+                        self.scores["attribution"] -= 10
+
+        SUSPECT_UNGROUNDED_CITIES = [
+            "bethlehem", "allentown", "lehigh", "harvard", "princeton", "yale",
+            "oxford", "cambridge", "columbia", "dartmouth", "cornell"
+        ]
+        for suspect in SUSPECT_UNGROUNDED_CITIES:
+            if re.search(rf"\b{suspect}\b", lower_clean):
+                if suspect not in lower_raw and suspect not in CAMPAIGN_WORLD_CANON:
+                    self.critical_errors.append(
+                        f"Ungrounded Location Hallucination: Prose mentions '{suspect}' which NEVER appears in raw audio or campaign canon!"
+                    )
+                    self.scores["attribution"] -= 10
 
         self.scores["attribution"] = max(0, self.scores["attribution"])
 
@@ -550,7 +598,7 @@ class EditorialAuditor:
                     "For Session 5, the upstream pipeline stopped at the Tabletop cut. "
                     "The Cinematic Cut is mandatory: it is where dead travel turns must be excised, "
                     "Dravin's divine heritage given rich interiority, Alfie given proactive physical business, "
-                    "and the Bethlehem lecture turned into a heart-pounding 1940s medical conspiracy thriller."
+                    "and the University University lecture turned into a heart-pounding 1940s medical conspiracy thriller."
                 )
             },
             "cutOrderingBlueprint": {
@@ -977,11 +1025,11 @@ The following blocks have conflicting speaker assignments between the narrative 
 ## 🛠️ Actionable Remediation Checklist for Upstream Agent
 
 1. **Author the Missing Cinematic Cut (Track B)**:
-   Write `sessions/data/clean/blocks_authorial/s5-scene-01-alt.md` through `s5-scene-10-alt.md` following the 3-Act Ordering Blueprint above. Give Dravin emotional interiority regarding Persephone, eliminate Alfie's luggage syndrome, and pace the Bethlehem heist with cinematic urgency.
+   Write `sessions/data/clean/blocks_authorial/s5-scene-01-alt.md` through `s5-scene-10-alt.md` following the 3-Act Ordering Blueprint above. Give Dravin emotional interiority regarding Persephone, eliminate Alfie's luggage syndrome, and pace the University University heist with cinematic urgency.
 
 2. **Insert Chapter Act Headers in Tabletop Cut**:
    Add `## CHAPTER 29: PARCHMENT, CREPES, AND THE GOD OF TRANSIT` at Scene 1 (line 11).
-   Add `## CHAPTER 30: THE CAMPUS AT BETHLEHEM & THE TIN-FOIL PROTEST` at Scene 4.
+   Add `## CHAPTER 30: THE CAMPUS AT UNIVERSITY UNIVERSITY & THE TIN-FOIL PROTEST` at Scene 4.
    Add `## CHAPTER 31: THE 1948 TRIAL NOTES & THE TEMPORAL SEAM` at Scene 7.
 
 3. **Correct Dialogue Turn Citations or Manifest Resolution**:
