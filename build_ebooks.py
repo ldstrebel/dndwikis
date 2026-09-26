@@ -2070,7 +2070,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             raw_jump_btn = ""
             if b_raw_line:
-                raw_jump_btn = f'<button type="button" class="raw-jump-btn text-[10px] font-mono text-slate-500 hover:text-emerald-400 transition-colors inline-flex items-center gap-1 opacity-70 hover:opacity-100 cursor-pointer" onclick="event.stopPropagation(); jumpToRawLine({b_raw_line});" title="View line {b_raw_line} in Raw Transcript"><span>🎙️</span><span>Raw L{b_raw_line}</span></button>'
+                raw_jump_btn = f'<button type="button" class="raw-jump-btn text-[10px] font-mono text-slate-500 hover:text-emerald-400 transition-colors inline-flex items-center gap-1 opacity-70 hover:opacity-100 cursor-pointer" onclick="event.stopPropagation(); jumpToRawLine({b_raw_line}, \'{b_id}\');" title="View line {b_raw_line} in Raw Transcript"><span>🎙️</span><span>Raw L{b_raw_line}</span></button>'
 
             segments = b.get("segments", [])
             if segments:
@@ -2085,9 +2085,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     if s_type == "dialogue" and s_spk != "narrator":
                         s_color = get_speaker_color(s_spk, characters.get(s_spk))
                         line_attr = f' data-source-line="{s_line}"' if s_line else ""
-                        title_attr = f' title="Spoken by {s_name}' + (f' · Click to jump to line {s_line} in Raw Transcript"' if s_line else '"')
                         seg_html_parts.append(
-                            f'<span class="dialogue-segment font-medium transition-colors cursor-pointer hover:underline" style="color: {s_color};" data-speaker="{s_spk}" data-speaker-name="{s_name}" data-speaker-color="{s_color}"{line_attr}{title_attr}>{s_text}</span>'
+                            f'<span class="dialogue-segment font-medium transition-colors" style="color: {s_color};" data-speaker="{s_spk}" data-speaker-name="{s_name}" data-speaker-color="{s_color}"{line_attr}>{s_text}</span>'
                         )
                     else:
                         seg_html_parts.append(
@@ -2120,14 +2119,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             else:
                 ch_novel_blocks_html += f"""
                 <!-- Block {b_idx} ({sp_name}) -->
-                <div class="story-block story-block-dialogue p-4 rounded-r-xl my-3.5 shadow-sm{cut_classes}"
+                <div class="story-block story-block-dialogue py-2.5 px-3.5 sm:px-4 rounded-xl my-2 bg-slate-900/40 hover:bg-slate-900/60 border border-slate-800/60 transition-colors shadow-sm{cut_classes}"
                      id="{b_id}"
-                     style="border-left: 3.5px solid {sp_color}; background: linear-gradient(90deg, {sp_color}14 0%, {sp_color}02 100%);"
                      data-block-id="{b_id}"
                      data-speaker="{sp_id}"
                      data-speaker-name="{sp_name}"
                      data-speaker-color="{sp_color}"{cut_attr}>
-                    <div class="flex items-center gap-2 mb-2">
+                    <div class="flex items-center gap-2 mb-1.5">
                         <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {sp_color}"></span>
                         <span class="text-xs font-bold uppercase tracking-wider font-mono" style="color: {sp_color}">{sp_name}</span>
                         <span class="critique-indicator-dot hidden text-xs text-amber-400 font-bold">● Critique Added</span>
@@ -2219,10 +2217,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
             if is_ic:
                 ch_raw_turns_html += f"""
-                <div class="raw-turn py-2 px-3 sm:px-4 rounded-lg my-2 transition-all hover:bg-slate-900/40"
-                     style="border-left: 3px solid {sp_color}; background: linear-gradient(90deg, {sp_color}14 0%, transparent 100%);"
+                <div class="raw-turn py-2 px-3 sm:px-4 rounded-xl my-2 bg-slate-900/40 hover:bg-slate-900/70 border border-slate-800/60 transition-colors overflow-hidden break-words"
                      data-line-num="{l_num}">
-                    <div class="flex items-center justify-between gap-2 mb-1">
+                    <div class="flex items-center justify-between gap-2 mb-1 min-w-0">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {sp_color};"></span>
                             <span class="font-bold text-xs uppercase tracking-wider font-mono truncate" style="color: {sp_color};">{char_name}</span>
@@ -2235,9 +2232,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 """
             else:
                 ch_raw_turns_html += f"""
-                <div class="raw-turn py-1.5 px-3 sm:px-4 rounded-lg my-1.5 hover:bg-slate-900/40 transition-all border-l-2 border-slate-800/70 bg-slate-950/40"
+                <div class="raw-turn py-1.5 px-3 sm:px-4 rounded-xl my-1.5 bg-slate-950/40 hover:bg-slate-900/40 border border-slate-800/40 transition-colors overflow-hidden break-words"
                      data-line-num="{l_num}">
-                    <div class="flex items-center justify-between gap-2 mb-0.5">
+                    <div class="flex items-center justify-between gap-2 mb-0.5 min-w-0">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <span class="font-medium text-xs text-slate-400 font-sans truncate">{display_speaker}</span>
                         </div>
@@ -2268,14 +2265,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             </div>
 
             <!-- Raw Transcript Blocks -->
-            <div class="cut-block cut-block-raw hidden space-y-1.5 max-w-4xl mx-auto py-2">
-                <div class="p-3 mb-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
-                    <div class="flex items-center gap-2">
+            <div class="cut-block cut-block-raw hidden space-y-1.5 max-w-3xl mx-auto py-2 overflow-x-hidden">
+                <div class="p-3 mb-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400 font-mono">
+                    <div class="flex items-center gap-2 flex-wrap">
                         <span class="text-emerald-400 font-bold">🎙️ Raw Audio Transcript</span>
                         <span>·</span>
                         <span>Lines {ch_start_line}–{ch_end_line}</span>
                     </div>
-                    <div class="text-[11px] text-slate-500">
+                    <div class="text-[11px] text-slate-500 truncate">
                         Uncut verbatim session dialogue & table banter
                     </div>
                 </div>
@@ -2888,16 +2885,32 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             <p class="text-xs sm:text-sm text-slate-400 mt-1.5 font-serif italic max-w-xl mx-auto">{session_synopsis}</p>
         </div>
 
-        <!-- FAST SCENE JUMP PILLS -->
-        <div class="mb-6 flex items-center gap-1.5 overflow-x-auto pb-1 custom-scrollbar">
-            <span class="text-[10px] font-bold uppercase text-slate-500 flex-shrink-0 mr-1">Jump to Scene:</span>
-            {chapter_pills_html}
+        <!-- CHAPTERS & READING LENS CONTROL BAR -->
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 shadow-md">
+            <button type="button" onclick="document.getElementById('toggleChaptersBtn').click()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700/80 text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95">
+                <span class="text-amber-400">📑</span>
+                <span>Browse Chapters & Scenes</span>
+            </button>
+            <div class="inline-flex items-center p-1 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-medium">
+                <button type="button" class="global-cut-btn cut-btn-cinematic px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5" data-cut="cinematic" onclick="switchGlobalCut('cinematic')">
+                    <span>🎬</span>
+                    <span>Cinematic</span>
+                </button>
+                <button type="button" class="global-cut-btn cut-btn-tabletop px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center gap-1.5" data-cut="tabletop" onclick="switchGlobalCut('tabletop')">
+                    <span>🎲</span>
+                    <span>Tabletop</span>
+                </button>
+                <button type="button" class="global-cut-btn cut-btn-raw px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5" data-cut="raw" onclick="switchGlobalCut('raw')">
+                    <span>🎙️</span>
+                    <span>Raw</span>
+                </button>
+            </div>
         </div>
 
         <!-- ========================================================= -->
         <!-- 11LABS-STYLE STORY BLOCKS CONTAINER -->
         <!-- ========================================================= -->
-        <main id="storyContentContainer" class="space-y-1">
+        <main id="storyContentContainer" class="space-y-1 overflow-x-hidden">
             {blocks_html}
         </main>
 
@@ -3448,6 +3461,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 </button>
             </div>
         </div>
+    <!-- Floating Return to Story Banner (Active only in Raw view) -->
+    <div id="rawReturnBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 hidden transition-all duration-200">
+        <button type="button" onclick="returnToLastReadingBlock()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold text-xs sm:text-sm shadow-2xl flex items-center gap-2 border border-amber-300 active:scale-95 transition-all">
+            <span class="text-base">↩</span>
+            <span>Return to Story</span>
+        </button>
     </div>
 
     {critic_forum_html}
@@ -3476,15 +3495,21 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             }}
 
             // =========================================================
-            // 3-LENS READING CONTROLLER (Tabletop vs Cinematic vs Raw)
+            // 3-LENS READING CONTROLLER (Cinematic vs Tabletop vs Raw)
             // =========================================================
-            let currentActiveCut = 'tabletop';
+            let currentActiveCut = 'cinematic';
             try {{
                 const savedCut = localStorage.getItem('dnd_active_cut');
                 if (savedCut === 'cinematic' || savedCut === 'tabletop' || savedCut === 'raw') {{
                     currentActiveCut = savedCut;
+                }} else {{
+                    currentActiveCut = 'cinematic';
+                    localStorage.setItem('dnd_active_cut', 'cinematic');
                 }}
             }} catch(e) {{}}
+
+            let lastReadingBlockId = null;
+            let lastReadingCut = currentActiveCut;
 
             window.switchGlobalCut = function(newCut) {{
                 if (newCut !== 'tabletop' && newCut !== 'cinematic' && newCut !== 'raw') return;
@@ -3493,18 +3518,22 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     localStorage.setItem('dnd_active_cut', newCut);
                 }} catch(e) {{}}
 
-                // 1. Update button styling across all chapter dividers
-                document.querySelectorAll('.chapter-cut-btn').forEach(btn => {{
-                    const btnCut = btn.dataset.cut;
-                    if (btnCut === newCut) {{
-                        let activeStyles = 'text-amber-300 border border-amber-500/50 bg-slate-800';
-                        if (btnCut === 'cinematic') activeStyles = 'text-cyan-300 border border-cyan-500/50 bg-slate-800';
-                        if (btnCut === 'raw') activeStyles = 'text-emerald-300 border border-emerald-500/50 bg-slate-800';
-                        btn.className = "chapter-cut-btn cut-btn-" + btnCut + " px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm " + activeStyles;
-                    }} else {{
-                        btn.className = "chapter-cut-btn cut-btn-" + btnCut + " px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1.5 border border-transparent";
-                    }}
-                }});
+                // 1. Update button styling across all chapter dividers and the top control bar
+                const updateButtonStyles = (selector) => {{
+                    document.querySelectorAll(selector).forEach(btn => {{
+                        const btnCut = btn.dataset.cut;
+                        if (btnCut === newCut) {{
+                            let activeStyles = 'text-amber-300 border border-amber-500/50 bg-slate-800 shadow-sm';
+                            if (btnCut === 'cinematic') activeStyles = 'text-cyan-300 border border-cyan-500/50 bg-slate-800 shadow-sm';
+                            if (btnCut === 'raw') activeStyles = 'text-emerald-300 border border-emerald-500/50 bg-slate-800 shadow-sm';
+                            btn.className = btn.className.replace(/border-transparent|text-slate-400|text-slate-300/g, '') + ' ' + activeStyles;
+                        }} else {{
+                            btn.className = btn.className.replace(/text-cyan-300|text-amber-300|text-emerald-300|border-cyan-500\\/50|border-amber-500\\/50|border-emerald-500\\/50|bg-slate-800|shadow-sm/g, '').trim() + ' text-slate-400 hover:text-slate-200 border-transparent';
+                        }}
+                    }});
+                }};
+                updateButtonStyles('.chapter-cut-btn');
+                updateButtonStyles('.global-cut-btn');
 
                 // 2. Toggle block visibility
                 if (newCut === 'raw') {{
@@ -3528,6 +3557,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     document.querySelectorAll('.cut-block-tabletop').forEach(el => el.classList.remove('hidden'));
                 }}
 
+                // 3. Show or hide Return to Story floating banner
+                const retBanner = document.getElementById('rawReturnBanner');
+                if (retBanner) {{
+                    retBanner.classList.toggle('hidden', newCut !== 'raw');
+                }}
+
                 updateBlocksReference();
                 diffInspectorInitialized = false;
             }};
@@ -3535,9 +3570,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             window.jumpToNovelBlock = function(blockId) {{
                 if (!blockId) return;
                 const targetEl = document.getElementById(blockId);
-                let targetCut = 'tabletop';
-                if (targetEl && targetEl.dataset.cut === 'cinematic') {{
-                    targetCut = 'cinematic';
+                let targetCut = (lastReadingCut && lastReadingCut !== 'raw') ? lastReadingCut : 'cinematic';
+                if (targetEl && targetEl.dataset.cut) {{
+                    targetCut = targetEl.dataset.cut;
                 }}
                 window.switchGlobalCut(targetCut);
 
@@ -3553,8 +3588,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}, 60);
             }};
 
-            window.jumpToRawLine = function(lineNum) {{
+            window.jumpToRawLine = function(lineNum, originBlockId) {{
                 if (!lineNum) return;
+                if (originBlockId) {{
+                    lastReadingBlockId = originBlockId;
+                }}
+                if (currentActiveCut !== 'raw') {{
+                    lastReadingCut = currentActiveCut;
+                }}
                 window.switchGlobalCut('raw');
 
                 setTimeout(() => {{
@@ -3569,16 +3610,44 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}, 60);
             }};
 
-            document.addEventListener('click', function(e) {{
-                const seg = e.target.closest('.dialogue-segment');
-                if (seg && !document.body.classList.contains('mode-critique')) {{
-                    const srcLine = seg.dataset.sourceLine;
-                    if (srcLine) {{
-                        e.stopPropagation();
-                        window.jumpToRawLine(parseInt(srcLine));
+            window.returnToLastReadingBlock = function() {{
+                const targetCut = (lastReadingCut && lastReadingCut !== 'raw') ? lastReadingCut : 'cinematic';
+                window.switchGlobalCut(targetCut);
+
+                setTimeout(() => {{
+                    if (lastReadingBlockId) {{
+                        const el = document.getElementById(lastReadingBlockId);
+                        if (el) {{
+                            el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                            el.classList.add('ring-2', 'ring-amber-400', 'bg-amber-500/10');
+                            setTimeout(() => {{
+                                el.classList.remove('ring-2', 'ring-amber-400', 'bg-amber-500/10');
+                            }}, 2500);
+                            return;
+                        }}
                     }}
-                }}
-            }});
+                }}, 60);
+            }};
+
+            // Observe visible blocks while reading to maintain precise return anchor
+            if ('IntersectionObserver' in window) {{
+                const readingObserver = new IntersectionObserver((entries) => {{
+                    entries.forEach(entry => {{
+                        if (entry.isIntersecting && currentActiveCut !== 'raw') {{
+                            const bId = entry.target.id;
+                            if (bId && entry.target.classList.contains('story-block')) {{
+                                lastReadingBlockId = bId;
+                                lastReadingCut = currentActiveCut;
+                            }}
+                        }}
+                    }});
+                }}, {{ threshold: 0.2 }});
+
+                document.querySelectorAll('.story-block').forEach(b => readingObserver.observe(b));
+            }}
+
+            // Initialize global cut on load
+            window.switchGlobalCut(currentActiveCut);
 
             const chaptersModalOverlay = document.getElementById('chaptersModalOverlay');
             const toggleChaptersBtn = document.getElementById('toggleChaptersBtn');
