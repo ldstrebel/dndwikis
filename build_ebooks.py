@@ -469,14 +469,14 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
 
                 if is_npc:
                     speaker_chips_list.append(
-                        f'<span class="inline-flex items-center gap-1 text-[11px] text-rose-300 flex-shrink-0">'
+                        f'<span class="inline-flex items-center gap-1 text-[11px] text-rose-300">'
                         f'<span class="text-[8px] text-[#f87171] leading-none">▲</span>'
                         f'<span>{sp_name}</span> <span class="font-mono text-rose-400/80 text-[10px]">{seg_pct}%</span>'
                         f'</span>'
                     )
                 else:
                     speaker_chips_list.append(
-                        f'<span class="inline-flex items-center gap-1 text-[11px] text-slate-300 flex-shrink-0">'
+                        f'<span class="inline-flex items-center gap-1 text-[11px] text-slate-300">'
                         f'<span class="w-1.5 h-1.5 rounded-full" style="background-color: {col}"></span>'
                         f'<span>{sp_name.split()[0]}</span> <span class="font-mono text-slate-400 text-[10px]">{seg_pct}%</span>'
                         f'</span>'
@@ -526,8 +526,8 @@ def build_vertical_chapters_html(chapters: list, characters: dict) -> str:
                 </div>
             </div>
 
-            <!-- Line 2: PCs and NPCs sorted by % (Horizontal scroll if needed) -->
-            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-slate-900/60 pr-1">
+            <!-- Line 2: Speaker voice share chips (wrap, no scroll) -->
+            <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 pt-1 border-t border-slate-900/60">
                 {''.join(speaker_chips_list)}
             </div>
         </div>
