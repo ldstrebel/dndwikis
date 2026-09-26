@@ -29256,7 +29256,7 @@
                 }
 
                 updateBlocksReference();
-                diffInspectorInitialized = false;
+                if (typeof diffInspectorInitialized !== 'undefined') diffInspectorInitialized = false;
             };
 
             window.jumpToNovelBlock = function(blockId) {

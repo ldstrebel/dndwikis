@@ -3564,7 +3564,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 }}
 
                 updateBlocksReference();
-                diffInspectorInitialized = false;
+                if (typeof diffInspectorInitialized !== 'undefined') diffInspectorInitialized = false;
             }};
 
             window.jumpToNovelBlock = function(blockId) {{
