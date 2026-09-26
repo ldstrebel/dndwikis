@@ -628,7 +628,7 @@ def build_session_line_chart_svg(chapters: list) -> str:
             <span class="text-[10px] text-amber-400 font-mono">Top Voice: {leader_name} ({leader_val:,}w)</span>
         </div>
         <div class="bg-slate-900/90 rounded-xl p-3 sm:p-3.5 border border-slate-800 shadow-sm">
-            <svg viewBox="0 0 {svg_w} {svg_h}" class="w-full h-auto" style="overflow: visible;">
+            <svg viewBox="0 0 {svg_w} {svg_h}" class="w-full h-auto" style="overflow: hidden;">
                 <!-- Grid Lines -->
                 <line x1="{pad_x}" y1="{get_y(0)}" x2="{svg_w - pad_x}" y2="{get_y(0)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
                 <line x1="{pad_x}" y1="{get_y(max_char_val/2)}" x2="{svg_w - pad_x}" y2="{get_y(max_char_val/2)}" stroke="#334155" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
@@ -2817,7 +2817,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         }}
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen pb-24 mode-critique">
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-24">
 
     <!-- STICKY TOP APP BAR (Clean & Content-Focused with Minimal Reading Progress) -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
