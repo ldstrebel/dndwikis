@@ -194,9 +194,9 @@ class TestReaderPages(unittest.TestCase):
     def test_session5_dialogue_calculation(self):
         """Session 5 must properly calculate spoken dialogue and display correct percentages."""
         s5_content = (ROOT / "uneraseable-s5.html").read_text(encoding="utf-8")
-        self.assertIn("32.0% Dialogue", s5_content, "Session 5 card must calculate 32.0% dialogue")
-        self.assertIn("2,705", s5_content, "Session 5 card must show 2,705 spoken words")
-        self.assertIn("8,442w", s5_content, "Session 5 card must show 8,442 total words")
+        self.assertIn("33.2% Dialogue", s5_content, "Session 5 card must calculate 33.2% dialogue")
+        self.assertIn("3,032", s5_content, "Session 5 card must show 3,032 spoken words")
+        self.assertIn("9,131w", s5_content, "Session 5 card must show 9,131 total words")
 
     def test_feedback_modal_scroll_lock_and_containment(self):
         """Feedback bottom sheet and modal overlays must lock html/body scroll and contain overscroll."""
