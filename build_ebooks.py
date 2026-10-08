@@ -6162,7 +6162,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     print(f"[OK] Generated {output_path.name} ({len(blocks)} blocks, {word_count:,} words)")
 
 if __name__ == "__main__":
-    for s_num in [1, 2, 3, 4, 5]:
+    available = sorted(all_manifests.keys())
+    print(f"[INFO] Discovered {len(available)} session manifests: {available}")
+    for s_num in available:
         m_path = MANIFEST_DIR / f"s{s_num}-manifest-v2.json"
         if m_path.exists():
             out_path = OUTPUT_DIR / f"uneraseable-s{s_num}.html"
