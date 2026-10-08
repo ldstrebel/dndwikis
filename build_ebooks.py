@@ -1051,6 +1051,94 @@ def get_default_participant_scorecards(session_num: int) -> list:
                 "nextSessionDirectives": "Telegraph the simmer before the boil. In Session 6 combat, give us physical micro-actions from the floor—tugging Dravin's hem, warning the giants about hoofsteps—so your emotional weight stays continuously anchored in the fight."
             }
         ]
+    elif session_num == 6:
+        return [
+            {
+                "id": "gm",
+                "name": "Luke Foreman",
+                "character": "Game Master",
+                "role": "Game Master & World Architect",
+                "badge": "The Architect",
+                "color": "#94a3b8",
+                "icon": "👑",
+                "grade": "B-",
+                "score": 81,
+                "spotlightShare": "34% narrative staging",
+                "consistencyScore": "82%",
+                "ruthlessVerdict": "Superb high-concept cosmic horror with memory extraction and planar rifts, but encounter management suffered from overlapping hazards and unclear stage boundaries.",
+                "whatHelped": "The psychic memory siphon concept was deeply chilling and raised genuine existential stakes for the party.",
+                "whatHurt": "Mechanical pileup. Simultaneous sprinkler floods, electrified linoleum, three satyr vanguards, and dimensional tears led to combat congestion and rushed resolutions.",
+                "nextSessionDirectives": "Give environmental mechanics distinct initiative phases rather than triggering them concurrently."
+            },
+            {
+                "id": "pierre",
+                "name": "Luke S",
+                "character": "Pierre",
+                "role": "Parisian Stonemason & Skeptic",
+                "badge": "The Artisan",
+                "color": "#3b82f6",
+                "icon": "🥖",
+                "grade": "B-",
+                "score": 82,
+                "spotlightShare": "28% spoken dialogue",
+                "consistencyScore": "80%",
+                "ruthlessVerdict": "Outstanding tactical initiative and grapple defense with the javelin, but deflected cosmic terror into premature slapstick jokes about message boards during soul extraction.",
+                "whatHelped": "Bravely pinning the transformed woman and risking psychic trauma to secure the party's escape.",
+                "whatHurt": "Tonal bathos. Making forum banter jokes while having foundational memories violently stripped broke immersion.",
+                "nextSessionDirectives": "Let the genuine terror of identity loss breathe before recovering your cynical wit."
+            },
+            {
+                "id": "dravin",
+                "name": "William Webb",
+                "character": "Prof. Edward Dravin",
+                "role": "Stanford Academic & Demigod",
+                "badge": "The Professor",
+                "color": "#8b5cf6",
+                "icon": "📚",
+                "grade": "C",
+                "score": 72,
+                "spotlightShare": "18% spoken dialogue",
+                "consistencyScore": "68%",
+                "ruthlessVerdict": "Delivered the climactic knockout blow with the heavy scholarly lexicon, but spent combat repeatedly breaking character into table meta talk and ruler slapstick.",
+                "whatHelped": "The climactic scholarly tome slam at the podium gave the encounter a definitive, academic punctuation mark.",
+                "whatHurt": "Meta table queries instead of character agency ('Can I do this?', 'Does the ruler hit?'). Relied on heavy authorial prose repair to sound like a scholar.",
+                "nextSessionDirectives": "Speak as Professor Dravin in-character during combat, framing spell manifestations through academic theory."
+            },
+            {
+                "id": "eusacles",
+                "name": "John Hagey",
+                "character": "Eusacles",
+                "role": "Blue-Collar Gambler & Cynic",
+                "badge": "The Gambler",
+                "color": "#f59e0b",
+                "icon": "🎲",
+                "grade": "B",
+                "score": 84,
+                "spotlightShare": "16% spoken dialogue",
+                "consistencyScore": "86%",
+                "ruthlessVerdict": "Reliable front-line muscle and grapple anchor, but faded into the background during cognitive horror beats.",
+                "whatHelped": "Holding the line against charging satyrs and physically shielding Dr. Thorne at the stage apron.",
+                "whatHurt": "Passive during psychic incursion sequences, leaving Pierre to face cognitive extraction alone.",
+                "nextSessionDirectives": "Engage directly with the mental hazards; don't leave the supernatural burden entirely on the scholars."
+            },
+            {
+                "id": "alfie",
+                "name": "Sophie Foreman Noone",
+                "character": "Alfie",
+                "role": "Driftwood Doll & Rogue Heart",
+                "badge": "The Rogue",
+                "color": "#10b981",
+                "icon": "🪆",
+                "grade": "B+",
+                "score": 88,
+                "spotlightShare": "14% spoken dialogue",
+                "consistencyScore": "90%",
+                "ruthlessVerdict": "The MVP of creative spellcraft—inventing the Mage Band hair-tie and executing the 'Spore the Dying' wordcraft twist—though early turns rushed into mechanics queries.",
+                "whatHelped": "The linguistic wordplay altering Dravin's threshold magic was brilliant and lore-authentic.",
+                "whatHurt": "Table-talk mechanics queries ('Can I strike this rod?') directly in dialogue required authorial cleanup.",
+                "nextSessionDirectives": "Dramatize Alfie's sensory perception of runic threads in real time as she manipulates reality."
+            }
+        ]
     else:
         return [
             {
