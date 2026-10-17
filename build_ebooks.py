@@ -729,7 +729,7 @@ def build_campaign_whole_html(current_session_num: int) -> str:
     # Sort session cards from most recent to earliest (matching index view)
     s_stats.sort(key=lambda x: x["num"], reverse=True)
 
-    cols_class = "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+    cols_class = "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7"
     session_cards = ""
     for ss in s_stats:
         is_current = (ss['num'] == current_session_num)
@@ -1139,6 +1139,77 @@ def get_default_participant_scorecards(session_num: int) -> list:
                 "nextSessionDirectives": "Dramatize Alfie's sensory perception of runic threads in real time as she manipulates reality."
             }
         ]
+    elif session_num == 7:
+        return [
+            {
+                "id": "gm",
+                "name": "Luke Foreman",
+                "character": "Game Master",
+                "role": "Game Master & World Architect",
+                "badge": "The Architect",
+                "color": "#94a3b8",
+                "icon": "👑",
+                "grade": "A-",
+                "score": 91,
+                "spotlightShare": "17% dialogue & rich world staging",
+                "consistencyScore": "94%",
+                "ruthlessVerdict": "Outstanding world-building and character work across multiple distinct NPCs—from the tragic interrogation in the janitor cart to the ethereal Thanatos dream and the warm cabin breakfast at The Margin.",
+                "whatHelped": "Giving Thanatos an authentic, enigmatic voice that blended paternal warmth with chilling cosmic gravity, plus sharp roleplay as Teddy, Naomi, and Susanna.",
+                "whatHurt": "A brief pacing lull during the podcast lore dump before the D.C. mission was formally accepted.",
+                "nextSessionDirectives": "Maintain this high narrative velocity as the party infiltrates the police precinct in Washington, D.C."
+            },
+            {
+                "id": "pierre",
+                "name": "Luke S",
+                "character": "Pierre",
+                "role": "Parisian Stonemason & Skeptic",
+                "badge": "The Artisan",
+                "color": "#3b82f6",
+                "icon": "🥖",
+                "grade": "A",
+                "score": 95,
+                "spotlightShare": "21% spoken dialogue (Core Narrative Anchor)",
+                "consistencyScore": "96%",
+                "ruthlessVerdict": "Masterclass in character comedy and psychological vulnerability—demanding Alfie slap the captive, the iconic mafia mother intimidation breakdown, and spear-training pushups with Alfie.",
+                "whatHelped": "The hilarious revelation that 'Do you know who my mother is?' was intended as an Italian mob intimidation tactic rather than a genuine inquiry, anchoring the entire table in laughter.",
+                "whatHurt": "Occasionally allowed fear of the Lost Roads to stall party forward momentum during the transition.",
+                "nextSessionDirectives": "Channel this newfound spear training into proactive tactical leadership when infiltrating D.C."
+            },
+            {
+                "id": "eusacles",
+                "name": "John Hagey",
+                "character": "Eusacles",
+                "role": "Blue-Collar Gambler & Cynic",
+                "badge": "The Gambler",
+                "color": "#f59e0b",
+                "icon": "🎲",
+                "grade": "A",
+                "score": 94,
+                "spotlightShare": "20% spoken dialogue (Grounding Anchor & Divine Emissary)",
+                "consistencyScore": "95%",
+                "ruthlessVerdict": "Superb deadpan humor and existential depth—grilling the prisoner in the trash can, parrying Pierre's spear with the Thanatos watch, and delivering his father's cryptic Hermes prank message.",
+                "whatHelped": "Seamlessly navigating between gritty brawler skepticism ('Let's just kill her, that'll be way easier') and poignant demigod communion with Thanatos.",
+                "whatHurt": "Lingered in bystander mode during the early culinary debate before stepping in with the rum bottle.",
+                "nextSessionDirectives": "Put the Thanatos pocket watch to active use against magical security barriers in the D.C. evidence locker."
+            },
+            {
+                "id": "alfie",
+                "name": "Sophie Foreman Noone",
+                "character": "Alfie",
+                "role": "Driftwood Doll & Rogue Heart",
+                "badge": "The Rogue",
+                "color": "#10b981",
+                "icon": "🪆",
+                "grade": "A-",
+                "score": 92,
+                "spotlightShare": "11% spoken dialogue (High-Impact Scene Stealer)",
+                "consistencyScore": "94%",
+                "ruthlessVerdict": "Pure comedic and dramatic gold—surgically severing the prisoner's tendril for saying the 'D word', styling it as a fur stole, and the one-handed pushup training montage.",
+                "whatHelped": "Fierce loyalty to Pierre, hilarious pop-culture analogies ('Harry Potter Horcruxes / Action figure who lived'), and effortless scene dominance.",
+                "whatHurt": "Dialogue volume dropped during the middle cabin exposition while the others debated logistics.",
+                "nextSessionDirectives": "Take full advantage of Alfie's miniature size and stealth capabilities during the precinct infiltration."
+            }
+        ]
     else:
         return [
             {
@@ -1358,7 +1429,9 @@ CAMPAIGN_ARC_IMPACTS = {
     2: "The transition through the Lost Roads establishes the fragility of timeline fragments and the active pursuit by external redactors.",
     3: "The North Carolina museum heist exposes the historical reach of The Margin's fragments and introduces high-stakes security escalation.",
     4: "The Raleigh Redactors confrontation transforms an academic recovery mission into an active multi-faction war for timeline survival.",
-    5: "The psychiatric ward clinical trials and Dr. Thorne's lecture connect the stolen epigraphy to human medical experimentation, culminating in an ambush by armed satyrs."
+    5: "The psychiatric ward clinical trials and Dr. Thorne's lecture connect the stolen epigraphy to human medical experimentation, culminating in an ambush by armed satyrs.",
+    6: "The auditorium assault shatters the academic barrier as memory-draining horrors attack, forcing Pierre and Alfie to risk psychic annihilation to protect the party.",
+    7: "The interrogation of the captured Gorgon operative uncovers widespread temporal redactions, while Eusacles receives a cryptic dream from Thanatos directing the party to Washington, D.C."
 }
 
 

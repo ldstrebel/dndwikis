@@ -31,26 +31,27 @@ class TestIndexCampaignView(unittest.TestCase):
         self.assertTrue(self.index_path.exists(), "index.html must exist")
         self.content = self.index_path.read_text(encoding="utf-8")
 
-    def test_uneraseable_contains_all_six_sessions(self):
-        """Uneraseable must list Session 1 through Session 6."""
+    def test_uneraseable_contains_all_seven_sessions(self):
+        """Uneraseable must list Session 1 through Session 7."""
         m = re.search(r'data-campaign-title="Uneraseable"[^>]*data-chapters=\'([^\']+)\'', self.content)
         self.assertIsNotNone(m, "Uneraseable data-chapters attribute must exist")
         chapters = json.loads(m.group(1))
         
-        self.assertEqual(len(chapters), 6, f"Expected 6 sessions, got {len(chapters)}")
+        self.assertEqual(len(chapters), 7, f"Expected 7 sessions, got {len(chapters)}")
         urls = [c["url"] for c in chapters]
-        for s in range(1, 7):
+        for s in range(1, 8):
             expected_url = f"uneraseable-s{s}.html"
             self.assertIn(expected_url, urls, f"{expected_url} missing from Uneraseable")
             target_file = ROOT / expected_url
             self.assertTrue(target_file.exists(), f"Target file {target_file} does not exist")
 
     def test_uneraseable_sorted_recent_to_earliest(self):
-        """Uneraseable chapters must be sorted from most recent (S6) to earliest (S1)."""
+        """Uneraseable chapters must be sorted from most recent (S7) to earliest (S1)."""
         m = re.search(r'data-campaign-title="Uneraseable"[^>]*data-chapters=\'([^\']+)\'', self.content)
         chapters = json.loads(m.group(1))
         urls = [c["url"] for c in chapters]
         expected_order = [
+            "uneraseable-s7.html",
             "uneraseable-s6.html",
             "uneraseable-s5.html",
             "uneraseable-s4.html",
@@ -58,7 +59,7 @@ class TestIndexCampaignView(unittest.TestCase):
             "uneraseable-s2.html",
             "uneraseable-s1.html",
         ]
-        self.assertEqual(urls, expected_order, "Chapters should be ordered from Session 6 down to Session 1")
+        self.assertEqual(urls, expected_order, "Chapters should be ordered from Session 7 down to Session 1")
 
     def test_all_campaign_links_exist(self):
         """All URLs in data-chapters across all campaigns must resolve to real files."""
@@ -85,7 +86,7 @@ class TestIndexCampaignView(unittest.TestCase):
 
 class TestReaderPages(unittest.TestCase):
     def setUp(self):
-        self.sessions = [ROOT / f"uneraseable-s{s}.html" for s in range(1, 7)]
+        self.sessions = [ROOT / f"uneraseable-s{s}.html" for s in range(1, 8)]
         for s in self.sessions:
             self.assertTrue(s.exists(), f"{s.name} must exist")
 
@@ -217,26 +218,27 @@ class TestReaderPages(unittest.TestCase):
                           f"{s.name} must call setBodyScrollLock(false) on close")
 
     def test_campaign_overall_all_sessions(self):
-        """Campaign overall view must list all 6 sessions (S1-S6) on every reader, sorted recent to earliest."""
+        """Campaign overall view must list all 7 sessions (S1-S7) on every reader, sorted recent to earliest."""
         for s in self.sessions:
             content = s.read_text(encoding="utf-8")
-            self.assertIn("Campaign (S1–S6)", content,
-                          f"{s.name} campaign tab label must show Campaign (S1–S6)")
-            for target_s in range(1, 7):
+            self.assertIn("Campaign (S1–S7)", content,
+                          f"{s.name} campaign tab label must show Campaign (S1–S7)")
+            for target_s in range(1, 8):
                 self.assertIn(f"uneraseable-s{target_s}.html", content,
                               f"{s.name} campaign whole must link to uneraseable-s{target_s}.html")
             self.assertIn("in Dialogue", content,
                           f"{s.name} campaign whole must rank sessions by dialogue percentage")
             
             # Verify recent-to-earliest order in campaign whole
+            idx_s7 = content.find('href="uneraseable-s7.html"')
             idx_s6 = content.find('href="uneraseable-s6.html"')
             idx_s5 = content.find('href="uneraseable-s5.html"')
             idx_s4 = content.find('href="uneraseable-s4.html"')
             idx_s3 = content.find('href="uneraseable-s3.html"')
             idx_s2 = content.find('href="uneraseable-s2.html"')
             idx_s1 = content.find('href="uneraseable-s1.html"')
-            self.assertTrue(idx_s6 < idx_s5 < idx_s4 < idx_s3 < idx_s2 < idx_s1,
-                            f"{s.name} campaign whole session cards must be ordered S6 down to S1")
+            self.assertTrue(idx_s7 < idx_s6 < idx_s5 < idx_s4 < idx_s3 < idx_s2 < idx_s1,
+                            f"{s.name} campaign whole session cards must be ordered S7 down to S1")
 
     def test_three_lens_reading_guide(self):
         """Chapters modal must provide a 3-lens guide with quick 1-click cut switchers."""
