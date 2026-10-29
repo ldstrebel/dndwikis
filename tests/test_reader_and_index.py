@@ -294,6 +294,50 @@ class TestReaderPages(unittest.TestCase):
             self.assertNotIn("if (e.target === ov) e.preventDefault();", content,
                              f"{s.name} must not contain disruptive wheel/touchmove preventDefault on overlays")
 
+    def test_codex_header_button_and_wiki_modal(self):
+        """Header must have a Codex link button beside Chapters, with interactive wiki modal and standalone codex.html."""
+        # 1. Standalone codex.html exists
+        codex_page = ROOT / "codex.html"
+        self.assertTrue(codex_page.exists(), "Standalone codex.html must exist")
+        codex_content = codex_page.read_text(encoding="utf-8")
+        self.assertIn("The Margin Campaign Codex", codex_content)
+        self.assertIn('id="codexSidebarList"', codex_content)
+        self.assertIn('id="codexArticleView"', codex_content)
+        self.assertIn('id="codexSearchInput"', codex_content)
+
+        # 2. Check each session ebook
+        for s in self.sessions:
+            content = s.read_text(encoding="utf-8")
+            # Sticky header button
+            self.assertIn('id="toggleCodexBtn"', content,
+                          f"{s.name} header must contain toggleCodexBtn")
+            self.assertIn("📖", content,
+                          f"{s.name} must have book icon in header controls")
+            self.assertIn("<span>Codex</span>", content,
+                          f"{s.name} header button must say Codex")
+            
+            # Modal overlay & card
+            self.assertIn('id="codexModalOverlay"', content,
+                          f"{s.name} must have codexModalOverlay")
+            self.assertIn('id="codexModalCard"', content,
+                          f"{s.name} must have codexModalCard")
+            self.assertIn('id="codexSidebarList"', content,
+                          f"{s.name} codex modal must have codexSidebarList")
+            self.assertIn('id="codexArticleView"', content,
+                          f"{s.name} codex modal must have codexArticleView")
+            self.assertIn('id="codexArticlesData"', content,
+                          f"{s.name} must embed codexArticlesData json store")
+
+            # Functions & scroll lock
+            self.assertIn("window.openCodexModal", content,
+                          f"{s.name} must define window.openCodexModal")
+            self.assertIn("window.closeCodexModal", content,
+                          f"{s.name} must define window.closeCodexModal")
+            self.assertIn("window.selectCodexArticle", content,
+                          f"{s.name} must define window.selectCodexArticle")
+            self.assertIn("codexModalOverlay && codexModalOverlay.classList.contains('visible')", content,
+                          f"{s.name} setBodyScrollLock must include codexModalOverlay")
+
 
 if __name__ == "__main__":
     unittest.main()

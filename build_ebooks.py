@@ -21,6 +21,7 @@ from cryptography.hazmat.primitives import serialization
 MANIFEST_DIR = Path("d:/Code/dnd-scribe/sessions/data/index")
 CLEAN_DIR = Path("d:/Code/dnd-scribe/sessions/data/clean")
 OUTPUT_DIR = Path("d:/Code/dndwikis-main/dndwikis-main")
+CODEX_DIR = Path("d:/Code/dnd-scribe/campaign/codex")
 # Search possible secrets directory locations
 SECRETS_DIRS = [
     Path("d:/Code/dnd-scribe/.secrets"),
@@ -539,10 +540,10 @@ def build_vertical_chapters_html(chapters: list, characters: dict, session_num: 
     if editorial_forum:
         bot_review = editorial_forum.get("initialBotReview", {})
         table_debrief = bot_review.get("tableDebrief", {})
-        tomatometer = bot_review.get("tomatometer") or table_debrief.get("tomatometer", 92 if session_num < 5 else 62)
-        popcornmeter = bot_review.get("popcornmeter") or table_debrief.get("popcornmeter", 96 if session_num < 5 else 94)
-        grade = bot_review.get("grade", "A-" if session_num < 5 else "D")
-        t_icon = "🍅" if tomatometer >= 75 else "🟢"
+        _rs = resolve_review_scores(bot_review, table_debrief)
+        tomatometer_text, popcorn_text, grade, t_icon = (
+            _rs["tomatometer_text"], _rs["popcorn_text"], _rs["grade"], _rs["tomatometer_icon"]
+        )
 
         critic_row = f"""
         <div class="p-2.5 bg-slate-950/90 hover:bg-slate-900 border border-slate-800 hover:border-rose-500/60 rounded-xl transition-all cursor-pointer group shadow-sm flex flex-col gap-1.5 select-none active:scale-[0.99] mt-3"
@@ -555,10 +556,10 @@ def build_vertical_chapters_html(chapters: list, characters: dict, session_num: 
                         REVIEW
                     </span>
                     <span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-700/80 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0">
-                        <span>{t_icon}</span> <span>{tomatometer}%</span>
+                        <span>{t_icon}</span> <span>{tomatometer_text}</span>
                     </span>
                     <span class="px-1.5 py-0.5 rounded bg-slate-900 text-amber-300 border border-slate-700/80 text-[9px] font-mono font-bold flex items-center gap-1 flex-shrink-0">
-                        <span>🍿</span> <span>{popcornmeter}%</span>
+                        <span>🍿</span> <span>{popcorn_text}</span>
                     </span>
                     <h4 class="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-amber-300 transition-colors truncate">
                         Editorial Debrief & Critic Review
@@ -962,7 +963,8 @@ def get_narrative_spectrum_elements(session_num: int, spoken_pct: float, narrati
     ]
 
 
-def get_default_participant_scorecards(session_num: int) -> list:
+def _legacy_participant_scorecards(session_num: int) -> list:
+    """Hand-typed pre-rubric opinions for S5-S7 only. Do not add sessions here (DEC-037)."""
     if session_num == 5:
         return [
             {
@@ -1210,94 +1212,124 @@ def get_default_participant_scorecards(session_num: int) -> list:
                 "nextSessionDirectives": "Take full advantage of Alfie's miniature size and stealth capabilities during the precinct infiltration."
             }
         ]
-    else:
-        return [
-            {
-                "id": "gm",
-                "name": "Luke Foreman",
-                "character": "Game Master",
-                "role": "Game Master & World Architect",
-                "badge": "The Architect",
-                "color": "#94a3b8",
-                "icon": "👑",
-                "grade": "A-",
-                "score": 90,
-                "spotlightShare": "35% narrative staging",
-                "consistencyScore": "92%",
-                "ruthlessVerdict": "Strong atmospheric tension and sharp encounter pacing throughout the early chapter arc.",
-                "whatHelped": "Kept scene transitions brisk and evocative, giving each party member distinctive space to establish character.",
-                "whatHurt": "Occasionally allowed lore exposition to interrupt natural party banter.",
-                "nextSessionDirectives": "Continue allowing players to organically uncover planar oddities through hands-on interaction."
-            },
-            {
-                "id": "pierre",
-                "name": "Luke S",
-                "character": "Pierre",
-                "role": "Parisian Stonemason & Skeptic",
-                "badge": "The Artisan",
-                "color": "#3b82f6",
-                "icon": "🥖",
-                "grade": "A",
-                "score": 93,
-                "spotlightShare": "22% spoken dialogue",
-                "consistencyScore": "95%",
-                "ruthlessVerdict": "Anchored high-magic surreality with sharp European cynicism and deadpan comedic timing.",
-                "whatHelped": "Distinctive Parisian voice and architectural sensibility gave the party an unmistakable moral center.",
-                "whatHurt": "Leaned heavily into passive observation during certain fast-paced transitions.",
-                "nextSessionDirectives": "Take more tactical initiative in physical confrontations."
-            },
-            {
-                "id": "dravin",
-                "name": "William Webb",
-                "character": "Prof. Edward Dravin",
-                "role": "Stanford Academic & Demigod",
-                "badge": "The Professor",
-                "color": "#8b5cf6",
-                "icon": "📚",
-                "grade": "B+",
-                "score": 88,
-                "spotlightShare": "25% spoken dialogue",
-                "consistencyScore": "90%",
-                "ruthlessVerdict": "Treats planar phenomena as rigorous fieldwork, elevating high-magic tension through scholarly arrogance.",
-                "whatHelped": "Weaponized pedantic academic authority to control NPC negotiations.",
-                "whatHurt": "Held cards too close to the chest regarding personal backstory.",
-                "nextSessionDirectives": "Share personal vulnerabilities with the party to deepen interpersonal drama."
-            },
-            {
-                "id": "eusacles",
-                "name": "John Hagey",
-                "character": "Eusacles",
-                "role": "Blue-Collar Gambler & Cynic",
-                "badge": "The Gambler",
-                "color": "#f59e0b",
-                "icon": "🎲",
-                "grade": "A-",
-                "score": 91,
-                "spotlightShare": "21% spoken dialogue",
-                "consistencyScore": "94%",
-                "ruthlessVerdict": "Punctures esoteric pretense with streetwise questions and gamble-ready swagger.",
-                "whatHelped": "Brought authentic working-class skepticism to high-concept magical dilemmas.",
-                "whatHurt": "Rushed some social interactions with impulsive bets.",
-                "nextSessionDirectives": "Pair gambling instincts with collaborative party strategy."
-            },
-            {
-                "id": "alfie",
-                "name": "Sophie Foreman Noone",
-                "character": "Alfie",
-                "role": "Driftwood Doll & Rogue Heart",
-                "badge": "The Rogue",
-                "color": "#10b981",
-                "icon": "🪆",
-                "grade": "A-",
-                "score": 90,
-                "spotlightShare": "18% spoken dialogue",
-                "consistencyScore": "92%",
-                "ruthlessVerdict": "Injects physical stakes and raw empathy into every dangerous encounter.",
-                "whatHelped": "Brought visceral emotional honesty that prevented scenes from lapsing into pure satire.",
-                "whatHurt": "Remained silent during extended vehicular transit.",
-                "nextSessionDirectives": "Assert physical presence in transit and downtime scenes."
-            }
-        ]
+    return []
+
+
+def resolve_review_scores(bot_review: dict, table_debrief: dict) -> dict:
+    """Resolve Tomatometer/Popcornmeter for display WITHOUT inventing numbers (DEC-037 C0).
+
+    A numeric score is shown only when the manifest names its producer in ``scoreSource``.
+    Otherwise the session renders as 'Unscored'. There are no per-session default scores.
+    """
+    source = (bot_review or {}).get("scoreSource")
+    sourced = isinstance(source, str) and source.strip() and not source.strip().lower().startswith("none")
+
+    def _num(key):
+        v = (bot_review or {}).get(key)
+        if v is None:
+            v = (table_debrief or {}).get(key)
+        return v if (sourced and isinstance(v, (int, float)) and not isinstance(v, bool)) else None
+
+    t, p = _num("tomatometer"), _num("popcornmeter")
+    neutral = "bg-slate-900/80 text-slate-300 border-slate-700/80"
+    return {
+        "tomatometer": t,
+        "popcornmeter": p,
+        "tomatometer_text": f"{t}%" if t is not None else "Unscored",
+        "popcorn_text": f"{p}%" if p is not None else "Unscored",
+        "grade": (bot_review or {}).get("grade") or "UNSCORED",
+        "tomatometer_icon": "\U0001F345" if (t is not None and t >= 75) else ("\U0001F7E2" if t is not None else "\u2796"),
+        "tomatometer_status": ("Rotten" if t < 75 else "Certified Fresh") if t is not None else "Unscored",
+        "tomato_badge_classes": (
+            ("bg-rose-950/80 text-rose-300 border-rose-800/80" if t >= 75 else "bg-emerald-950/80 text-emerald-300 border-emerald-800/80")
+            if t is not None else neutral
+        ),
+        "popcorn_status": ("Certified Fresh" if p >= 75 else "Fresh") if p is not None else "Unscored",
+    }
+
+
+def _load_player_telemetry(session_num: int):
+    """Measured per-player telemetry embedded in the manifest by compute_player_telemetry.py."""
+    p = MANIFEST_DIR / f"s{session_num}-manifest-v2.json"
+    try:
+        return json.loads(p.read_text(encoding="utf-8")).get("stats", {}).get("playerTelemetry")
+    except Exception:
+        return None
+
+
+_PARTICIPANT_COLORS = {"gm": "#94a3b8", "pierre": "#3b82f6", "dravin": "#8b5cf6", "eusacles": "#f59e0b", "alfie": "#10b981"}
+
+
+def _participant_key(character: str) -> str:
+    c = (character or "").lower()
+    for k in ("pierre", "dravin", "eusacles", "alfie"):
+        if k in c:
+            return k
+    return "gm" if "master" in c else c
+
+
+def get_default_participant_scorecards(session_num: int, telemetry=None) -> list:
+    """Scorecards WITHOUT invented numbers (DEC-037 C0).
+
+    * Sessions 5-7 keep their hand-typed opinions, but they are labelled 'Legacy opinion
+      (pre-rubric)', lose the unmeasured numeric score/voice-match, and receive MEASURED airtime.
+    * Every other session gets telemetry-only 'Not rated' cards - never an invented grade.
+    * Players recorded as absent get a 'No data' card, never a grade.
+    """
+    telemetry = telemetry or _load_player_telemetry(session_num)
+    t_players = {p["label"]: p for p in (telemetry or {}).get("players", [])}
+    t_absent = {a["label"] for a in (telemetry or {}).get("absentPlayers", [])}
+    t_gm = (telemetry or {}).get("gm")
+
+    def _airtime(name: str, is_gm: bool) -> str:
+        if is_gm and t_gm:
+            return f"{t_gm['sharePctOfAllWords']}% of all words (measured airtime)"
+        row = t_players.get(name)
+        if row and row.get("sharePctOfPlayerWords") is not None:
+            return f"{row['sharePctOfPlayerWords']}% of player words (measured airtime)"
+        return ""
+
+    legacy = _legacy_participant_scorecards(session_num) if session_num in (5, 6, 7) else []
+    cards = []
+    if legacy:
+        for sc in legacy:
+            card = {k: v for k, v in sc.items() if k not in ("score", "consistencyScore")}
+            card["legacyBadge"] = sc.get("badge", "")
+            card["badge"] = "Legacy opinion (pre-rubric)"
+            card["legacy"] = True
+            is_gm = sc.get("id") == "gm"
+            card["spotlightShare"] = _airtime(sc.get("name", ""), is_gm)
+            if sc.get("name") in t_absent:
+                card.update({
+                    "grade": "No data",
+                    "ruthlessVerdict": "Absent this session - no data, no grade.",
+                    "whatHelped": "", "whatHurt": "", "nextSessionDirectives": "",
+                    "spotlightShare": "absent - no data",
+                })
+            cards.append(card)
+        return cards
+
+    if not telemetry:
+        return []
+
+    def _tele_card(pid, name, character, role, airtime, absent=False):
+        key = _participant_key(character)
+        return {
+            "id": pid, "name": name, "character": character, "role": role,
+            "badge": "Telemetry only", "color": _PARTICIPANT_COLORS.get(key, "#94a3b8"),
+            "grade": "No data" if absent else "Not rated",
+            "spotlightShare": "absent - no data" if absent else airtime,
+            "ruthlessVerdict": "Absent this session - no data, no grade." if absent else "Not yet rated by the Critic (measured airtime only).",
+            "whatHelped": "", "whatHurt": "", "nextSessionDirectives": "",
+        }
+
+    if t_gm:
+        cards.append(_tele_card("gm", t_gm["label"], "Game Master", "Game Master", _airtime(t_gm["label"], True)))
+    for row in (telemetry or {}).get("players", []):
+        cards.append(_tele_card(_participant_key(row["character"]), row["label"], row["character"], "", _airtime(row["label"], False)))
+    for a in (telemetry or {}).get("absentPlayers", []):
+        cards.append(_tele_card(_participant_key(a["character"]), a["label"], a["character"], "", "", absent=True))
+    return cards
 
 
 def get_participant_icon(participant_id: str = "", name: str = "", character: str = "") -> str:
@@ -1319,6 +1351,13 @@ def get_participant_icon(participant_id: str = "", name: str = "", character: st
 
 def get_grade_badge_styles(grade: str) -> dict:
     g = (grade or "").strip().upper()
+    if g in ("", "NOT RATED", "NO DATA", "UNSCORED"):
+        return {
+            "bg": "bg-slate-900/80",
+            "border": "border-slate-700/80",
+            "text": "text-slate-400",
+            "subtext": "text-slate-500"
+        }
     if g.startswith("A"):
         return {
             "bg": "bg-emerald-950/80",
@@ -1365,11 +1404,11 @@ def build_player_story_fuel_html(participant_scorecards: list, spoken_speakers: 
         p_color = sc.get("color", "#94a3b8")
         role = sc.get("role", "")
         badge = sc.get("badge", "")
-        spotlight = sc.get("spotlightShare", "20% · 500w novel")
+        spotlight = sc.get("spotlightShare") or "no data"
         what_helped = sc.get("whatHelped", "")
 
         pct_match = re.search(r"(\d+(?:\.\d+)?)%", spotlight)
-        pct_val = float(pct_match.group(1)) if pct_match else 20.0
+        pct_val = float(pct_match.group(1)) if pct_match else 0.0
 
         cards_html += f"""
         <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5 shadow-sm" style="border-left: 3px solid {p_color};">
@@ -1438,14 +1477,10 @@ CAMPAIGN_ARC_IMPACTS = {
 def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, word_count: int, spoken_pct: float, narrative_pct: float, sensory: dict) -> str:
     bot_review = editorial_forum.get("initialBotReview", {})
     table_debrief = bot_review.get("tableDebrief", {})
-    tomatometer = bot_review.get("tomatometer") or table_debrief.get("tomatometer", 92 if session_num < 5 else 62)
-    popcornmeter = bot_review.get("popcornmeter") or table_debrief.get("popcornmeter", 96 if session_num < 5 else 94)
-    grade = bot_review.get("grade", "A-" if session_num < 5 else "D")
-
-    tomatometer_status = "Rotten" if tomatometer < 75 else "Certified Fresh"
-    tomatometer_icon = "🍅" if tomatometer >= 75 else "🟢"
-    tomato_badge_classes = "bg-rose-950/80 text-rose-300 border-rose-800/80" if tomatometer >= 75 else "bg-emerald-950/80 text-emerald-300 border-emerald-800/80"
-    popcorn_status = "Certified Fresh" if popcornmeter >= 75 else "Fresh"
+    _rs = resolve_review_scores(bot_review, table_debrief)
+    tomatometer_text, popcorn_text, grade = _rs["tomatometer_text"], _rs["popcorn_text"], _rs["grade"]
+    tomatometer_status, tomatometer_icon = _rs["tomatometer_status"], _rs["tomatometer_icon"]
+    tomato_badge_classes, popcorn_status = _rs["tomato_badge_classes"], _rs["popcorn_status"]
 
     analysis = bot_review.get("ruthlessAnalysis", "")
     if isinstance(analysis, dict):
@@ -1547,7 +1582,7 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
                         <span class="text-2xl flex-shrink-0">{tomatometer_icon}</span>
                         <div>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-sm sm:text-base font-bold font-mono text-emerald-400">{tomatometer}%</span>
+                                <span class="text-sm sm:text-base font-bold font-mono text-emerald-400">{tomatometer_text}</span>
                                 <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded {tomato_badge_classes}">{tomatometer_status}</span>
                             </div>
                             <span class="text-[9px] text-slate-400 font-mono block">Tomatometer</span>
@@ -1559,7 +1594,7 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
                         <span class="text-2xl flex-shrink-0">🍿</span>
                         <div>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="text-sm sm:text-base font-bold font-mono text-amber-300">{popcornmeter}%</span>
+                                <span class="text-sm sm:text-base font-bold font-mono text-amber-300">{popcorn_text}</span>
                                 <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/80">{popcorn_status}</span>
                             </div>
                             <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter</span>
@@ -1599,15 +1634,11 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
 def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words: int, spoken_pct: float, narrative_pct: float, sensory: dict) -> str:
     bot_review = editorial_forum.get("initialBotReview", {})
     table_debrief = bot_review.get("tableDebrief", {})
-    tomatometer = bot_review.get("tomatometer") or table_debrief.get("tomatometer", 92 if session_num < 5 else 62)
-    popcornmeter = bot_review.get("popcornmeter") or table_debrief.get("popcornmeter", 96 if session_num < 5 else 94)
-    grade = bot_review.get("grade", "A-" if session_num < 5 else "D")
-    verdict = bot_review.get("verdict", "APPROVED FOR PRODUCTION" if session_num < 5 else "CRITICAL FAILURES REQUIRE REVISION")
-
-    tomatometer_status = "Rotten" if tomatometer < 75 else "Certified Fresh"
-    tomatometer_icon = "🍅" if tomatometer >= 75 else "🟢"
-    tomato_badge_classes = "bg-rose-950/80 text-rose-300 border-rose-800/80" if tomatometer >= 75 else "bg-emerald-950/80 text-emerald-300 border-emerald-800/80"
-    popcorn_status = "Certified Fresh" if popcornmeter >= 75 else "Fresh"
+    _rs = resolve_review_scores(bot_review, table_debrief)
+    tomatometer_text, popcorn_text, grade = _rs["tomatometer_text"], _rs["popcorn_text"], _rs["grade"]
+    verdict = bot_review.get("verdict", "UNSCORED")
+    tomatometer_status, tomatometer_icon = _rs["tomatometer_status"], _rs["tomatometer_icon"]
+    tomato_badge_classes, popcorn_status = _rs["tomato_badge_classes"], _rs["popcorn_status"]
 
     analysis = bot_review.get("ruthlessAnalysis", "")
     if isinstance(analysis, dict):
@@ -1630,7 +1661,8 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         p_icon = sc.get("icon") or get_participant_icon(sc.get("id"), sc.get("name"), sc.get("character"))
         p_color = sc.get("color", "#94a3b8")
         g = sc.get("grade", "B")
-        score = sc.get("score", 80)
+        score = sc.get("score")
+        score_html = f"({score}%)" if score is not None else ""
         g_style = get_grade_badge_styles(g)
         is_first = (idx == 0)
         active_btn_class = "border-amber-500 bg-slate-800 text-amber-300 shadow-md" if is_first else "border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
@@ -1648,7 +1680,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         role = sc.get("role", "")
         badge = sc.get("badge", "")
         spotlight = sc.get("spotlightShare", "")
-        consistency = sc.get("consistencyScore", "")
+        consistency = sc.get("consistencyScore") or "n/a"
         verdict_text = sc.get("ruthlessVerdict", "")
         what_helped_text = sc.get("whatHelped", "")
         what_hurt_text = sc.get("whatHurt", "")
@@ -1687,7 +1719,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                     </div>
                     <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl {g_style['bg']} border {g_style['border']}">
                         <span class="text-lg font-bold font-mono {g_style['text']}">{g}</span>
-                        <span class="text-xs font-mono {g_style['subtext']}">({score}%)</span>
+                        <span class="text-xs font-mono {g_style['subtext']}">{score_html}</span>
                     </div>
                 </div>
             </div>
@@ -1961,7 +1993,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                             <div class="text-3xl sm:text-4xl flex-shrink-0">{tomatometer_icon}</div>
                             <div>
                                 <div class="flex items-baseline gap-2">
-                                    <span class="text-xl sm:text-2xl font-bold font-mono text-slate-100">{tomatometer}%</span>
+                                    <span class="text-xl sm:text-2xl font-bold font-mono text-slate-100">{tomatometer_text}</span>
                                     <span class="text-[10px] uppercase font-mono font-bold px-1.5 py-0.2 rounded {tomato_badge_classes}">{tomatometer_status} ({grade})</span>
                                 </div>
                                 <span class="text-[10px] text-slate-400 font-mono block">Tomatometer · Narrative Execution</span>
@@ -1973,7 +2005,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                             <div class="text-3xl sm:text-4xl flex-shrink-0">🍿</div>
                             <div>
                                 <div class="flex items-baseline gap-2">
-                                    <span class="text-xl sm:text-2xl font-bold font-mono text-amber-300">{popcornmeter}%</span>
+                                    <span class="text-xl sm:text-2xl font-bold font-mono text-amber-300">{popcorn_text}</span>
                                     <span class="text-[10px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/80">{popcorn_status}</span>
                                 </div>
                                 <span class="text-[10px] text-slate-400 font-mono block">Popcornmeter · Live Tabletop Energy</span>
@@ -2151,7 +2183,311 @@ def build_diff_inspector_html(session_num: int) -> str:
     </div>
     """
 
-def generate_html_for_session(manifest_path: Path, output_path: Path):
+def parse_codex_markdown(md_text: str) -> str:
+    """Parses Codex Markdown to clean HTML with badges, tables, and internal article links."""
+    lines = md_text.splitlines()
+    html_lines = []
+    
+    def format_inline(text):
+        # Provenance and mystery status badges
+        text = re.sub(r'\[(OPEN|ESTABLISHED|HOOK|THEORY)\]', r'<span class="codex-badge badge-\1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">\1</span>', text)
+        text = re.sub(r'\[(OPEN|ESTABLISHED|HOOK|THEORY):\s*([^\]]+)\]', r'<span class="codex-badge badge-\1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">\1</span> <span class="text-[11px] font-mono text-slate-400">(\2)</span>', text)
+        
+        # Internal codex cross-links [Label](path/to/file.md)
+        def link_sub(m):
+            lbl = m.group(1)
+            target = m.group(2)
+            m_slug = re.search(r'([a-zA-Z0-9_\-]+)\.md', target)
+            if m_slug:
+                s_slug = m_slug.group(1).lower()
+                if s_slug == 'readme':
+                    s_slug = 'overview'
+                return f'<a href="javascript:void(0)" onclick="selectCodexArticle(\'{s_slug}\')" class="codex-crosslink text-amber-400 hover:text-amber-200 underline decoration-amber-500/40 hover:decoration-amber-300 font-semibold">{lbl}</a>'
+            return f'<span class="text-amber-300">{lbl}</span>'
+            
+        text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', link_sub, text)
+        text = re.sub(r'\*\*([^*]+)\*\*', r'<strong class="text-slate-100 font-semibold">\1</strong>', text)
+        text = re.sub(r'\*([^*]+)\*', r'<em class="text-slate-300 italic">\1</em>', text)
+        text = re.sub(r'`([^`]+)`', r'<code class="px-1.5 py-0.5 rounded bg-slate-950/80 text-amber-300 border border-slate-800 font-mono text-xs">\1</code>', text)
+        return text
+
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        
+        # Markdown table
+        if line.startswith('|') and line.endswith('|'):
+            table_rows = []
+            while i < len(lines) and lines[i].strip().startswith('|') and lines[i].strip().endswith('|'):
+                table_rows.append(lines[i].strip())
+                i += 1
+                
+            if len(table_rows) >= 2:
+                header_cols = [c.strip() for c in table_rows[0].strip('|').split('|')]
+                data_rows = table_rows[2:]
+                
+                t_html = ['<div class="overflow-x-auto my-4 rounded-xl border border-slate-800 bg-slate-950/70 shadow-inner">',
+                          '<table class="w-full text-left text-xs text-slate-300 border-collapse">',
+                          '<thead class="bg-slate-900/90 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">',
+                          '<tr>']
+                for hc in header_cols:
+                    t_html.append(f'<th class="px-3.5 py-2.5 font-bold font-mono">{format_inline(hc)}</th>')
+                t_html.append('</tr></thead><tbody class="divide-y divide-slate-800/60 font-sans">')
+                for r in data_rows:
+                    row_cols = [c.strip() for c in r.strip('|').split('|')]
+                    t_html.append('<tr class="hover:bg-slate-900/50 transition-colors">')
+                    for rc in row_cols:
+                        t_html.append(f'<td class="px-3.5 py-2 leading-relaxed">{format_inline(rc)}</td>')
+                    t_html.append('</tr>')
+                t_html.append('</tbody></table></div>')
+                html_lines.append('\n'.join(t_html))
+            continue
+            
+        if not line:
+            i += 1
+            continue
+            
+        if line.startswith('# '):
+            t_txt = line[2:].strip()
+            html_lines.append(f'<h1 class="text-xl sm:text-2xl font-bold font-serif text-amber-400 tracking-wide mt-2 mb-3 pb-2 border-b border-slate-800 flex items-center gap-2"><span>📜</span> <span>{format_inline(t_txt)}</span></h1>')
+        elif line.startswith('## '):
+            h_txt = line[3:].strip()
+            html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-5 mb-2.5 flex items-center gap-2 text-amber-300/90">{format_inline(h_txt)}</h2>')
+        elif line.startswith('### '):
+            h_txt = line[4:].strip()
+            html_lines.append(f'<h3 class="text-sm font-bold text-slate-200 mt-4 mb-2 flex items-center gap-1.5">{format_inline(h_txt)}</h3>')
+        elif line.startswith('---'):
+            html_lines.append('<hr class="my-4 border-slate-800/80">')
+        elif line.startswith('- ') or line.startswith('* '):
+            items = []
+            while i < len(lines) and (lines[i].strip().startswith('- ') or lines[i].strip().startswith('* ')):
+                item_txt = lines[i].strip()[2:].strip()
+                items.append(f'<li class="leading-relaxed">{format_inline(item_txt)}</li>')
+                i += 1
+            html_lines.append('<ul class="list-disc list-inside space-y-1 my-2 text-xs sm:text-sm text-slate-300 pl-1">\n' + '\n'.join(items) + '\n</ul>')
+            continue
+        elif re.match(r'^\d+\.\s+', line):
+            items = []
+            while i < len(lines) and re.match(r'^\d+\.\s+', lines[i].strip()):
+                m = re.match(r'^\d+\.\s+(.*)$', lines[i].strip())
+                items.append(f'<li class="leading-relaxed">{format_inline(m.group(1))}</li>')
+                i += 1
+            html_lines.append('<ol class="list-decimal list-inside space-y-1.5 my-2 text-xs sm:text-sm text-slate-300 pl-1">\n' + '\n'.join(items) + '\n</ol>')
+            continue
+        else:
+            html_lines.append(f'<p class="text-xs sm:text-sm text-slate-300 leading-relaxed my-2">{format_inline(line)}</p>')
+            
+        i += 1
+        
+    return '\n'.join(html_lines)
+
+
+def load_all_codex_articles():
+    """Scans and loads all canonical articles from dnd-scribe/campaign/codex."""
+    articles = {}
+    if not CODEX_DIR.exists():
+        print(f"[WARN] CODEX_DIR does not exist at {CODEX_DIR}")
+        return articles
+        
+    for p in sorted(CODEX_DIR.rglob("*.md")):
+        text = p.read_text(encoding="utf-8")
+        lines = text.splitlines()
+        title = lines[0].replace("#", "").strip() if lines else p.stem.title()
+        
+        category = "General"
+        subtitle = ""
+        for l in lines[1:8]:
+            if l.startswith("**Codex Category:**"):
+                category = l.replace("**Codex Category:**", "").strip()
+            elif l.startswith("**Type:**"):
+                category = l.replace("**Type:**", "").strip()
+            elif l.startswith("**Role:**"):
+                subtitle = l.replace("**Role:**", "").strip()
+            elif l.startswith("**Canon Standard:**"):
+                subtitle = l.replace("**Canon Standard:**", "").strip()
+
+        rel = p.as_posix()
+        slug = p.stem.lower()
+        if slug == "readme":
+            slug = "overview"
+            title = "Campaign Codex Overview"
+            category = "Overview"
+
+        if "sessions/" in rel:
+            group = "sessions"
+            icon = "📜"
+            sess_m = re.search(r's(\d+)', slug)
+            sess_num = int(sess_m.group(1)) if sess_m else 0
+        elif "characters/" in rel:
+            group = "characters"
+            icon = "👤"
+            sess_num = None
+        elif "factions/" in rel:
+            group = "factions"
+            icon = "🏛️"
+            sess_num = None
+        elif "threads/" in rel:
+            group = "threads"
+            icon = "🔍"
+            sess_num = None
+        else:
+            group = "overview"
+            icon = "🧭"
+            sess_num = None
+
+        html_body = parse_codex_markdown(text)
+        articles[slug] = {
+            "slug": slug,
+            "title": title,
+            "group": group,
+            "category": category,
+            "subtitle": subtitle,
+            "icon": icon,
+            "sessionNum": sess_num,
+            "html": html_body
+        }
+    return articles
+
+
+def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> str:
+    """Builds the Codex wiki modal overlay HTML and JSON payload."""
+    articles_json = json.dumps(codex_articles).replace("</script>", "<\\/script>")
+    
+    # Pre-render sidebar items
+    sidebar_items_html = []
+    # Sort: Overview first, then current session, then other sessions, then characters, factions, threads
+    group_order = {"overview": 1, "sessions": 2, "characters": 3, "factions": 4, "threads": 5}
+    sorted_slugs = sorted(
+        codex_articles.keys(),
+        key=lambda k: (
+            group_order.get(codex_articles[k]["group"], 99),
+            0 if codex_articles[k].get("sessionNum") == current_session_num else 1,
+            codex_articles[k].get("sessionNum") or 999,
+            codex_articles[k]["title"]
+        )
+    )
+    
+    default_active_slug = f"s{current_session_num}" if f"s{current_session_num}" in codex_articles else "overview"
+    
+    for s_slug in sorted_slugs:
+        art = codex_articles[s_slug]
+        is_default = (s_slug == default_active_slug)
+        active_class = "active bg-amber-500/20 text-amber-300 border-amber-500/50" if is_default else "bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white"
+        
+        subtitle_snip = f'<div class="text-[10px] text-slate-500 truncate">{art["subtitle"]}</div>' if art.get("subtitle") else ""
+        sess_badge = f'<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">S{art["sessionNum"]}</span>' if art.get("sessionNum") else ""
+        
+        sidebar_items_html.append(f"""
+        <button type="button" class="codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] {active_class}" data-slug="{s_slug}" data-group="{art['group']}" data-title="{art['title'].lower()}" onclick="selectCodexArticle('{s_slug}')">
+            <div class="flex items-center justify-between gap-1 w-full">
+                <span class="text-xs font-semibold truncate flex items-center gap-1.5">
+                    <span>{art['icon']}</span>
+                    <span class="truncate">{art['title']}</span>
+                </span>
+                {sess_badge}
+            </div>
+            {subtitle_snip}
+        </button>
+        """)
+
+    sidebar_joined = "\n".join(sidebar_items_html)
+    default_art = codex_articles.get(default_active_slug, codex_articles.get("overview", {}))
+    default_html = default_art.get("html", "<p class='text-slate-400'>Select an article to view.</p>")
+
+    return f"""
+    <!-- ========================================================= -->
+    <!-- CAMPAIGN CODEX & WIKI MODAL OVERLAY (Header-Triggered Modal) -->
+    <!-- ========================================================= -->
+    <div id="codexModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[80] flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto pt-6 sm:pt-4">
+        <div id="codexModalCard" class="w-full max-w-5xl bg-slate-900 border border-slate-700 rounded-2xl p-3.5 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[90vh] sm:max-h-[88vh]">
+            
+            <!-- Modal Header with Title, Search, and Exit Button -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3 gap-2 flex-shrink-0">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="text-2xl">📖</span>
+                    <div class="truncate">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm sm:text-base font-bold text-amber-400 uppercase tracking-wider font-serif truncate">The Margin Campaign Codex</h3>
+                            <span class="hidden xs:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">Canonical Wiki</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-mono truncate">DEC-037 Reference · Grounded Continuity & Dramatis Personae</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <a href="codex.html" target="_blank" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all" title="Open Standalone Codex in new tab">
+                        <span>↗</span> <span>Full Wiki</span>
+                    </a>
+                    <button id="closeCodexModalBtn" type="button" class="text-slate-400 hover:text-slate-100 text-2xl font-bold p-1 leading-none transition-colors" title="Close (Esc)">&times;</button>
+                </div>
+            </div>
+
+            <!-- Controls: Category Filter Tabs & Real-Time Search Bar -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pb-3 border-b border-slate-800/80 flex-shrink-0">
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar text-xs font-medium">
+                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-bold transition-all" data-category="all" onclick="filterCodexCategory('all')">
+                        All ({len(codex_articles)})
+                    </button>
+                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all" data-category="sessions" onclick="filterCodexCategory('sessions')">
+                        📜 Sessions
+                    </button>
+                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all" data-category="characters" onclick="filterCodexCategory('characters')">
+                        👤 Cast
+                    </button>
+                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all" data-category="factions" onclick="filterCodexCategory('factions')">
+                        🏛️ Factions
+                    </button>
+                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all" data-category="threads" onclick="filterCodexCategory('threads')">
+                        🔍 Mysteries
+                    </button>
+                </div>
+
+                <!-- Live Search Input -->
+                <div class="relative flex-1 sm:max-w-xs">
+                    <input id="codexSearchInput" type="text" placeholder="Search codex, characters, lore..." class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors" oninput="searchCodex(this.value)">
+                    <span class="absolute right-2.5 top-1.5 text-xs text-slate-500 pointer-events-none">🔍</span>
+                </div>
+            </div>
+
+            <!-- Two-Pane Layout: Left Sidebar Article Index + Right Article Reader -->
+            <div class="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-12 gap-3 pt-3 overflow-hidden">
+                <!-- Sidebar List (Scrollable) -->
+                <div id="codexSidebarList" class="md:col-span-4 overflow-y-auto space-y-1.5 pr-1 max-h-48 md:max-h-full custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 pb-2 md:pb-0">
+                    {sidebar_joined}
+                </div>
+
+                <!-- Main Article Viewer -->
+                <div id="codexArticleView" class="md:col-span-8 overflow-y-auto p-3 sm:p-5 rounded-xl bg-slate-950/70 border border-slate-800/80 custom-scrollbar max-h-[50vh] md:max-h-full">
+                    {default_html}
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="pt-3 mt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500 font-mono flex-shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Continuity Engine DEC-037 Phase 0</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="codexActiveArticleBadge" class="text-amber-400 font-semibold">{default_art.get('title', 'Overview')}</span>
+                    <button type="button" onclick="closeCodexModal()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Embedded Codex Article JSON Store -->
+    <script id="codexArticlesData" type="application/json">
+        {articles_json}
+    </script>
+    """
+
+
+def generate_html_for_session(manifest_path: Path, output_path: Path, codex_articles: dict = None):
     with open(manifest_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
@@ -2178,7 +2514,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     raw_speaker_dist = stats.get("speakerDistribution", [])
     writing_metrics = stats.get("writingMetrics", {})
     sensory = writing_metrics.get("sensoryRegisters", {})
-    bot_grade = editorial_forum.get("initialBotReview", {}).get("grade", "A-")
+    bot_grade = editorial_forum.get("initialBotReview", {}).get("grade", "UNSCORED")
 
     # Spoken characters & NPCs
     spoken_speakers = []
@@ -2298,6 +2634,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
     critic_forum_html = build_critic_forum_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct, sensory)
     end_session_critic_card_html = build_end_session_critic_card_html(editorial_forum, session_num, word_count, spoken_pct, narrative_pct, sensory)
     diff_inspector_html = build_diff_inspector_html(session_num)
+    if codex_articles is None:
+        codex_articles = load_all_codex_articles()
+    codex_modal_html = build_codex_modal_html(session_num, codex_articles)
 
     # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
@@ -2994,7 +3333,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         }}
 
         /* Overlay Transitions & Viewport Sizing */
-        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay, #diffInspectorOverlay {{
+        #chaptersModalOverlay, #codexModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay, #diffInspectorOverlay {{
             transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
             height: 100vh;
             height: 100dvh;
@@ -3004,16 +3343,16 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             overflow-x: hidden !important;
             overscroll-behavior: contain !important;
         }}
-        #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard, #diffInspectorCard {{
+        #chaptersModalCard, #codexModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard, #diffInspectorCard {{
             overscroll-behavior: contain !important;
         }}
-        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible, #diffInspectorOverlay.visible, #ghModalOverlay.visible {{
+        #chaptersModalOverlay.visible, #codexModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible, #diffInspectorOverlay.visible, #ghModalOverlay.visible {{
             opacity: 1 !important;
             pointer-events: auto !important;
             visibility: visible !important;
         }}
 
-        #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
+        #chaptersModalCard, #codexModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, max-height 0.2s ease;
             transform: scale(0.96) translateY(-10px);
             opacity: 0;
@@ -3023,6 +3362,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             margin-right: auto !important;
         }}
         #chaptersModalOverlay.visible #chaptersModalCard,
+        #codexModalOverlay.visible #codexModalCard,
         #critiqueModalOverlay.visible #critiqueBottomSheet,
         #criticForumModalOverlay.visible #criticForumModalCard,
         #settingsModalOverlay.visible #settingsModalCard,
@@ -3031,8 +3371,30 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             opacity: 1;
         }}
 
+        /* Codex Badges */
+        .codex-badge.badge-OPEN {{
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }}
+        .codex-badge.badge-ESTABLISHED {{
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }}
+        .codex-badge.badge-HOOK {{
+            background-color: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }}
+        .codex-badge.badge-THEORY {{
+            background-color: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }}
+
         @media (max-width: 640px) {{
-            #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay {{
+            #chaptersModalOverlay, #codexModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay {{
                 padding: 0.75rem !important;
                 box-sizing: border-box !important;
             }}
@@ -3040,7 +3402,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                 align-items: flex-start !important;
                 padding: 0.75rem !important;
             }}
-            #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
+            #chaptersModalCard, #codexModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
                 width: 100% !important;
                 max-width: 100% !important;
                 box-sizing: border-box !important;
@@ -3176,6 +3538,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     <span>Chapters</span>
                 </button>
 
+                <!-- Header Codex Button: Opens Campaign Codex & Wiki -->
+                <button id="toggleCodexBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 hover:text-amber-200 flex items-center gap-1.5 transition-all shadow-sm active:scale-95" title="Open Campaign Codex & World Wiki" aria-label="Open Codex">
+                    <span class="text-sm">📖</span>
+                    <span>Codex</span>
+                </button>
+
                 <!-- Combined Single Mode Toggle: Switches dynamically between Read Mode and Critique Mode -->
                 <button id="modeToggleBtn" type="button" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-1.5 active:scale-95" title="Read Mode is Active — tap to enable Critique Mode">
                     <span id="modeToggleIcon">📖</span>
@@ -3216,10 +3584,16 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
         <!-- CHAPTERS & READING LENS CONTROL BAR -->
         <div class="mb-6 flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 shadow-md">
-            <button type="button" onclick="document.getElementById('toggleChaptersBtn').click()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700/80 text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95">
-                <span class="text-amber-400">📑</span>
-                <span>Browse Chapters & Scenes</span>
-            </button>
+            <div class="flex items-center gap-2 flex-wrap">
+                <button type="button" onclick="document.getElementById('toggleChaptersBtn').click()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700/80 text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95">
+                    <span class="text-amber-400">📑</span>
+                    <span>Browse Chapters & Scenes</span>
+                </button>
+                <button type="button" onclick="openCodexModal()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border border-slate-700/80 text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95" title="Browse Campaign Codex & Wiki">
+                    <span>📖</span>
+                    <span>Codex Wiki</span>
+                </button>
+            </div>
             <div class="inline-flex items-center p-1 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-medium">
                 <button type="button" class="global-cut-btn cut-btn-cinematic px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center gap-1.5" data-cut="cinematic" onclick="switchGlobalCut('cinematic')">
                     <span>🎬</span>
@@ -3294,7 +3668,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         <p class="text-[11px] text-slate-400 font-mono truncate">Session {session_num} · {len(chapters)} Chapters · {word_count:,}w (~{read_mins}m)</p>
                     </div>
                 </div>
-                <button id="closeChaptersModalBtn" type="button" class="text-slate-400 hover:text-slate-100 text-2xl font-bold p-1 leading-none transition-colors ml-2" title="Close (Esc)">&times;</button>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <button type="button" onclick="closeChaptersModal(); openCodexModal();" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 hover:text-amber-200 text-xs font-semibold transition-all" title="Switch to Campaign Codex & Wiki">
+                        <span>📖</span> <span class="hidden xs:inline">Codex</span>
+                    </button>
+                    <button id="closeChaptersModalBtn" type="button" class="text-slate-400 hover:text-slate-100 text-2xl font-bold p-1 leading-none transition-colors ml-1" title="Close (Esc)">&times;</button>
+                </div>
             </div>
 
             <!-- Scrollable Content Body -->
@@ -3531,6 +3910,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
 
         </div>
     </div>
+
+    {codex_modal_html}
 
     {diff_inspector_html}
 
@@ -4004,6 +4385,22 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             const statsAccordionBody = document.getElementById('statsAccordionBody');
             const statsAccordionChevron = document.getElementById('statsAccordionChevron');
 
+            // Campaign Codex Modal Elements
+            const codexModalOverlay = document.getElementById('codexModalOverlay');
+            const toggleCodexBtn = document.getElementById('toggleCodexBtn');
+            const closeCodexModalBtn = document.getElementById('closeCodexModalBtn');
+            const codexSearchInput = document.getElementById('codexSearchInput');
+            const codexSidebarList = document.getElementById('codexSidebarList');
+            const codexArticleView = document.getElementById('codexArticleView');
+            const codexActiveArticleBadge = document.getElementById('codexActiveArticleBadge');
+            let codexArticlesMap = {{}};
+            try {{
+                const codexJsonEl = document.getElementById('codexArticlesData');
+                if (codexJsonEl) codexArticlesMap = JSON.parse(codexJsonEl.textContent);
+            }} catch(e) {{
+                console.warn('Could not parse codexArticlesData', e);
+            }}
+
             const endSessionCriticCard = document.getElementById('endSessionCriticCard');
             const footerCriticForumBtn = document.getElementById('footerCriticForumBtn');
             const criticForumModalOverlay = document.getElementById('criticForumModalOverlay');
@@ -4107,6 +4504,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                     const isAnyModalOpen = Boolean(
                         (diffInspectorOverlay && diffInspectorOverlay.classList.contains('visible')) ||
                         (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) ||
+                        (codexModalOverlay && codexModalOverlay.classList.contains('visible')) ||
                         (modalOverlay && modalOverlay.classList.contains('visible')) ||
                         (onboardingOverlay && onboardingOverlay.classList.contains('visible')) ||
                         (criticForumModalOverlay && criticForumModalOverlay.classList.contains('visible')) ||
@@ -4540,6 +4938,106 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
             if (chaptersModalOverlay) {{
                 chaptersModalOverlay.onclick = function(e) {{
                     if (e.target === chaptersModalOverlay) closeChaptersModal();
+                }};
+            }}
+
+            // =========================================================
+            // CAMPAIGN CODEX MODAL CONTROLLER & CLIENT SEARCH ENGINE
+            // =========================================================
+            window.openCodexModal = function(targetSlug) {{
+                if (!codexModalOverlay) return;
+                codexModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                codexModalOverlay.classList.add('visible');
+                setBodyScrollLock(true);
+                
+                if (targetSlug && codexArticlesMap[targetSlug]) {{
+                    window.selectCodexArticle(targetSlug);
+                }} else if (!targetSlug) {{
+                    const curSessSlug = "s{session_num}";
+                    if (codexArticlesMap[curSessSlug]) {{
+                        window.selectCodexArticle(curSessSlug);
+                    }} else if (codexArticlesMap['overview']) {{
+                        window.selectCodexArticle('overview');
+                    }}
+                }}
+            }};
+
+            window.closeCodexModal = function() {{
+                if (!codexModalOverlay) return;
+                codexModalOverlay.classList.remove('visible');
+                codexModalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                codexModalOverlay.style.height = '';
+                codexModalOverlay.style.transform = '';
+                setBodyScrollLock(false);
+            }};
+
+            window.selectCodexArticle = function(slug) {{
+                if (!slug) return;
+                const cleanSlug = slug.toLowerCase().trim();
+                const art = codexArticlesMap[cleanSlug];
+                if (!art) return;
+
+                if (codexArticleView) {{
+                    codexArticleView.innerHTML = art.html || '<p class="text-slate-400">Article content unavailable.</p>';
+                    codexArticleView.scrollTop = 0;
+                }}
+                if (codexActiveArticleBadge) {{
+                    codexActiveArticleBadge.textContent = art.title || cleanSlug;
+                }}
+
+                // Update active sidebar selection highlight
+                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                    if (item.dataset.slug === cleanSlug) {{
+                        item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                        try {{ item.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }}); }} catch(e) {{}}
+                    }} else {{
+                        item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                    }}
+                }});
+            }};
+
+            window.filterCodexCategory = function(cat) {{
+                const filter = (cat || 'all').toLowerCase().trim();
+                document.querySelectorAll('.codex-cat-btn').forEach(btn => {{
+                    const bCat = btn.dataset.category || 'all';
+                    if (bCat === filter) {{
+                        btn.className = "codex-cat-btn px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-bold transition-all";
+                    }} else {{
+                        btn.className = "codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all";
+                    }}
+                }});
+
+                const query = (codexSearchInput ? codexSearchInput.value : '').toLowerCase().trim();
+                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                    const grp = item.dataset.group || '';
+                    const title = item.dataset.title || '';
+                    const matchesCat = (filter === 'all' || grp === filter);
+                    const matchesSearch = (!query || title.includes(query) || (codexArticlesMap[item.dataset.slug] && codexArticlesMap[item.dataset.slug].html.toLowerCase().includes(query)));
+                    item.style.display = (matchesCat && matchesSearch) ? 'flex' : 'none';
+                }});
+            }};
+
+            window.searchCodex = function(query) {{
+                const q = (query || '').toLowerCase().trim();
+                const activeCatBtn = document.querySelector('.codex-cat-btn.bg-amber-400');
+                const cat = activeCatBtn ? activeCatBtn.dataset.category : 'all';
+
+                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                    const grp = item.dataset.group || '';
+                    const title = item.dataset.title || '';
+                    const matchesCat = (cat === 'all' || grp === cat);
+                    const slug = item.dataset.slug;
+                    const art = codexArticlesMap[slug];
+                    const matchesText = !q || title.includes(q) || (art && (art.subtitle || '').toLowerCase().includes(q)) || (art && (art.html || '').toLowerCase().includes(q));
+                    item.style.display = (matchesCat && matchesText) ? 'flex' : 'none';
+                }});
+            }};
+
+            if (toggleCodexBtn) toggleCodexBtn.onclick = function() {{ window.openCodexModal(); }};
+            if (closeCodexModalBtn) closeCodexModalBtn.onclick = window.closeCodexModal;
+            if (codexModalOverlay) {{
+                codexModalOverlay.onclick = function(e) {{
+                    if (e.target === codexModalOverlay) window.closeCodexModal();
                 }};
             }}
 
@@ -5053,6 +5551,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         diffInspectorOverlay,
                         modalOverlay,
                         chaptersModalOverlay,
+                        codexModalOverlay,
                         onboardingOverlay,
                         criticForumModalOverlay,
                         settingsModalOverlay,
@@ -5106,6 +5605,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
                         return;
                     }}
                     if (chaptersModalOverlay && chaptersModalOverlay.classList.contains('visible')) closeChaptersModal();
+                    if (codexModalOverlay && codexModalOverlay.classList.contains('visible')) window.closeCodexModal();
                     if (ghModalOverlay && !ghModalOverlay.classList.contains('opacity-0')) hideGhModal();
                     if (onboardingOverlay && !onboardingOverlay.classList.contains('opacity-0')) closeOnboardingModal();
                 }} else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {{
@@ -6322,11 +6822,279 @@ def generate_html_for_session(manifest_path: Path, output_path: Path):
         f.write(full_html)
     print(f"[OK] Generated {output_path.name} ({len(blocks)} blocks, {word_count:,} words)")
 
+def build_standalone_codex_html(codex_articles: dict) -> str:
+    """Builds a standalone wiki-style codex.html page for direct reading and bookmarking."""
+    articles_json = json.dumps(codex_articles).replace("</script>", "<\\/script>")
+    
+    group_order = {"overview": 1, "sessions": 2, "characters": 3, "factions": 4, "threads": 5}
+    sorted_slugs = sorted(
+        codex_articles.keys(),
+        key=lambda k: (
+            group_order.get(codex_articles[k]["group"], 99),
+            codex_articles[k].get("sessionNum") or 999,
+            codex_articles[k]["title"]
+        )
+    )
+    
+    sidebar_items_html = []
+    for s_slug in sorted_slugs:
+        art = codex_articles[s_slug]
+        is_default = (s_slug == "overview")
+        active_class = "active bg-amber-500/20 text-amber-300 border-amber-500/50" if is_default else "bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white"
+        subtitle_snip = f'<div class="text-[10px] text-slate-500 truncate">{art["subtitle"]}</div>' if art.get("subtitle") else ""
+        sess_badge = f'<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">S{art["sessionNum"]}</span>' if art.get("sessionNum") else ""
+        
+        sidebar_items_html.append(f"""
+        <button type="button" class="codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] {active_class}" data-slug="{s_slug}" data-group="{art['group']}" data-title="{art['title'].lower()}" onclick="selectCodexArticle('{s_slug}')">
+            <div class="flex items-center justify-between gap-1 w-full">
+                <span class="text-xs font-semibold truncate flex items-center gap-1.5">
+                    <span>{art['icon']}</span>
+                    <span class="truncate">{art['title']}</span>
+                </span>
+                {sess_badge}
+            </div>
+            {subtitle_snip}
+        </button>
+        """)
+
+    sidebar_joined = "\n".join(sidebar_items_html)
+    default_art = codex_articles.get("overview", {})
+    default_html = default_art.get("html", "<p class='text-slate-400'>Select an article to view.</p>")
+
+    return f"""<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Margin Campaign Codex · Wiki & Dramatis Personae</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        body {{
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+        }}
+        h1, h2, h3, .font-serif {{
+            font-family: 'Lora', serif;
+        }}
+        .font-cinzel {{
+            font-family: 'Cinzel', serif;
+        }}
+        .custom-scrollbar::-webkit-scrollbar {{
+            width: 5px;
+            height: 5px;
+        }}
+        .custom-scrollbar::-webkit-scrollbar-track {{
+            background: rgba(15, 23, 42, 0.6);
+        }}
+        .custom-scrollbar::-webkit-scrollbar-thumb {{
+            background: #334155;
+            border-radius: 9999px;
+        }}
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {{
+            background: #f59e0b;
+        }}
+        .codex-badge.badge-OPEN {{
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }}
+        .codex-badge.badge-ESTABLISHED {{
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }}
+        .codex-badge.badge-HOOK {{
+            background-color: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }}
+        .codex-badge.badge-THEORY {{
+            background-color: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+        }}
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 px-4 py-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <a href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-800/60 active:scale-95 flex-shrink-0" title="Back to Campaigns Index" aria-label="Back to Campaigns Index">
+                    <span class="text-lg leading-none font-bold">←</span>
+                </a>
+                <div class="truncate">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">📖</span>
+                        <h1 class="text-base sm:text-lg font-bold text-amber-400 font-cinzel tracking-wider truncate">The Margin Campaign Codex</h1>
+                        <span class="hidden sm:inline text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">Canonical Wiki</span>
+                    </div>
+                    <p class="text-xs text-slate-400 font-mono hidden sm:block">DEC-037 Grounded Continuity · Dramatis Personae · Session Chronicles · Open Mysteries</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <a href="uneraseable-s7.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-semibold transition-all">
+                    <span>📖</span> <span>Latest Session (S7)</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area: Sidebar + Article View -->
+    <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 flex-1 flex flex-col min-h-0">
+        <!-- Controls: Category Filter Tabs & Search Bar -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800 flex-shrink-0">
+            <!-- Category Tabs -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar text-xs font-medium">
+                <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-bold transition-all shadow-sm" data-category="all" onclick="filterCodexCategory('all')">
+                    All ({len(codex_articles)})
+                </button>
+                <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="sessions" onclick="filterCodexCategory('sessions')">
+                    📜 Sessions
+                </button>
+                <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="characters" onclick="filterCodexCategory('characters')">
+                    👤 Cast & NPCs
+                </button>
+                <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="factions" onclick="filterCodexCategory('factions')">
+                    🏛️ Factions
+                </button>
+                <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="threads" onclick="filterCodexCategory('threads')">
+                    🔍 Mysteries Board
+                </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative flex-1 sm:max-w-md">
+                <input id="codexSearchInput" type="text" placeholder="Search codex, characters, lore, sessions..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors shadow-inner" oninput="searchCodex(this.value)">
+                <span class="absolute right-3 top-2.5 text-xs text-slate-500 pointer-events-none">🔍</span>
+            </div>
+        </div>
+
+        <!-- Two-Pane Layout Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 flex-1 min-h-0">
+            <!-- Left Sidebar Article Directory -->
+            <aside id="codexSidebarList" class="md:col-span-4 lg:col-span-3 space-y-1.5 overflow-y-auto max-h-[40vh] md:max-h-[calc(100vh-220px)] pr-2 custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 pb-4 md:pb-0">
+                {sidebar_joined}
+            </aside>
+
+            <!-- Right Main Article Body -->
+            <article id="codexArticleView" class="md:col-span-8 lg:col-span-9 bg-slate-900/60 rounded-2xl border border-slate-800/80 p-4 sm:p-7 overflow-y-auto max-h-[60vh] md:max-h-[calc(100vh-220px)] custom-scrollbar shadow-xl">
+                {default_html}
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-800 py-4 px-4 bg-slate-950/80 text-center text-xs text-slate-500 font-mono">
+        <p>THE MARGIN CAMPAIGN CODEX · Grounded in DEC-037 Phase 0 Engine · Schema 2.0 Indexed.</p>
+    </footer>
+
+    <!-- Embedded Article Store & Controller Script -->
+    <script id="codexArticlesData" type="application/json">
+        {articles_json}
+    </script>
+    <script>
+        (function() {{
+            const codexJsonEl = document.getElementById('codexArticlesData');
+            const codexArticlesMap = codexJsonEl ? JSON.parse(codexJsonEl.textContent) : {{}};
+            const codexSearchInput = document.getElementById('codexSearchInput');
+            const codexArticleView = document.getElementById('codexArticleView');
+
+            window.selectCodexArticle = function(slug) {{
+                if (!slug) return;
+                const cleanSlug = slug.toLowerCase().trim();
+                const art = codexArticlesMap[cleanSlug];
+                if (!art) return;
+
+                if (codexArticleView) {{
+                    codexArticleView.innerHTML = art.html || '<p class="text-slate-400">Article content unavailable.</p>';
+                    codexArticleView.scrollTop = 0;
+                }}
+
+                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                    if (item.dataset.slug === cleanSlug) {{
+                        item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                        try {{ item.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }}); }} catch(e) {{}}
+                    }} else {{
+                        item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                    }}
+                }});
+                try {{ history.replaceState(null, null, '#' + cleanSlug); }} catch(e) {{}}
+            }};
+
+            window.filterCodexCategory = function(cat) {{
+                const filter = (cat || 'all').toLowerCase().trim();
+                document.querySelectorAll('.codex-cat-btn').forEach(btn => {{
+                    const bCat = btn.dataset.category || 'all';
+                    if (bCat === filter) {{
+                        btn.className = "codex-cat-btn px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-bold transition-all shadow-sm";
+                    }} else {{
+                        btn.className = "codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all";
+                    }}
+                }});
+
+                const query = (codexSearchInput ? codexSearchInput.value : '').toLowerCase().trim();
+                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                    const grp = item.dataset.group || '';
+                    const title = item.dataset.title || '';
+                    const matchesCat = (filter === 'all' || grp === filter);
+                    const matchesSearch = (!query || title.includes(query) || (codexArticlesMap[item.dataset.slug] && codexArticlesMap[item.dataset.slug].html.toLowerCase().includes(query)));
+                    item.style.display = (matchesCat && matchesSearch) ? 'flex' : 'none';
+                }});
+            }};
+
+            window.searchCodex = function(query) {{
+                const q = (query || '').toLowerCase().trim();
+                const activeCatBtn = document.querySelector('.codex-cat-btn.bg-amber-400');
+                const cat = activeCatBtn ? activeCatBtn.dataset.category : 'all';
+
+                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                    const grp = item.dataset.group || '';
+                    const title = item.dataset.title || '';
+                    const matchesCat = (cat === 'all' || grp === cat);
+                    const slug = item.dataset.slug;
+                    const art = codexArticlesMap[slug];
+                    const matchesText = !q || title.includes(q) || (art && (art.subtitle || '').toLowerCase().includes(q)) || (art && (art.html || '').toLowerCase().includes(q));
+                    item.style.display = (matchesCat && matchesText) ? 'flex' : 'none';
+                }});
+            }};
+
+            // Handle URL Hash on load
+            const hash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
+            if (hash && codexArticlesMap[hash]) {{
+                window.selectCodexArticle(hash);
+            }} else {{
+                window.selectCodexArticle('overview');
+            }}
+        }})();
+    </script>
+    <script src="traffic-tracker.js"></script>
+</body>
+</html>
+"""
+
 if __name__ == "__main__":
+    codex_articles = load_all_codex_articles()
+    print(f"[INFO] Loaded {len(codex_articles)} canonical codex articles.")
+    
+    # Generate standalone codex.html
+    codex_html_content = build_standalone_codex_html(codex_articles)
+    codex_output_path = OUTPUT_DIR / "codex.html"
+    with open(codex_output_path, "w", encoding="utf-8") as f:
+        f.write(codex_html_content)
+    print(f"[OK] Generated {codex_output_path.name}")
+
     available = sorted(all_manifests.keys())
     print(f"[INFO] Discovered {len(available)} session manifests: {available}")
     for s_num in available:
         m_path = MANIFEST_DIR / f"s{s_num}-manifest-v2.json"
         if m_path.exists():
             out_path = OUTPUT_DIR / f"uneraseable-s{s_num}.html"
-            generate_html_for_session(m_path, out_path)
+            generate_html_for_session(m_path, out_path, codex_articles)
