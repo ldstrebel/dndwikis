@@ -2204,16 +2204,22 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
         text = re.sub(r'\[(OPEN|ESTABLISHED|HOOK|THEORY):\s*([^\]]+)\]', r'<span class="codex-badge badge-\1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">\1</span>', text)
         text = re.sub(r'\[(OPEN|ESTABLISHED|HOOK|THEORY)\]', r'<span class="codex-badge badge-\1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">\1</span>', text)
         
-        # Internal codex cross-links [Label](path/to/file.md)
+        # Internal codex cross-links [Label](path/to/file.md) or [Label](path/to/file.md#anchor) or [Label](#anchor)
         def link_sub(m):
             lbl = m.group(1)
             target = m.group(2)
+            m_anchor = re.search(r'#([a-zA-Z0-9_\-]+)', target)
+            anchor_part = m_anchor.group(1).lower() if m_anchor else ""
             m_slug = re.search(r'([a-zA-Z0-9_\-]+)\.md', target)
             if m_slug:
                 s_slug = m_slug.group(1).lower()
                 if s_slug == 'readme':
                     s_slug = 'overview'
+                if anchor_part:
+                    return f'<a href="javascript:void(0)" onclick="selectCodexArticle(\'{s_slug}\'); setTimeout(() => {{ const el = document.getElementById(\'{anchor_part}\'); if (el) el.scrollIntoView({{ behavior: \'smooth\', block: \'center\' }}); }}, 150);" class="codex-crosslink text-amber-400 hover:text-amber-200 underline decoration-amber-500/40 hover:decoration-amber-300 font-semibold">{lbl}</a>'
                 return f'<a href="javascript:void(0)" onclick="selectCodexArticle(\'{s_slug}\')" class="codex-crosslink text-amber-400 hover:text-amber-200 underline decoration-amber-500/40 hover:decoration-amber-300 font-semibold">{lbl}</a>'
+            elif anchor_part:
+                return f'<a href="javascript:void(0)" onclick="const el = document.getElementById(\'{anchor_part}\'); if (el) el.scrollIntoView({{ behavior: \'smooth\', block: \'center\' }});" class="codex-crosslink text-amber-400 hover:text-amber-200 underline decoration-amber-500/40 hover:decoration-amber-300 font-semibold">{lbl}</a>'
             return f'<span class="text-amber-300">{lbl}</span>'
             
         text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', link_sub, text)
@@ -2300,6 +2306,168 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
                 ):
                     continue
 
+                # Check if this is the Active Mysteries Board or a Thread Table
+                is_thread_table = any("thread id" in hc.lower() for hc in header_cols)
+                if is_thread_table:
+                    # Check if it's the full 6-col Active Mysteries Board
+                    if any("established in-world evidence" in hc.lower() or "hypotheses" in hc.lower() for hc in header_cols):
+                        parsed_cards = []
+                        lead_count = 0
+                        active_count = 0
+                        resolved_count = 0
+                        
+                        for r in data_rows:
+                            row_cols = [c.strip() for c in r.strip('|').split('|')]
+                            if len(row_cols) < 5:
+                                continue
+                            raw_id = row_cols[0]
+                            core_q = row_cols[1]
+                            origin = row_cols[2]
+                            raw_status = row_cols[3]
+                            evidence = row_cols[4] if len(row_cols) > 4 else ""
+                            hypotheses = row_cols[5] if len(row_cols) > 5 else ""
+                            
+                            # Preserve deep link anchor
+                            anchor_m = re.search(r'<a\s+id="([^"]+)"></a>', raw_id)
+                            anchor_id = anchor_m.group(1) if anchor_m else ""
+                            anchor_html = f'<a id="{anchor_id}"></a>' if anchor_id else ""
+                            clean_id = re.sub(r'<[^>]+>', '', raw_id).replace('*', '').strip()
+                            card_elem_id = anchor_id if anchor_id else clean_id.lower().replace(' ', '-')
+                            
+                            # Clean status and build colored badge
+                            clean_status = re.sub(r'[`*]', '', raw_status).strip()
+                            st_lower = clean_status.lower()
+                            if "immediate" in st_lower or "hook" in st_lower:
+                                status_cat = "immediate"
+                                lead_count += 1
+                                status_badge = f'<span class="px-2.5 py-0.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>🚨 {clean_status}</span>'
+                            elif "resolved" in st_lower or "confirmed" in st_lower:
+                                status_cat = "resolved"
+                                resolved_count += 1
+                                status_badge = f'<span class="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1 shadow-sm">✅ {clean_status}</span>'
+                            elif "inquiry" in st_lower or "theory" in st_lower:
+                                status_cat = "active"
+                                active_count += 1
+                                status_badge = f'<span class="px-2.5 py-0.5 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/40 text-[10px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1 shadow-sm">🔮 {clean_status}</span>'
+                            else:
+                                status_cat = "active"
+                                active_count += 1
+                                status_badge = f'<span class="px-2.5 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1 shadow-sm">🔍 {clean_status}</span>'
+
+                            card = f"""
+                            <div class="mystery-card my-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-amber-950/20 border border-slate-800 hover:border-amber-500/40 transition-all shadow-xl space-y-3.5 scroll-mt-20" data-mystery-status="{status_cat}" id="{card_elem_id}">
+                                <!-- Card Header -->
+                                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2.5">
+                                    <div class="flex items-center gap-2">
+                                        {anchor_html}
+                                        <span class="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold tracking-wider">{clean_id}</span>
+                                        <span class="text-xs text-slate-400 font-mono flex items-center gap-1">
+                                            <span class="text-slate-500">Origin:</span> <span>{format_inline(origin)}</span>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        {status_badge}
+                                    </div>
+                                </div>
+
+                                <!-- Core Mystery Title & Question -->
+                                <div class="space-y-1">
+                                    <h3 class="text-sm sm:text-base font-bold font-serif text-slate-100 leading-snug">
+                                        {format_inline(core_q)}
+                                    </h3>
+                                </div>
+
+                                <!-- Evidence vs Hypotheses 2-Column Responsive Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                                    <!-- Observed Facts -->
+                                    <div class="p-3 sm:p-3.5 rounded-xl bg-slate-950/80 border border-emerald-500/30 space-y-1.5 flex flex-col justify-start shadow-inner">
+                                        <div class="flex items-center gap-1.5 text-emerald-400 text-[10px] sm:text-[11px] font-mono uppercase tracking-wider font-bold border-b border-emerald-950/80 pb-1">
+                                            <span>🏛️</span> <span>Established In-World Evidence</span>
+                                        </div>
+                                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">{format_inline(evidence)}</p>
+                                    </div>
+
+                                    <!-- Working Deductions -->
+                                    <div class="p-3 sm:p-3.5 rounded-xl bg-slate-950/80 border border-purple-500/30 space-y-1.5 flex flex-col justify-start shadow-inner">
+                                        <div class="flex items-center gap-1.5 text-purple-400 text-[10px] sm:text-[11px] font-mono uppercase tracking-wider font-bold border-b border-purple-950/80 pb-1">
+                                            <span>💡</span> <span>Party Hypotheses &amp; Inquiries</span>
+                                        </div>
+                                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">{format_inline(hypotheses)}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            """
+                            parsed_cards.append(card)
+
+                        total_count = len(parsed_cards)
+                        board_html = []
+                        # Filter buttons toolbar with dynamic counts
+                        board_html.append(f"""
+                        <div class="my-5 p-3.5 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">🧶</span>
+                                <div>
+                                    <h4 class="text-xs sm:text-sm font-bold text-amber-400 font-serif">Investigation Case Board</h4>
+                                    <p class="text-[10px] text-slate-400 font-mono">Filter by threat level &amp; resolution status</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-1.5" id="mysteryFilterButtons">
+                                <button type="button" class="mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm" data-filter="all" onclick="filterMysteryCards('all')">All ({total_count})</button>
+                                <button type="button" class="mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-rose-300 border border-rose-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-filter="immediate" onclick="filterMysteryCards('immediate')">🚨 Leads ({lead_count})</button>
+                                <button type="button" class="mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-sky-300 border border-sky-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-filter="active" onclick="filterMysteryCards('active')">🔍 Active ({active_count})</button>
+                                <button type="button" class="mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-emerald-300 border border-emerald-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-filter="resolved" onclick="filterMysteryCards('resolved')">✅ Resolved ({resolved_count})</button>
+                            </div>
+                        </div>
+                        """)
+                        board_html.append('\\n'.join(parsed_cards))
+                        html_lines.append('\\n'.join(board_html))
+                        continue
+                    else:
+                        # Session Chronicle 4-col Thread Table: Render as responsive Session Thread Cards
+                        cards_html = []
+                        for r in data_rows:
+                            row_cols = [c.strip() for c in r.strip('|').split('|')]
+                            if len(row_cols) < 4:
+                                continue
+                            raw_id = row_cols[0]
+                            core_q = row_cols[1]
+                            raw_status = row_cols[2]
+                            context = row_cols[3]
+                            
+                            clean_status = re.sub(r'[`*]', '', raw_status).strip()
+                            st_lower = clean_status.lower()
+                            if "advanced" in st_lower:
+                                status_badge = f'<span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">⚡ {clean_status}</span>'
+                            elif "opened" in st_lower and "hook" in st_lower:
+                                status_badge = f'<span class="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-mono font-bold uppercase tracking-wider animate-pulse">🚨 {clean_status}</span>'
+                            elif "opened" in st_lower:
+                                status_badge = f'<span class="px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">🔍 {clean_status}</span>'
+                            elif "resolved" in st_lower or "confirmed" in st_lower:
+                                status_badge = f'<span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">✅ {clean_status}</span>'
+                            else:
+                                status_badge = f'<span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-mono font-bold uppercase tracking-wider">{clean_status}</span>'
+
+                            card = f"""
+                            <div class="session-thread-card my-3 p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-amber-950/10 border border-slate-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-md">
+                                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/60 pb-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold">{format_inline(raw_id)}</span>
+                                        <span class="text-xs sm:text-sm font-bold text-slate-100 font-serif">{format_inline(core_q)}</span>
+                                    </div>
+                                    <div>
+                                        {status_badge}
+                                    </div>
+                                </div>
+                                <div class="p-2.5 sm:p-3 rounded-lg bg-slate-950/70 border border-slate-800/80 text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+                                    {format_inline(context)}
+                                </div>
+                            </div>
+                            """
+                            cards_html.append(card)
+                        html_lines.append('\n'.join(cards_html))
+                        continue
+
+                # Standard table rendering
                 t_html = ['<div class="overflow-x-auto my-3 rounded-xl border border-slate-800 bg-slate-950/60 shadow-inner">',
                           '<table class="w-full text-left text-xs text-slate-300 border-collapse">',
                           '<thead class="bg-slate-900/90 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">',
@@ -5443,6 +5611,15 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 codexModalOverlay.classList.add('visible');
                 setBodyScrollLock(true);
                 
+                if (targetSlug && targetSlug.toLowerCase().startsWith('th-')) {{
+                    window.selectCodexArticle('open-threads');
+                    setTimeout(() => {{
+                        const el = document.getElementById(targetSlug.toLowerCase());
+                        if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                    }}, 200);
+                    return;
+                }}
+                
                 const slugToOpen = (targetSlug && codexArticlesMap[targetSlug]) ? targetSlug : 'overview';
                 window.selectCodexArticle(slugToOpen);
             }};
@@ -5587,6 +5764,37 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                         }}
                     }}
                 }}
+
+                if (cleanSlug === 'open-threads') {{
+                    if (typeof window.filterMysteryCards === 'function') {{
+                        window.filterMysteryCards('all');
+                    }}
+                }}
+            }};
+
+            window.filterMysteryCards = function(category) {{
+                const filter = (category || 'all').toLowerCase().trim();
+                document.querySelectorAll('.mystery-filter-btn').forEach(btn => {{
+                    const bFilter = btn.dataset.filter || 'all';
+                    if (bFilter === filter) {{
+                        btn.className = "mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm";
+                    }} else {{
+                        let textClass = "text-slate-300 border-slate-700";
+                        if (bFilter === 'immediate') textClass = "text-rose-300 border-rose-500/30";
+                        else if (bFilter === 'active') textClass = "text-sky-300 border-sky-500/30";
+                        else if (bFilter === 'resolved') textClass = "text-emerald-300 border-emerald-500/30";
+                        btn.className = "mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 " + textClass + " border hover:bg-slate-700 text-xs font-semibold transition-all";
+                    }}
+                }});
+
+                document.querySelectorAll('.mystery-card').forEach(card => {{
+                    const cardStatus = card.dataset.mysteryStatus || '';
+                    if (filter === 'all' || cardStatus === filter) {{
+                        card.style.display = 'block';
+                    }} else {{
+                        card.style.display = 'none';
+                    }}
+                }});
             }};
 
             window.filterCodexCategory = function(cat) {{
@@ -8055,7 +8263,38 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     }}
                 }}
 
+                if (cleanSlug === 'open-threads') {{
+                    if (typeof window.filterMysteryCards === 'function') {{
+                        window.filterMysteryCards('all');
+                    }}
+                }}
+
                 try {{ history.replaceState(null, null, '#' + cleanSlug); }} catch(e) {{}}
+            }};
+
+            window.filterMysteryCards = function(category) {{
+                const filter = (category || 'all').toLowerCase().trim();
+                document.querySelectorAll('.mystery-filter-btn').forEach(btn => {{
+                    const bFilter = btn.dataset.filter || 'all';
+                    if (bFilter === filter) {{
+                        btn.className = "mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm";
+                    }} else {{
+                        let textClass = "text-slate-300 border-slate-700";
+                        if (bFilter === 'immediate') textClass = "text-rose-300 border-rose-500/30";
+                        else if (bFilter === 'active') textClass = "text-sky-300 border-sky-500/30";
+                        else if (bFilter === 'resolved') textClass = "text-emerald-300 border-emerald-500/30";
+                        btn.className = "mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 " + textClass + " border hover:bg-slate-700 text-xs font-semibold transition-all";
+                    }}
+                }});
+
+                document.querySelectorAll('.mystery-card').forEach(card => {{
+                    const cardStatus = card.dataset.mysteryStatus || '';
+                    if (filter === 'all' || cardStatus === filter) {{
+                        card.style.display = 'block';
+                    }} else {{
+                        card.style.display = 'none';
+                    }}
+                }});
             }};
 
             window.filterCodexCategory = function(cat) {{
@@ -8340,11 +8579,30 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
             const isMobile = window.innerWidth < 768;
             if (hash && codexArticlesMap[hash]) {{
                 window.selectCodexArticle(hash);
+            }} else if (hash && hash.startsWith('th-')) {{
+                window.selectCodexArticle('open-threads');
+                setTimeout(() => {{
+                    const el = document.getElementById(hash);
+                    if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                }}, 200);
             }} else if (isMobile) {{
                 window.selectCodexArticle('overview');
             }} else {{
                 window.selectCodexArticle('overview');
             }}
+
+            window.addEventListener('hashchange', () => {{
+                const newHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
+                if (newHash && codexArticlesMap[newHash]) {{
+                    window.selectCodexArticle(newHash);
+                }} else if (newHash && newHash.startsWith('th-')) {{
+                    window.selectCodexArticle('open-threads');
+                    setTimeout(() => {{
+                        const el = document.getElementById(newHash);
+                        if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                    }}, 200);
+                }}
+            }});
         }})();
     </script>
     <script src="traffic-tracker.js"></script>
