@@ -240,6 +240,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const chapters = JSON.parse(card.dataset.chapters || '[]');
             const genres = (card.dataset.genre || "").split(' ');
 
+            const codexUrl = card.dataset.codexUrl;
+            const codexLabel = card.dataset.codexLabel || "📖 Campaign Codex & Wiki";
+
             // Update campaign order and sort
             const campaignId = title.toLowerCase().replace(/\s+/g, '-');
             localStorage.setItem(`lastClicked_${campaignId}`, Date.now());
@@ -304,7 +307,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalChapterList.innerHTML = ''; // Clear previous chapters
                 const chaptersSection = modal.querySelector('.modal-chapters-section');
 
-                if (chapters.length > 0) {
+                if (chapters.length > 0 || codexUrl) {
+                    if (codexUrl) {
+                        const codexItem = document.createElement('li');
+                        codexItem.className = 'modal-codex-item';
+                        const codexLink = document.createElement('a');
+                        codexLink.href = codexUrl;
+                        codexLink.className = 'codex-featured-link';
+                        codexLink.style.cssText = 'background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; font-weight: bold; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;';
+                        codexLink.innerHTML = `<span>${codexLabel}</span> <span style="font-size: 0.85em; opacity: 0.85; font-family: monospace;">Explore Wiki ↗</span>`;
+                        codexItem.appendChild(codexLink);
+                        modalChapterList.appendChild(codexItem);
+                    }
                     chapters.forEach(chapter => {
                         const listItem = document.createElement('li');
                         const link = document.createElement('a');
