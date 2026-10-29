@@ -2358,6 +2358,161 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
     return '\n'.join(html_lines)
 
 
+def build_codex_feedback_card_html(slug: str, title: str, group: str) -> str:
+    """Builds an interactive critique and feedback card anchored at the bottom of every codex entry."""
+    clean_title = title.replace('"', '&quot;').replace("'", "&#39;")
+    return f"""
+    <!-- Codex Entry Feedback & Lore Critique Card -->
+    <div class="mt-12 pt-6 border-t border-slate-800/80" id="codexFeedbackSection">
+        <div class="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-900 to-amber-950/20 border border-amber-500/30 shadow-xl space-y-4" data-codex-slug="{slug}" data-codex-title="{clean_title}" data-codex-group="{group}">
+            <!-- Header -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">✍️</span>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-bold font-serif text-slate-100">Feedback &amp; Lore Refinement</h3>
+                        <p class="text-[11px] text-slate-400 font-sans">Have a correction, missing canon detail, or suggestion for this entry?</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono text-[10px] font-bold uppercase">{group}</span>
+                    <span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700 font-mono text-[10px] truncate max-w-[160px] font-semibold">{clean_title}</span>
+                </div>
+            </div>
+
+            <!-- Reviewer Handle Row -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <label class="text-xs text-slate-400 font-medium whitespace-nowrap">Your Scribe Handle:</label>
+                <div class="flex items-center gap-1.5 flex-1 max-w-sm">
+                    <input type="text" id="codexReviewerNameInput" placeholder="Your name or handle..." class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 font-mono transition-colors">
+                    <button type="button" onclick="rollCodexReviewerName()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 text-xs font-semibold whitespace-nowrap active:scale-95 transition-all flex items-center gap-1" title="Roll random D&D character pun name">
+                        <span>🎲</span> <span class="hidden xs:inline">Roll Name</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Selector -->
+            <div>
+                <label class="text-xs text-slate-400 font-medium block mb-1.5">Critique Category:</label>
+                <div class="flex flex-wrap gap-1.5" id="codexCategoryPills">
+                    <button type="button" class="codex-fb-cat-pill active px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/50 transition-all" data-cat="Continuity / Canon" onclick="selectCodexFeedbackCategory(this, 'Continuity / Canon')">⚖️ Continuity / Canon</button>
+                    <button type="button" class="codex-fb-cat-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200 transition-all" data-cat="Lore Inaccuracy" onclick="selectCodexFeedbackCategory(this, 'Lore Inaccuracy')">⚠️ Lore Inaccuracy</button>
+                    <button type="button" class="codex-fb-cat-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200 transition-all" data-cat="Missing Detail" onclick="selectCodexFeedbackCategory(this, 'Missing Detail')">🔍 Missing Detail</button>
+                    <button type="button" class="codex-fb-cat-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200 transition-all" data-cat="Tone / Voice" onclick="selectCodexFeedbackCategory(this, 'Tone / Voice')">🎭 Tone / Voice</button>
+                    <button type="button" class="codex-fb-cat-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200 transition-all" data-cat="General Suggestion" onclick="selectCodexFeedbackCategory(this, 'General Suggestion')">💡 Suggestion</button>
+                </div>
+            </div>
+
+            <!-- Directive Textarea -->
+            <div>
+                <label class="text-xs text-slate-400 font-medium block mb-1">Your Directive / Critique Note: <span class="text-amber-400">*</span></label>
+                <textarea id="codexFeedbackDirective" rows="3" placeholder="Identify an inconsistency, missing lore detail, character cadence nuance, or timeline error..." class="w-full bg-slate-950 border border-slate-700/80 rounded-xl p-3 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors leading-relaxed"></textarea>
+            </div>
+
+            <!-- Optional Rewrite Textarea -->
+            <div>
+                <label class="text-xs text-slate-400 font-medium block mb-1">Suggested Revision / Text (Optional):</label>
+                <textarea id="codexFeedbackRewrite" rows="2" placeholder="Proposed replacement phrasing, corrected stat, or additional lore paragraph..." class="w-full bg-slate-950 border border-slate-700/80 rounded-xl p-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 font-mono transition-colors leading-relaxed"></textarea>
+            </div>
+
+            <!-- Status Message Banner -->
+            <div id="codexFeedbackStatus" class="hidden p-3 rounded-xl text-xs font-mono"></div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-800">
+                <button type="button" onclick="copyCodexFeedbackToClipboard('{slug}', '{clean_title}', '{group}')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold active:scale-95 transition-all flex items-center gap-1.5" title="Copy formatted feedback note to clipboard">
+                    <span>📋</span> <span>Copy Note</span>
+                </button>
+                <button type="button" id="codexSubmitPrBtn" onclick="submitCodexFeedbackPr('{slug}', '{clean_title}', '{group}')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold shadow-lg shadow-amber-500/20 active:scale-95 transition-all flex items-center gap-1.5" title="Open Pull Request against ldstrebel/dnd-scribe">
+                    <span>🚀</span> <span>Submit Codex Feedback</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    """
+
+
+def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int = None, is_standalone: bool = False) -> str:
+    """Builds nested collapsible accordion groups with item counts and rotating chevrons."""
+    groups = [
+        {"key": "sessions", "title": "Session Chronicles", "icon": "📜"},
+        {"key": "characters", "title": "Dramatis Personae", "icon": "👤"},
+        {"key": "factions", "title": "Factions & Orders", "icon": "🏛️"},
+        {"key": "threads", "title": "Active Mysteries Board", "icon": "🔍"},
+        {"key": "critic", "title": "Critic Editorial Reviews", "icon": "🎭"},
+    ]
+    
+    html_parts = []
+    
+    # Pinned Master Hub at top
+    html_parts.append("""
+    <button type="button" class="codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50 mb-3 shadow-md" data-slug="overview" data-group="overview" data-title="campaign codex overview home portal" onclick="selectCodexArticle('overview')">
+        <span class="text-xs font-bold flex items-center gap-2">
+            <span class="text-base">🧭</span>
+            <span>Campaign Codex Hub</span>
+        </span>
+        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-200 border border-amber-500/50 uppercase font-bold">Home</span>
+    </button>
+    """)
+    
+    for g in groups:
+        g_key = g["key"]
+        g_title = g["title"]
+        g_icon = g["icon"]
+        
+        g_articles = [art for art in codex_articles.values() if art.get("group") == g_key]
+        if not g_articles:
+            continue
+            
+        if g_key == "sessions":
+            g_articles.sort(key=lambda a: a.get("sessionNum") or 999)
+        elif g_key == "critic":
+            def critic_sort(a):
+                m = re.search(r's(\d+)', a["slug"])
+                return int(m.group(1)) if m else 999
+            g_articles.sort(key=critic_sort)
+        else:
+            g_articles.sort(key=lambda a: a.get("title", ""))
+            
+        group_items_html = []
+        for art in g_articles:
+            s_slug = art["slug"]
+            subtitle_snip = f'<div class="text-[10px] text-slate-500 truncate">{art["subtitle"]}</div>' if art.get("subtitle") else ""
+            sess_badge = f'<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">S{art["sessionNum"]}</span>' if art.get("sessionNum") else ""
+            
+            group_items_html.append(f"""
+            <button type="button" class="codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white" data-slug="{s_slug}" data-group="{art['group']}" data-title="{art['title'].lower()}" onclick="selectCodexArticle('{s_slug}')">
+                <div class="flex items-center justify-between gap-1 w-full">
+                    <span class="text-xs font-semibold truncate flex items-center gap-1.5">
+                        <span>{art['icon']}</span>
+                        <span class="truncate">{art['title']}</span>
+                    </span>
+                    {sess_badge}
+                </div>
+                {subtitle_snip}
+            </button>
+            """)
+            
+        joined_items = "\n".join(group_items_html)
+        html_parts.append(f"""
+        <div class="codex-accordion-group mb-2.5" data-group="{g_key}">
+            <button type="button" class="codex-group-header w-full flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold select-none" onclick="toggleCodexGroup('{g_key}')">
+                <div class="flex items-center gap-2">
+                    <span>{g_icon}</span>
+                    <span>{g_title}</span>
+                    <span class="codex-group-count text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-400 border border-slate-700/60 font-bold">{len(g_articles)}</span>
+                </div>
+                <span class="codex-group-chevron text-[10px] text-slate-500 transition-transform duration-200">▼</span>
+            </button>
+            <div class="codex-group-items pl-1 pt-1.5 space-y-1" id="codexGroup-{g_key}">
+                {joined_items}
+            </div>
+        </div>
+        """)
+        
+    return "\n".join(html_parts)
+
+
 def load_all_codex_articles():
     """Scans and loads all canonical articles from dnd-scribe/campaign/codex."""
     articles = {}
@@ -2385,13 +2540,19 @@ def load_all_codex_articles():
                 subtitle = l.replace("**Role:**", "").strip()
             elif l.startswith("**Canon Standard:**"):
                 subtitle = l.replace("**Canon Standard:**", "").strip()
+            elif l.startswith("**Session Scorecard:**"):
+                subtitle = l.replace("**Session Scorecard:**", "").strip().replace("`", "")
 
         rel = p.as_posix()
         slug = p.stem.lower()
-        if slug == "readme":
-            slug = "overview"
-            title = "Campaign Codex Overview"
-            category = "Overview"
+        if p.name.lower() == "readme.md":
+            if p.parent == CODEX_DIR:
+                slug = "overview"
+                title = "Campaign Codex Overview"
+                category = "Overview"
+            else:
+                # Skip subfolder README files to keep the master overview clean
+                continue
 
         if "sessions/" in rel:
             group = "sessions"
@@ -2409,6 +2570,10 @@ def load_all_codex_articles():
         elif "threads/" in rel:
             group = "threads"
             icon = "🔍"
+            sess_num = None
+        elif "critic/" in rel:
+            group = "critic"
+            icon = "🎭"
             sess_num = None
         else:
             group = "overview"
@@ -2529,6 +2694,114 @@ def load_all_codex_articles():
 
         html_body = parse_codex_markdown(text, slug=slug)
         
+        # Inject rich landing hub at top of overview
+        if slug == "overview":
+            overview_portal_hub = """
+            <div class="mb-8 space-y-4">
+                <!-- Hero Banner -->
+                <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 border border-amber-500/30 shadow-2xl">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-2xl sm:text-3xl">🧭</span>
+                        <div>
+                            <span class="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-amber-400 font-bold">Interactive Campaign Hub</span>
+                            <h1 class="text-2xl sm:text-3xl font-bold font-serif text-slate-100">The Margin Campaign Codex</h1>
+                        </div>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed max-w-2xl">
+                        Official world encyclopedia and continuity ledger for <strong class="text-amber-300">The Margin: The Stolen Weave</strong>. Explore session debriefs, character dossiers, faction profiles, active mysteries, and critical editorial reviews.
+                    </p>
+                </div>
+
+                <!-- 4 Interactive Portal Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <!-- Card 1: Sessions -->
+                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition-all flex flex-col justify-between group shadow-lg">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-lg">📜</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">7 Sessions</span>
+                            </div>
+                            <h3 class="text-base font-bold font-serif text-slate-100 group-hover:text-amber-300 transition-colors">Session Chronicles</h3>
+                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Acts I–IV recaps, narrative cliffhangers, and scene breakdowns from Vegas to D.C.</p>
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <button type="button" onclick="selectCodexArticle('s1')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S1</button>
+                                <button type="button" onclick="selectCodexArticle('s2')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S2</button>
+                                <button type="button" onclick="selectCodexArticle('s3')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S3</button>
+                                <button type="button" onclick="selectCodexArticle('s4')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S4</button>
+                                <button type="button" onclick="selectCodexArticle('s5')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S5</button>
+                                <button type="button" onclick="selectCodexArticle('s6')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S6</button>
+                                <button type="button" onclick="selectCodexArticle('s7')" class="px-2 py-0.5 text-[11px] rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-bold hover:bg-amber-500/30 transition-colors">S7 (Latest)</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="filterCodexCategory('sessions')" class="mt-3.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
+                            <span>Browse All Chronicles</span> <span>→</span>
+                        </button>
+                    </div>
+
+                    <!-- Card 2: Characters -->
+                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition-all flex flex-col justify-between group shadow-lg">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-lg">👤</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-bold">13 Dossiers</span>
+                            </div>
+                            <h3 class="text-base font-bold font-serif text-slate-100 group-hover:text-amber-300 transition-colors">Dramatis Personae</h3>
+                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Party backstories, Margin wardens, rescued allies, and celestial powers.</p>
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <button type="button" onclick="selectCodexArticle('pierre')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-blue-500/20 text-slate-300 hover:text-blue-300 transition-colors">Pierre</button>
+                                <button type="button" onclick="selectCodexArticle('alfie')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-colors">Alfie</button>
+                                <button type="button" onclick="selectCodexArticle('dravin')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-purple-500/20 text-slate-300 hover:text-purple-300 transition-colors">Dravin</button>
+                                <button type="button" onclick="selectCodexArticle('eusacles')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 transition-colors">Eusacles</button>
+                                <button type="button" onclick="selectCodexArticle('naomi')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Naomi</button>
+                                <button type="button" onclick="selectCodexArticle('thanatos')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Thanatos</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="filterCodexCategory('characters')" class="mt-3.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
+                            <span>View Full Cast</span> <span>→</span>
+                        </button>
+                    </div>
+
+                    <!-- Card 3: Factions -->
+                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition-all flex flex-col justify-between group shadow-lg">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-lg">🏛️</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">2 Factions</span>
+                            </div>
+                            <h3 class="text-base font-bold font-serif text-slate-100 group-hover:text-amber-300 transition-colors">Factions &amp; Orders</h3>
+                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">The Margin Wardens defending the seams vs. The Redactors erasing history.</p>
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <button type="button" onclick="selectCodexArticle('margin-wardens')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-colors">Margin Wardens</button>
+                                <button type="button" onclick="selectCodexArticle('redactors')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 transition-colors">The Redactors</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="filterCodexCategory('factions')" class="mt-3.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
+                            <span>Inspect Factions</span> <span>→</span>
+                        </button>
+                    </div>
+
+                    <!-- Card 4: Mysteries Board -->
+                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition-all flex flex-col justify-between group shadow-lg">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-lg">🔍</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold">8 Open Threads</span>
+                            </div>
+                            <h3 class="text-base font-bold font-serif text-slate-100 group-hover:text-amber-300 transition-colors">Active Mysteries Board</h3>
+                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Track the stolen weave, Alfie's origins, the 1948 Big Pox trials, and Persephone's warning.</p>
+                            <div class="mt-3 flex flex-wrap gap-1">
+                                <button type="button" onclick="selectCodexArticle('open-threads')" class="px-2 py-0.5 text-[11px] rounded bg-purple-950/40 border border-purple-800/60 text-purple-300 hover:bg-purple-900/60 font-mono transition-colors">TH-01 to TH-08</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="selectCodexArticle('open-threads')" class="mt-3.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
+                            <span>Open Tracking Board</span> <span>→</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            """
+            html_body = overview_portal_hub + html_body
+
         # Inject rich profile card at top if available
         if slug in LORE_PROFILES:
             prof = LORE_PROFILES[slug]
@@ -2554,6 +2827,10 @@ def load_all_codex_articles():
             </div>
             """
             html_body = profile_card + html_body
+
+        # Append Codex Entry Feedback card at the bottom of every article
+        html_body += build_codex_feedback_card_html(slug, title, group)
+
         articles[slug] = {
             "slug": slug,
             "title": title,
@@ -2570,45 +2847,9 @@ def load_all_codex_articles():
 def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> str:
     """Builds the Codex wiki modal overlay HTML and JSON payload."""
     articles_json = json.dumps(codex_articles).replace("</script>", "<\\/script>")
+    sidebar_joined = build_accordion_sidebar_html(codex_articles, current_session_num=current_session_num)
     
-    # Pre-render sidebar items
-    sidebar_items_html = []
-    # Sort: Overview first, then current session, then other sessions, then characters, factions, threads
-    group_order = {"overview": 1, "sessions": 2, "characters": 3, "factions": 4, "threads": 5}
-    sorted_slugs = sorted(
-        codex_articles.keys(),
-        key=lambda k: (
-            group_order.get(codex_articles[k]["group"], 99),
-            0 if codex_articles[k].get("sessionNum") == current_session_num else 1,
-            codex_articles[k].get("sessionNum") or 999,
-            codex_articles[k]["title"]
-        )
-    )
-    
-    default_active_slug = f"s{current_session_num}" if f"s{current_session_num}" in codex_articles else "overview"
-    
-    for s_slug in sorted_slugs:
-        art = codex_articles[s_slug]
-        is_default = (s_slug == default_active_slug)
-        active_class = "active bg-amber-500/20 text-amber-300 border-amber-500/50" if is_default else "bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white"
-        
-        subtitle_snip = f'<div class="text-[10px] text-slate-500 truncate">{art["subtitle"]}</div>' if art.get("subtitle") else ""
-        sess_badge = f'<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">S{art["sessionNum"]}</span>' if art.get("sessionNum") else ""
-        
-        sidebar_items_html.append(f"""
-        <button type="button" class="codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] {active_class}" data-slug="{s_slug}" data-group="{art['group']}" data-title="{art['title'].lower()}" onclick="selectCodexArticle('{s_slug}')">
-            <div class="flex items-center justify-between gap-1 w-full">
-                <span class="text-xs font-semibold truncate flex items-center gap-1.5">
-                    <span>{art['icon']}</span>
-                    <span class="truncate">{art['title']}</span>
-                </span>
-                {sess_badge}
-            </div>
-            {subtitle_snip}
-        </button>
-        """)
-
-    sidebar_joined = "\n".join(sidebar_items_html)
+    default_active_slug = "overview"
     default_art = codex_articles.get(default_active_slug, codex_articles.get("overview", {}))
     default_html = default_art.get("html", "<p class='text-slate-400'>Select an article to view.</p>")
 
@@ -2632,7 +2873,7 @@ def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> st
                         <span class="text-xl sm:text-2xl flex-shrink-0">📖</span>
                         <div class="truncate">
                             <h3 class="text-xs sm:text-base font-bold text-amber-400 uppercase tracking-wider font-serif truncate">The Margin Codex</h3>
-                            <p class="text-[10px] sm:text-xs text-slate-400 font-mono truncate hidden xs:block">Campaign Wiki & Dramatis Personae</p>
+                            <p class="text-[10px] sm:text-xs text-slate-400 font-mono truncate hidden xs:block">Campaign Wiki &amp; Dramatis Personae</p>
                         </div>
                     </div>
                 </div>
@@ -2657,13 +2898,16 @@ def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> st
                         📜 Sessions
                     </button>
                     <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60" data-category="characters" onclick="filterCodexCategory('characters')">
-                        👤 Cast & NPCs
+                        👤 Cast &amp; NPCs
                     </button>
                     <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60" data-category="factions" onclick="filterCodexCategory('factions')">
                         🏛️ Factions
                     </button>
                     <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60" data-category="threads" onclick="filterCodexCategory('threads')">
                         🔍 Mysteries
+                    </button>
+                    <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60" data-category="critic" onclick="filterCodexCategory('critic')">
+                        🎭 Reviews
                     </button>
                 </div>
 
@@ -5199,28 +5443,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 codexModalOverlay.classList.add('visible');
                 setBodyScrollLock(true);
                 
-                const isMobile = window.innerWidth < 768;
-                if (targetSlug && codexArticlesMap[targetSlug]) {{
-                    window.selectCodexArticle(targetSlug);
-                }} else if (isMobile) {{
-                    window.codexShowDirectoryOnMobile();
-                    const curSessSlug = "s{session_num}";
-                    const activeSlug = codexArticlesMap[curSessSlug] ? curSessSlug : 'overview';
-                    document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
-                        if (item.dataset.slug === activeSlug) {{
-                            item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
-                        }} else {{
-                            item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
-                        }}
-                    }});
-                }} else {{
-                    const curSessSlug = "s{session_num}";
-                    if (codexArticlesMap[curSessSlug]) {{
-                        window.selectCodexArticle(curSessSlug);
-                    }} else if (codexArticlesMap['overview']) {{
-                        window.selectCodexArticle('overview');
-                    }}
-                }}
+                const slugToOpen = (targetSlug && codexArticlesMap[targetSlug]) ? targetSlug : 'overview';
+                window.selectCodexArticle(slugToOpen);
             }};
 
             window.closeCodexModal = function() {{
@@ -5255,6 +5479,22 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 }}
             }};
 
+            window.toggleCodexGroup = function(groupKey) {{
+                const groupEl = document.querySelector('.codex-accordion-group[data-group="' + groupKey + '"]');
+                if (!groupEl) return;
+                const itemsEl = groupEl.querySelector('.codex-group-items');
+                const chevronEl = groupEl.querySelector('.codex-group-chevron');
+                if (!itemsEl) return;
+                
+                if (itemsEl.classList.contains('hidden')) {{
+                    itemsEl.classList.remove('hidden');
+                    if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+                }} else {{
+                    itemsEl.classList.add('hidden');
+                    if (chevronEl) chevronEl.style.transform = 'rotate(-90deg)';
+                }}
+            }};
+
             window.clearCodexSearch = function() {{
                 if (codexSearchInput) {{
                     codexSearchInput.value = '';
@@ -5275,18 +5515,49 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 if (codexArticleView) {{
                     codexArticleView.innerHTML = art.html || '<p class="text-slate-400">Article content unavailable.</p>';
                     codexArticleView.scrollTop = 0;
+
+                    // Pre-fill reviewer name in feedback card if present
+                    const revInput = document.getElementById('codexReviewerNameInput');
+                    if (revInput) {{
+                        const savedName = localStorage.getItem('dnd_scribe_reviewer_name') || (typeof getOrInitReviewerName === 'function' ? getOrInitReviewerName() : '');
+                        revInput.value = savedName;
+                        revInput.oninput = function() {{
+                            localStorage.setItem('dnd_scribe_reviewer_name', this.value.trim());
+                        }};
+                    }}
                 }}
                 if (codexActiveArticleBadge) {{
                     codexActiveArticleBadge.textContent = art.title || cleanSlug;
                 }}
 
+                // Ensure the article's accordion group is open
+                if (art.group && art.group !== 'overview') {{
+                    const groupEl = document.querySelector('.codex-accordion-group[data-group="' + art.group + '"]');
+                    if (groupEl) {{
+                        const itemsEl = groupEl.querySelector('.codex-group-items');
+                        const chevronEl = groupEl.querySelector('.codex-group-chevron');
+                        if (itemsEl && itemsEl.classList.contains('hidden')) {{
+                            itemsEl.classList.remove('hidden');
+                            if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+                        }}
+                    }}
+                }}
+
                 // Update active sidebar selection highlight
                 document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
                     if (item.dataset.slug === cleanSlug) {{
-                        item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                        if (item.classList.contains('codex-hub-item')) {{
+                            item.className = "codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50 mb-3 shadow-md";
+                        }} else {{
+                            item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                        }}
                         try {{ item.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }}); }} catch(e) {{}}
                     }} else {{
-                        item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                        if (item.classList.contains('codex-hub-item')) {{
+                            item.className = "codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white mb-3 shadow-md";
+                        }} else {{
+                            item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                        }}
                     }}
                 }});
 
@@ -5329,16 +5600,32 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     }}
                 }});
 
-                const query = (codexSearchInput ? codexSearchInput.value : '').toLowerCase().trim();
-                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
-                    const grp = item.dataset.group || '';
-                    const title = item.dataset.title || '';
-                    const matchesCat = (filter === 'all' || grp === filter);
-                    const slug = item.dataset.slug;
-                    const art = codexArticlesMap[slug];
-                    const matchesSearch = (!query || title.includes(query) || (art && (art.subtitle || '').toLowerCase().includes(query)) || (art && (art.html || '').toLowerCase().includes(query)));
-                    item.style.display = (matchesCat && matchesSearch) ? 'flex' : 'none';
+                // Toggle accordion groups
+                document.querySelectorAll('.codex-accordion-group').forEach(groupEl => {{
+                    const grp = groupEl.dataset.group || '';
+                    const itemsEl = groupEl.querySelector('.codex-group-items');
+                    const chevronEl = groupEl.querySelector('.codex-group-chevron');
+                    
+                    if (filter === 'all' || filter === grp) {{
+                        groupEl.style.display = 'block';
+                        if (filter === grp && itemsEl) {{
+                            itemsEl.classList.remove('hidden');
+                            if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+                            try {{ groupEl.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }}); }} catch(e) {{}}
+                        }}
+                    }} else {{
+                        groupEl.style.display = 'none';
+                    }}
                 }});
+
+                const hubItem = document.querySelector('.codex-hub-item');
+                if (hubItem) {{
+                    hubItem.style.display = (filter === 'all' || filter === 'overview') ? 'flex' : 'none';
+                }}
+
+                if (window.innerWidth < 768) {{
+                    window.codexShowDirectoryOnMobile();
+                }}
             }};
 
             window.searchCodex = function(query) {{
@@ -5358,15 +5645,227 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 const activeCatBtn = document.querySelector('.codex-cat-btn.bg-amber-400');
                 const cat = activeCatBtn ? activeCatBtn.dataset.category : 'all';
 
-                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
-                    const grp = item.dataset.group || '';
-                    const title = item.dataset.title || '';
-                    const matchesCat = (cat === 'all' || grp === cat);
-                    const slug = item.dataset.slug;
-                    const art = codexArticlesMap[slug];
-                    const matchesText = !q || title.includes(q) || (art && (art.subtitle || '').toLowerCase().includes(q)) || (art && (art.html || '').toLowerCase().includes(query));
-                    item.style.display = (matchesCat && matchesText) ? 'flex' : 'none';
+                document.querySelectorAll('.codex-accordion-group').forEach(groupEl => {{
+                    const grp = groupEl.dataset.group || '';
+                    if (cat !== 'all' && cat !== grp) {{
+                        groupEl.style.display = 'none';
+                        return;
+                    }}
+
+                    let matchCount = 0;
+                    const itemsEl = groupEl.querySelector('.codex-group-items');
+                    const chevronEl = groupEl.querySelector('.codex-group-chevron');
+
+                    groupEl.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                        const title = item.dataset.title || '';
+                        const slug = item.dataset.slug || '';
+                        const art = codexArticlesMap[slug];
+                        const matchesText = !q || title.includes(q) || (art && (art.subtitle || '').toLowerCase().includes(q)) || (art && (art.html || '').toLowerCase().includes(q));
+                        
+                        if (matchesText) {{
+                            item.style.display = 'flex';
+                            matchCount++;
+                        }} else {{
+                            item.style.display = 'none';
+                        }}
+                    }});
+
+                    if (matchCount > 0) {{
+                        groupEl.style.display = 'block';
+                        if (q.length > 0 && itemsEl) {{
+                            itemsEl.classList.remove('hidden');
+                            if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+                        }}
+                    }} else {{
+                        groupEl.style.display = 'none';
+                    }}
                 }});
+
+                const hubItem = document.querySelector('.codex-hub-item');
+                if (hubItem) {{
+                    const matchesHub = !q || 'campaign codex hub overview home portal'.includes(q);
+                    hubItem.style.display = ((cat === 'all' || cat === 'overview') && matchesHub) ? 'flex' : 'none';
+                }}
+            }};
+
+            window.rollCodexReviewerName = function() {{
+                const newName = (typeof getRandomDndName === 'function') ? getRandomDndName() : "Adventurer Scribe";
+                const revInput = document.getElementById('codexReviewerNameInput');
+                if (revInput) {{
+                    revInput.value = newName;
+                    revInput.classList.add('ring-2', 'ring-amber-400');
+                    setTimeout(() => revInput.classList.remove('ring-2', 'ring-amber-400'), 400);
+                }}
+                localStorage.setItem('dnd_scribe_reviewer_name', newName);
+                localStorage.setItem('dnd_scribe_is_bank_name', 'true');
+                const ghInput = document.getElementById('ghReviewerNameInput');
+                if (ghInput) ghInput.value = newName;
+            }};
+
+            window.selectCodexFeedbackCategory = function(btn, cat) {{
+                document.querySelectorAll('.codex-fb-cat-pill').forEach(p => {{
+                    p.className = "codex-fb-cat-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200 transition-all";
+                }});
+                if (btn) {{
+                    btn.className = "codex-fb-cat-pill active px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/50 transition-all";
+                }}
+            }};
+
+            window.copyCodexFeedbackToClipboard = function(slug, title, group) {{
+                const revInput = document.getElementById('codexReviewerNameInput');
+                const reviewer = (revInput && revInput.value.trim()) ? revInput.value.trim() : (localStorage.getItem('dnd_scribe_reviewer_name') || 'Anonymous Scribe');
+                const activeCatPill = document.querySelector('.codex-fb-cat-pill.active');
+                const category = activeCatPill ? activeCatPill.dataset.cat : 'Continuity / Canon';
+                const directiveEl = document.getElementById('codexFeedbackDirective');
+                const directive = directiveEl ? directiveEl.value.trim() : '';
+                const rewriteEl = document.getElementById('codexFeedbackRewrite');
+                const rewrite = rewriteEl ? rewriteEl.value.trim() : '';
+                const statusEl = document.getElementById('codexFeedbackStatus');
+
+                if (!directive) {{
+                    if (directiveEl) directiveEl.focus();
+                    if (statusEl) {{
+                        statusEl.className = "p-2.5 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                        statusEl.textContent = "⚠️ Please write a critique directive or note before copying.";
+                    }}
+                    return;
+                }}
+
+                const payload = [
+                    "### 📖 Codex Feedback: " + title + " (" + slug + ")",
+                    "- **Reviewer:** `" + reviewer + "`",
+                    "- **Category:** `" + category + "` (" + group + ")",
+                    "- **Directive:** " + directive,
+                    rewrite ? ("- **Suggested Rewrite:** " + rewrite) : ""
+                ].filter(Boolean).join("\\n");
+
+                navigator.clipboard.writeText(payload).then(() => {{
+                    if (statusEl) {{
+                        statusEl.className = "p-2.5 rounded-xl text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
+                        statusEl.innerHTML = "📋 <strong>Note copied to clipboard!</strong> Formatted for Discord, GitHub, or direct sharing.";
+                    }}
+                }}).catch(err => {{
+                    if (statusEl) {{
+                        statusEl.className = "p-2.5 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                        statusEl.textContent = "Failed to copy: " + err.message;
+                    }}
+                }});
+            }};
+
+            window.submitCodexFeedbackPr = async function(slug, title, group) {{
+                const revInput = document.getElementById('codexReviewerNameInput');
+                const reviewer = (revInput && revInput.value.trim()) ? revInput.value.trim() : (localStorage.getItem('dnd_scribe_reviewer_name') || 'Anonymous Scribe');
+                const activeCatPill = document.querySelector('.codex-fb-cat-pill.active');
+                const category = activeCatPill ? activeCatPill.dataset.cat : 'Continuity / Canon';
+                const directiveEl = document.getElementById('codexFeedbackDirective');
+                const directive = directiveEl ? directiveEl.value.trim() : '';
+                const rewriteEl = document.getElementById('codexFeedbackRewrite');
+                const rewrite = rewriteEl ? rewriteEl.value.trim() : '';
+                const statusEl = document.getElementById('codexFeedbackStatus');
+                const submitBtn = document.getElementById('codexSubmitPrBtn');
+
+                if (!directive) {{
+                    if (directiveEl) directiveEl.focus();
+                    if (statusEl) {{
+                        statusEl.className = "p-2.5 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                        statusEl.textContent = "⚠️ Please write a directive or critique note before submitting.";
+                    }}
+                    return;
+                }}
+
+                localStorage.setItem('dnd_scribe_reviewer_name', reviewer);
+                if (submitBtn) submitBtn.disabled = true;
+
+                if (statusEl) {{
+                    statusEl.className = "p-2.5 rounded-xl text-xs bg-sky-950/70 border border-sky-800 text-sky-300 block";
+                    statusEl.innerHTML = "⏳ <strong>Submitting feedback...</strong> Authenticating with scribe bot and preparing review branch...";
+                }}
+
+                const REPO = "ldstrebel/dnd-scribe";
+                const BASE_BRANCH = "uneraseable";
+                const safeReviewer = reviewer.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                const safeSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                const timestamp = Date.now().toString().slice(-6);
+                const NEW_BRANCH = "critique/codex-" + safeSlug + "-" + safeReviewer + "-" + timestamp;
+
+                const exportPayload = {{
+                    type: "codex_entry_feedback",
+                    campaign: "uneraseable",
+                    targetSlug: slug,
+                    targetTitle: title,
+                    targetGroup: group,
+                    reviewer: reviewer,
+                    category: category,
+                    directive: directive,
+                    suggestedRewrite: rewrite || null,
+                    submittedAt: new Date().toISOString()
+                }};
+
+                const prBody = "## 📖 Codex Feedback: " + title + "\\n" +
+                    "**Target Article:** `" + slug + "` (" + group + ")\\n" +
+                    "**Reviewer:** `" + reviewer + "`\\n" +
+                    "**Category:** `" + category + "`\\n\\n" +
+                    "### 📝 Critique / Directive\\n" + directive + "\\n\\n" +
+                    (rewrite ? ("### ✍️ Suggested Revision / Lore Addition\\n" + rewrite + "\\n\\n") : "") +
+                    "<details>\\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\\n\\n```json\\n" +
+                    JSON.stringify(exportPayload, null, 2) + "\\n```\\n</details>";
+
+                try {{
+                    if (typeof getInstallationAccessToken !== 'function') {{
+                        throw new Error("Bot authentication engine not available in this view.");
+                    }}
+                    const token = await getInstallationAccessToken();
+                    const headers = {{
+                        "Authorization": "Bearer " + token,
+                        "Accept": "application/vnd.github+json",
+                        "Content-Type": "application/json"
+                    }};
+
+                    let baseRefRes = await fetch("https://api.github.com/repos/" + REPO + "/git/ref/heads/" + BASE_BRANCH, {{ headers }});
+                    if (!baseRefRes.ok) baseRefRes = await fetch("https://api.github.com/repos/" + REPO + "/git/ref/heads/main", {{ headers }});
+                    if (!baseRefRes.ok) throw new Error("Could not connect to scribe repository: " + baseRefRes.statusText);
+                    const baseSha = (await baseRefRes.json()).object.sha;
+
+                    const createBranchRes = await fetch("https://api.github.com/repos/" + REPO + "/git/refs", {{
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({{ ref: "refs/heads/" + NEW_BRANCH, sha: baseSha }})
+                    }});
+                    if (!createBranchRes.ok) throw new Error("Failed to create review branch: " + (await createBranchRes.text()));
+
+                    const filePath = "sessions/data/critiques/codex-" + safeSlug + "-" + safeReviewer + "-" + timestamp + ".json";
+                    const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(exportPayload, null, 2))));
+                    const commitRes = await fetch("https://api.github.com/repos/" + REPO + "/contents/" + filePath, {{
+                        method: "PUT",
+                        headers: headers,
+                        body: JSON.stringify({{ message: "codex critique: " + reviewer + " on " + title, content: contentBase64, branch: NEW_BRANCH }})
+                    }});
+                    if (!commitRes.ok) throw new Error("Failed to upload critique payload: " + (await commitRes.text()));
+
+                    const prRes = await fetch("https://api.github.com/repos/" + REPO + "/pulls", {{
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({{ title: "📖 Codex Review: " + title + " by " + reviewer, head: NEW_BRANCH, base: BASE_BRANCH, body: prBody }})
+                    }});
+                    if (!prRes.ok) throw new Error("Failed to open review PR: " + (await prRes.text()));
+                    const prData = await prRes.json();
+
+                    if (statusEl) {{
+                        statusEl.className = "p-3 rounded-xl text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
+                        statusEl.innerHTML = '🎉 <strong>Feedback Submitted!</strong><br>Thank you, ' + reviewer + '! <a href="' + prData.html_url + '" target="_blank" class="underline text-amber-300 font-bold hover:text-white">PR #' + prData.number + ' opened on ldstrebel/dnd-scribe ↗</a>';
+                    }}
+
+                    if (directiveEl) directiveEl.value = '';
+                    if (rewriteEl) rewriteEl.value = '';
+                }} catch (err) {{
+                    window.copyCodexFeedbackToClipboard(slug, title, group);
+                    if (statusEl) {{
+                        statusEl.className = "p-3 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                        statusEl.innerHTML = "❌ <strong>Direct PR Submission Error:</strong> " + err.message + "<br><span class=\\"text-amber-300\\">📋 Don't worry! Your note has been safely copied to your clipboard.</span>";
+                    }}
+                }} finally {{
+                    if (submitBtn) submitBtn.disabled = false;
+                }}
             }};
 
             if (toggleCodexBtn) toggleCodexBtn.onclick = function() {{ window.openCodexModal(); }};
@@ -7161,39 +7660,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
 def build_standalone_codex_html(codex_articles: dict) -> str:
     """Builds a standalone wiki-style codex.html page for direct reading and bookmarking."""
     articles_json = json.dumps(codex_articles).replace("</script>", "<\\/script>")
+    sidebar_joined = build_accordion_sidebar_html(codex_articles, is_standalone=True)
     
-    group_order = {"overview": 1, "sessions": 2, "characters": 3, "factions": 4, "threads": 5}
-    sorted_slugs = sorted(
-        codex_articles.keys(),
-        key=lambda k: (
-            group_order.get(codex_articles[k]["group"], 99),
-            codex_articles[k].get("sessionNum") or 999,
-            codex_articles[k]["title"]
-        )
-    )
-    
-    sidebar_items_html = []
-    for s_slug in sorted_slugs:
-        art = codex_articles[s_slug]
-        is_default = (s_slug == "overview")
-        active_class = "active bg-amber-500/20 text-amber-300 border-amber-500/50" if is_default else "bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white"
-        subtitle_snip = f'<div class="text-[10px] text-slate-500 truncate">{art["subtitle"]}</div>' if art.get("subtitle") else ""
-        sess_badge = f'<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">S{art["sessionNum"]}</span>' if art.get("sessionNum") else ""
-        
-        sidebar_items_html.append(f"""
-        <button type="button" class="codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] {active_class}" data-slug="{s_slug}" data-group="{art['group']}" data-title="{art['title'].lower()}" onclick="selectCodexArticle('{s_slug}')">
-            <div class="flex items-center justify-between gap-1 w-full">
-                <span class="text-xs font-semibold truncate flex items-center gap-1.5">
-                    <span>{art['icon']}</span>
-                    <span class="truncate">{art['title']}</span>
-                </span>
-                {sess_badge}
-            </div>
-            {subtitle_snip}
-        </button>
-        """)
-
-    sidebar_joined = "\n".join(sidebar_items_html)
     default_art = codex_articles.get("overview", {})
     default_html = default_art.get("html", "<p class='text-slate-400'>Select an article to view.</p>")
 
@@ -7202,7 +7670,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Margin Campaign Codex · Wiki & Dramatis Personae</title>
+    <title>The Margin Campaign Codex · Wiki &amp; Dramatis Personae</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -7302,13 +7770,16 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     📜 Sessions
                 </button>
                 <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="characters" onclick="filterCodexCategory('characters')">
-                    👤 Cast & NPCs
+                    👤 Cast &amp; NPCs
                 </button>
                 <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="factions" onclick="filterCodexCategory('factions')">
                     🏛️ Factions
                 </button>
                 <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="threads" onclick="filterCodexCategory('threads')">
                     🔍 Mysteries Board
+                </button>
+                <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="critic" onclick="filterCodexCategory('critic')">
+                    🎭 Reviews
                 </button>
             </div>
 
@@ -7350,6 +7821,108 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
             const codexSearchInput = document.getElementById('codexSearchInput');
             const codexArticleView = document.getElementById('codexArticleView');
 
+            // =========================================================
+            // GITHUB APP AUTOMATED AUTHENTICATION ENGINE
+            // =========================================================
+            const BOT_APP_ID = "{BOT_APP_ID}";
+            const BOT_INSTALLATION_ID = "{BOT_INSTALLATION_ID}";
+            const BOT_PKCS8_B64 = "{BOT_PKCS8_B64}";
+
+            async function getInstallationAccessToken() {{
+                const manualToken = localStorage.getItem('dnd_scribe_gh_token');
+                if (manualToken) return manualToken;
+
+                if (!BOT_PKCS8_B64 || !BOT_APP_ID || !BOT_INSTALLATION_ID) {{
+                    throw new Error("Bot authentication credentials missing.");
+                }}
+
+                function base64UrlEncode(str) {{
+                    return btoa(str).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+                }}
+
+                function base64UrlEncodeBuffer(buf) {{
+                    const bytes = new Uint8Array(buf);
+                    let binary = '';
+                    for (let i = 0; i < bytes.byteLength; i++) {{
+                        binary += String.fromCharCode(bytes[i]);
+                    }}
+                    return btoa(binary).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+                }}
+
+                function str2ab(b64) {{
+                    const binary = atob(b64);
+                    const bytes = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+                    return bytes.buffer;
+                }}
+
+                const key = await crypto.subtle.importKey(
+                    "pkcs8",
+                    str2ab(BOT_PKCS8_B64),
+                    {{ name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }},
+                    false,
+                    ["sign"]
+                );
+
+                const now = Math.floor(Date.now() / 1000);
+                const header = base64UrlEncode(JSON.stringify({{ alg: "RS256", typ: "JWT" }}));
+                const payload = base64UrlEncode(JSON.stringify({{
+                    iat: now - 60,
+                    exp: now + 500,
+                    iss: BOT_APP_ID
+                }}));
+
+                const dataToSign = new TextEncoder().encode(header + "." + payload);
+                const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, dataToSign);
+                const jwt = header + "." + payload + "." + base64UrlEncodeBuffer(signature);
+
+                const res = await fetch("https://api.github.com/app/installations/" + BOT_INSTALLATION_ID + "/access_tokens", {{
+                    method: "POST",
+                    headers: {{
+                        "Authorization": "Bearer " + jwt,
+                        "Accept": "application/vnd.github+json",
+                        "User-Agent": "dnd-scribe-bot"
+                    }}
+                }});
+
+                if (!res.ok) {{
+                    const errBody = await res.text();
+                    throw new Error("Failed to authenticate bot (" + res.status + "): " + errBody);
+                }}
+
+                const tokenData = await res.json();
+                return tokenData.token;
+            }}
+
+            // =========================================================
+            // D&D PUN REVIEWER NAMES
+            // =========================================================
+            const DND_PUN_NAMES = [
+                "Artie Ficer", "Barbie Dian", "Claire Ick", "Drew Id", "Faye Terr",
+                "Monk Montgomery", "Paula Din", "Ray N. Gerr", "Rowan Rogue", "Sorcha Sparks",
+                "Warrick Lock", "Wizzy Ward", "Natasha Twenty", "Dexter Ity", "Connie Stitution",
+                "Charis Mah", "Justin Initiative", "Eileen Advantage", "Disa Dvantage",
+                "Penny Shortrest", "Lonnie Longrest", "Mithril Mike", "Kenku Kenny",
+                "Tabitha Tarrasque", "Spellslot Sam", "Sneak Attack Stan", "Lootis Goblin",
+                "Calvin Trip", "Missy Step", "Barb Arian", "Bardy McFly", "Prestidi Katie",
+                "Otto Resilient", "Tasha Laughter", "Morden Kainen-Smith", "Bigby Handley",
+                "Eldritch Blast-on", "Githy Hank", "Mimic Mike", "Dungeon Dan", "Master Mia"
+            ];
+
+            function getRandomDndName() {{
+                return DND_PUN_NAMES[Math.floor(Math.random() * DND_PUN_NAMES.length)];
+            }}
+
+            function getOrInitReviewerName() {{
+                let saved = localStorage.getItem('dnd_scribe_reviewer_name');
+                if (!saved || !saved.trim()) {{
+                    saved = getRandomDndName();
+                    localStorage.setItem('dnd_scribe_reviewer_name', saved);
+                    localStorage.setItem('dnd_scribe_is_bank_name', 'true');
+                }}
+                return saved;
+            }}
+
             window.codexShowDirectoryOnMobile = function() {{
                 const sidebarList = document.getElementById('codexSidebarList');
                 const articleView = document.getElementById('codexArticleView');
@@ -7375,6 +7948,22 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 }}
             }};
 
+            window.toggleCodexGroup = function(groupKey) {{
+                const groupEl = document.querySelector('.codex-accordion-group[data-group="' + groupKey + '"]');
+                if (!groupEl) return;
+                const itemsEl = groupEl.querySelector('.codex-group-items');
+                const chevronEl = groupEl.querySelector('.codex-group-chevron');
+                if (!itemsEl) return;
+                
+                if (itemsEl.classList.contains('hidden')) {{
+                    itemsEl.classList.remove('hidden');
+                    if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+                }} else {{
+                    itemsEl.classList.add('hidden');
+                    if (chevronEl) chevronEl.style.transform = 'rotate(-90deg)';
+                }}
+            }};
+
             window.clearCodexSearch = function() {{
                 if (codexSearchInput) {{
                     codexSearchInput.value = '';
@@ -7395,14 +7984,45 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 if (codexArticleView) {{
                     codexArticleView.innerHTML = art.html || '<p class="text-slate-400">Article content unavailable.</p>';
                     codexArticleView.scrollTop = 0;
+
+                    // Pre-fill reviewer name in feedback card if present
+                    const revInput = document.getElementById('codexReviewerNameInput');
+                    if (revInput) {{
+                        const savedName = localStorage.getItem('dnd_scribe_reviewer_name') || getOrInitReviewerName();
+                        revInput.value = savedName;
+                        revInput.oninput = function() {{
+                            localStorage.setItem('dnd_scribe_reviewer_name', this.value.trim());
+                        }};
+                    }}
+                }}
+
+                // Ensure the article's accordion group is open
+                if (art.group && art.group !== 'overview') {{
+                    const groupEl = document.querySelector('.codex-accordion-group[data-group="' + art.group + '"]');
+                    if (groupEl) {{
+                        const itemsEl = groupEl.querySelector('.codex-group-items');
+                        const chevronEl = groupEl.querySelector('.codex-group-chevron');
+                        if (itemsEl && itemsEl.classList.contains('hidden')) {{
+                            itemsEl.classList.remove('hidden');
+                            if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+                        }}
+                    }}
                 }}
 
                 document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
                     if (item.dataset.slug === cleanSlug) {{
-                        item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                        if (item.classList.contains('codex-hub-item')) {{
+                            item.className = "codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50 mb-3 shadow-md";
+                        }} else {{
+                            item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                        }}
                         try {{ item.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }}); }} catch(e) {{}}
                     }} else {{
-                        item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                        if (item.classList.contains('codex-hub-item')) {{
+                            item.className = "codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white mb-3 shadow-md";
+                        }} else {{
+                            item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                        }}
                     }}
                 }});
 
@@ -7449,14 +8069,32 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     }}
                 }});
 
-                const query = (codexSearchInput ? codexSearchInput.value : '').toLowerCase().trim();
-                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
-                    const grp = item.dataset.group || '';
-                    const title = item.dataset.title || '';
-                    const matchesCat = (filter === 'all' || grp === filter);
-                    const matchesSearch = (!query || title.includes(query) || (codexArticlesMap[item.dataset.slug] && (codexArticlesMap[item.dataset.slug].subtitle || '').toLowerCase().includes(query)) || (codexArticlesMap[item.dataset.slug] && codexArticlesMap[item.dataset.slug].html.toLowerCase().includes(query)));
-                    item.style.display = (matchesCat && matchesSearch) ? 'flex' : 'none';
+                // Toggle accordion groups
+                document.querySelectorAll('.codex-accordion-group').forEach(groupEl => {{
+                    const grp = groupEl.dataset.group || '';
+                    const itemsEl = groupEl.querySelector('.codex-group-items');
+                    const chevronEl = groupEl.querySelector('.codex-group-chevron');
+                    
+                    if (filter === 'all' || filter === grp) {{
+                        groupEl.style.display = 'block';
+                        if (filter === grp && itemsEl) {{
+                            itemsEl.classList.remove('hidden');
+                            if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+                            try {{ groupEl.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }}); }} catch(e) {{}}
+                        }}
+                    }} else {{
+                        groupEl.style.display = 'none';
+                    }}
                 }});
+
+                const hubItem = document.querySelector('.codex-hub-item');
+                if (hubItem) {{
+                    hubItem.style.display = (filter === 'all' || filter === 'overview') ? 'flex' : 'none';
+                }}
+
+                if (window.innerWidth < 768) {{
+                    window.codexShowDirectoryOnMobile();
+                }}
             }};
 
             window.searchCodex = function(query) {{
@@ -7476,15 +8114,225 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 const activeCatBtn = document.querySelector('.codex-cat-btn.bg-amber-400');
                 const cat = activeCatBtn ? activeCatBtn.dataset.category : 'all';
 
-                document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
-                    const grp = item.dataset.group || '';
-                    const title = item.dataset.title || '';
-                    const matchesCat = (cat === 'all' || grp === cat);
-                    const slug = item.dataset.slug;
-                    const art = codexArticlesMap[slug];
-                    const matchesText = !q || title.includes(q) || (art && (art.subtitle || '').toLowerCase().includes(q)) || (art && (art.html || '').toLowerCase().includes(q));
-                    item.style.display = (matchesCat && matchesText) ? 'flex' : 'none';
+                document.querySelectorAll('.codex-accordion-group').forEach(groupEl => {{
+                    const grp = groupEl.dataset.group || '';
+                    if (cat !== 'all' && cat !== grp) {{
+                        groupEl.style.display = 'none';
+                        return;
+                    }}
+
+                    let matchCount = 0;
+                    const itemsEl = groupEl.querySelector('.codex-group-items');
+                    const chevronEl = groupEl.querySelector('.codex-group-chevron');
+
+                    groupEl.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                        const title = item.dataset.title || '';
+                        const slug = item.dataset.slug || '';
+                        const art = codexArticlesMap[slug];
+                        const matchesText = !q || title.includes(q) || (art && (art.subtitle || '').toLowerCase().includes(q)) || (art && (art.html || '').toLowerCase().includes(q));
+                        
+                        if (matchesText) {{
+                            item.style.display = 'flex';
+                            matchCount++;
+                        }} else {{
+                            item.style.display = 'none';
+                        }}
+                    }});
+
+                    if (matchCount > 0) {{
+                        groupEl.style.display = 'block';
+                        if (q.length > 0 && itemsEl) {{
+                            itemsEl.classList.remove('hidden');
+                            if (chevronEl) chevronEl.style.transform = 'rotate(0deg)';
+                        }}
+                    }} else {{
+                        groupEl.style.display = 'none';
+                    }}
                 }});
+
+                const hubItem = document.querySelector('.codex-hub-item');
+                if (hubItem) {{
+                    const matchesHub = !q || 'campaign codex hub overview home portal'.includes(q);
+                    hubItem.style.display = ((cat === 'all' || cat === 'overview') && matchesHub) ? 'flex' : 'none';
+                }}
+            }};
+
+            window.rollCodexReviewerName = function() {{
+                const newName = getRandomDndName();
+                const revInput = document.getElementById('codexReviewerNameInput');
+                if (revInput) {{
+                    revInput.value = newName;
+                    revInput.classList.add('ring-2', 'ring-amber-400');
+                    setTimeout(() => revInput.classList.remove('ring-2', 'ring-amber-400'), 400);
+                }}
+                localStorage.setItem('dnd_scribe_reviewer_name', newName);
+                localStorage.setItem('dnd_scribe_is_bank_name', 'true');
+            }};
+
+            window.selectCodexFeedbackCategory = function(btn, cat) {{
+                document.querySelectorAll('.codex-fb-cat-pill').forEach(p => {{
+                    p.className = "codex-fb-cat-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200 transition-all";
+                }});
+                if (btn) {{
+                    btn.className = "codex-fb-cat-pill active px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/50 transition-all";
+                }}
+            }};
+
+            window.copyCodexFeedbackToClipboard = function(slug, title, group) {{
+                const revInput = document.getElementById('codexReviewerNameInput');
+                const reviewer = (revInput && revInput.value.trim()) ? revInput.value.trim() : (localStorage.getItem('dnd_scribe_reviewer_name') || 'Anonymous Scribe');
+                const activeCatPill = document.querySelector('.codex-fb-cat-pill.active');
+                const category = activeCatPill ? activeCatPill.dataset.cat : 'Continuity / Canon';
+                const directiveEl = document.getElementById('codexFeedbackDirective');
+                const directive = directiveEl ? directiveEl.value.trim() : '';
+                const rewriteEl = document.getElementById('codexFeedbackRewrite');
+                const rewrite = rewriteEl ? rewriteEl.value.trim() : '';
+                const statusEl = document.getElementById('codexFeedbackStatus');
+
+                if (!directive) {{
+                    if (directiveEl) directiveEl.focus();
+                    if (statusEl) {{
+                        statusEl.className = "p-2.5 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                        statusEl.textContent = "⚠️ Please write a critique directive or note before copying.";
+                    }}
+                    return;
+                }}
+
+                const payload = [
+                    "### 📖 Codex Feedback: " + title + " (" + slug + ")",
+                    "- **Reviewer:** `" + reviewer + "`",
+                    "- **Category:** `" + category + "` (" + group + ")",
+                    "- **Directive:** " + directive,
+                    rewrite ? ("- **Suggested Rewrite:** " + rewrite) : ""
+                ].filter(Boolean).join("\\n");
+
+                navigator.clipboard.writeText(payload).then(() => {{
+                    if (statusEl) {{
+                        statusEl.className = "p-2.5 rounded-xl text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
+                        statusEl.innerHTML = "📋 <strong>Note copied to clipboard!</strong> Formatted for Discord, GitHub, or direct sharing.";
+                    }}
+                }}).catch(err => {{
+                    if (statusEl) {{
+                        statusEl.className = "p-2.5 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                        statusEl.textContent = "Failed to copy: " + err.message;
+                    }}
+                }});
+            }};
+
+            window.submitCodexFeedbackPr = async function(slug, title, group) {{
+                const revInput = document.getElementById('codexReviewerNameInput');
+                const reviewer = (revInput && revInput.value.trim()) ? revInput.value.trim() : (localStorage.getItem('dnd_scribe_reviewer_name') || 'Anonymous Scribe');
+                const activeCatPill = document.querySelector('.codex-fb-cat-pill.active');
+                const category = activeCatPill ? activeCatPill.dataset.cat : 'Continuity / Canon';
+                const directiveEl = document.getElementById('codexFeedbackDirective');
+                const directive = directiveEl ? directiveEl.value.trim() : '';
+                const rewriteEl = document.getElementById('codexFeedbackRewrite');
+                const rewrite = rewriteEl ? rewriteEl.value.trim() : '';
+                const statusEl = document.getElementById('codexFeedbackStatus');
+                const submitBtn = document.getElementById('codexSubmitPrBtn');
+
+                if (!directive) {{
+                    if (directiveEl) directiveEl.focus();
+                    if (statusEl) {{
+                        statusEl.className = "p-2.5 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                        statusEl.textContent = "⚠️ Please write a directive or critique note before submitting.";
+                    }}
+                    return;
+                }}
+
+                localStorage.setItem('dnd_scribe_reviewer_name', reviewer);
+                if (submitBtn) submitBtn.disabled = true;
+
+                if (statusEl) {{
+                    statusEl.className = "p-2.5 rounded-xl text-xs bg-sky-950/70 border border-sky-800 text-sky-300 block";
+                    statusEl.innerHTML = "⏳ <strong>Submitting feedback...</strong> Authenticating with scribe bot and preparing review branch...";
+                }}
+
+                const REPO = "ldstrebel/dnd-scribe";
+                const BASE_BRANCH = "uneraseable";
+                const safeReviewer = reviewer.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                const safeSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                const timestamp = Date.now().toString().slice(-6);
+                const NEW_BRANCH = "critique/codex-" + safeSlug + "-" + safeReviewer + "-" + timestamp;
+
+                const exportPayload = {{
+                    type: "codex_entry_feedback",
+                    campaign: "uneraseable",
+                    targetSlug: slug,
+                    targetTitle: title,
+                    targetGroup: group,
+                    reviewer: reviewer,
+                    category: category,
+                    directive: directive,
+                    suggestedRewrite: rewrite || null,
+                    submittedAt: new Date().toISOString()
+                }};
+
+                const prBody = "## 📖 Codex Feedback: " + title + "\\n" +
+                    "**Target Article:** `" + slug + "` (" + group + ")\\n" +
+                    "**Reviewer:** `" + reviewer + "`\\n" +
+                    "**Category:** `" + category + "`\\n\\n" +
+                    "### 📝 Critique / Directive\\n" + directive + "\\n\\n" +
+                    (rewrite ? ("### ✍️ Suggested Revision / Lore Addition\\n" + rewrite + "\\n\\n") : "") +
+                    "<details>\\n<summary><b>📦 Raw JSON Payload (for Agent Ingestion)</b></summary>\\n\\n```json\\n" +
+                    JSON.stringify(exportPayload, null, 2) + "\\n```\\n</details>";
+
+                try {{
+                    if (typeof getInstallationAccessToken !== 'function') {{
+                        throw new Error("Bot authentication engine not available in this view.");
+                    }}
+                    const token = await getInstallationAccessToken();
+                    const headers = {{
+                        "Authorization": "Bearer " + token,
+                        "Accept": "application/vnd.github+json",
+                        "Content-Type": "application/json"
+                    }};
+
+                    let baseRefRes = await fetch("https://api.github.com/repos/" + REPO + "/git/ref/heads/" + BASE_BRANCH, {{ headers }});
+                    if (!baseRefRes.ok) baseRefRes = await fetch("https://api.github.com/repos/" + REPO + "/git/ref/heads/main", {{ headers }});
+                    if (!baseRefRes.ok) throw new Error("Could not connect to scribe repository: " + baseRefRes.statusText);
+                    const baseSha = (await baseRefRes.json()).object.sha;
+
+                    const createBranchRes = await fetch("https://api.github.com/repos/" + REPO + "/git/refs", {{
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({{ ref: "refs/heads/" + NEW_BRANCH, sha: baseSha }})
+                    }});
+                    if (!createBranchRes.ok) throw new Error("Failed to create review branch: " + (await createBranchRes.text()));
+
+                    const filePath = "sessions/data/critiques/codex-" + safeSlug + "-" + safeReviewer + "-" + timestamp + ".json";
+                    const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(exportPayload, null, 2))));
+                    const commitRes = await fetch("https://api.github.com/repos/" + REPO + "/contents/" + filePath, {{
+                        method: "PUT",
+                        headers: headers,
+                        body: JSON.stringify({{ message: "codex critique: " + reviewer + " on " + title, content: contentBase64, branch: NEW_BRANCH }})
+                    }});
+                    if (!commitRes.ok) throw new Error("Failed to upload critique payload: " + (await commitRes.text()));
+
+                    const prRes = await fetch("https://api.github.com/repos/" + REPO + "/pulls", {{
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({{ title: "📖 Codex Review: " + title + " by " + reviewer, head: NEW_BRANCH, base: BASE_BRANCH, body: prBody }})
+                    }});
+                    if (!prRes.ok) throw new Error("Failed to open review PR: " + (await prRes.text()));
+                    const prData = await prRes.json();
+
+                    if (statusEl) {{
+                        statusEl.className = "p-3 rounded-xl text-xs bg-emerald-950/70 border border-emerald-700 text-emerald-300 block";
+                        statusEl.innerHTML = '🎉 <strong>Feedback Submitted!</strong><br>Thank you, ' + reviewer + '! <a href="' + prData.html_url + '" target="_blank" class="underline text-amber-300 font-bold hover:text-white">PR #' + prData.number + ' opened on ldstrebel/dnd-scribe ↗</a>';
+                    }}
+
+                    if (directiveEl) directiveEl.value = '';
+                    if (rewriteEl) rewriteEl.value = '';
+                }} catch (err) {{
+                    window.copyCodexFeedbackToClipboard(slug, title, group);
+                    if (statusEl) {{
+                        statusEl.className = "p-3 rounded-xl text-xs bg-rose-950/70 border border-rose-700 text-rose-300 block";
+                        statusEl.innerHTML = "❌ <strong>Direct PR Submission Error:</strong> " + err.message + "<br><span class=\\"text-amber-300\\">📋 Don't worry! Your note has been safely copied to your clipboard.</span>";
+                    }}
+                }} finally {{
+                    if (submitBtn) submitBtn.disabled = false;
+                }}
             }};
 
             // Handle URL Hash on load
@@ -7493,7 +8341,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
             if (hash && codexArticlesMap[hash]) {{
                 window.selectCodexArticle(hash);
             }} else if (isMobile) {{
-                window.codexShowDirectoryOnMobile();
+                window.selectCodexArticle('overview');
             }} else {{
                 window.selectCodexArticle('overview');
             }}

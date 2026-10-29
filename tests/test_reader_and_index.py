@@ -304,6 +304,12 @@ class TestReaderPages(unittest.TestCase):
         self.assertIn('id="codexSidebarList"', codex_content)
         self.assertIn('id="codexArticleView"', codex_content)
         self.assertIn('id="codexSearchInput"', codex_content)
+        self.assertIn('codex-accordion-group', codex_content)
+        self.assertIn('codex-hub-item', codex_content)
+        self.assertIn('Interactive Campaign Hub', codex_content)
+        self.assertIn('window.toggleCodexGroup', codex_content)
+        self.assertIn('window.submitCodexFeedbackPr', codex_content)
+        self.assertIn('window.copyCodexFeedbackToClipboard', codex_content)
 
         # 2. Check each session ebook
         for s in self.sessions:
@@ -327,6 +333,10 @@ class TestReaderPages(unittest.TestCase):
                           f"{s.name} codex modal must have codexArticleView")
             self.assertIn('id="codexArticlesData"', content,
                           f"{s.name} must embed codexArticlesData json store")
+            self.assertIn('codex-accordion-group', content,
+                          f"{s.name} codex modal must contain accordion groups")
+            self.assertIn('codex-hub-item', content,
+                          f"{s.name} codex modal must contain codex-hub-item")
 
             # Functions & scroll lock
             self.assertIn("window.openCodexModal", content,
@@ -335,6 +345,12 @@ class TestReaderPages(unittest.TestCase):
                           f"{s.name} must define window.closeCodexModal")
             self.assertIn("window.selectCodexArticle", content,
                           f"{s.name} must define window.selectCodexArticle")
+            self.assertIn("window.toggleCodexGroup", content,
+                          f"{s.name} must define window.toggleCodexGroup")
+            self.assertIn("window.submitCodexFeedbackPr", content,
+                          f"{s.name} must define window.submitCodexFeedbackPr")
+            self.assertIn("window.copyCodexFeedbackToClipboard", content,
+                          f"{s.name} must define window.copyCodexFeedbackToClipboard")
             self.assertIn("codexModalOverlay && codexModalOverlay.classList.contains('visible')", content,
                           f"{s.name} setBodyScrollLock must include codexModalOverlay")
 
