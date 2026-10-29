@@ -2193,7 +2193,10 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
         "source decision ledger",
         "provenance standard",
         "codex architectural laws",
-        "badge standard reference"
+        "badge standard reference",
+        "chapter navigation index",
+        "chapter index",
+        "opening block"
     ]
     
     def format_inline(text):
@@ -2241,7 +2244,7 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
             i += 1
             continue
 
-        # Skip raw compiler metadata headers like **Publication System:** or **Schema Index:**
+        # Skip raw compiler metadata headers, breadcrumbs, jump menus, and category tags
         if (
             line.startswith('**Publication System:**')
             or line.startswith('**Schema Index:**')
@@ -2250,6 +2253,13 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
             or line.startswith('**Provenance Standard:**')
             or line.startswith('**Architectural Law:**')
             or line.startswith('**Provenance:**')
+            or line.startswith('**Codex Category:**')
+            or line.startswith('**Novel Chapter Span:**')
+            or line.startswith('**Interactive Navigation:**')
+            or line.startswith('**Jump Menu:**')
+            or line.startswith('**Type:**')
+            or 'Campaign Codex Home' in line
+            or 'Session Chronicles](README.md)' in line
         ):
             i += 1
             continue
@@ -2280,8 +2290,14 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
                 header_cols = [c.strip() for c in table_rows[0].strip('|').split('|')]
                 data_rows = table_rows[2:]
                 
-                # If table is raw decision ledger (e.g. contains Line and Risk Category), skip it
-                if any("risk" in hc.lower() for hc in header_cols) or any("status badge" in hc.lower() and "line" in hc.lower() for hc in header_cols):
+                # If table is raw decision ledger (e.g. contains Line and Risk Category) or developer block map, skip it
+                if (
+                    any("risk" in hc.lower() for hc in header_cols)
+                    or any("status badge" in hc.lower() and "line" in hc.lower() for hc in header_cols)
+                    or any("opening block" in hc.lower() for hc in header_cols)
+                    or any("block id" in hc.lower() for hc in header_cols)
+                    or any("uneraseable_" in r.lower() for r in data_rows)
+                ):
                     continue
 
                 t_html = ['<div class="overflow-x-auto my-3 rounded-xl border border-slate-800 bg-slate-950/60 shadow-inner">',
@@ -2352,7 +2368,11 @@ def load_all_codex_articles():
     for p in sorted(CODEX_DIR.rglob("*.md")):
         text = p.read_text(encoding="utf-8")
         lines = text.splitlines()
-        title = lines[0].replace("#", "").strip() if lines else p.stem.title()
+        title = p.stem.title()
+        for l in lines[:15]:
+            if l.startswith("# "):
+                title = l[2:].strip()
+                break
         
         category = "General"
         subtitle = ""
@@ -2668,8 +2688,8 @@ def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> st
                 </div>
             </div>
 
-            <!-- Mobile & Desktop Bottom Bar -->
-            <footer class="px-4 py-2 border-t border-slate-800/80 bg-slate-900/90 flex items-center justify-between text-xs text-slate-400 font-mono flex-shrink-0">
+            <!-- Desktop Bottom Bar (Hidden on Mobile for 100% Full-Screen Immersion) -->
+            <footer class="hidden md:flex px-4 py-2 border-t border-slate-800/80 bg-slate-900/90 items-center justify-between text-xs text-slate-400 font-mono flex-shrink-0">
                 <div class="flex items-center gap-2 truncate">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
                     <span id="codexActiveArticleBadge" class="text-amber-300 font-semibold truncate">{default_art.get('title', 'Overview')}</span>
@@ -5290,7 +5310,10 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     if (toolbar) toolbar.classList.add('hidden');
                     if (titleArea) {{
                         const h3 = titleArea.querySelector('h3');
-                        if (h3) h3.textContent = art.title || 'The Margin Codex';
+                        if (h3) {{
+                            const displayTitle = art.sessionNum ? ('Session ' + art.sessionNum) : (art.title || 'The Margin Codex');
+                            h3.textContent = displayTitle;
+                        }}
                     }}
                 }}
             }};
@@ -7405,7 +7428,10 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     if (toolbar) toolbar.classList.add('hidden');
                     if (titleArea) {{
                         const h1 = titleArea.querySelector('h1');
-                        if (h1) h1.textContent = art.title || 'The Margin Campaign Codex';
+                        if (h1) {{
+                            const displayTitle = art.sessionNum ? ('Session ' + art.sessionNum) : (art.title || 'The Margin Campaign Codex');
+                            h1.textContent = displayTitle;
+                        }}
                     }}
                 }}
 
