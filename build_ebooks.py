@@ -2183,15 +2183,23 @@ def build_diff_inspector_html(session_num: int) -> str:
     </div>
     """
 
-def parse_codex_markdown(md_text: str) -> str:
-    """Parses Codex Markdown to clean HTML with badges, tables, and internal article links."""
+def parse_codex_markdown(md_text: str, slug: str = "") -> str:
+    """Parses Codex Markdown into elegant, reader-focused HTML, stripping debug tables and compiler metadata."""
     lines = md_text.splitlines()
     html_lines = []
     
+    # Internal dev sections to filter out from reader-facing codex
+    DEV_SECTIONS = [
+        "source decision ledger",
+        "provenance standard",
+        "codex architectural laws",
+        "badge standard reference"
+    ]
+    
     def format_inline(text):
-        # Provenance and mystery status badges
+        # Strip raw line citations like [ESTABLISHED: S4 L0348, S5 L0353] into clean lore badges or notes
+        text = re.sub(r'\[(OPEN|ESTABLISHED|HOOK|THEORY):\s*([^\]]+)\]', r'<span class="codex-badge badge-\1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">\1</span>', text)
         text = re.sub(r'\[(OPEN|ESTABLISHED|HOOK|THEORY)\]', r'<span class="codex-badge badge-\1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">\1</span>', text)
-        text = re.sub(r'\[(OPEN|ESTABLISHED|HOOK|THEORY):\s*([^\]]+)\]', r'<span class="codex-badge badge-\1 font-mono text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">\1</span> <span class="text-[11px] font-mono text-slate-400">(\2)</span>', text)
         
         # Internal codex cross-links [Label](path/to/file.md)
         def link_sub(m):
@@ -2208,13 +2216,59 @@ def parse_codex_markdown(md_text: str) -> str:
         text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', link_sub, text)
         text = re.sub(r'\*\*([^*]+)\*\*', r'<strong class="text-slate-100 font-semibold">\1</strong>', text)
         text = re.sub(r'\*([^*]+)\*', r'<em class="text-slate-300 italic">\1</em>', text)
-        text = re.sub(r'`([^`]+)`', r'<code class="px-1.5 py-0.5 rounded bg-slate-950/80 text-amber-300 border border-slate-800 font-mono text-xs">\1</code>', text)
+        text = re.sub(r'`([^`]+)`', r'<code class="px-1.5 py-0.5 rounded bg-slate-900 text-amber-300 border border-slate-800 font-mono text-xs">\1</code>', text)
         return text
 
     i = 0
+    skipping_dev_section = False
+    
     while i < len(lines):
         line = lines[i].strip()
         
+        # Check if line starts a dev section that should be suppressed
+        if line.startswith('## '):
+            h_lower = line[3:].lower()
+            if any(dev_sec in h_lower for dev_sec in DEV_SECTIONS):
+                skipping_dev_section = True
+                i += 1
+                continue
+            else:
+                skipping_dev_section = False
+        elif line.startswith('# ') or (line.startswith('---') and not skipping_dev_section):
+            skipping_dev_section = False
+
+        if skipping_dev_section:
+            i += 1
+            continue
+
+        # Skip raw compiler metadata headers like **Publication System:** or **Schema Index:**
+        if (
+            line.startswith('**Publication System:**')
+            or line.startswith('**Schema Index:**')
+            or line.startswith('**STT Historical Variant:**')
+            or line.startswith('**Canon Standard:**')
+            or line.startswith('**Provenance Standard:**')
+            or line.startswith('**Architectural Law:**')
+            or line.startswith('**Provenance:**')
+        ):
+            i += 1
+            continue
+
+        # Clean "Where We Left Off" to remove line numbers like "Line 1293 (GM Call Line 1288):"
+        if "Where We Left Off" in line:
+            html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-5 mb-2.5 flex items-center gap-2 text-amber-300/90">📍 Next Objective</h2>')
+            i += 1
+            # Next line might contain raw line text: sanitize it
+            if i < len(lines):
+                next_l = lines[i].strip()
+                cleaned_next = re.sub(r'Line \d+.*?\:\s*', '', next_l)
+                cleaned_next = re.sub(r'\(L\d+\).*', '', cleaned_next).strip()
+                cleaned_next = re.sub(r'L\d+[-–]L\d+.*', '', cleaned_next).strip()
+                if cleaned_next:
+                    html_lines.append(f'<div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200/90 text-xs sm:text-sm leading-relaxed">{format_inline(cleaned_next)}</div>')
+            i += 1
+            continue
+
         # Markdown table
         if line.startswith('|') and line.endswith('|'):
             table_rows = []
@@ -2226,7 +2280,11 @@ def parse_codex_markdown(md_text: str) -> str:
                 header_cols = [c.strip() for c in table_rows[0].strip('|').split('|')]
                 data_rows = table_rows[2:]
                 
-                t_html = ['<div class="overflow-x-auto my-4 rounded-xl border border-slate-800 bg-slate-950/70 shadow-inner">',
+                # If table is raw decision ledger (e.g. contains Line and Risk Category), skip it
+                if any("risk" in hc.lower() for hc in header_cols) or any("status badge" in hc.lower() and "line" in hc.lower() for hc in header_cols):
+                    continue
+
+                t_html = ['<div class="overflow-x-auto my-3 rounded-xl border border-slate-800 bg-slate-950/60 shadow-inner">',
                           '<table class="w-full text-left text-xs text-slate-300 border-collapse">',
                           '<thead class="bg-slate-900/90 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">',
                           '<tr>']
@@ -2252,16 +2310,18 @@ def parse_codex_markdown(md_text: str) -> str:
             html_lines.append(f'<h1 class="text-xl sm:text-2xl font-bold font-serif text-amber-400 tracking-wide mt-2 mb-3 pb-2 border-b border-slate-800 flex items-center gap-2"><span>📜</span> <span>{format_inline(t_txt)}</span></h1>')
         elif line.startswith('## '):
             h_txt = line[3:].strip()
-            html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-5 mb-2.5 flex items-center gap-2 text-amber-300/90">{format_inline(h_txt)}</h2>')
+            html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-5 mb-2 flex items-center gap-2 text-amber-300/90">{format_inline(h_txt)}</h2>')
         elif line.startswith('### '):
             h_txt = line[4:].strip()
-            html_lines.append(f'<h3 class="text-sm font-bold text-slate-200 mt-4 mb-2 flex items-center gap-1.5">{format_inline(h_txt)}</h3>')
+            html_lines.append(f'<h3 class="text-sm font-bold text-slate-200 mt-3.5 mb-1.5 flex items-center gap-1.5">{format_inline(h_txt)}</h3>')
         elif line.startswith('---'):
             html_lines.append('<hr class="my-4 border-slate-800/80">')
         elif line.startswith('- ') or line.startswith('* '):
             items = []
             while i < len(lines) and (lines[i].strip().startswith('- ') or lines[i].strip().startswith('* ')):
                 item_txt = lines[i].strip()[2:].strip()
+                # Clean out [NO DATA - ABSENT] tags into clean note
+                item_txt = item_txt.replace('[NO DATA - ABSENT]', '<span class="text-slate-500 font-mono text-[10px]">(Absent)</span>')
                 items.append(f'<li class="leading-relaxed">{format_inline(item_txt)}</li>')
                 i += 1
             html_lines.append('<ul class="list-disc list-inside space-y-1 my-2 text-xs sm:text-sm text-slate-300 pl-1">\n' + '\n'.join(items) + '\n</ul>')
@@ -2335,7 +2395,145 @@ def load_all_codex_articles():
             icon = "🧭"
             sess_num = None
 
-        html_body = parse_codex_markdown(text)
+        # Rich narrative lore profiles to replace empty appearance tables in character stubs
+        LORE_PROFILES = {
+            "pierre": {
+                "name": "Pierre",
+                "player": "Luke S",
+                "role": "Parisian Stonemason & Skeptic · Gorgon Bloodline",
+                "heritage": "French mortal with dormant / emerging Gorgon bloodline (snakes, petrification gaze, rabbit patronus)",
+                "voice": "Dry Parisian pragmatist, reluctant mystic, defensive protector of allies",
+                "summary": "A cynical Parisian stonemason pulled from a Vegas Greyhound bus into planar freefall. Despite his insistence on grounded physical reality, Pierre's Gorgon lineage manifested with serpentine shadows and petrifying power during the Raleigh museum ambush. In Session 7, he summoned a glowing rabbit patronus to escape a six-fingered Redactor operative on the university quad.",
+                "traits": ["Gorgon Heritage", "Stonemason Eye", "Suggestion Spell", "Rabbit Patronus", "Reluctant Combatant"]
+            },
+            "dravin": {
+                "name": "Prof. Edward Dravin",
+                "player": "William Webb",
+                "role": "Stanford Greek Historian · Persephone Signet Bearer",
+                "heritage": "Human academic marked by underworld divine patronage",
+                "voice": "Measured academic curiosity, analytical decipherer of ancient Greek epigraphy",
+                "summary": "Professor of Classical Greek history at Stanford University. Dravin bears an engraved signet ring tied to Persephone, allowing him to decipher ancient script and sense planar veil thinning. He provided crucial translations for the Raleigh museum Gorgon stele and led the expedition into the University University historical archives.",
+                "traits": ["Greek Epigraphy", "Persephone Signet", "Underworld Sensitivity", "Academic Rigor"]
+            },
+            "eusacles": {
+                "name": "Eusacles",
+                "player": "John Hagey",
+                "role": "Vegas Brawler & Gambler · Thanatos Watch Bearer",
+                "heritage": "Mortal fighter chosen by the god of peaceful death",
+                "voice": "Grit, sardonic humor, barroom instinct, and protective brawn",
+                "summary": "A hard-hitting Las Vegas brawler whose pocket watch is an enchanted divine focus from Thanatos. Eusacles serves as the frontline shield for the displaced group, wielding brawler fists and protective spells. In Session 7, Thanatos visited him in a campfire dream, empowering his watch with a defensive ward (+2 AC when bloodied) and hinting at a cryptic secret regarding Pierre's lineage.",
+                "traits": ["Thanatos Pocket Watch", "Defensive Bastion", "Unarmed Brawler", "Mending Specialist", "Divine Protection"]
+            },
+            "alfie": {
+                "name": "Alfie",
+                "player": "Sophie Foreman Noone",
+                "role": "Cockney Driftwood Construct · Wordcraft Duelist",
+                "heritage": "Living animated driftwood construct carved with mysterious ancient runes",
+                "voice": "Fast-talking London street dialect, razor-sharp rapier duelist, fiercely loyal",
+                "summary": "An animated driftwood construct carved with enigmatic coastal runes, wielding a rapier with blinding speed. Alfie suffers from sensory trauma flashbacks involving freezing brine, dark oarsmen, and a coastal town ablaze whenever she touches ancient nautical stone tablets. In Session 7, she severed the tendrils of a captive Gorgon and dueled with purple flare magic across the Lost Roads.",
+                "traits": ["Living Driftwood", "Rapier Mastery", "Wordcraft Runes", "Naval Trauma Flashbacks", "Purple Flare"]
+            },
+            "teddy": {
+                "name": "Teddy (Theodore)",
+                "player": "NPC (GM)",
+                "role": "Founding Caretaker of The Margin · 1846 Surveyor",
+                "heritage": "Frontier surveyor anchored in the Margin's timeless crease",
+                "voice": "Weathered 19th-century frontier hospitality, calm practical reassurance",
+                "summary": "The founding surveyor and groundskeeper of The Margin compound. Theodore surveyed the Appalachian boundaries in 1846 before slipping into the temporal fold. He maintains the woodstoves, mended tools, and boundary wards that keep the Redactors from locating the sanctuary.",
+                "traits": ["1846 Surveyor", "Margin Founder", "Perimeter Anchor", "Frontier Hospitality"]
+            },
+            "naomi": {
+                "name": "Naomi",
+                "player": "NPC (GM)",
+                "role": "Margin Warden Coordinator · Tactical Strategist",
+                "heritage": "Modern field researcher and anomaly investigator",
+                "voice": "Direct, military-sharp, focused on mission logistics and party survival",
+                "summary": "The tactical coordinator of the Margin Wardens. Naomi maps anomalous timeline seams, organizes party infiltrations, and runs dawn drills for the travelers. At the close of Session 7, Naomi debriefs the group and assigns them to infiltrate the Washington D.C. police evidence locker to recover confiscated anomalous epigraphy.",
+                "traits": ["Tactical Briefing", "Anomaly Mapping", "Combat Drills", "D.C. Expedition Lead"]
+            },
+            "mike": {
+                "name": "Mike",
+                "player": "NPC (GM)",
+                "role": "Gatekeeper of the Lost Roads · Master Mechanic",
+                "heritage": "Lost Roads pilot and inter-dimensional transit engineer",
+                "voice": "Grease-monkey pragmatism, dry wit, unfazed by planar horrors",
+                "summary": "The grease-stained pilot and gatekeeper who operates the mechanical lever junctions of the Lost Roads. Mike navigates the party across unstable dimensional transit corridors in modified transport trucks, avoiding Redactor hunting parties along the asphalt seams.",
+                "traits": ["Lost Roads Pilot", "Transit Junctions", "Heavy Rig Mechanic"]
+            },
+            "susanna": {
+                "name": "Susanna",
+                "player": "NPC (GM)",
+                "role": "Rescued Operative & Former Captive",
+                "heritage": "Transformed mortal operative liberated from Gorgon thrall",
+                "voice": "Quiet recovery, lingering trauma, grateful allied survivor",
+                "summary": "A young woman transformed into a serpentine thrall by the Gorgon faction. Rescued by Pierre, Alfie, and Eusacles along the Lost Roads in Session 7, Susanna was brought to the safety of the Margin cabins where Rosa and Teddy assisted her recovery.",
+                "traits": ["Former Gorgon Thrall", "Lost Roads Survivor", "Margin Ward"]
+            },
+            "thorne": {
+                "name": "Dr. Aris Thorne",
+                "player": "NPC (GM)",
+                "role": "Investigative Medical Historian · 1948 Trial Lecturer",
+                "heritage": "Mid-century epidemiological archivist",
+                "voice": "Passionate academic cadence, suspicious of institutional cover-ups",
+                "summary": "An eccentric medical historian whose lecture on the 1948 Big Pox clinical trials at University University was interrupted by a Redactor satyr strike team. His recovered notes binder is at the center of Campaign Thread TH-03.",
+                "traits": ["Medical Archives", "1948 Trial Lead", "University Scholar"]
+            },
+            "thanatos": {
+                "name": "Thanatos",
+                "player": "Celestial Power",
+                "role": "Greek God of Peaceful Death · Planar Overseer",
+                "heritage": "Primordial Olympian deity",
+                "voice": "Calm, deep, solemn, resonant with finality and quiet mercy",
+                "summary": "The Greek divine personification of peaceful death. Thanatos appears in divine dreams to Eusacles, having chosen him to bear his enchanted pocket watch. He provides cryptic guidance on the encroaching timeline redactions and warned Eusacles of deep secrets regarding Pierre's maternal heritage.",
+                "traits": ["God of Death", "Patron of Eusacles", "Divine Watch Focus", "Prophetic Dreams"]
+            },
+            "hermes": {
+                "name": "Hermes",
+                "player": "Celestial Power",
+                "role": "Divine Courier & Boundary Crosser",
+                "heritage": "Olympian messenger god",
+                "voice": "Swift, elusive, irreverent, speaks through sealed wax missives",
+                "summary": "The Olympian messenger god who travels between the upper world, underworld, and temporal margins. In Session 5, Hermes delivered Persephone's sealed solstice warning to the Margin travelers.",
+                "traits": ["Celestial Messenger", "Boundary Navigator", "Solstice Missives"]
+            },
+            "fates": {
+                "name": "The Three Fates (Moirai)",
+                "player": "Primordial Cosmic Powers",
+                "role": "Weavers of the Loom of Time (Clotho, Lachesis, Atropos)",
+                "heritage": "Primordial cosmic weavers pre-dating Olympus",
+                "voice": "Unison resonance, chillingly detached, weaving thread and shears",
+                "summary": "The primordial weavers whose library was severed and plundered by the Redactors in Session 1. The theft of their cosmic thread and epigraphy sets the entire campaign into motion as the party seeks to recover the stolen weave.",
+                "traits": ["Loom of Time", "Cosmic Thread", "Library of the Fates", "Severed Weave"]
+            }
+        }
+
+        html_body = parse_codex_markdown(text, slug=slug)
+        
+        # Inject rich profile card at top if available
+        if slug in LORE_PROFILES:
+            prof = LORE_PROFILES[slug]
+            traits_chips = " ".join([f'<span class="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono text-[11px] font-semibold">{t}</span>' for t in prof.get("traits", [])])
+            player_line = f'<div class="text-xs text-slate-400 font-mono"><strong>Player:</strong> <span class="text-slate-200">{prof["player"]}</span></div>' if prof.get("player") else ""
+            
+            profile_card = f"""
+            <div class="mb-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900/90 to-amber-950/20 border border-amber-500/30 shadow-xl space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                    <div>
+                        <span class="text-xs uppercase font-mono tracking-widest text-amber-500 font-bold">{prof.get('role', '')}</span>
+                        <h2 class="text-xl sm:text-2xl font-bold font-serif text-slate-100">{prof.get('name', title)}</h2>
+                    </div>
+                    {player_line}
+                </div>
+                
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">{prof.get('summary', '')}</p>
+                
+                <div class="pt-2 border-t border-slate-800/80 flex flex-wrap items-center gap-1.5">
+                    <span class="text-[10px] uppercase font-mono text-slate-500 font-bold mr-1">Key Lore Tags:</span>
+                    {traits_chips}
+                </div>
+            </div>
+            """
+            html_body = profile_card + html_body
         articles[slug] = {
             "slug": slug,
             "title": title,
@@ -2396,86 +2594,90 @@ def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> st
 
     return f"""
     <!-- ========================================================= -->
-    <!-- CAMPAIGN CODEX & WIKI MODAL OVERLAY (Header-Triggered Modal) -->
+    <!-- CAMPAIGN CODEX & WIKI FULL-SCREEN APP MODAL OVERLAY -->
     <!-- ========================================================= -->
-    <div id="codexModalOverlay" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[80] flex items-start sm:items-center justify-center opacity-0 pointer-events-none p-3 sm:p-4 overflow-y-auto pt-6 sm:pt-4">
-        <div id="codexModalCard" class="w-full max-w-5xl bg-slate-900 border border-slate-700 rounded-2xl p-3.5 sm:p-5 shadow-2xl flex flex-col my-auto max-h-[90vh] sm:max-h-[88vh]">
+    <div id="codexModalOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[80] flex flex-col opacity-0 pointer-events-none p-0 overflow-hidden">
+        <div id="codexModalCard" class="w-full h-full flex flex-col bg-slate-950 border-0 md:border md:border-slate-800 md:rounded-2xl md:max-w-6xl md:h-[90vh] md:my-auto md:mx-auto shadow-2xl overflow-hidden">
             
-            <!-- Modal Header with Title, Search, and Exit Button -->
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3 gap-2 flex-shrink-0">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <span class="text-2xl">📖</span>
-                    <div class="truncate">
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm sm:text-base font-bold text-amber-400 uppercase tracking-wider font-serif truncate">The Margin Campaign Codex</h3>
-                            <span class="hidden xs:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">Canonical Wiki</span>
+            <!-- Mobile & Desktop Sticky Header -->
+            <header class="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3.5 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md flex-shrink-0 gap-2">
+                <!-- Left Nav: Mobile Back Button or Title -->
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <!-- Dynamic Mobile Back Button (Only visible when viewing an article on mobile) -->
+                    <button id="codexMobileBackBtn" type="button" onclick="codexShowDirectoryOnMobile()" class="hidden md:hidden px-2.5 py-1.5 rounded-xl bg-slate-800 text-amber-300 border border-slate-700 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all" title="Return to Directory">
+                        <span>←</span> <span class="font-sans font-bold">Directory</span>
+                    </button>
+
+                    <div class="flex items-center gap-2 min-w-0" id="codexHeaderTitleArea">
+                        <span class="text-xl sm:text-2xl flex-shrink-0">📖</span>
+                        <div class="truncate">
+                            <h3 class="text-xs sm:text-base font-bold text-amber-400 uppercase tracking-wider font-serif truncate">The Margin Codex</h3>
+                            <p class="text-[10px] sm:text-xs text-slate-400 font-mono truncate hidden xs:block">Campaign Wiki & Dramatis Personae</p>
                         </div>
-                        <p class="text-[11px] text-slate-400 font-mono truncate">DEC-037 Reference · Grounded Continuity & Dramatis Personae</p>
                     </div>
                 </div>
                 
+                <!-- Right Controls: Standalone Link & Exit Modal Button -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <a href="codex.html" target="_blank" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all" title="Open Standalone Codex in new tab">
-                        <span>↗</span> <span>Full Wiki</span>
+                    <a href="codex.html" target="_blank" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all" title="Open Standalone Wiki in new tab">
+                        <span>↗</span> <span>Standalone Wiki</span>
                     </a>
-                    <button id="closeCodexModalBtn" type="button" class="text-slate-400 hover:text-slate-100 text-2xl font-bold p-1 leading-none transition-colors" title="Close (Esc)">&times;</button>
+                    <button id="closeCodexModalBtn" type="button" class="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-100 flex items-center justify-center text-xl font-bold transition-all active:scale-95" title="Exit Codex (Esc)" aria-label="Close Codex">&times;</button>
                 </div>
-            </div>
+            </header>
 
-            <!-- Controls: Category Filter Tabs & Real-Time Search Bar -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pb-3 border-b border-slate-800/80 flex-shrink-0">
-                <!-- Category Tabs -->
-                <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar text-xs font-medium">
-                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-bold transition-all" data-category="all" onclick="filterCodexCategory('all')">
+            <!-- Search & Category Filter Toolbar -->
+            <div id="codexToolbar" class="px-3 sm:px-6 py-2.5 border-b border-slate-800/80 bg-slate-900/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 flex-shrink-0">
+                <!-- Category Tabs with Visual Counts -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar text-xs font-medium">
+                    <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-bold transition-all shadow-sm" data-category="all" onclick="filterCodexCategory('all')">
                         All ({len(codex_articles)})
                     </button>
-                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all" data-category="sessions" onclick="filterCodexCategory('sessions')">
+                    <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60" data-category="sessions" onclick="filterCodexCategory('sessions')">
                         📜 Sessions
                     </button>
-                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all" data-category="characters" onclick="filterCodexCategory('characters')">
-                        👤 Cast
+                    <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60" data-category="characters" onclick="filterCodexCategory('characters')">
+                        👤 Cast & NPCs
                     </button>
-                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all" data-category="factions" onclick="filterCodexCategory('factions')">
+                    <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60" data-category="factions" onclick="filterCodexCategory('factions')">
                         🏛️ Factions
                     </button>
-                    <button type="button" class="codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all" data-category="threads" onclick="filterCodexCategory('threads')">
+                    <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60" data-category="threads" onclick="filterCodexCategory('threads')">
                         🔍 Mysteries
                     </button>
                 </div>
 
-                <!-- Live Search Input -->
+                <!-- Instant Search Input with Clear Button -->
                 <div class="relative flex-1 sm:max-w-xs">
-                    <input id="codexSearchInput" type="text" placeholder="Search codex, characters, lore..." class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors" oninput="searchCodex(this.value)">
-                    <span class="absolute right-2.5 top-1.5 text-xs text-slate-500 pointer-events-none">🔍</span>
+                    <input id="codexSearchInput" type="text" placeholder="Search codex, cast, mysteries..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-3 pr-8 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors shadow-inner" oninput="searchCodex(this.value)">
+                    <button id="codexSearchClearBtn" type="button" onclick="clearCodexSearch()" class="hidden absolute right-2.5 top-1.5 text-slate-400 hover:text-white text-xs font-bold" title="Clear Search">✕</button>
+                    <span id="codexSearchIcon" class="absolute right-2.5 top-1.5 text-xs text-slate-500 pointer-events-none">🔍</span>
                 </div>
             </div>
 
-            <!-- Two-Pane Layout: Left Sidebar Article Index + Right Article Reader -->
-            <div class="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-12 gap-3 pt-3 overflow-hidden">
-                <!-- Sidebar List (Scrollable) -->
-                <div id="codexSidebarList" class="md:col-span-4 overflow-y-auto space-y-1.5 pr-1 max-h-48 md:max-h-full custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 pb-2 md:pb-0">
+            <!-- Content Area: Responsive Mobile Stack / Desktop 2-Pane -->
+            <div class="flex-1 min-h-0 flex flex-col md:grid md:grid-cols-12 overflow-hidden relative">
+                <!-- Directory Sidebar (Full screen on mobile when viewing directory, left 4 cols on desktop) -->
+                <div id="codexSidebarList" class="w-full md:col-span-4 lg:col-span-4 overflow-y-auto p-3 sm:p-4 space-y-1.5 custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 flex-1 md:flex-initial">
                     {sidebar_joined}
                 </div>
 
-                <!-- Main Article Viewer -->
-                <div id="codexArticleView" class="md:col-span-8 overflow-y-auto p-3 sm:p-5 rounded-xl bg-slate-950/70 border border-slate-800/80 custom-scrollbar max-h-[50vh] md:max-h-full">
+                <!-- Main Article Viewer (Full screen on mobile when reading, right 8 cols on desktop) -->
+                <div id="codexArticleView" class="hidden md:block md:col-span-8 lg:col-span-8 overflow-y-auto p-4 sm:p-7 bg-slate-950/80 custom-scrollbar flex-1">
                     {default_html}
                 </div>
             </div>
 
-            <!-- Modal Footer -->
-            <div class="pt-3 mt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500 font-mono flex-shrink-0">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span>Continuity Engine DEC-037 Phase 0</span>
+            <!-- Mobile & Desktop Bottom Bar -->
+            <footer class="px-4 py-2 border-t border-slate-800/80 bg-slate-900/90 flex items-center justify-between text-xs text-slate-400 font-mono flex-shrink-0">
+                <div class="flex items-center gap-2 truncate">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+                    <span id="codexActiveArticleBadge" class="text-amber-300 font-semibold truncate">{default_art.get('title', 'Overview')}</span>
                 </div>
-                <div class="flex items-center gap-3">
-                    <span id="codexActiveArticleBadge" class="text-amber-400 font-semibold">{default_art.get('title', 'Overview')}</span>
-                    <button type="button" onclick="closeCodexModal()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors">
-                        Close
-                    </button>
-                </div>
-            </div>
+                <button type="button" onclick="closeCodexModal()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold transition-all">
+                    Exit Codex
+                </button>
+            </footer>
 
         </div>
     </div>
@@ -3394,7 +3596,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
         }}
 
         @media (max-width: 640px) {{
-            #chaptersModalOverlay, #codexModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay {{
+            #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay {{
                 padding: 0.75rem !important;
                 box-sizing: border-box !important;
             }}
@@ -3402,7 +3604,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 align-items: flex-start !important;
                 padding: 0.75rem !important;
             }}
-            #chaptersModalCard, #codexModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
+            #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
                 width: 100% !important;
                 max-width: 100% !important;
                 box-sizing: border-box !important;
@@ -3413,6 +3615,33 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 max-height: calc(100dvh - 1.5rem) !important;
                 margin-top: 0 !important;
                 margin-bottom: auto !important;
+            }}
+        }}
+
+        /* Full Screen Mobile Immersion for Codex Modal */
+        @media (max-width: 767px) {{
+            #codexModalOverlay {{
+                padding: 0 !important;
+                margin: 0 !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                width: 100vw !important;
+                max-width: 100vw !important;
+                border-radius: 0 !important;
+            }}
+            #codexModalCard {{
+                width: 100vw !important;
+                max-width: 100vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                max-height: 100dvh !important;
+                border-radius: 0 !important;
+                border: none !important;
+                margin: 0 !important;
+                transform: none !important;
+            }}
+            #codexModalOverlay.visible #codexModalCard {{
+                transform: none !important;
             }}
         }}
 
@@ -4950,9 +5179,21 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 codexModalOverlay.classList.add('visible');
                 setBodyScrollLock(true);
                 
+                const isMobile = window.innerWidth < 768;
                 if (targetSlug && codexArticlesMap[targetSlug]) {{
                     window.selectCodexArticle(targetSlug);
-                }} else if (!targetSlug) {{
+                }} else if (isMobile) {{
+                    window.codexShowDirectoryOnMobile();
+                    const curSessSlug = "s{session_num}";
+                    const activeSlug = codexArticlesMap[curSessSlug] ? curSessSlug : 'overview';
+                    document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
+                        if (item.dataset.slug === activeSlug) {{
+                            item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                        }} else {{
+                            item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                        }}
+                    }});
+                }} else {{
                     const curSessSlug = "s{session_num}";
                     if (codexArticlesMap[curSessSlug]) {{
                         window.selectCodexArticle(curSessSlug);
@@ -4969,6 +5210,40 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 codexModalOverlay.style.height = '';
                 codexModalOverlay.style.transform = '';
                 setBodyScrollLock(false);
+            }};
+
+            window.codexShowDirectoryOnMobile = function() {{
+                const sidebarList = document.getElementById('codexSidebarList');
+                const articleView = document.getElementById('codexArticleView');
+                const mobileBackBtn = document.getElementById('codexMobileBackBtn');
+                const toolbar = document.getElementById('codexToolbar');
+                const titleArea = document.getElementById('codexHeaderTitleArea');
+
+                if (sidebarList) sidebarList.classList.remove('hidden');
+                if (articleView) {{
+                    articleView.classList.add('hidden');
+                    articleView.classList.remove('block');
+                }}
+                if (mobileBackBtn) {{
+                    mobileBackBtn.classList.add('hidden');
+                    mobileBackBtn.classList.remove('flex');
+                }}
+                if (toolbar) toolbar.classList.remove('hidden');
+                if (titleArea) {{
+                    const h3 = titleArea.querySelector('h3');
+                    if (h3) h3.textContent = 'The Margin Codex';
+                }}
+            }};
+
+            window.clearCodexSearch = function() {{
+                if (codexSearchInput) {{
+                    codexSearchInput.value = '';
+                }}
+                const clearBtn = document.getElementById('codexSearchClearBtn');
+                const searchIcon = document.getElementById('codexSearchIcon');
+                if (clearBtn) clearBtn.classList.add('hidden');
+                if (searchIcon) searchIcon.classList.remove('hidden');
+                window.searchCodex('');
             }};
 
             window.selectCodexArticle = function(slug) {{
@@ -4994,6 +5269,30 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                         item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
                     }}
                 }});
+
+                // On mobile (< 768px), drill down into full-screen article view with back button
+                if (window.innerWidth < 768) {{
+                    const sidebarList = document.getElementById('codexSidebarList');
+                    const articleView = document.getElementById('codexArticleView');
+                    const mobileBackBtn = document.getElementById('codexMobileBackBtn');
+                    const toolbar = document.getElementById('codexToolbar');
+                    const titleArea = document.getElementById('codexHeaderTitleArea');
+
+                    if (sidebarList) sidebarList.classList.add('hidden');
+                    if (articleView) {{
+                        articleView.classList.remove('hidden');
+                        articleView.classList.add('block');
+                    }}
+                    if (mobileBackBtn) {{
+                        mobileBackBtn.classList.remove('hidden');
+                        mobileBackBtn.classList.add('flex');
+                    }}
+                    if (toolbar) toolbar.classList.add('hidden');
+                    if (titleArea) {{
+                        const h3 = titleArea.querySelector('h3');
+                        if (h3) h3.textContent = art.title || 'The Margin Codex';
+                    }}
+                }}
             }};
 
             window.filterCodexCategory = function(cat) {{
@@ -5001,9 +5300,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 document.querySelectorAll('.codex-cat-btn').forEach(btn => {{
                     const bCat = btn.dataset.category || 'all';
                     if (bCat === filter) {{
-                        btn.className = "codex-cat-btn px-2.5 py-1 rounded-lg bg-amber-400 text-slate-950 font-bold transition-all";
+                        btn.className = "codex-cat-btn px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-bold transition-all shadow-sm";
                     }} else {{
-                        btn.className = "codex-cat-btn px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all";
+                        btn.className = "codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-400 hover:text-slate-200 transition-all border border-slate-700/60";
                     }}
                 }});
 
@@ -5012,13 +5311,27 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     const grp = item.dataset.group || '';
                     const title = item.dataset.title || '';
                     const matchesCat = (filter === 'all' || grp === filter);
-                    const matchesSearch = (!query || title.includes(query) || (codexArticlesMap[item.dataset.slug] && codexArticlesMap[item.dataset.slug].html.toLowerCase().includes(query)));
+                    const slug = item.dataset.slug;
+                    const art = codexArticlesMap[slug];
+                    const matchesSearch = (!query || title.includes(query) || (art && (art.subtitle || '').toLowerCase().includes(query)) || (art && (art.html || '').toLowerCase().includes(query)));
                     item.style.display = (matchesCat && matchesSearch) ? 'flex' : 'none';
                 }});
             }};
 
             window.searchCodex = function(query) {{
                 const q = (query || '').toLowerCase().trim();
+                const clearBtn = document.getElementById('codexSearchClearBtn');
+                const searchIcon = document.getElementById('codexSearchIcon');
+                if (clearBtn && searchIcon) {{
+                    if (q.length > 0) {{
+                        clearBtn.classList.remove('hidden');
+                        searchIcon.classList.add('hidden');
+                    }} else {{
+                        clearBtn.classList.add('hidden');
+                        searchIcon.classList.remove('hidden');
+                    }}
+                }}
+
                 const activeCatBtn = document.querySelector('.codex-cat-btn.bg-amber-400');
                 const cat = activeCatBtn ? activeCatBtn.dataset.category : 'all';
 
@@ -5028,7 +5341,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     const matchesCat = (cat === 'all' || grp === cat);
                     const slug = item.dataset.slug;
                     const art = codexArticlesMap[slug];
-                    const matchesText = !q || title.includes(q) || (art && (art.subtitle || '').toLowerCase().includes(q)) || (art && (art.html || '').toLowerCase().includes(q));
+                    const matchesText = !q || title.includes(q) || (art && (art.subtitle || '').toLowerCase().includes(q)) || (art && (art.html || '').toLowerCase().includes(query));
                     item.style.display = (matchesCat && matchesText) ? 'flex' : 'none';
                 }});
             }};
@@ -6925,11 +7238,17 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
     <!-- Header Navigation Bar -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 px-4 py-3">
-            <div class="flex items-center gap-3 min-w-0">
-                <a href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-800/60 active:scale-95 flex-shrink-0" title="Back to Campaigns Index" aria-label="Back to Campaigns Index">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                <!-- Mobile Dynamic Back Button (shown when viewing an article on mobile) -->
+                <button id="codexMobileBackBtn" type="button" onclick="codexShowDirectoryOnMobile()" class="hidden md:hidden px-2.5 py-1.5 rounded-xl bg-slate-800 text-amber-300 border border-slate-700 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all" title="Return to Directory">
+                    <span>←</span> <span class="font-sans font-bold">Directory</span>
+                </button>
+
+                <a id="codexIndexBackLink" href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-800/60 active:scale-95 flex-shrink-0" title="Back to Campaigns Index" aria-label="Back to Campaigns Index">
                     <span class="text-lg leading-none font-bold">←</span>
                 </a>
-                <div class="truncate">
+
+                <div class="truncate" id="codexHeaderTitleArea">
                     <div class="flex items-center gap-2">
                         <span class="text-lg">📖</span>
                         <h1 class="text-base sm:text-lg font-bold text-amber-400 font-cinzel tracking-wider truncate">The Margin Campaign Codex</h1>
@@ -6941,16 +7260,16 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
 
             <div class="flex items-center gap-2 flex-shrink-0">
                 <a href="uneraseable-s7.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-semibold transition-all">
-                    <span>📖</span> <span>Latest Session (S7)</span>
+                    <span>📖</span> <span class="hidden xs:inline">Latest Session (S7)</span><span class="xs:hidden">S7</span>
                 </a>
             </div>
         </div>
     </header>
 
     <!-- Main Content Area: Sidebar + Article View -->
-    <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 flex-1 flex flex-col min-h-0">
+    <main class="max-w-7xl w-full mx-auto p-3 sm:p-6 flex-1 flex flex-col min-h-0">
         <!-- Controls: Category Filter Tabs & Search Bar -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800 flex-shrink-0">
+        <div id="codexToolbar" class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-slate-800 flex-shrink-0">
             <!-- Category Tabs -->
             <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar text-xs font-medium">
                 <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-bold transition-all shadow-sm" data-category="all" onclick="filterCodexCategory('all')">
@@ -6970,22 +7289,23 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 </button>
             </div>
 
-            <!-- Search Input -->
+            <!-- Search Input with Instant Clear Button -->
             <div class="relative flex-1 sm:max-w-md">
-                <input id="codexSearchInput" type="text" placeholder="Search codex, characters, lore, sessions..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors shadow-inner" oninput="searchCodex(this.value)">
-                <span class="absolute right-3 top-2.5 text-xs text-slate-500 pointer-events-none">🔍</span>
+                <input id="codexSearchInput" type="text" placeholder="Search codex, characters, lore, sessions..." class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-3.5 pr-8 py-2 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors shadow-inner" oninput="searchCodex(this.value)">
+                <button id="codexSearchClearBtn" type="button" onclick="clearCodexSearch()" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs font-bold" title="Clear Search">✕</button>
+                <span id="codexSearchIcon" class="absolute right-3 top-2.5 text-xs text-slate-500 pointer-events-none">🔍</span>
             </div>
         </div>
 
-        <!-- Two-Pane Layout Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 flex-1 min-h-0">
+        <!-- Two-Pane Layout Grid on Desktop, Full-Screen Drill-Down on Mobile -->
+        <div class="flex-1 min-h-0 flex flex-col md:grid md:grid-cols-12 gap-5 overflow-hidden relative">
             <!-- Left Sidebar Article Directory -->
-            <aside id="codexSidebarList" class="md:col-span-4 lg:col-span-3 space-y-1.5 overflow-y-auto max-h-[40vh] md:max-h-[calc(100vh-220px)] pr-2 custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 pb-4 md:pb-0">
+            <aside id="codexSidebarList" class="w-full md:col-span-4 lg:col-span-3 space-y-1.5 overflow-y-auto max-h-[calc(100vh-210px)] pr-2 custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 pb-4 md:pb-0 flex-1 md:flex-initial">
                 {sidebar_joined}
             </aside>
 
             <!-- Right Main Article Body -->
-            <article id="codexArticleView" class="md:col-span-8 lg:col-span-9 bg-slate-900/60 rounded-2xl border border-slate-800/80 p-4 sm:p-7 overflow-y-auto max-h-[60vh] md:max-h-[calc(100vh-220px)] custom-scrollbar shadow-xl">
+            <article id="codexArticleView" class="hidden md:block md:col-span-8 lg:col-span-9 bg-slate-900/60 rounded-2xl border border-slate-800/80 p-4 sm:p-7 overflow-y-auto max-h-[calc(100vh-210px)] custom-scrollbar shadow-xl flex-1">
                 {default_html}
             </article>
         </div>
@@ -7007,6 +7327,42 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
             const codexSearchInput = document.getElementById('codexSearchInput');
             const codexArticleView = document.getElementById('codexArticleView');
 
+            window.codexShowDirectoryOnMobile = function() {{
+                const sidebarList = document.getElementById('codexSidebarList');
+                const articleView = document.getElementById('codexArticleView');
+                const mobileBackBtn = document.getElementById('codexMobileBackBtn');
+                const indexBackLink = document.getElementById('codexIndexBackLink');
+                const toolbar = document.getElementById('codexToolbar');
+                const titleArea = document.getElementById('codexHeaderTitleArea');
+
+                if (sidebarList) sidebarList.classList.remove('hidden');
+                if (articleView) {{
+                    articleView.classList.add('hidden');
+                    articleView.classList.remove('block');
+                }}
+                if (mobileBackBtn) {{
+                    mobileBackBtn.classList.add('hidden');
+                    mobileBackBtn.classList.remove('flex');
+                }}
+                if (indexBackLink) indexBackLink.classList.remove('hidden');
+                if (toolbar) toolbar.classList.remove('hidden');
+                if (titleArea) {{
+                    const h1 = titleArea.querySelector('h1');
+                    if (h1) h1.textContent = 'The Margin Campaign Codex';
+                }}
+            }};
+
+            window.clearCodexSearch = function() {{
+                if (codexSearchInput) {{
+                    codexSearchInput.value = '';
+                }}
+                const clearBtn = document.getElementById('codexSearchClearBtn');
+                const searchIcon = document.getElementById('codexSearchIcon');
+                if (clearBtn) clearBtn.classList.add('hidden');
+                if (searchIcon) searchIcon.classList.remove('hidden');
+                window.searchCodex('');
+            }};
+
             window.selectCodexArticle = function(slug) {{
                 if (!slug) return;
                 const cleanSlug = slug.toLowerCase().trim();
@@ -7026,6 +7382,33 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                         item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
                     }}
                 }});
+
+                // Full-screen mobile drill down
+                if (window.innerWidth < 768) {{
+                    const sidebarList = document.getElementById('codexSidebarList');
+                    const articleView = document.getElementById('codexArticleView');
+                    const mobileBackBtn = document.getElementById('codexMobileBackBtn');
+                    const indexBackLink = document.getElementById('codexIndexBackLink');
+                    const toolbar = document.getElementById('codexToolbar');
+                    const titleArea = document.getElementById('codexHeaderTitleArea');
+
+                    if (sidebarList) sidebarList.classList.add('hidden');
+                    if (articleView) {{
+                        articleView.classList.remove('hidden');
+                        articleView.classList.add('block');
+                    }}
+                    if (mobileBackBtn) {{
+                        mobileBackBtn.classList.remove('hidden');
+                        mobileBackBtn.classList.add('flex');
+                    }}
+                    if (indexBackLink) indexBackLink.classList.add('hidden');
+                    if (toolbar) toolbar.classList.add('hidden');
+                    if (titleArea) {{
+                        const h1 = titleArea.querySelector('h1');
+                        if (h1) h1.textContent = art.title || 'The Margin Campaign Codex';
+                    }}
+                }}
+
                 try {{ history.replaceState(null, null, '#' + cleanSlug); }} catch(e) {{}}
             }};
 
@@ -7045,13 +7428,25 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     const grp = item.dataset.group || '';
                     const title = item.dataset.title || '';
                     const matchesCat = (filter === 'all' || grp === filter);
-                    const matchesSearch = (!query || title.includes(query) || (codexArticlesMap[item.dataset.slug] && codexArticlesMap[item.dataset.slug].html.toLowerCase().includes(query)));
+                    const matchesSearch = (!query || title.includes(query) || (codexArticlesMap[item.dataset.slug] && (codexArticlesMap[item.dataset.slug].subtitle || '').toLowerCase().includes(query)) || (codexArticlesMap[item.dataset.slug] && codexArticlesMap[item.dataset.slug].html.toLowerCase().includes(query)));
                     item.style.display = (matchesCat && matchesSearch) ? 'flex' : 'none';
                 }});
             }};
 
             window.searchCodex = function(query) {{
                 const q = (query || '').toLowerCase().trim();
+                const clearBtn = document.getElementById('codexSearchClearBtn');
+                const searchIcon = document.getElementById('codexSearchIcon');
+                if (clearBtn && searchIcon) {{
+                    if (q.length > 0) {{
+                        clearBtn.classList.remove('hidden');
+                        searchIcon.classList.add('hidden');
+                    }} else {{
+                        clearBtn.classList.add('hidden');
+                        searchIcon.classList.remove('hidden');
+                    }}
+                }}
+
                 const activeCatBtn = document.querySelector('.codex-cat-btn.bg-amber-400');
                 const cat = activeCatBtn ? activeCatBtn.dataset.category : 'all';
 
@@ -7068,8 +7463,11 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
 
             // Handle URL Hash on load
             const hash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
+            const isMobile = window.innerWidth < 768;
             if (hash && codexArticlesMap[hash]) {{
                 window.selectCodexArticle(hash);
+            }} else if (isMobile) {{
+                window.codexShowDirectoryOnMobile();
             }} else {{
                 window.selectCodexArticle('overview');
             }}
