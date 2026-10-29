@@ -2312,6 +2312,9 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
                     # Check if it's the full 6-col Active Mysteries Board
                     if any("established in-world evidence" in hc.lower() or "hypotheses" in hc.lower() for hc in header_cols):
                         parsed_cards = []
+                        main_count = 0
+                        pc_count = 0
+                        side_count = 0
                         lead_count = 0
                         active_count = 0
                         resolved_count = 0
@@ -2320,12 +2323,22 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
                             row_cols = [c.strip() for c in r.strip('|').split('|')]
                             if len(row_cols) < 5:
                                 continue
-                            raw_id = row_cols[0]
-                            core_q = row_cols[1]
-                            origin = row_cols[2]
-                            raw_status = row_cols[3]
-                            evidence = row_cols[4] if len(row_cols) > 4 else ""
-                            hypotheses = row_cols[5] if len(row_cols) > 5 else ""
+                            if len(row_cols) >= 7:
+                                raw_id = row_cols[0]
+                                raw_quest_type = row_cols[1]
+                                core_q = row_cols[2]
+                                origin = row_cols[3]
+                                raw_status = row_cols[4]
+                                evidence = row_cols[5]
+                                hypotheses = row_cols[6] if len(row_cols) > 6 else ""
+                            else:
+                                raw_id = row_cols[0]
+                                raw_quest_type = ""
+                                core_q = row_cols[1]
+                                origin = row_cols[2]
+                                raw_status = row_cols[3]
+                                evidence = row_cols[4] if len(row_cols) > 4 else ""
+                                hypotheses = row_cols[5] if len(row_cols) > 5 else ""
                             
                             # Preserve deep link anchor
                             anchor_m = re.search(r'<a\s+id="([^"]+)"></a>', raw_id)
@@ -2333,6 +2346,37 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
                             anchor_html = f'<a id="{anchor_id}"></a>' if anchor_id else ""
                             clean_id = re.sub(r'<[^>]+>', '', raw_id).replace('*', '').strip()
                             card_elem_id = anchor_id if anchor_id else clean_id.lower().replace(' ', '-')
+
+                            # Clean quest type
+                            clean_quest_type = re.sub(r'[`*]', '', raw_quest_type).strip()
+                            qt_lower = clean_quest_type.lower()
+                            if "main" in qt_lower or "plot" in qt_lower:
+                                quest_cat = "main"
+                                main_count += 1
+                                quest_badge = '<span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-mono font-bold tracking-wide">🌟 Main Story Arc</span>'
+                            elif "pc" in qt_lower or "companion" in qt_lower or "alfie" in qt_lower or "pierre" in qt_lower or "eusacles" in qt_lower:
+                                quest_cat = "pc"
+                                pc_count += 1
+                                pc_label = clean_quest_type if clean_quest_type else "🛡️ PC Quest"
+                                quest_badge = f'<span class="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-mono font-bold tracking-wide">{pc_label}</span>'
+                            elif "side" in qt_lower or "field" in qt_lower or "inquiry" in qt_lower:
+                                quest_cat = "side"
+                                side_count += 1
+                                side_label = clean_quest_type if clean_quest_type else "🗺️ Side Inquiry"
+                                quest_badge = f'<span class="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-mono font-bold tracking-wide">{side_label}</span>'
+                            else:
+                                if "th-01" in raw_id.lower() or "th-08" in raw_id.lower():
+                                    quest_cat = "pc"
+                                    pc_count += 1
+                                    quest_badge = '<span class="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-[10px] font-mono font-bold tracking-wide">🛡️ PC Quest</span>'
+                                elif "th-06" in raw_id.lower() or "th-07" in raw_id.lower():
+                                    quest_cat = "side"
+                                    side_count += 1
+                                    quest_badge = '<span class="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-mono font-bold tracking-wide">🗺️ Side Inquiry</span>'
+                                else:
+                                    quest_cat = "main"
+                                    main_count += 1
+                                    quest_badge = '<span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-mono font-bold tracking-wide">🌟 Main Story Arc</span>'
                             
                             # Clean status and build colored badge
                             clean_status = re.sub(r'[`*]', '', raw_status).strip()
@@ -2355,12 +2399,13 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
                                 status_badge = f'<span class="px-2.5 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[10px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1 shadow-sm">🔍 {clean_status}</span>'
 
                             card = f"""
-                            <div class="mystery-card my-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-amber-950/20 border border-slate-800 hover:border-amber-500/40 transition-all shadow-xl space-y-3.5 scroll-mt-20" data-mystery-status="{status_cat}" id="{card_elem_id}">
+                            <div class="mystery-card my-3.5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-amber-950/20 border border-slate-800 hover:border-amber-500/40 transition-all shadow-xl space-y-3.5 scroll-mt-20" data-quest-cat="{quest_cat}" data-mystery-status="{status_cat}" id="{card_elem_id}">
                                 <!-- Card Header -->
                                 <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-2.5">
-                                    <div class="flex items-center gap-2">
+                                    <div class="flex flex-wrap items-center gap-2">
                                         {anchor_html}
                                         <span class="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold tracking-wider">{clean_id}</span>
+                                        {quest_badge}
                                         <span class="text-xs text-slate-400 font-mono flex items-center gap-1">
                                             <span class="text-slate-500">Origin:</span> <span>{format_inline(origin)}</span>
                                         </span>
@@ -2401,26 +2446,39 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
 
                         total_count = len(parsed_cards)
                         board_html = []
-                        # Filter buttons toolbar with dynamic counts
+                        # RPG Quest Log Toolbar with Category Tabs & Status Chips
                         board_html.append(f"""
-                        <div class="my-5 p-3.5 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xl">🧶</span>
-                                <div>
-                                    <h4 class="text-xs sm:text-sm font-bold text-amber-400 font-serif">Investigation Case Board</h4>
-                                    <p class="text-[10px] text-slate-400 font-mono">Filter by threat level &amp; resolution status</p>
+                        <div class="my-4 p-3.5 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-3">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xl">🧶</span>
+                                    <div>
+                                        <h4 class="text-xs sm:text-sm font-bold text-amber-400 font-serif">Investigation Quest Board</h4>
+                                        <p class="text-[10px] text-slate-400 font-mono">RPG Quest Tracking · Main Narrative Beats · PC Arcs · Field Inquiries</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="flex flex-wrap items-center gap-1.5" id="mysteryFilterButtons">
-                                <button type="button" class="mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm" data-filter="all" onclick="filterMysteryCards('all')">All ({total_count})</button>
-                                <button type="button" class="mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-rose-300 border border-rose-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-filter="immediate" onclick="filterMysteryCards('immediate')">🚨 Leads ({lead_count})</button>
-                                <button type="button" class="mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-sky-300 border border-sky-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-filter="active" onclick="filterMysteryCards('active')">🔍 Active ({active_count})</button>
-                                <button type="button" class="mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-emerald-300 border border-emerald-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-filter="resolved" onclick="filterMysteryCards('resolved')">✅ Resolved ({resolved_count})</button>
+
+                            <!-- Tier 1: Video Game Quest Type Tabs -->
+                            <div class="flex flex-wrap items-center gap-1.5" id="questTypeFilters">
+                                <button type="button" class="quest-type-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm" data-quest="all" onclick="filterQuests('all', null)">All Quests ({total_count})</button>
+                                <button type="button" class="quest-type-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-amber-300 border border-amber-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-quest="main" onclick="filterQuests('main', null)">🌟 Main Story ({main_count})</button>
+                                <button type="button" class="quest-type-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-indigo-300 border border-indigo-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-quest="pc" onclick="filterQuests('pc', null)">🛡️ PC Arcs ({pc_count})</button>
+                                <button type="button" class="quest-type-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 text-cyan-300 border border-cyan-500/30 hover:bg-slate-700 text-xs font-semibold transition-all" data-quest="side" onclick="filterQuests('side', null)">🗺️ Side Inquiries ({side_count})</button>
+                            </div>
+
+                            <!-- Tier 2: Threat & Resolution Status Chips -->
+                            <div class="flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-slate-800/80" id="questStatusFilters">
+                                <span class="text-[10px] uppercase font-mono text-slate-500 font-bold mr-1">Status:</span>
+                                <button type="button" class="quest-status-btn px-2 py-0.5 rounded-lg bg-slate-200 text-slate-950 text-[11px] font-bold transition-all shadow-sm" data-status="all" onclick="filterQuests(null, 'all')">Any</button>
+                                <button type="button" class="quest-status-btn px-2 py-0.5 rounded-lg bg-slate-800/80 text-rose-300 border border-rose-500/30 hover:bg-slate-700 text-[11px] font-medium transition-all" data-status="immediate" onclick="filterQuests(null, 'immediate')">🚨 Immediate ({lead_count})</button>
+                                <button type="button" class="quest-status-btn px-2 py-0.5 rounded-lg bg-slate-800/80 text-sky-300 border border-sky-500/30 hover:bg-slate-700 text-[11px] font-medium transition-all" data-status="active" onclick="filterQuests(null, 'active')">🔍 Active ({active_count})</button>
+                                <button type="button" class="quest-status-btn px-2 py-0.5 rounded-lg bg-slate-800/80 text-emerald-300 border border-emerald-500/30 hover:bg-slate-700 text-[11px] font-medium transition-all" data-status="resolved" onclick="filterQuests(null, 'resolved')">✅ Resolved ({resolved_count})</button>
                             </div>
                         </div>
                         """)
-                        board_html.append('\\n'.join(parsed_cards))
-                        html_lines.append('\\n'.join(board_html))
+                        board_html.append('\n'.join(parsed_cards))
+                        html_lines.append('\n'.join(board_html))
                         continue
                     else:
                         # Session Chronicle 4-col Thread Table: Render as responsive Session Thread Cards
@@ -2601,7 +2659,7 @@ def build_codex_feedback_card_html(slug: str, title: str, group: str) -> str:
 
 
 def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int = None, is_standalone: bool = False) -> str:
-    """Builds nested collapsible accordion groups with item counts and rotating chevrons."""
+    """Builds clean, flat directory navigation with collapsible groups and item counts."""
     groups = [
         {"key": "sessions", "title": "Session Chronicles", "icon": "📜"},
         {"key": "characters", "title": "Dramatis Personae", "icon": "👤"},
@@ -2614,12 +2672,12 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
     
     # Pinned Master Hub at top
     html_parts.append("""
-    <button type="button" class="codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50 mb-3 shadow-md" data-slug="overview" data-group="overview" data-title="campaign codex overview home portal" onclick="selectCodexArticle('overview')">
-        <span class="text-xs font-bold flex items-center gap-2">
+    <button type="button" class="codex-sidebar-item codex-hub-item w-full text-left px-3 py-2.5 transition-colors flex items-center justify-between gap-2 border-b border-slate-800/80 hover:bg-slate-850 active:bg-amber-500/10 text-amber-300 font-semibold border-l-2 border-l-amber-400 bg-amber-500/10" data-slug="overview" data-group="overview" data-title="campaign codex overview home portal" onclick="selectCodexArticle('overview')">
+        <span class="text-xs flex items-center gap-2">
             <span class="text-base">🧭</span>
-            <span>Campaign Codex Hub</span>
+            <span class="font-serif font-bold tracking-wide">Codex Overview Hub</span>
         </span>
-        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-200 border border-amber-500/50 uppercase font-bold">Home</span>
+        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 uppercase font-bold">Portal</span>
     </button>
     """)
     
@@ -2649,9 +2707,9 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
             sess_badge = f'<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">S{art["sessionNum"]}</span>' if art.get("sessionNum") else ""
             
             group_items_html.append(f"""
-            <button type="button" class="codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white" data-slug="{s_slug}" data-group="{art['group']}" data-title="{art['title'].lower()}" onclick="selectCodexArticle('{s_slug}')">
-                <div class="flex items-center justify-between gap-1 w-full">
-                    <span class="text-xs font-semibold truncate flex items-center gap-1.5">
+            <button type="button" class="codex-sidebar-item w-full text-left px-3 py-2 transition-colors flex flex-col gap-0.5 hover:bg-slate-800/50 text-slate-300 active:bg-amber-500/10 border-l-2 border-l-transparent" data-slug="{s_slug}" data-group="{art['group']}" data-title="{art['title'].lower()}" onclick="selectCodexArticle('{s_slug}')">
+                <div class="flex items-center justify-between gap-1.5 w-full">
+                    <span class="text-xs font-medium truncate flex items-center gap-1.5">
                         <span>{art['icon']}</span>
                         <span class="truncate">{art['title']}</span>
                     </span>
@@ -2663,22 +2721,144 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
             
         joined_items = "\n".join(group_items_html)
         html_parts.append(f"""
-        <div class="codex-accordion-group mb-2.5" data-group="{g_key}">
-            <button type="button" class="codex-group-header w-full flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold select-none" onclick="toggleCodexGroup('{g_key}')">
-                <div class="flex items-center gap-2">
+        <div class="codex-accordion-group border-b border-slate-800/60" data-group="{g_key}">
+            <button type="button" class="codex-group-header w-full flex items-center justify-between px-3 py-2 bg-slate-900/40 hover:bg-slate-850 text-slate-400 hover:text-slate-200 transition-colors text-[11px] font-mono uppercase tracking-wider font-bold select-none" onclick="toggleCodexGroup('{g_key}')">
+                <div class="flex items-center gap-1.5">
                     <span>{g_icon}</span>
                     <span>{g_title}</span>
-                    <span class="codex-group-count text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-400 border border-slate-700/60 font-bold">{len(g_articles)}</span>
+                    <span class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-400 font-bold ml-1">{len(g_articles)}</span>
                 </div>
-                <span class="codex-group-chevron text-[10px] text-slate-500 transition-transform duration-200">▼</span>
+                <span class="codex-group-chevron text-[9px] text-slate-500 transition-transform duration-200">▼</span>
             </button>
-            <div class="codex-group-items pl-1 pt-1.5 space-y-1" id="codexGroup-{g_key}">
+            <div class="codex-group-items divide-y divide-slate-800/40 bg-slate-950/30" id="codexGroup-{g_key}">
                 {joined_items}
             </div>
         </div>
         """)
         
     return "\n".join(html_parts)
+
+
+GLOBAL_ENTITY_AUTOLINKER = None
+
+def build_entity_crosslinker(codex_articles: dict):
+    """
+    Builds a robust, automated entity cross-linking pipeline from canonical codex articles,
+    resolving characters, factions, key locations, and mysteries without double-linking.
+    """
+    entities = []
+    
+    # Pre-defined canon alias expansions
+    CUSTOM_ALIASES = {
+        "pierre": ["Pierre Boucher", "Pierre"],
+        "alfie": ["Alfie"],
+        "eusacles": ["Eusacles"],
+        "dravin": ["Prof. Edward Dravin", "Professor Dravin", "Prof. Dravin", "Edward Dravin", "Dravin"],
+        "susanna": ["Susanna Drake", "Susanna"],
+        "teddy": ["Theodore", "Teddy"],
+        "naomi": ["Naomi"],
+        "mike": ["Mike"],
+        "thorne": ["Dr. Aris Thorne", "Dr. Thorne", "Aris Thorne", "Dr. Robert Thorne", "Robert Thorne", "Thorne"],
+        "redactors": ["The Redactors", "Redactor Operatives", "Redactor Operative", "Redactors", "Redactor"],
+        "margin-wardens": ["Margin Wardens", "The Margin Wardens", "Wardens of the Margin"],
+        "the-margin": ["The Margin", "The Margin Compound"],
+        "hermes": ["Hermes Express", "The Hermes Express"],
+        "thanatos": ["Thanatos"],
+        "persephone": ["Persephone"],
+        "open-threads": ["Active Mysteries Board", "Investigation Case Board", "Campaign Mysteries Board", "Open Mysteries Board", "Open Threads Board", "Quest Board"],
+        "lost-roads": ["Lost Roads", "The Lost Roads"],
+        "university-university": ["University University"],
+        "raleigh": ["Raleigh Museum"],
+    }
+    
+    for slug, art in codex_articles.items():
+        title = art.get("title", slug.title())
+        aliases = set()
+        aliases.add(title)
+        
+        # Strip prefixes like "Prof. ", "Dr. ", "The "
+        clean_title = re.sub(r'^(Prof\.|Dr\.|The)\s+', '', title).strip()
+        if len(clean_title) > 3:
+            aliases.add(clean_title)
+            
+        if slug in CUSTOM_ALIASES:
+            for ca in CUSTOM_ALIASES[slug]:
+                aliases.add(ca)
+                
+        # Filter aliases (must be >= 4 chars unless exact character name like "Mike")
+        valid_aliases = [a for a in aliases if len(a) >= 4 or a in ("Mike", "Rosa")]
+        if valid_aliases:
+            entities.append({
+                "slug": slug,
+                "title": title,
+                "aliases": sorted(valid_aliases, key=len, reverse=True)
+            })
+            
+    # Flatten all alias mappings: (alias, slug, title) sorted by length descending
+    all_mappings = []
+    for ent in entities:
+        for al in ent["aliases"]:
+            all_mappings.append((al, ent["slug"], ent["title"]))
+            
+    all_mappings.sort(key=lambda x: len(x[0]), reverse=True)
+    
+    if not all_mappings:
+        return lambda html, current_slug=None, is_modal=False: (html, 0)
+        
+    master_pattern = re.compile(r'\b(' + '|'.join(re.escape(x[0]) for x in all_mappings) + r')\b', re.IGNORECASE)
+    
+    def autolink_text(html_content: str, current_slug: str = None, is_modal: bool = False, counts: dict = None, max_per_entity: int = 2) -> tuple[str, int]:
+        if not html_content:
+            return html_content, 0
+            
+        parts = re.split(r'(<[^>]+>)', html_content)
+        in_restricted = 0
+        if counts is None:
+            counts = {}
+        links_added = 0
+        
+        out = []
+        for p in parts:
+            if not p:
+                continue
+            if p.startswith('<') and p.endswith('>'):
+                tag_name = re.match(r'</?([a-zA-Z0-9]+)', p)
+                if tag_name:
+                    t_lower = tag_name.group(1).lower()
+                    if t_lower in ('a', 'button', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre', 'script', 'style', 'input', 'textarea'):
+                        if p.startswith('</'):
+                            in_restricted = max(0, in_restricted - 1)
+                        elif not p.endswith('/>'):
+                            in_restricted += 1
+                out.append(p)
+            else:
+                if in_restricted > 0:
+                    out.append(p)
+                else:
+                    def repl(match_obj):
+                        nonlocal links_added
+                        matched_text = match_obj.group(1)
+                        for al_text, slug, ent_title in all_mappings:
+                            if matched_text.lower() == al_text.lower():
+                                if current_slug and slug == current_slug:
+                                    return matched_text  # Don't link to self
+                                c = counts.get(slug, 0)
+                                if c < max_per_entity:  # Max links per entity per page/chapter
+                                    counts[slug] = c + 1
+                                    links_added += 1
+                                    if is_modal:
+                                        return f'<a href="javascript:void(0)" onclick="openCodexModal(\'{slug}\')" class="codex-entity-link text-amber-300 hover:text-amber-200 underline decoration-amber-500/30 hover:decoration-amber-300 font-medium transition-colors cursor-pointer" title="Codex: {ent_title}">{matched_text}</a>'
+                                    else:
+                                        return f'<a href="javascript:void(0)" onclick="selectCodexArticle(\'{slug}\')" class="codex-entity-link text-amber-300 hover:text-amber-200 underline decoration-amber-500/30 hover:decoration-amber-300 font-medium transition-colors" title="Codex: {ent_title}">{matched_text}</a>'
+                                return matched_text
+                        return matched_text
+                        
+                    replaced_text = master_pattern.sub(repl, p)
+                    out.append(replaced_text)
+                    
+        return ''.join(out), links_added
+        
+    return autolink_text
 
 
 def load_all_codex_articles():
@@ -2865,57 +3045,55 @@ def load_all_codex_articles():
         # Inject rich landing hub at top of overview
         if slug == "overview":
             overview_portal_hub = """
-            <div class="mb-8 space-y-4">
-                <!-- Hero Banner -->
-                <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 border border-amber-500/30 shadow-2xl">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-2xl sm:text-3xl">🧭</span>
+            <div class="mb-6 space-y-4">
+                <!-- Clean Header Banner -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-amber-950/20 to-slate-900 border border-amber-500/30">
+                    <div class="flex items-center gap-2.5 mb-1.5">
+                        <span class="text-2xl">🧭</span>
                         <div>
-                            <span class="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-amber-400 font-bold">Interactive Campaign Hub</span>
-                            <h1 class="text-2xl sm:text-3xl font-bold font-serif text-slate-100">The Margin Campaign Codex</h1>
+                            <span class="text-[10px] uppercase font-mono tracking-widest text-amber-400 font-bold">Interactive Campaign Hub · Wiki Portal</span>
+                            <h1 class="text-xl sm:text-2xl font-bold font-serif text-slate-100">The Margin Campaign Codex</h1>
                         </div>
                     </div>
-                    <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed max-w-2xl">
-                        Official world encyclopedia and continuity ledger for <strong class="text-amber-300">The Margin: The Stolen Weave</strong>. Explore session debriefs, character dossiers, faction profiles, active mysteries, and critical editorial reviews.
+                    <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+                        Official world encyclopedia and continuity ledger for <strong class="text-amber-300">The Margin: The Stolen Weave</strong>. Explore session chronicles, character dossiers, faction orders, active investigation mysteries, and critical editorial notes.
                     </p>
                 </div>
 
-                <!-- 4 Interactive Portal Cards Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <!-- Card 1: Sessions -->
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition-all flex flex-col justify-between group shadow-lg">
+                <!-- 4 Flat Directory Sections -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Section 1: Sessions -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-lg">📜</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">7 Sessions</span>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs font-bold font-serif text-slate-100 flex items-center gap-1.5"><span>📜</span> <span>Session Chronicles</span></span>
+                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">7 Sessions</span>
                             </div>
-                            <h3 class="text-base font-bold font-serif text-slate-100 group-hover:text-amber-300 transition-colors">Session Chronicles</h3>
-                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Acts I–IV recaps, narrative cliffhangers, and scene breakdowns from Vegas to D.C.</p>
-                            <div class="mt-3 flex flex-wrap gap-1">
-                                <button type="button" onclick="selectCodexArticle('s1')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S1</button>
-                                <button type="button" onclick="selectCodexArticle('s2')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S2</button>
-                                <button type="button" onclick="selectCodexArticle('s3')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S3</button>
-                                <button type="button" onclick="selectCodexArticle('s4')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S4</button>
-                                <button type="button" onclick="selectCodexArticle('s5')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S5</button>
-                                <button type="button" onclick="selectCodexArticle('s6')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 font-mono transition-colors">S6</button>
+                            <p class="text-[11px] text-slate-400 leading-snug">Acts I–IV recaps, narrative cliffhangers, and scene breakdowns from Vegas to D.C.</p>
+                            <div class="mt-2.5 flex flex-wrap gap-1">
+                                <button type="button" onclick="selectCodexArticle('s1')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S1</button>
+                                <button type="button" onclick="selectCodexArticle('s2')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S2</button>
+                                <button type="button" onclick="selectCodexArticle('s3')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S3</button>
+                                <button type="button" onclick="selectCodexArticle('s4')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S4</button>
+                                <button type="button" onclick="selectCodexArticle('s5')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S5</button>
+                                <button type="button" onclick="selectCodexArticle('s6')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S6</button>
                                 <button type="button" onclick="selectCodexArticle('s7')" class="px-2 py-0.5 text-[11px] rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-bold hover:bg-amber-500/30 transition-colors">S7 (Latest)</button>
                             </div>
                         </div>
-                        <button type="button" onclick="filterCodexCategory('sessions')" class="mt-3.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
-                            <span>Browse All Chronicles</span> <span>→</span>
+                        <button type="button" onclick="filterCodexCategory('sessions')" class="mt-2.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
+                            <span>View All Chronicles</span> <span>→</span>
                         </button>
                     </div>
 
-                    <!-- Card 2: Characters -->
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition-all flex flex-col justify-between group shadow-lg">
+                    <!-- Section 2: Characters -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-lg">👤</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-bold">13 Dossiers</span>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs font-bold font-serif text-slate-100 flex items-center gap-1.5"><span>👤</span> <span>Dramatis Personae</span></span>
+                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-bold">13 Dossiers</span>
                             </div>
-                            <h3 class="text-base font-bold font-serif text-slate-100 group-hover:text-amber-300 transition-colors">Dramatis Personae</h3>
-                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Party backstories, Margin wardens, rescued allies, and celestial powers.</p>
-                            <div class="mt-3 flex flex-wrap gap-1">
+                            <p class="text-[11px] text-slate-400 leading-snug">Party backstories, Margin wardens, rescued allies, and celestial powers.</p>
+                            <div class="mt-2.5 flex flex-wrap gap-1">
                                 <button type="button" onclick="selectCodexArticle('pierre')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-blue-500/20 text-slate-300 hover:text-blue-300 transition-colors">Pierre</button>
                                 <button type="button" onclick="selectCodexArticle('alfie')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-colors">Alfie</button>
                                 <button type="button" onclick="selectCodexArticle('dravin')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-purple-500/20 text-slate-300 hover:text-purple-300 transition-colors">Dravin</button>
@@ -2924,45 +3102,43 @@ def load_all_codex_articles():
                                 <button type="button" onclick="selectCodexArticle('thanatos')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Thanatos</button>
                             </div>
                         </div>
-                        <button type="button" onclick="filterCodexCategory('characters')" class="mt-3.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
+                        <button type="button" onclick="filterCodexCategory('characters')" class="mt-2.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
                             <span>View Full Cast</span> <span>→</span>
                         </button>
                     </div>
 
-                    <!-- Card 3: Factions -->
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition-all flex flex-col justify-between group shadow-lg">
+                    <!-- Section 3: Factions -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-lg">🏛️</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">2 Factions</span>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs font-bold font-serif text-slate-100 flex items-center gap-1.5"><span>🏛️</span> <span>Factions &amp; Orders</span></span>
+                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">2 Factions</span>
                             </div>
-                            <h3 class="text-base font-bold font-serif text-slate-100 group-hover:text-amber-300 transition-colors">Factions &amp; Orders</h3>
-                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">The Margin Wardens defending the seams vs. The Redactors erasing history.</p>
-                            <div class="mt-3 flex flex-wrap gap-1">
+                            <p class="text-[11px] text-slate-400 leading-snug">The Margin Wardens defending reality seams vs. The Redactors erasing history.</p>
+                            <div class="mt-2.5 flex flex-wrap gap-1">
                                 <button type="button" onclick="selectCodexArticle('margin-wardens')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-colors">Margin Wardens</button>
                                 <button type="button" onclick="selectCodexArticle('redactors')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 transition-colors">The Redactors</button>
                             </div>
                         </div>
-                        <button type="button" onclick="filterCodexCategory('factions')" class="mt-3.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
+                        <button type="button" onclick="filterCodexCategory('factions')" class="mt-2.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
                             <span>Inspect Factions</span> <span>→</span>
                         </button>
                     </div>
 
-                    <!-- Card 4: Mysteries Board -->
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/60 transition-all flex flex-col justify-between group shadow-lg">
+                    <!-- Section 4: Mysteries & Quest Board -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-lg">🔍</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold">8 Open Threads</span>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs font-bold font-serif text-slate-100 flex items-center gap-1.5"><span>🔍</span> <span>Investigation Quest Board</span></span>
+                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold">8 Threads</span>
                             </div>
-                            <h3 class="text-base font-bold font-serif text-slate-100 group-hover:text-amber-300 transition-colors">Active Mysteries Board</h3>
-                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Track the stolen weave, Alfie's origins, the 1948 Big Pox trials, and Persephone's warning.</p>
-                            <div class="mt-3 flex flex-wrap gap-1">
+                            <p class="text-[11px] text-slate-400 leading-snug">Video game quest log tracking the stolen weave, Alfie's origins, 1948 Big Pox trials, and Persephone's warning.</p>
+                            <div class="mt-2.5 flex flex-wrap gap-1">
                                 <button type="button" onclick="selectCodexArticle('open-threads')" class="px-2 py-0.5 text-[11px] rounded bg-purple-950/40 border border-purple-800/60 text-purple-300 hover:bg-purple-900/60 font-mono transition-colors">TH-01 to TH-08</button>
                             </div>
                         </div>
-                        <button type="button" onclick="selectCodexArticle('open-threads')" class="mt-3.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
-                            <span>Open Tracking Board</span> <span>→</span>
+                        <button type="button" onclick="selectCodexArticle('open-threads')" class="mt-2.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
+                            <span>Open Quest Board</span> <span>→</span>
                         </button>
                     </div>
                 </div>
@@ -3009,6 +3185,17 @@ def load_all_codex_articles():
             "sessionNum": sess_num,
             "html": html_body
         }
+
+    # Execute Automated Entity Cross-Linking Pipeline across all codex articles
+    global GLOBAL_ENTITY_AUTOLINKER
+    GLOBAL_ENTITY_AUTOLINKER = build_entity_crosslinker(articles)
+    total_codex_links = 0
+    for s_slug, art_data in articles.items():
+        linked_html, added = GLOBAL_ENTITY_AUTOLINKER(art_data["html"], current_slug=s_slug, is_modal=False)
+        art_data["html"] = linked_html
+        total_codex_links += added
+    print(f"[OK] Pipeline Cross-Linker: Injected {total_codex_links} entity cross-links into codex articles.")
+
     return articles
 
 
@@ -3032,9 +3219,9 @@ def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> st
             <header class="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3.5 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md flex-shrink-0 gap-2">
                 <!-- Left Nav: Mobile Back Button or Title -->
                 <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                    <!-- Dynamic Mobile Back Button (Only visible when viewing an article on mobile) -->
-                    <button id="codexMobileBackBtn" type="button" onclick="codexShowDirectoryOnMobile()" class="hidden md:hidden px-2.5 py-1.5 rounded-xl bg-slate-800 text-amber-300 border border-slate-700 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all" title="Return to Directory">
-                        <span>←</span> <span class="font-sans font-bold">Directory</span>
+                    <!-- Always-Visible Back Button -->
+                    <button id="codexModalBackBtn" type="button" onclick="codexModalHandleBack()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm" title="Go back">
+                        <span class="text-sm font-bold">←</span> <span id="codexModalBackLabel" class="font-sans">Back</span>
                     </button>
 
                     <div class="flex items-center gap-2 min-w-0" id="codexHeaderTitleArea">
@@ -3323,6 +3510,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             """
 
         ch_novel_blocks_html = ""
+        chapter_entity_counts = {}
         for b in ch["blocks"]:
             b_id = b.get("id", "block")
             b_idx = b.get("index", 1)
@@ -3375,6 +3563,9 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 rendered_text = "".join(seg_html_parts)
             else:
                 rendered_text = text
+
+            if "GLOBAL_ENTITY_AUTOLINKER" in globals() and GLOBAL_ENTITY_AUTOLINKER:
+                rendered_text, _ = GLOBAL_ENTITY_AUTOLINKER(rendered_text, current_slug=None, is_modal=True, counts=chapter_entity_counts, max_per_entity=2)
 
             is_narrator = (sp_info.get("type") == "narrator" or sp_id == "narrator")
 
@@ -5605,14 +5796,21 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             // =========================================================
             // CAMPAIGN CODEX MODAL CONTROLLER & CLIENT SEARCH ENGINE
             // =========================================================
-            window.openCodexModal = function(targetSlug) {{
+            window.openCodexModal = function(targetSlug, fromPopState = false) {{
                 if (!codexModalOverlay) return;
                 codexModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
                 codexModalOverlay.classList.add('visible');
                 setBodyScrollLock(true);
                 
+                const slugToOpen = (targetSlug && codexArticlesMap[targetSlug]) ? targetSlug : 'overview';
+                if (!fromPopState) {{
+                    try {{
+                        history.pushState({{ inCodexModal: true, slug: slugToOpen }}, '', '#' + slugToOpen);
+                    }} catch(e) {{}}
+                }}
+                
                 if (targetSlug && targetSlug.toLowerCase().startsWith('th-')) {{
-                    window.selectCodexArticle('open-threads');
+                    window.selectCodexArticle('open-threads', true);
                     setTimeout(() => {{
                         const el = document.getElementById(targetSlug.toLowerCase());
                         if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
@@ -5620,23 +5818,41 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     return;
                 }}
                 
-                const slugToOpen = (targetSlug && codexArticlesMap[targetSlug]) ? targetSlug : 'overview';
-                window.selectCodexArticle(slugToOpen);
+                window.selectCodexArticle(slugToOpen, true);
             }};
 
-            window.closeCodexModal = function() {{
+            window.closeCodexModal = function(fromPopState = false) {{
                 if (!codexModalOverlay) return;
                 codexModalOverlay.classList.remove('visible');
                 codexModalOverlay.classList.add('opacity-0', 'pointer-events-none');
                 codexModalOverlay.style.height = '';
                 codexModalOverlay.style.transform = '';
                 setBodyScrollLock(false);
+
+                if (!fromPopState && window.history.state && window.history.state.inCodexModal) {{
+                    try {{
+                        history.pushState(null, '', window.location.pathname + window.location.search);
+                    }} catch(e) {{}}
+                }}
+            }};
+
+            window.codexModalHandleBack = function() {{
+                const articleView = document.getElementById('codexArticleView');
+                const isMobile = window.innerWidth < 768;
+                if (isMobile && articleView && !articleView.classList.contains('hidden')) {{
+                    window.codexShowDirectoryOnMobile();
+                    try {{
+                        history.pushState({{ inCodexModal: true, slug: 'overview', view: 'directory' }}, '', '#overview');
+                    }} catch(e) {{}}
+                }} else {{
+                    window.closeCodexModal();
+                }}
             }};
 
             window.codexShowDirectoryOnMobile = function() {{
                 const sidebarList = document.getElementById('codexSidebarList');
                 const articleView = document.getElementById('codexArticleView');
-                const mobileBackBtn = document.getElementById('codexMobileBackBtn');
+                const backLabel = document.getElementById('codexModalBackLabel');
                 const toolbar = document.getElementById('codexToolbar');
                 const titleArea = document.getElementById('codexHeaderTitleArea');
 
@@ -5645,10 +5861,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     articleView.classList.add('hidden');
                     articleView.classList.remove('block');
                 }}
-                if (mobileBackBtn) {{
-                    mobileBackBtn.classList.add('hidden');
-                    mobileBackBtn.classList.remove('flex');
-                }}
+                if (backLabel) backLabel.textContent = 'Close';
                 if (toolbar) toolbar.classList.remove('hidden');
                 if (titleArea) {{
                     const h3 = titleArea.querySelector('h3');
@@ -5683,11 +5896,17 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 window.searchCodex('');
             }};
 
-            window.selectCodexArticle = function(slug) {{
+            window.selectCodexArticle = function(slug, fromPopState = false) {{
                 if (!slug) return;
                 const cleanSlug = slug.toLowerCase().trim();
                 const art = codexArticlesMap[cleanSlug];
                 if (!art) return;
+
+                if (!fromPopState && codexModalOverlay && codexModalOverlay.classList.contains('visible')) {{
+                    try {{
+                        history.pushState({{ inCodexModal: true, slug: cleanSlug }}, '', '#' + cleanSlug);
+                    }} catch(e) {{}}
+                }}
 
                 if (codexArticleView) {{
                     codexArticleView.innerHTML = art.html || '<p class="text-slate-400">Article content unavailable.</p>';
@@ -5720,29 +5939,29 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     }}
                 }}
 
-                // Update active sidebar selection highlight
+                // Update active sidebar selection highlight with flat layout
                 document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
                     if (item.dataset.slug === cleanSlug) {{
                         if (item.classList.contains('codex-hub-item')) {{
-                            item.className = "codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50 mb-3 shadow-md";
+                            item.className = "codex-sidebar-item codex-hub-item w-full text-left px-3 py-2.5 transition-colors flex items-center justify-between gap-2 border-b border-slate-800/80 active:scale-[0.99] active bg-amber-500/10 text-amber-300 font-semibold border-l-2 border-l-amber-400 shadow-sm";
                         }} else {{
-                            item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                            item.className = "codex-sidebar-item w-full text-left px-3 py-2 transition-colors flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/10 text-amber-200 font-semibold border-l-2 border-l-amber-400 shadow-sm";
                         }}
                         try {{ item.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }}); }} catch(e) {{}}
                     }} else {{
                         if (item.classList.contains('codex-hub-item')) {{
-                            item.className = "codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white mb-3 shadow-md";
+                            item.className = "codex-sidebar-item codex-hub-item w-full text-left px-3 py-2.5 transition-colors flex items-center justify-between gap-2 border-b border-slate-800/80 active:scale-[0.99] bg-transparent text-slate-300 hover:bg-slate-850 hover:text-white border-l-2 border-l-transparent";
                         }} else {{
-                            item.className = "codex-sidebar-item w-full text-left p-2 sm:p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                            item.className = "codex-sidebar-item w-full text-left px-3 py-2 transition-colors flex flex-col gap-0.5 active:scale-[0.99] bg-transparent text-slate-300 hover:bg-slate-800/50 hover:text-white border-l-2 border-l-transparent";
                         }}
                     }}
                 }});
 
+                const backLabel = document.getElementById('codexModalBackLabel');
                 // On mobile (< 768px), drill down into full-screen article view with back button
                 if (window.innerWidth < 768) {{
                     const sidebarList = document.getElementById('codexSidebarList');
                     const articleView = document.getElementById('codexArticleView');
-                    const mobileBackBtn = document.getElementById('codexMobileBackBtn');
                     const toolbar = document.getElementById('codexToolbar');
                     const titleArea = document.getElementById('codexHeaderTitleArea');
 
@@ -5751,10 +5970,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                         articleView.classList.remove('hidden');
                         articleView.classList.add('block');
                     }}
-                    if (mobileBackBtn) {{
-                        mobileBackBtn.classList.remove('hidden');
-                        mobileBackBtn.classList.add('flex');
-                    }}
+                    if (backLabel) backLabel.textContent = 'Directory';
                     if (toolbar) toolbar.classList.add('hidden');
                     if (titleArea) {{
                         const h3 = titleArea.querySelector('h3');
@@ -5763,39 +5979,85 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                             h3.textContent = displayTitle;
                         }}
                     }}
+                }} else {{
+                    if (backLabel) backLabel.textContent = 'Close';
                 }}
 
                 if (cleanSlug === 'open-threads') {{
-                    if (typeof window.filterMysteryCards === 'function') {{
-                        window.filterMysteryCards('all');
+                    if (typeof window.filterQuests === 'function') {{
+                        window.filterQuests('all', 'all');
                     }}
                 }}
             }};
 
-            window.filterMysteryCards = function(category) {{
-                const filter = (category || 'all').toLowerCase().trim();
-                document.querySelectorAll('.mystery-filter-btn').forEach(btn => {{
-                    const bFilter = btn.dataset.filter || 'all';
-                    if (bFilter === filter) {{
-                        btn.className = "mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm";
+            // Dual-Tier RPG Quest Log Filter Controller
+            let activeQuestTypeFilter = 'all';
+            let activeQuestStatusFilter = 'all';
+
+            window.filterQuests = function(questType, status) {{
+                if (questType !== null && questType !== undefined) activeQuestTypeFilter = questType.toLowerCase().trim();
+                if (status !== null && status !== undefined) activeQuestStatusFilter = status.toLowerCase().trim();
+
+                // Update quest type buttons
+                document.querySelectorAll('.quest-type-btn').forEach(btn => {{
+                    const bQuest = (btn.dataset.quest || 'all').toLowerCase().trim();
+                    if (bQuest === activeQuestTypeFilter) {{
+                        btn.className = "quest-type-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm";
                     }} else {{
-                        let textClass = "text-slate-300 border-slate-700";
-                        if (bFilter === 'immediate') textClass = "text-rose-300 border-rose-500/30";
-                        else if (bFilter === 'active') textClass = "text-sky-300 border-sky-500/30";
-                        else if (bFilter === 'resolved') textClass = "text-emerald-300 border-emerald-500/30";
-                        btn.className = "mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 " + textClass + " border hover:bg-slate-700 text-xs font-semibold transition-all";
+                        let colorCls = "text-slate-300 border-slate-700/80";
+                        if (bQuest === 'main') colorCls = "text-amber-300 border-amber-500/30";
+                        else if (bQuest === 'pc') colorCls = "text-indigo-300 border-indigo-500/30";
+                        else if (bQuest === 'side') colorCls = "text-cyan-300 border-cyan-500/30";
+                        btn.className = "quest-type-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 " + colorCls + " border hover:bg-slate-700 text-xs font-semibold transition-all";
                     }}
                 }});
 
+                // Update quest status buttons
+                document.querySelectorAll('.quest-status-btn').forEach(btn => {{
+                    const bStatus = (btn.dataset.status || 'all').toLowerCase().trim();
+                    if (bStatus === activeQuestStatusFilter) {{
+                        btn.className = "quest-status-btn px-2 py-0.5 rounded-lg bg-slate-200 text-slate-950 text-[11px] font-bold transition-all shadow-sm";
+                    }} else {{
+                        let colorCls = "text-slate-400 border-slate-700/80";
+                        if (bStatus === 'immediate') colorCls = "text-rose-300 border-rose-500/30";
+                        else if (bStatus === 'active') colorCls = "text-sky-300 border-sky-500/30";
+                        else if (bStatus === 'resolved') colorCls = "text-emerald-300 border-emerald-500/30";
+                        btn.className = "quest-status-btn px-2 py-0.5 rounded-lg bg-slate-800/80 " + colorCls + " border hover:bg-slate-700 text-[11px] font-medium transition-all";
+                    }}
+                }});
+
+                // Filter mystery cards
                 document.querySelectorAll('.mystery-card').forEach(card => {{
-                    const cardStatus = card.dataset.mysteryStatus || '';
-                    if (filter === 'all' || cardStatus === filter) {{
+                    const cCat = (card.dataset.questCat || '').toLowerCase().trim();
+                    const cStatus = (card.dataset.mysteryStatus || '').toLowerCase().trim();
+                    const matchType = (activeQuestTypeFilter === 'all' || cCat === activeQuestTypeFilter);
+                    const matchStatus = (activeQuestStatusFilter === 'all' || cStatus === activeQuestStatusFilter);
+                    if (matchType && matchStatus) {{
                         card.style.display = 'block';
                     }} else {{
                         card.style.display = 'none';
                     }}
                 }});
             }};
+
+            window.filterMysteryCards = window.filterQuests;
+
+            // Hardware and Browser Back Button Support for Modal
+            window.addEventListener('popstate', function(e) {{
+                if (codexModalOverlay && codexModalOverlay.classList.contains('visible')) {{
+                    if (e.state && e.state.inCodexModal) {{
+                        if (e.state.view === 'directory' && window.innerWidth < 768) {{
+                            window.codexShowDirectoryOnMobile();
+                        }} else if (e.state.slug && codexArticlesMap[e.state.slug]) {{
+                            window.selectCodexArticle(e.state.slug, true);
+                        }}
+                    }} else {{
+                        window.closeCodexModal(true);
+                    }}
+                }} else if (e.state && e.state.inCodexModal) {{
+                    window.openCodexModal(e.state.slug || 'overview', true);
+                }}
+            }});
 
             window.filterCodexCategory = function(cat) {{
                 const filter = (cat || 'all').toLowerCase().trim();
@@ -7853,6 +8115,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             window.setReadingMode(currentReadingMode || 'read');
             window.switchGlobalCut(currentActiveCut);
             refreshMarkers();
+
+            // Open Codex Modal if initial URL hash targets an article or thread
+            const initCodexHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
+            if (initCodexHash && (codexArticlesMap[initCodexHash] || initCodexHash.startsWith('th-'))) {{
+                window.openCodexModal(initCodexHash, true);
+            }}
         }})();
     </script>
     <!-- Lightweight Visitor & Navigation Tracker -->
@@ -7938,14 +8206,10 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 px-4 py-3">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                <!-- Mobile Dynamic Back Button (shown when viewing an article on mobile) -->
-                <button id="codexMobileBackBtn" type="button" onclick="codexShowDirectoryOnMobile()" class="hidden md:hidden px-2.5 py-1.5 rounded-xl bg-slate-800 text-amber-300 border border-slate-700 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all" title="Return to Directory">
-                    <span>←</span> <span class="font-sans font-bold">Directory</span>
+                <!-- Unified Always-Visible Back Navigation -->
+                <button id="codexNavBackBtn" type="button" onclick="codexHandleBack()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm" title="Go back">
+                    <span class="text-sm font-bold">←</span> <span id="codexBackBtnLabel" class="font-sans">Home</span>
                 </button>
-
-                <a id="codexIndexBackLink" href="index.html" class="text-slate-400 hover:text-amber-400 transition-colors flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-800/60 active:scale-95 flex-shrink-0" title="Back to Campaigns Index" aria-label="Back to Campaigns Index">
-                    <span class="text-lg leading-none font-bold">←</span>
-                </a>
 
                 <div class="truncate" id="codexHeaderTitleArea">
                     <div class="flex items-center gap-2">
@@ -8131,11 +8395,28 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 return saved;
             }}
 
+            window.codexHandleBack = function() {{
+                const isMobile = window.innerWidth < 768;
+                const articleView = document.getElementById('codexArticleView');
+                if (isMobile && articleView && !articleView.classList.contains('hidden')) {{
+                    window.codexShowDirectoryOnMobile();
+                    try {{
+                        history.pushState({{ codexDirectory: true }}, '', '#overview');
+                    }} catch(e) {{}}
+                    return;
+                }}
+                
+                if (window.history.length > 1 && document.referrer.includes(window.location.host)) {{
+                    window.history.back();
+                }} else {{
+                    window.location.href = 'index.html';
+                }}
+            }};
+
             window.codexShowDirectoryOnMobile = function() {{
                 const sidebarList = document.getElementById('codexSidebarList');
                 const articleView = document.getElementById('codexArticleView');
-                const mobileBackBtn = document.getElementById('codexMobileBackBtn');
-                const indexBackLink = document.getElementById('codexIndexBackLink');
+                const backLabel = document.getElementById('codexBackBtnLabel');
                 const toolbar = document.getElementById('codexToolbar');
                 const titleArea = document.getElementById('codexHeaderTitleArea');
 
@@ -8144,11 +8425,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     articleView.classList.add('hidden');
                     articleView.classList.remove('block');
                 }}
-                if (mobileBackBtn) {{
-                    mobileBackBtn.classList.add('hidden');
-                    mobileBackBtn.classList.remove('flex');
-                }}
-                if (indexBackLink) indexBackLink.classList.remove('hidden');
+                if (backLabel) backLabel.textContent = 'Home';
                 if (toolbar) toolbar.classList.remove('hidden');
                 if (titleArea) {{
                     const h1 = titleArea.querySelector('h1');
@@ -8183,11 +8460,19 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 window.searchCodex('');
             }};
 
-            window.selectCodexArticle = function(slug) {{
+            window.selectCodexArticle = function(slug, fromPopState = false) {{
                 if (!slug) return;
                 const cleanSlug = slug.toLowerCase().trim();
                 const art = codexArticlesMap[cleanSlug];
                 if (!art) return;
+
+                if (!fromPopState) {{
+                    try {{
+                        history.pushState({{ codexArticle: cleanSlug }}, '', '#' + cleanSlug);
+                    }} catch(e) {{
+                        try {{ history.replaceState(null, null, '#' + cleanSlug); }} catch(err) {{}}
+                    }}
+                }}
 
                 if (codexArticleView) {{
                     codexArticleView.innerHTML = art.html || '<p class="text-slate-400">Article content unavailable.</p>';
@@ -8217,29 +8502,29 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     }}
                 }}
 
+                // Update active sidebar selection highlight with flat layout
                 document.querySelectorAll('.codex-sidebar-item').forEach(item => {{
                     if (item.dataset.slug === cleanSlug) {{
                         if (item.classList.contains('codex-hub-item')) {{
-                            item.className = "codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50 mb-3 shadow-md";
+                            item.className = "codex-sidebar-item codex-hub-item w-full text-left px-3 py-2.5 transition-colors flex items-center justify-between gap-2 border-b border-slate-800/80 active:scale-[0.99] active bg-amber-500/10 text-amber-300 font-semibold border-l-2 border-l-amber-400 shadow-sm";
                         }} else {{
-                            item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/20 text-amber-300 border-amber-500/50";
+                            item.className = "codex-sidebar-item w-full text-left px-3 py-2 transition-colors flex flex-col gap-0.5 active:scale-[0.99] active bg-amber-500/10 text-amber-200 font-semibold border-l-2 border-l-amber-400 shadow-sm";
                         }}
                         try {{ item.scrollIntoView({{ behavior: 'smooth', block: 'nearest' }}); }} catch(e) {{}}
                     }} else {{
                         if (item.classList.contains('codex-hub-item')) {{
-                            item.className = "codex-sidebar-item codex-hub-item w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between gap-2 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white mb-3 shadow-md";
+                            item.className = "codex-sidebar-item codex-hub-item w-full text-left px-3 py-2.5 transition-colors flex items-center justify-between gap-2 border-b border-slate-800/80 active:scale-[0.99] bg-transparent text-slate-300 hover:bg-slate-850 hover:text-white border-l-2 border-l-transparent";
                         }} else {{
-                            item.className = "codex-sidebar-item w-full text-left p-2.5 rounded-xl border transition-all flex flex-col gap-0.5 active:scale-[0.99] bg-slate-900/60 text-slate-300 border-slate-800/80 hover:bg-slate-800/70 hover:text-white";
+                            item.className = "codex-sidebar-item w-full text-left px-3 py-2 transition-colors flex flex-col gap-0.5 active:scale-[0.99] bg-transparent text-slate-300 hover:bg-slate-800/50 hover:text-white border-l-2 border-l-transparent";
                         }}
                     }}
                 }});
 
+                const backBtnLabel = document.getElementById('codexBackBtnLabel');
                 // Full-screen mobile drill down
                 if (window.innerWidth < 768) {{
                     const sidebarList = document.getElementById('codexSidebarList');
                     const articleView = document.getElementById('codexArticleView');
-                    const mobileBackBtn = document.getElementById('codexMobileBackBtn');
-                    const indexBackLink = document.getElementById('codexIndexBackLink');
                     const toolbar = document.getElementById('codexToolbar');
                     const titleArea = document.getElementById('codexHeaderTitleArea');
 
@@ -8248,11 +8533,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                         articleView.classList.remove('hidden');
                         articleView.classList.add('block');
                     }}
-                    if (mobileBackBtn) {{
-                        mobileBackBtn.classList.remove('hidden');
-                        mobileBackBtn.classList.add('flex');
-                    }}
-                    if (indexBackLink) indexBackLink.classList.add('hidden');
+                    if (backBtnLabel) backBtnLabel.textContent = 'Directory';
                     if (toolbar) toolbar.classList.add('hidden');
                     if (titleArea) {{
                         const h1 = titleArea.querySelector('h1');
@@ -8261,41 +8542,68 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                             h1.textContent = displayTitle;
                         }}
                     }}
+                }} else {{
+                    if (backBtnLabel) backBtnLabel.textContent = (cleanSlug === 'overview') ? 'Home' : 'Back';
                 }}
 
                 if (cleanSlug === 'open-threads') {{
-                    if (typeof window.filterMysteryCards === 'function') {{
-                        window.filterMysteryCards('all');
+                    if (typeof window.filterQuests === 'function') {{
+                        window.filterQuests('all', 'all');
                     }}
                 }}
-
-                try {{ history.replaceState(null, null, '#' + cleanSlug); }} catch(e) {{}}
             }};
 
-            window.filterMysteryCards = function(category) {{
-                const filter = (category || 'all').toLowerCase().trim();
-                document.querySelectorAll('.mystery-filter-btn').forEach(btn => {{
-                    const bFilter = btn.dataset.filter || 'all';
-                    if (bFilter === filter) {{
-                        btn.className = "mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm";
+            // Dual-Tier RPG Quest Log Filter Controller
+            let activeQuestTypeFilter = 'all';
+            let activeQuestStatusFilter = 'all';
+
+            window.filterQuests = function(questType, status) {{
+                if (questType !== null && questType !== undefined) activeQuestTypeFilter = questType.toLowerCase().trim();
+                if (status !== null && status !== undefined) activeQuestStatusFilter = status.toLowerCase().trim();
+
+                // Update quest type buttons
+                document.querySelectorAll('.quest-type-btn').forEach(btn => {{
+                    const bQuest = (btn.dataset.quest || 'all').toLowerCase().trim();
+                    if (bQuest === activeQuestTypeFilter) {{
+                        btn.className = "quest-type-btn px-2.5 sm:px-3 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-sm";
                     }} else {{
-                        let textClass = "text-slate-300 border-slate-700";
-                        if (bFilter === 'immediate') textClass = "text-rose-300 border-rose-500/30";
-                        else if (bFilter === 'active') textClass = "text-sky-300 border-sky-500/30";
-                        else if (bFilter === 'resolved') textClass = "text-emerald-300 border-emerald-500/30";
-                        btn.className = "mystery-filter-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 " + textClass + " border hover:bg-slate-700 text-xs font-semibold transition-all";
+                        let colorCls = "text-slate-300 border-slate-700/80";
+                        if (bQuest === 'main') colorCls = "text-amber-300 border-amber-500/30";
+                        else if (bQuest === 'pc') colorCls = "text-indigo-300 border-indigo-500/30";
+                        else if (bQuest === 'side') colorCls = "text-cyan-300 border-cyan-500/30";
+                        btn.className = "quest-type-btn px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/90 " + colorCls + " border hover:bg-slate-700 text-xs font-semibold transition-all";
                     }}
                 }});
 
+                // Update quest status buttons
+                document.querySelectorAll('.quest-status-btn').forEach(btn => {{
+                    const bStatus = (btn.dataset.status || 'all').toLowerCase().trim();
+                    if (bStatus === activeQuestStatusFilter) {{
+                        btn.className = "quest-status-btn px-2 py-0.5 rounded-lg bg-slate-200 text-slate-950 text-[11px] font-bold transition-all shadow-sm";
+                    }} else {{
+                        let colorCls = "text-slate-400 border-slate-700/80";
+                        if (bStatus === 'immediate') colorCls = "text-rose-300 border-rose-500/30";
+                        else if (bStatus === 'active') colorCls = "text-sky-300 border-sky-500/30";
+                        else if (bStatus === 'resolved') colorCls = "text-emerald-300 border-emerald-500/30";
+                        btn.className = "quest-status-btn px-2 py-0.5 rounded-lg bg-slate-800/80 " + colorCls + " border hover:bg-slate-700 text-[11px] font-medium transition-all";
+                    }}
+                }});
+
+                // Filter mystery cards
                 document.querySelectorAll('.mystery-card').forEach(card => {{
-                    const cardStatus = card.dataset.mysteryStatus || '';
-                    if (filter === 'all' || cardStatus === filter) {{
+                    const cCat = (card.dataset.questCat || '').toLowerCase().trim();
+                    const cStatus = (card.dataset.mysteryStatus || '').toLowerCase().trim();
+                    const matchType = (activeQuestTypeFilter === 'all' || cCat === activeQuestTypeFilter);
+                    const matchStatus = (activeQuestStatusFilter === 'all' || cStatus === activeQuestStatusFilter);
+                    if (matchType && matchStatus) {{
                         card.style.display = 'block';
                     }} else {{
                         card.style.display = 'none';
                     }}
                 }});
             }};
+
+            window.filterMysteryCards = window.filterQuests;
 
             window.filterCodexCategory = function(cat) {{
                 const filter = (cat || 'all').toLowerCase().trim();
@@ -8574,33 +8882,44 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 }}
             }};
 
-            // Handle URL Hash on load
+            // Handle URL Hash and initial state on load
             const hash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
             const isMobile = window.innerWidth < 768;
             if (hash && codexArticlesMap[hash]) {{
-                window.selectCodexArticle(hash);
+                window.selectCodexArticle(hash, true);
             }} else if (hash && hash.startsWith('th-')) {{
-                window.selectCodexArticle('open-threads');
+                window.selectCodexArticle('open-threads', true);
                 setTimeout(() => {{
                     const el = document.getElementById(hash);
                     if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
                 }}, 200);
             }} else if (isMobile) {{
-                window.selectCodexArticle('overview');
+                window.codexShowDirectoryOnMobile();
             }} else {{
-                window.selectCodexArticle('overview');
+                window.selectCodexArticle('overview', true);
             }}
 
-            window.addEventListener('hashchange', () => {{
-                const newHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
-                if (newHash && codexArticlesMap[newHash]) {{
-                    window.selectCodexArticle(newHash);
-                }} else if (newHash && newHash.startsWith('th-')) {{
-                    window.selectCodexArticle('open-threads');
-                    setTimeout(() => {{
-                        const el = document.getElementById(newHash);
-                        if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
-                    }}, 200);
+            // Hardware and Browser Back Button Support for Standalone Wiki
+            window.addEventListener('popstate', function(e) {{
+                if (e.state && e.state.codexArticle && codexArticlesMap[e.state.codexArticle]) {{
+                    window.selectCodexArticle(e.state.codexArticle, true);
+                }} else if (e.state && e.state.codexDirectory && window.innerWidth < 768) {{
+                    window.codexShowDirectoryOnMobile();
+                }} else {{
+                    const newHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
+                    if (newHash && codexArticlesMap[newHash]) {{
+                        window.selectCodexArticle(newHash, true);
+                    }} else if (newHash && newHash.startsWith('th-')) {{
+                        window.selectCodexArticle('open-threads', true);
+                        setTimeout(() => {{
+                            const el = document.getElementById(newHash);
+                            if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                        }}, 200);
+                    }} else if (window.innerWidth < 768) {{
+                        window.codexShowDirectoryOnMobile();
+                    }} else {{
+                        window.selectCodexArticle('overview', true);
+                    }}
                 }}
             }});
         }})();
