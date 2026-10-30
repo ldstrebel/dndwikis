@@ -63,13 +63,13 @@
                 Evaluates session pacing, Swain MRU mechanics, verbatim table parity, player agency, and evolving performance per PC and Game Master.
             </p>
 
-            <!-- Mode Switcher -->
-            <div class="mt-6 flex flex-wrap items-center gap-3">
-                <button type="button" id="tabAuditBtn" class="px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition-colors" onclick="switchDeskMode('audit')">
-                    📜 Session &amp; Cast Audits
+            <!-- Mode Switcher (Touch-Optimized) -->
+            <div class="mt-6 flex flex-wrap items-center gap-2 sm:gap-3">
+                <button type="button" id="tabAuditBtn" class="min-h-[42px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition-all flex items-center gap-1.5 shadow-sm" onclick="switchDeskMode('audit')">
+                    <span>📜</span> <span>Session &amp; Cast Audits</span>
                 </button>
-                <button type="button" id="tabConspiraciesBtn" class="px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono text-slate-400 hover:text-white transition-colors" onclick="switchDeskMode('conspiracies')">
-                    🕵️‍♂️ Critic Conspiracies &amp; Arc Forecasts
+                <button type="button" id="tabConspiraciesBtn" class="min-h-[42px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition-all flex items-center gap-1.5" onclick="switchDeskMode('conspiracies')">
+                    <span>🕵️‍♂️</span> <span>Critic Conspiracies &amp; Forecasts</span>
                 </button>
             </div>
 
@@ -399,16 +399,64 @@
                 ],
                 participants: [
                     {
+                        roleBadge: "Player Character · Wordcraft Duelist",
+                        name: "Sophie Foreman Noone",
+                        character: "Alfie",
+                        icon: "🌿",
+                        grade: "A",
+                        spotlight: "28% dialogue",
+                        verdict: "Peak dramatic performance. Her sensory trauma flashback upon touching the stele elevated the entire campaign's emotional stakes.",
+                        helped: "Balancing high-dexterity gallery fencing with genuine physical terror during the maritime drowning flashback.",
+                        hurt: "None observed; drove both combat momentum and character vulnerability.",
+                        directive: "Interrogate the grain memory in her driftwood whenever encountering ancient stone relics."
+                    },
+                    {
+                        roleBadge: "Player Character · Reluctant Gorgon Scion",
+                        name: "Luke S",
+                        character: "Pierre",
+                        icon: "🐍",
+                        grade: "A",
+                        spotlight: "24% dialogue",
+                        verdict: "Masterclass in deadpan tactical stalling. His absurd conversation with the identical 'Gordon' operatives created crucial seconds for the urn drop.",
+                        helped: "Grounding the electrical static feedback from the fractured stele before reality severed.",
+                        hurt: "Reluctance to draw lethal steel forces party into chaotic improvisations.",
+                        directive: "Explore the growing biological resonance between his gaze and ancient Aegean stone."
+                    },
+                    {
+                        roleBadge: "Player Character · Classical Historian",
+                        name: "William Webb",
+                        character: "Prof. Edward Dravin",
+                        icon: "📜",
+                        grade: "B+",
+                        spotlight: "18% dialogue",
+                        verdict: "Crucial epigraphical translation under hostile gunfire; deciphered the stele's coastal fleet inscription.",
+                        helped: "Rigorous academic deciphering proving that ancient Greek voyages reached pre-colonial North Carolina.",
+                        hurt: "Remained physically passive behind museum display pedestals during the Gordon fire exchange.",
+                        directive: "Coordinate tactical cover fire using necrotic chimes during indoor shootouts."
+                    },
+                    {
+                        roleBadge: "Player Character · Vegas Demigod",
+                        name: "John Hagey",
+                        character: "Eusacles",
+                        icon: "🛡️",
+                        grade: "A-",
+                        spotlight: "16% dialogue",
+                        verdict: "The muscle behind the museum escape. Teaming up with Dravin to topple the multi-ton ceramic urn turned the tide of the ambush.",
+                        helped: "Flawless physical defense holding the museum exit stairwell against cloaked Gordon reinforcements.",
+                        hurt: "Underutilizes his Thanatos focus during social infiltration phases.",
+                        directive: "Leverage his Vegas street sense during urban reconnaissance before combat breaks out."
+                    },
+                    {
                         roleBadge: "Game Master",
                         name: "Luke Foreman",
                         character: "Game Master (DM)",
                         icon: "👑",
                         grade: "A",
-                        spotlight: "24% dialogue",
-                        verdict: "Vivid depiction of ancient Greek antiquity combat inside a modern museum wing.",
-                        helped: "Sensory descriptions of temporal shock and electrostatic discharge.",
-                        hurt: "None.",
-                        directive: "Continue bridging mortal and planar settings."
+                        spotlight: "14% dialogue",
+                        verdict: "Superb execution of corporate/bureaucratic temporal horror with the identically named 'Gordon' operatives.",
+                        helped: "Sensory contrast between sterile modern museum architecture and ancient maritime trireme drowning visions.",
+                        hurt: "Extraction via Mike's truck was slightly abrupt after the intensity of the mezzanine collapse.",
+                        directive: "Allow municipal police sirens and mortal emergency response to pressure the escape perimeter."
                     }
                 ]
             },
@@ -443,7 +491,68 @@
                 gradeLabel: "Certified Fresh",
                 summary: "Explosive opening in medias res. Sudden plunge from a mundane Vegas bus into planar freefall and cosmic library defense.",
                 pacingNotes: ["In Media Res: High velocity threshold crossing establishing immediate existential stakes."],
-                participants: []
+                participants: [
+                    {
+                        roleBadge: "Player Character · Wordcraft Duelist",
+                        name: "Sophie Foreman Noone",
+                        character: "Alfie",
+                        icon: "🌿",
+                        grade: "A-",
+                        spotlight: "18% dialogue (Act III-IV entry)",
+                        verdict: "Electric mid-session entrance. Woven directly from driftwood by the Fates to salvage a collapsing frontline.",
+                        helped: "Immediate tactile combat presence. Wielding her needle rapier against ink-beasts gave the desperate defensive line sharp agility.",
+                        hurt: "Late entry in Scene 6 limits early roleplay dialogue with the party.",
+                        directive: "Deepen interpersonal rapport with Pierre and Eusacles during quiet threshold scenes."
+                    },
+                    {
+                        roleBadge: "Player Character · Reluctant Gorgon Scion",
+                        name: "Luke S",
+                        character: "Pierre",
+                        icon: "🐍",
+                        grade: "A",
+                        spotlight: "26% dialogue",
+                        verdict: "Essential comedic grounding and modern disbelief as the Nevada highway shears into the cosmic library.",
+                        helped: "His deadpan line ('Is this normal for buses in America?') perfectly anchored the bizarre threshold crossing in relatable human reality.",
+                        hurt: "Initial combat hesitation before finding defensive leverage alongside Eusacles.",
+                        directive: "Lean into his stonesmith tactical instincts as planar architecture shifts."
+                    },
+                    {
+                        roleBadge: "Player Character · Classical Historian",
+                        name: "William Webb",
+                        character: "Prof. Edward Dravin",
+                        icon: "📜",
+                        grade: "B+",
+                        spotlight: "22% dialogue",
+                        verdict: "Academic authority under extreme crisis. Instantly recognizes Fate epigraphy and manifests necrotic crowd control.",
+                        helped: "Manifesting skeletal frost hands to drag down ink-beasts established tactical battlefield control early.",
+                        hurt: "Tends to lecture during active spatial crises rather than coordinating physical retreats.",
+                        directive: "Ground historical exposition directly into urgent party escape routes."
+                    },
+                    {
+                        roleBadge: "Player Character · Vegas Demigod",
+                        name: "John Hagey",
+                        character: "Eusacles",
+                        icon: "🛡️",
+                        grade: "A-",
+                        spotlight: "20% dialogue",
+                        verdict: "Indispensable physical anchor. Put his body between panicked passengers and tearing ink-hounds without hesitation.",
+                        helped: "Raw barroom protective instinct provided the frontline shield while Dravin deciphered the tapestry exit.",
+                        hurt: "Quiet on arcane deductions, deferring heavily to Dravin.",
+                        directive: "Assert mortal instincts against cosmic powers when celestial logic threatens the group."
+                    },
+                    {
+                        roleBadge: "Game Master",
+                        name: "Luke Foreman",
+                        character: "Game Master (DM)",
+                        icon: "👑",
+                        grade: "A",
+                        spotlight: "14% dialogue",
+                        verdict: "Masterful in medias res opening with relentless narrative momentum from desert bus to the Loom of Time.",
+                        helped: "Chilling, rhythmic unison voice for the Three Fates and terrifying sensory depictions of thread-devouring ink hounds.",
+                        hurt: "Rapid transit through the tapestry seam gave the players little time to mourn the displaced Greyhound passengers.",
+                        directive: "Allow quiet moments of sensory aftermath after colossal planar transitions."
+                    }
+                ]
             }
         };
 
@@ -564,14 +673,14 @@
                 auditContainer.classList.add('hidden');
                 sessionBar.classList.add('hidden');
                 conspiraciesContainer.classList.remove('hidden');
-                tabConspiraciesBtn.className = 'px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 transition-colors';
-                tabAuditBtn.className = 'px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono text-slate-400 hover:text-white transition-colors';
+                tabConspiraciesBtn.className = 'min-h-[42px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 transition-all flex items-center gap-1.5 shadow-sm';
+                tabAuditBtn.className = 'min-h-[42px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition-all flex items-center gap-1.5';
             } else {
                 conspiraciesContainer.classList.add('hidden');
                 auditContainer.classList.remove('hidden');
                 sessionBar.classList.remove('hidden');
-                tabAuditBtn.className = 'px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition-colors';
-                tabConspiraciesBtn.className = 'px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono text-slate-400 hover:text-white transition-colors';
+                tabAuditBtn.className = 'min-h-[42px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition-all flex items-center gap-1.5 shadow-sm';
+                tabConspiraciesBtn.className = 'min-h-[42px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800 transition-all flex items-center gap-1.5';
             }
         }
 
