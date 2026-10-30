@@ -108,11 +108,11 @@
 
                 <!-- Category Filters -->
                 <div class="flex flex-wrap items-center gap-1.5" id="charCategoryFilters">
-                    <button type="button" class="filter-char-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm" data-role="all" onclick="setCharacterFilter('all', this)">All</button>
-                    <button type="button" class="filter-char-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-indigo-300 border border-slate-700 hover:bg-slate-750 transition-all" data-role="pc" onclick="setCharacterFilter('pc', this)">🛡️ Player Characters (4)</button>
-                    <button type="button" class="filter-char-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-emerald-300 border border-slate-700 hover:bg-slate-750 transition-all" data-role="npc" onclick="setCharacterFilter('npc', this)">👥 NPCs &amp; Allies (5)</button>
-                    <button type="button" class="filter-char-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-purple-300 border border-slate-700 hover:bg-slate-750 transition-all" data-role="celestial" onclick="setCharacterFilter('celestial', this)">⚡ Celestials (3)</button>
-                    <button type="button" class="filter-char-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-rose-300 border border-slate-700 hover:bg-slate-750 transition-all" data-role="faction" onclick="setCharacterFilter('faction', this)">🏛️ Factions (2)</button>
+                    <button type="button" class="filter-char-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm" data-role="all" onclick="setCharacterFilter('all', this)">All</button>
+                    <button type="button" class="filter-char-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-indigo-300 border border-slate-700 hover:bg-slate-750 transition-all" data-role="pc" onclick="setCharacterFilter('pc', this)">🛡️ Player Characters (4)</button>
+                    <button type="button" class="filter-char-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-emerald-300 border border-slate-700 hover:bg-slate-750 transition-all" data-role="npc" onclick="setCharacterFilter('npc', this)">👥 NPCs &amp; Allies (5)</button>
+                    <button type="button" class="filter-char-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-purple-300 border border-slate-700 hover:bg-slate-750 transition-all" data-role="celestial" onclick="setCharacterFilter('celestial', this)">⚡ Celestials (3)</button>
+                    <button type="button" class="filter-char-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-rose-300 border border-slate-700 hover:bg-slate-750 transition-all" data-role="faction" onclick="setCharacterFilter('faction', this)">🏛️ Factions (2)</button>
                 </div>
             </div>
         </div>
@@ -528,9 +528,9 @@
         function setCharacterFilter(role, btn) {
             currentCharRole = role;
             document.querySelectorAll('.filter-char-btn').forEach(b => {
-                b.className = 'filter-char-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-750 transition-all';
+                b.className = 'filter-char-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-750 transition-all';
             });
-            btn.className = 'filter-char-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm';
+            btn.className = 'filter-char-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm';
             filterCharacters();
         }
 

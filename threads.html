@@ -109,18 +109,18 @@
 
                 <!-- Quest Category Filters -->
                 <div class="flex flex-wrap items-center gap-1.5" id="categoryFilters">
-                    <button type="button" class="filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm" data-cat="all" onclick="setCategoryFilter('all', this)">All</button>
-                    <button type="button" class="filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-amber-300 border border-slate-700 hover:bg-slate-750 transition-all" data-cat="main" onclick="setCategoryFilter('main', this)">🌟 Main Story</button>
-                    <button type="button" class="filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-indigo-300 border border-slate-700 hover:bg-slate-750 transition-all" data-cat="pc" onclick="setCategoryFilter('pc', this)">🛡️ PC Quests</button>
-                    <button type="button" class="filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-cyan-300 border border-slate-700 hover:bg-slate-750 transition-all" data-cat="side" onclick="setCategoryFilter('side', this)">🗺️ Side Inquiries</button>
+                    <button type="button" class="filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm" data-cat="all" onclick="setCategoryFilter('all', this)">All</button>
+                    <button type="button" class="filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-amber-300 border border-slate-700 hover:bg-slate-750 transition-all" data-cat="main" onclick="setCategoryFilter('main', this)">🌟 Main Story</button>
+                    <button type="button" class="filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-indigo-300 border border-slate-700 hover:bg-slate-750 transition-all" data-cat="pc" onclick="setCategoryFilter('pc', this)">🛡️ PC Quests</button>
+                    <button type="button" class="filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-cyan-300 border border-slate-700 hover:bg-slate-750 transition-all" data-cat="side" onclick="setCategoryFilter('side', this)">🗺️ Side Inquiries</button>
                 </div>
 
                 <!-- Status Filter -->
-                <div class="flex items-center gap-1.5 border-t md:border-t-0 md:border-l border-slate-800 pt-2 md:pt-0 md:pl-3">
-                    <span class="text-xs font-mono text-slate-500 font-bold uppercase mr-1">Status:</span>
-                    <button type="button" class="filter-status-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200 text-slate-950 transition-all shadow-sm" data-status="all" onclick="setStatusFilter('all', this)">Any</button>
-                    <button type="button" class="filter-status-btn px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-rose-300 border border-rose-500/30 hover:bg-slate-700 transition-all" data-status="immediate" onclick="setStatusFilter('immediate', this)">🚨 Immediate</button>
-                    <button type="button" class="filter-status-btn px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-sky-300 border border-sky-500/30 hover:bg-slate-700 transition-all" data-status="active" onclick="setStatusFilter('active', this)">🔍 Active</button>
+                <div class="flex items-center gap-1.5 border-t md:border-t-0 md:border-l border-slate-800 pt-2.5 md:pt-0 md:pl-3 overflow-x-auto scrollbar-none">
+                    <span class="text-xs font-mono text-slate-500 font-bold uppercase mr-1 flex-shrink-0">Status:</span>
+                    <button type="button" class="filter-status-btn min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-950 transition-all shadow-sm flex-shrink-0" data-status="all" onclick="setStatusFilter('all', this)">Any</button>
+                    <button type="button" class="filter-status-btn min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-rose-300 border border-rose-500/30 hover:bg-slate-700 transition-all flex-shrink-0" data-status="immediate" onclick="setStatusFilter('immediate', this)">🚨 Immediate</button>
+                    <button type="button" class="filter-status-btn min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-sky-300 border border-sky-500/30 hover:bg-slate-700 transition-all flex-shrink-0" data-status="active" onclick="setStatusFilter('active', this)">🔍 Active</button>
                 </div>
             </div>
         </div>
@@ -483,16 +483,16 @@
         function setCategoryFilter(cat, btn) {
             currentCat = cat;
             document.querySelectorAll('.filter-cat-btn').forEach(b => {
-                b.className = 'filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-750 transition-all';
+                b.className = 'filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-750 transition-all';
             });
             if (cat === 'all') {
-                btn.className = 'filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm';
+                btn.className = 'filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm';
             } else if (cat === 'main') {
-                btn.className = 'filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm';
+                btn.className = 'filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-400 text-slate-950 transition-all shadow-sm';
             } else if (cat === 'pc') {
-                btn.className = 'filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-indigo-400 text-slate-950 transition-all shadow-sm';
+                btn.className = 'filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-indigo-400 text-slate-950 transition-all shadow-sm';
             } else if (cat === 'side') {
-                btn.className = 'filter-cat-btn px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-400 text-slate-950 transition-all shadow-sm';
+                btn.className = 'filter-cat-btn min-h-[38px] px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-400 text-slate-950 transition-all shadow-sm';
             }
             filterQuests();
         }
@@ -500,14 +500,14 @@
         function setStatusFilter(status, btn) {
             currentStatus = status;
             document.querySelectorAll('.filter-status-btn').forEach(b => {
-                b.className = 'filter-status-btn px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 transition-all';
+                b.className = 'filter-status-btn min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 transition-all flex-shrink-0';
             });
             if (status === 'all') {
-                btn.className = 'filter-status-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-200 text-slate-950 transition-all shadow-sm';
+                btn.className = 'filter-status-btn min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-950 transition-all shadow-sm flex-shrink-0';
             } else if (status === 'immediate') {
-                btn.className = 'filter-status-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-500 text-white transition-all shadow-sm';
+                btn.className = 'filter-status-btn min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-500 text-white transition-all shadow-sm flex-shrink-0';
             } else if (status === 'active') {
-                btn.className = 'filter-status-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-500 text-white transition-all shadow-sm';
+                btn.className = 'filter-status-btn min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-500 text-white transition-all shadow-sm flex-shrink-0';
             }
             filterQuests();
         }
