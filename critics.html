@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Critic's Desk · Developmental &amp; Ensemble Audits</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Lora', serif;
+        }
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+    </style>
+</head>
+<body class="bg-[#030712] text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <!-- Minimalist Sticky Header (No nested card borders) -->
+    <header class="sticky top-0 z-40 bg-[#030712]/95 backdrop-blur-md border-b border-slate-800/80">
+        <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4 px-4 sm:px-6 py-4">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="flex items-center gap-2 text-rose-400 hover:text-rose-300 transition-colors">
+                    <span class="text-xl">🎭</span>
+                    <span class="text-base sm:text-lg font-bold font-cinzel tracking-wider">The Critic's Desk</span>
+                </a>
+                <span class="text-slate-700">/</span>
+                <span class="text-xs sm:text-sm font-mono text-slate-400 uppercase tracking-widest font-semibold">Developmental Sub-App</span>
+            </div>
+
+            <!-- Suite Navigation -->
+            <nav class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
+                <a href="index.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">📖 Reader</a>
+                <a href="codex.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">🏛️ Hub</a>
+                <a href="threads.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">🧶 Threads</a>
+                <a href="characters.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">👥 Personae</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container: Open, breathable, zero box obsession -->
+    <main class="max-w-4xl mx-auto w-full px-4 sm:px-6 py-10 sm:py-14 flex-1">
+        
+        <!-- App Editorial Header -->
+        <header class="mb-12 border-b border-slate-800 pb-10">
+            <span class="text-xs font-mono uppercase tracking-widest text-rose-400 font-bold block mb-2">Independent Editorial Review Suite</span>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-serif text-slate-50 tracking-tight leading-tight">
+                Craft, Pacing &amp; Ensemble Audits
+            </h1>
+            <p class="text-base sm:text-lg text-slate-400 mt-4 max-w-2xl leading-relaxed">
+                An adversarial review desk operating independently of in-world canon lore. 
+                Evaluates session pacing, Swain MRU mechanics, verbatim table parity, player agency, and evolving performance per PC and Game Master.
+            </p>
+
+            <!-- Mode Switcher -->
+            <div class="mt-6 flex flex-wrap items-center gap-3">
+                <button type="button" id="tabAuditBtn" class="px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition-colors" onclick="switchDeskMode('audit')">
+                    📜 Session &amp; Cast Audits
+                </button>
+                <button type="button" id="tabConspiraciesBtn" class="px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono text-slate-400 hover:text-white transition-colors" onclick="switchDeskMode('conspiracies')">
+                    🕵️‍♂️ Critic Conspiracies &amp; Arc Forecasts
+                </button>
+            </div>
+
+            <!-- Session Selector Bar (Shown in Audit Mode) -->
+            <div id="sessionSelectorBar" class="mt-6 pt-6 border-t border-slate-900 flex flex-wrap items-center gap-2">
+                <span class="text-xs font-mono text-slate-500 uppercase font-semibold mr-2">Audit Session:</span>
+                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(1, this)">S1</button>
+                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(2, this)">S2</button>
+                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(3, this)">S3</button>
+                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(4, this)">S4</button>
+                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(5, this)">S5</button>
+                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(6, this)">S6</button>
+                <button type="button" class="sess-btn active px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(7, this)">S7 (Latest)</button>
+            </div>
+        </header>
+
+        <!-- Dynamic Audit Stream (Zero container boxes) -->
+        <div id="auditContentContainer" class="space-y-16">
+            <!-- Dynamically injected via JavaScript -->
+        </div>
+
+        <!-- Critic Conspiracies Stream (Zero container boxes) -->
+        <div id="conspiraciesContentContainer" class="hidden space-y-16">
+            <header class="border-b border-slate-800 pb-6">
+                <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold block mb-1">Developmental Editorial Theories</span>
+                <h2 class="text-2xl sm:text-3xl font-bold font-serif text-slate-100">
+                    The Critic's Conspiracies &amp; Story Forecasts
+                </h2>
+                <p class="text-sm sm:text-base text-slate-400 mt-2 leading-relaxed font-sans">
+                    Where does the developmental desk believe the GM and players are steering the campaign? 
+                    These theories operate strictly in the editorial layer, keeping the in-world <a href="threads.html" class="text-amber-400 hover:underline">Canon Thread Tracker</a> 100% factual.
+                </p>
+            </header>
+
+            <!-- Conspiracy 1: Alfie & The Erased Fleet -->
+            <article id="conspiracy-1" class="space-y-3 pb-10 border-b border-slate-800/80 scroll-mt-24">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono uppercase tracking-wider text-amber-500 font-bold">Conspiracy #1 · Provenance</span>
+                    <span class="text-slate-600">·</span>
+                    <a href="threads.html#thread-TH-01" class="text-xs font-mono text-slate-400 hover:text-amber-300">Anchored to TH-01 &amp; TH-02</a>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100">
+                    Alfie Is Carved from the Very Flagship Erased by the Raleigh Stele
+                </h3>
+                <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed">
+                    When Alfie touched the fractured Aegean stele in the Raleigh museum during Session 4, she experienced an agonizing sensory flashback of burning ports and dark oarsmen—the exact same maritime catastrophe recorded on the stone. 
+                    The Critic theorizes that Alfie was not crafted from generic driftwood; her timber was salvaged directly from the hull of the ancient Aegean expedition fleet that was excised from American history. 
+                    If the party successfully stabilizes the stele, the Critic forecasts that Alfie may face an existential choice: maintain her miniature animated identity, or dissolve back into the sea as the timeline corrects itself.
+                </p>
+            </article>
+
+            <!-- Conspiracy 2: The Redactors & Human Mortality -->
+            <article id="conspiracy-2" class="space-y-3 pb-10 border-b border-slate-800/80 scroll-mt-24">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono uppercase tracking-wider text-amber-500 font-bold">Conspiracy #2 · Macro Conflict</span>
+                    <span class="text-slate-600">·</span>
+                    <a href="threads.html#thread-TH-03" class="text-xs font-mono text-slate-400 hover:text-amber-300">Anchored to TH-03</a>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100">
+                    The Redactors Are Actively Regulating Human Mortality Rates
+                </h3>
+                <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed">
+                    Why would an unseen hand physically overwrite the word <code class="text-amber-300 bg-slate-900 px-1 py-0.5 rounded font-mono text-xs">STABLE</code> to <code class="text-rose-400 bg-slate-900 px-1 py-0.5 rounded font-mono text-xs">STALE</code> in Dr. Thorne's 1948 trial notes? 
+                    The Critic theorizes that 'The Master' and their Redactor syndicate are not merely hunting ancient mythological gods; they are actively editing modern human scientific history. In the Master's curated timeline, human disease eradication is artificially throttled. A world where Dr. Thorne eradicated the Big Pox in 1948 would have produced an uncurated demographic explosion that derailed the sanitized timeline the Redactors are engineering.
+                </p>
+            </article>
+
+            <!-- Conspiracy 3: Pierre's Matriarchal Denial -->
+            <article id="conspiracy-3" class="space-y-3 pb-10 border-b border-slate-800/80 scroll-mt-24">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono uppercase tracking-wider text-amber-500 font-bold">Conspiracy #3 · Character Arc</span>
+                    <span class="text-slate-600">·</span>
+                    <a href="threads.html#thread-TH-08" class="text-xs font-mono text-slate-400 hover:text-amber-300">Anchored to TH-08</a>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100">
+                    Pierre's Mother Is an Elder Gorgon Deity, Not an Italian Mobster
+                </h3>
+                <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed">
+                    When Eusacles questioned Thanatos regarding Pierre's maternal heritage during the Session 7 campfire dream, the God of Death broke into booming laughter and vanished. Pierre spent the post-interrogation debrief claiming his phrase <em>"Do you know who my mother is?"</em> was merely an Italian mob intimidation tactic. 
+                    The Critic suspects Pierre is in profound psychological denial: Thanatos laughed because Pierre's mother is an immortal Gorgon matriarch who hid her mortal scion among French stonemasons specifically to keep him off the Redactors' excision rolls.
+                </p>
+            </article>
+
+            <!-- Conspiracy 4: The D.C. Evidence Locker & Mortal APBs -->
+            <article id="conspiracy-4" class="space-y-3 pb-10 border-b border-slate-800/80 scroll-mt-24">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono uppercase tracking-wider text-amber-500 font-bold">Conspiracy #4 · Narrative Horizon</span>
+                    <span class="text-slate-600">·</span>
+                    <a href="threads.html#thread-TH-06" class="text-xs font-mono text-slate-400 hover:text-amber-300">Anchored to TH-06</a>
+                </div>
+                <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100">
+                    The 1980s Flight Relic Forces the Party into Modern Municipal Surveillance
+                </h3>
+                <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed">
+                    Up to this point, encounters have taken place in foggy woods, academic halls, and closed museum galleries. By sending the travelers to a high-security Washington, D.C. police evidence vault, the GM is intentionally introducing mortal 20th-century surveillance mechanics: security badges, CCTV cameras, and metropolitan police dispatch. 
+                    The Critic forecasts that the party's usual reliance on flashy magic (wordcraft, glowing rabbit decoys, divine shields) will trigger immediate mortal police alerts, creating a chaotic three-way escalation between the travelers, municipal law enforcement, and cloaked Redactor trackers.
+                </p>
+            </article>
+
+            <!-- Meta-Critic Case Study: The Persephone Hallucination -->
+            <article class="space-y-3 pt-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono uppercase tracking-wider text-rose-400 font-bold">Editorial Case Study · AI Hallucination Guardrail</span>
+                </div>
+                <h3 class="text-lg sm:text-xl font-bold font-serif text-slate-200">
+                    The Persephone Anomaly: When Drafting Bots Outrun the Table
+                </h3>
+                <p class="text-sm text-slate-400 font-sans leading-relaxed">
+                    During early automated critique passes for Session 5, automated drafting agents took a single brief mention by the GM (Hermes delivering a message from an unnamed traveler descending from Olympus) and hallucinated an entire ungrounded mythos: drafting bot scorecards penalized Professor Dravin for <em>"omitting Persephone interiority"</em> and manufactured a nonexistent <em>"Persephone Signet"</em>. 
+                    The table player (William Webb) was roleplaying a grounded Stanford historian, not an underworld demigod. This serves as the definitive justification for decoupling in-world canon facts (<a href="threads.html" class="text-amber-400 hover:underline">threads.html</a>) from editorial hypotheses (<a href="critics.html" class="text-rose-400 hover:underline">critics.html</a>).
+                </p>
+            </article>
+        </div>
+
+    </main>
+
+    <!-- Clean Unboxed Footer -->
+    <footer class="border-t border-slate-900 py-8 px-4 text-center text-xs font-mono text-slate-500">
+        <p>THE CRITIC'S DESK · Adversarial Telemetry &amp; Double-Blind Intent Parity · DEC-037 Grounded</p>
+    </footer>
+
+    <!-- Interactive Session Audit Controller -->
+    <script>
+        const AUDIT_DATA = {
+            7: {
+                sessionNum: 7,
+                title: "The Interrogation, The Redactor & The Dream of Thanatos",
+                tomatometer: "95%",
+                popcornmeter: "96%",
+                grade: "9.5 / 10",
+                gradeLabel: "Certified Fresh",
+                summary: "Session 7 represents a masterclass in tonal balance. The prose pivots effortlessly from cold, visceral interrogation beneath a damp university arcade, to eerie cosmic suspense against a multi-faced stalker, warm domestic respite over rum pancakes on a mountain porch, high mythic communion with the God of Death, and unhinged culinary slapstick.",
+                pacingNotes: [
+                    "Swain MRU Mechanics: The execution of the captive operative strictly observes micro-reactions—Alfie's internal calculation -> physical drawing of the needle rapier -> instant sensory shock.",
+                    "Parity Integrity: 100% of spoken dialogue lines are grounded in raw audio turns with zero regex attributions.",
+                    "Intent Contracts: Alfie's 458-year thread memory confession honors the player's double-blind agency boundaries, anchoring her tragic identity without overriding table canon."
+                ],
+                participants: [
+                    {
+                        roleBadge: "Game Master & World Architect",
+                        name: "Luke Foreman",
+                        character: "Game Master (DM)",
+                        icon: "👑",
+                        grade: "A-",
+                        spotlight: "17% dialogue & world staging",
+                        verdict: "Outstanding world-building and character work across multiple distinct NPCs—from the tragic interrogation in the janitor cart to the ethereal Thanatos dream and the warm cabin breakfast at The Margin.",
+                        helped: "Giving Thanatos an authentic, enigmatic voice that blended paternal warmth with chilling cosmic gravity, plus sharp roleplay as Teddy, Naomi, and Susanna.",
+                        hurt: "A brief pacing lull during the podcast lore dump before the D.C. mission was formally accepted.",
+                        directive: "Maintain this high narrative velocity as the party infiltrates the police precinct in Washington, D.C."
+                    },
+                    {
+                        roleBadge: "The Artisan · Gorgon Bloodline",
+                        name: "Luke S",
+                        character: "Pierre",
+                        icon: "🥖",
+                        grade: "A",
+                        spotlight: "21% spoken dialogue (Core Narrative Anchor)",
+                        verdict: "Masterclass in character comedy and psychological vulnerability—demanding Alfie slap the captive, the iconic mafia mother intimidation breakdown, and spear-training pushups with Alfie.",
+                        helped: "The hilarious revelation that 'Do you know who my mother is?' was intended as an Italian mob intimidation tactic rather than a genuine inquiry, anchoring the entire table in laughter.",
+                        hurt: "Occasionally allowed fear of the Lost Roads to stall party forward momentum during the transition.",
+                        directive: "Channel this newfound spear training into proactive tactical leadership when infiltrating D.C."
+                    },
+                    {
+                        roleBadge: "The Gambler · Divine Ward",
+                        name: "John Hagey",
+                        character: "Eusacles",
+                        icon: "🎲",
+                        grade: "A",
+                        spotlight: "20% spoken dialogue (Grounding Anchor)",
+                        verdict: "Superb deadpan humor and existential depth—grilling the prisoner in the trash can, parrying Pierre's spear with the Thanatos watch, and delivering his father's cryptic Hermes prank message.",
+                        helped: "Seamlessly navigating between gritty brawler skepticism ('Let's just kill her, that'll be way easier') and poignant demigod communion with Thanatos.",
+                        hurt: "Lingered in bystander mode during the early culinary debate before stepping in with the rum bottle.",
+                        directive: "Put the Thanatos pocket watch to active use against magical security barriers in the D.C. evidence locker."
+                    },
+                    {
+                        roleBadge: "The Rogue · Driftwood Doll",
+                        name: "Sophie Foreman Noone",
+                        character: "Alfie",
+                        icon: "🪆",
+                        grade: "A-",
+                        spotlight: "11% spoken dialogue (High-Impact Scene Stealer)",
+                        verdict: "Pure comedic and dramatic gold—surgically severing the prisoner's tendril for saying the 'D word', styling it as a fur stole, and the one-handed pushup training montage.",
+                        helped: "Fierce loyalty to Pierre, hilarious pop-culture analogies ('Harry Potter Horcruxes / Action figure who lived'), and effortless scene dominance.",
+                        hurt: "A momentary delay in clarifying her attack intention during the cart sequence.",
+                        directive: "Continue exploring her 458-year thread memories as the group encounters ancient Aegean anchors."
+                    },
+                    {
+                        roleBadge: "The Professor · Chrono-Academic",
+                        name: "William Webb",
+                        character: "Prof. Edward Dravin",
+                        icon: "📚",
+                        grade: "B+",
+                        spotlight: "18% spoken dialogue (Intellectual Anchor)",
+                        verdict: "Strong scholarly gravitas during the debrief with Naomi; helped anchor the historical timeline and safely cataloged the altered 1948 trial notes.",
+                        helped: "Methodical analysis of the six-fingered stalker's curse mechanics and physical anchor requirements.",
+                        hurt: "Relied slightly more on passive note-taking during the campfire roleplay.",
+                        directive: "Take point on academic forgery and credentials when planning the municipal evidence locker incursion."
+                    }
+                ]
+            },
+            6: {
+                sessionNum: 6,
+                title: "The Auditorium Incursion & The Memory Seam",
+                tomatometer: "93%",
+                popcornmeter: "90%",
+                grade: "9.3 / 10",
+                gradeLabel: "Certified Fresh",
+                summary: "Violent planar combat erupts across the university amphitheater as satyr strike teams and a tendril-grafted Gorgon operative assault the party. High combat tension balanced with academic horror.",
+                pacingNotes: [
+                    "Tactical Pacing: Rapid exchange of spellcraft and physical barriers across the amphitheater stage.",
+                    "Sensory Grounding: Cold sweat, ozone hum from the stage lights, and the heavy physical thud of the ancient Greek lexicon.",
+                    "Parity Check: Pierre's Hold Person and Alfie's chaos belt modifications reflect exact table mechanics."
+                ],
+                participants: [
+                    {
+                        roleBadge: "Game Master & World Architect",
+                        name: "Luke Foreman",
+                        character: "Game Master (DM)",
+                        icon: "👑",
+                        grade: "A",
+                        spotlight: "25% dialogue & combat orchestration",
+                        verdict: "Superb tactical combat management, maintaining high physical stakes and visceral descriptions of satyr shock charges.",
+                        helped: "Vivid depiction of memory-siphoning tendrils and environmental destruction of the lecture hall.",
+                        hurt: "Slight hesitation during rule lookup for grappling size modifiers.",
+                        directive: "Allow players to capitalize on environmental hazards without penalizing creativity."
+                    },
+                    {
+                        roleBadge: "The Artisan · Gorgon Bloodline",
+                        name: "Luke S",
+                        character: "Pierre",
+                        icon: "🥖",
+                        grade: "B-",
+                        spotlight: "28% spoken dialogue",
+                        verdict: "Outstanding tactical initiative and grapple defense with the javelin, but deflected cosmic terror into premature slapstick jokes about message boards during soul extraction.",
+                        helped: "Bravely pinning the transformed woman and risking psychic trauma to secure the party's escape.",
+                        hurt: "Tonal bathos. Making forum banter jokes while having foundational memories violently stripped broke immersion.",
+                        directive: "Let the genuine terror of identity loss breathe before recovering your cynical wit."
+                    },
+                    {
+                        roleBadge: "The Professor · Chrono-Academic",
+                        name: "William Webb",
+                        character: "Prof. Edward Dravin",
+                        icon: "📚",
+                        grade: "C",
+                        spotlight: "18% spoken dialogue",
+                        verdict: "Delivered the climactic knockout blow with the heavy scholarly lexicon, but spent combat repeatedly breaking character into table meta talk and ruler slapstick.",
+                        helped: "The climactic scholarly tome slam at the podium gave the encounter a definitive, academic punctuation mark.",
+                        hurt: "Meta table queries instead of character agency ('Can I do this?', 'Does the ruler hit?'). Relied on heavy authorial prose repair to sound like a scholar.",
+                        directive: "Speak as Professor Dravin in-character during combat, framing spell manifestations through academic theory."
+                    },
+                    {
+                        roleBadge: "The Gambler · Divine Ward",
+                        name: "John Hagey",
+                        character: "Eusacles",
+                        icon: "🎲",
+                        grade: "B",
+                        spotlight: "16% spoken dialogue",
+                        verdict: "Reliable front-line muscle and grapple anchor, but faded into the background during cognitive horror beats.",
+                        helped: "Holding the line against charging satyrs and physically shielding Dr. Thorne at the stage apron.",
+                        hurt: "Passive during psychic incursion sequences, leaving Pierre to face cognitive extraction alone.",
+                        directive: "Engage directly with the mental hazards; don't leave the supernatural burden entirely on the scholars."
+                    },
+                    {
+                        roleBadge: "The Rogue · Driftwood Doll",
+                        name: "Sophie Foreman Noone",
+                        character: "Alfie",
+                        icon: "🪆",
+                        grade: "B+",
+                        spotlight: "14% spoken dialogue",
+                        verdict: "The MVP of creative spellcraft—inventing the Mage Band hair-tie and executing the 'Spore the Dying' wordcraft twist—though early turns rushed into mechanics queries.",
+                        helped: "The linguistic wordplay altering Dravin's threshold magic was brilliant and lore-authentic.",
+                        hurt: "Table-talk mechanics queries ('Can I strike this rod?') directly in dialogue required authorial cleanup.",
+                        directive: "Dramatize Alfie's sensory perception of runic threads in real time as she manipulates reality."
+                    }
+                ]
+            },
+            5: {
+                sessionNum: 5,
+                title: "The Forgotten Trail & The Mad Doctor's Lecture",
+                tomatometer: "90%",
+                popcornmeter: "88%",
+                grade: "9.0 / 10",
+                gradeLabel: "Certified Fresh",
+                summary: "Paranoid temporal mystery. Introduction of Dr. Thorne, Hermes' winter warning, and the green room investigation into altered 1948 trial notes.",
+                pacingNotes: [
+                    "Atmospheric Build: Creeping dread across the Pennsylvania campus quad.",
+                    "Mystery Anchoring: Concrete physical discovery of retroactive ink tampering in the clinical trial notebook."
+                ],
+                participants: [
+                    {
+                        roleBadge: "Game Master & World Architect",
+                        name: "Luke Foreman",
+                        character: "Game Master (DM)",
+                        icon: "👑",
+                        grade: "A",
+                        spotlight: "22% dialogue",
+                        verdict: "Masterful delivery of Hermes' divine courier cadence and Dr. Thorne's manic academic defensiveness.",
+                        helped: "Setting up the multi-layered campus investigation seamlessly.",
+                        hurt: "Rushed the final green room door breach slightly.",
+                        directive: "Keep building palpable environmental clues."
+                    },
+                    {
+                        roleBadge: "The Professor",
+                        name: "William Webb",
+                        character: "Prof. Edward Dravin",
+                        icon: "📚",
+                        grade: "A-",
+                        spotlight: "26% dialogue",
+                        verdict: "Outstanding academic forensic roleplay when inspecting the altered clinical binder.",
+                        helped: "Grounded the scene in authentic archival analysis.",
+                        hurt: "None.",
+                        directive: "Keep Dravin at the forensic forefront of historical documents."
+                    }
+                ]
+            },
+            4: {
+                sessionNum: 4,
+                title: "The Raleigh Museum Gorgon Ambush & Debrief",
+                tomatometer: "92%",
+                popcornmeter: "94%",
+                grade: "9.2 / 10",
+                gradeLabel: "Certified Fresh",
+                summary: "High-octane museum combat followed by emotional decompression and debrief at The Margin sanctuary.",
+                pacingNotes: [
+                    "Cinematic Escalation: The urn drop and baguette improvised explosives create dynamic 3D verticality in the gallery.",
+                    "Trauma Trigger: Alfie's first sensory flashback grounds the stakes in maritime tragedy."
+                ],
+                participants: [
+                    {
+                        roleBadge: "Game Master",
+                        name: "Luke Foreman",
+                        character: "Game Master (DM)",
+                        icon: "👑",
+                        grade: "A",
+                        spotlight: "24% dialogue",
+                        verdict: "Vivid depiction of ancient Greek antiquity combat inside a modern museum wing.",
+                        helped: "Sensory descriptions of temporal shock and electrostatic discharge.",
+                        hurt: "None.",
+                        directive: "Continue bridging mortal and planar settings."
+                    }
+                ]
+            },
+            3: {
+                sessionNum: 3,
+                title: "The Museum Heist in North Carolina",
+                tomatometer: "87%",
+                popcornmeter: "90%",
+                grade: "8.7 / 10",
+                gradeLabel: "Fresh",
+                summary: "Comedic infiltration and heist mechanics. Pierre's Sorbonne academic bluff and Alfie's spectral sheep stampede.",
+                pacingNotes: ["Infiltration Pacing: Classic heist escalation with sharp comedic beats."],
+                participants: []
+            },
+            2: {
+                sessionNum: 2,
+                title: "The Margin, The Fragments & The Lost Roads",
+                tomatometer: "85%",
+                popcornmeter: "84%",
+                grade: "8.5 / 10",
+                gradeLabel: "Fresh",
+                summary: "Rich worldbuilding decompression. Teddy and Naomi establish sanctuary lore and the rules of the Anomaly Board.",
+                pacingNotes: ["Haven Pacing: Deliberate slow-burn worldbuilding, setting the cosmological rules."],
+                participants: []
+            },
+            1: {
+                sessionNum: 1,
+                title: "The Bus from Vegas & The Library of the Fates",
+                tomatometer: "88%",
+                popcornmeter: "91%",
+                grade: "8.8 / 10",
+                gradeLabel: "Certified Fresh",
+                summary: "Explosive opening in medias res. Sudden plunge from a mundane Vegas bus into planar freefall and cosmic library defense.",
+                pacingNotes: ["In Media Res: High velocity threshold crossing establishing immediate existential stakes."],
+                participants: []
+            }
+        };
+
+        function renderSessionAudit(data) {
+            const container = document.getElementById('auditContentContainer');
+            
+            // Generate participants HTML without box cards
+            let participantsHtml = '';
+            if (data.participants && data.participants.length > 0) {
+                participantsHtml = `
+                    <section class="space-y-8 pt-8 border-t border-slate-800">
+                        <div class="border-b border-slate-800/80 pb-3">
+                            <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold">Ensemble Evolution Audit</span>
+                            <h3 class="text-xl sm:text-2xl font-bold font-serif text-slate-100 mt-1">Performance per PC &amp; Game Master</h3>
+                            <p class="text-sm text-slate-400 mt-1">Evolving character agency, dialogue share, and table friction for Session ${data.sessionNum}.</p>
+                        </div>
+
+                        <div class="space-y-10">
+                            ${data.participants.map(p => `
+                                <article class="space-y-3 pb-8 border-b border-slate-900 last:border-b-0">
+                                    <div class="flex flex-wrap items-baseline justify-between gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-lg">${p.icon}</span>
+                                            <h4 class="text-lg sm:text-xl font-bold font-serif text-slate-100">${p.character}</h4>
+                                            <span class="text-xs font-mono text-slate-400">(${p.name})</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 font-mono text-xs">
+                                            <span class="text-slate-400">${p.spotlight}</span>
+                                            <span class="text-slate-600">·</span>
+                                            <span class="text-emerald-400 font-bold">Grade ${p.grade}</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-mono text-amber-500 uppercase tracking-wider block font-semibold">${p.roleBadge}</span>
+
+                                    <!-- Ruthless Verdict -->
+                                    <p class="text-sm sm:text-base text-slate-200 font-sans leading-relaxed">
+                                        ${p.verdict}
+                                    </p>
+
+                                    <!-- What Helped / What Hurt / Directive -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs sm:text-sm font-sans">
+                                        <div class="space-y-1">
+                                            <strong class="text-emerald-400 font-mono text-xs uppercase tracking-wider block">✓ What Helped:</strong>
+                                            <p class="text-slate-300 leading-relaxed">${p.helped}</p>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <strong class="text-rose-400 font-mono text-xs uppercase tracking-wider block">✗ What Hurt:</strong>
+                                            <p class="text-slate-400 leading-relaxed">${p.hurt || 'None observed.'}</p>
+                                        </div>
+                                    </div>
+                                    ${p.directive ? `
+                                        <div class="pt-2 text-xs font-mono text-slate-400">
+                                            <span class="text-amber-400 font-bold uppercase tracking-wider">Next Session Directive:</span>
+                                            <span class="text-slate-300 ml-1 font-sans">${p.directive}</span>
+                                        </div>
+                                    ` : ''}
+                                </article>
+                            `).join('')}
+                        </div>
+                    </section>
+                `;
+            } else {
+                participantsHtml = `
+                    <div class="pt-8 border-t border-slate-800 text-xs font-mono text-slate-500 italic">
+                        Detailed participant scorecards for Session ${data.sessionNum} are archived in telemetry.
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <!-- Session Level Craft Audit -->
+                <section class="space-y-6">
+                    <div class="flex flex-wrap items-baseline justify-between gap-3 border-b border-slate-800/80 pb-4">
+                        <div>
+                            <span class="text-xs font-mono uppercase tracking-widest text-rose-400 font-bold">Developmental Prose &amp; Pacing Audit</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold font-serif text-slate-100 mt-1">
+                                Session ${data.sessionNum}: ${data.title}
+                            </h2>
+                        </div>
+                        <div class="flex items-center gap-3 font-mono text-xs">
+                            <span class="text-slate-400">Tomatometer: <strong class="text-rose-400">${data.tomatometer}</strong></span>
+                            <span class="text-slate-600">·</span>
+                            <span class="text-slate-400">Popcornmeter: <strong class="text-amber-400">${data.popcornmeter}</strong></span>
+                            <span class="text-slate-600">·</span>
+                            <span class="text-emerald-400 font-bold text-sm sm:text-base">${data.grade}</span>
+                        </div>
+                    </div>
+
+                    <!-- Ruthless Editorial Analysis -->
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Editorial Analysis</h3>
+                        <p class="text-sm sm:text-base text-slate-300 font-sans leading-relaxed">
+                            ${data.summary}
+                        </p>
+                    </div>
+
+                    <!-- Pacing & Grounding Notes -->
+                    <div class="space-y-2 pt-2">
+                        <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Pacing, Swain MRU &amp; Table Parity</h3>
+                        <ul class="text-sm text-slate-300 space-y-2 list-disc list-outside pl-5 font-sans leading-relaxed">
+                            ${data.pacingNotes.map(n => `<li>${n}</li>`).join('')}
+                        </ul>
+                    </div>
+                </section>
+
+                ${participantsHtml}
+            `;
+        }
+
+        function switchDeskMode(mode) {
+            const auditContainer = document.getElementById('auditContentContainer');
+            const conspiraciesContainer = document.getElementById('conspiraciesContentContainer');
+            const sessionBar = document.getElementById('sessionSelectorBar');
+            const tabAuditBtn = document.getElementById('tabAuditBtn');
+            const tabConspiraciesBtn = document.getElementById('tabConspiraciesBtn');
+
+            if (mode === 'conspiracies') {
+                auditContainer.classList.add('hidden');
+                sessionBar.classList.add('hidden');
+                conspiraciesContainer.classList.remove('hidden');
+                tabConspiraciesBtn.className = 'px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 transition-colors';
+                tabAuditBtn.className = 'px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono text-slate-400 hover:text-white transition-colors';
+            } else {
+                conspiraciesContainer.classList.add('hidden');
+                auditContainer.classList.remove('hidden');
+                sessionBar.classList.remove('hidden');
+                tabAuditBtn.className = 'px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition-colors';
+                tabConspiraciesBtn.className = 'px-3.5 py-1.5 rounded text-xs sm:text-sm font-mono text-slate-400 hover:text-white transition-colors';
+            }
+        }
+
+        function loadSessionAudit(num, btn) {
+            document.querySelectorAll('.sess-btn').forEach(b => {
+                b.className = 'sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white';
+            });
+            if (btn) {
+                btn.className = 'sess-btn active px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40';
+            }
+
+            const data = AUDIT_DATA[num] || AUDIT_DATA[7];
+            renderSessionAudit(data);
+        }
+
+        // Initialize from URL param ?s=N or ?mode=conspiracies or default to 7
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const modeParam = urlParams.get('mode');
+            const sParam = parseInt(urlParams.get('s'), 10);
+            const targetSession = (sParam && AUDIT_DATA[sParam]) ? sParam : 7;
+
+            // Find matching button
+            const buttons = document.querySelectorAll('.sess-btn');
+            let targetBtn = null;
+            buttons.forEach(b => {
+                if (b.textContent.includes(`S${targetSession}`)) {
+                    targetBtn = b;
+                }
+            });
+            loadSessionAudit(targetSession, targetBtn);
+
+            if (modeParam === 'conspiracies' || window.location.hash.startsWith('#conspiracy')) {
+                switchDeskMode('conspiracies');
+                if (window.location.hash) {
+                    setTimeout(() => {
+                        const targetElem = document.querySelector(window.location.hash);
+                        if (targetElem) targetElem.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

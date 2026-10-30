@@ -311,12 +311,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (codexUrl) {
                         const codexItem = document.createElement('li');
                         codexItem.className = 'modal-codex-item';
-                        const codexLink = document.createElement('a');
-                        codexLink.href = codexUrl;
-                        codexLink.className = 'codex-featured-link';
-                        codexLink.style.cssText = 'background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; font-weight: bold; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;';
-                        codexLink.innerHTML = `<span>${codexLabel}</span> <span style="font-size: 0.85em; opacity: 0.85; font-family: monospace;">Explore Wiki ↗</span>`;
-                        codexItem.appendChild(codexLink);
+                        codexItem.innerHTML = `
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 12px;">
+                                <a href="codex.html" style="background: rgba(245, 158, 11, 0.25); border: 1px solid #f59e0b; color: #fef3c7; font-weight: bold; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
+                                    <span>🏛️ Campaign Hub</span> <span style="font-size: 0.75rem; opacity: 0.8;">↗</span>
+                                </a>
+                                <a href="threads.html" style="background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; font-weight: bold; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
+                                    <span>🧶 Quest Threads</span> <span style="font-size: 0.75rem; opacity: 0.8;">↗</span>
+                                </a>
+                                <a href="characters.html" style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; font-weight: bold; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
+                                    <span>👥 Personae</span> <span style="font-size: 0.75rem; opacity: 0.8;">↗</span>
+                                </a>
+                                <a href="critics.html" style="background: rgba(244, 63, 94, 0.15); border: 1px solid #f43f5e; color: #fb7185; font-weight: bold; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between;">
+                                    <span>🎭 Critics</span> <span style="font-size: 0.75rem; opacity: 0.8;">↗</span>
+                                </a>
+                            </div>
+                        `;
                         modalChapterList.appendChild(codexItem);
                     }
                     chapters.forEach(chapter => {

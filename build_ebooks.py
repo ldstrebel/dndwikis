@@ -1015,8 +1015,8 @@ def _legacy_participant_scorecards(session_num: int) -> list:
                 "consistencyScore": "72%",
                 "ruthlessVerdict": "Brilliant pedagogical manipulation at the podium, but committed the cardinal sin of pocketing a divine underworld heritage revelation like a dry dry-cleaning receipt.",
                 "whatHelped": "The 'visual learners' bluff against Dr. Thorne in Scene 9 was masterful academic maneuvering, and his smooth pickpocketing of Rick Ready's keys gave the heist early momentum.",
-                "whatHurt": "Absolute emotional evasion. When handed a wax-sealed letter confirming Persephone is his divine mother descending into Hades, Dravin shelved the world-shattering revelation without a single syllable of existential weight.",
-                "nextSessionDirectives": "Reckon with the goddess mother. In Session 6, pull Pierre or Eusacles aside at the first quiet threshold and break the academic facade—tell them what was in that letter and what it feels like to be the son of the Underworld."
+                "whatHurt": "Over-reliance on academic abstraction. At moments of acute tactical crisis or arcane anomaly, Dravin sometimes retreats into academic lecture rather than pressing immediate physical or spatial advantages.",
+                "nextSessionDirectives": "Ground the academic knowledge into urgent party decisions. When translating ancient epigraphy or interrogating anomalies, link historical causality directly to the party's next tactical escape route."
             },
             {
                 "id": "eusacles",
@@ -2942,11 +2942,11 @@ def load_all_codex_articles():
             "dravin": {
                 "name": "Prof. Edward Dravin",
                 "player": "William Webb",
-                "role": "Stanford Greek Historian · Persephone Signet Bearer",
-                "heritage": "Human academic marked by underworld divine patronage",
+                "role": "Stanford Greek Historian · Epigrapher & Occult Decipherer",
+                "heritage": "Human academic versed in ancient Greek epigraphy and planar seam geography",
                 "voice": "Measured academic curiosity, analytical decipherer of ancient Greek epigraphy",
-                "summary": "Professor of Classical Greek history at Stanford University. Dravin bears an engraved signet ring tied to Persephone, allowing him to decipher ancient script and sense planar veil thinning. He provided crucial translations for the Raleigh museum Gorgon stele and led the expedition into the University University historical archives.",
-                "traits": ["Greek Epigraphy", "Persephone Signet", "Underworld Sensitivity", "Academic Rigor"]
+                "summary": "Professor of Classical Greek history at Stanford University. Dravin deciphers ancient script, reads historical causality patterns, and tracks the erasure of timeline anchors. He provided crucial translations for the Raleigh museum Gorgon stele and led the expedition into the University University historical archives.",
+                "traits": ["Greek Epigraphy", "Historical Causality", "Academic Rigor", "Infiltration Leverage"]
             },
             "eusacles": {
                 "name": "Eusacles",
@@ -3026,8 +3026,8 @@ def load_all_codex_articles():
                 "role": "Divine Courier & Boundary Crosser",
                 "heritage": "Olympian messenger god",
                 "voice": "Swift, elusive, irreverent, speaks through sealed wax missives",
-                "summary": "The Olympian messenger god who travels between the upper world, underworld, and temporal margins. In Session 5, Hermes delivered Persephone's sealed solstice warning to the Margin travelers.",
-                "traits": ["Celestial Messenger", "Boundary Navigator", "Solstice Missives"]
+                "summary": "The Olympian messenger god who travels between the upper world, underworld, and temporal margins. Operates as an elusive cross-boundary courier along the edge of mortal and celestial realms.",
+                "traits": ["Celestial Messenger", "Boundary Navigator", "Cross-Realm Courier"]
             },
             "fates": {
                 "name": "The Three Fates (Moirai)",
@@ -3045,102 +3045,24 @@ def load_all_codex_articles():
         # Inject rich landing hub at top of overview
         if slug == "overview":
             overview_portal_hub = """
-            <div class="mb-6 space-y-4">
-                <!-- Clean Header Banner -->
-                <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-amber-950/20 to-slate-900 border border-amber-500/30">
-                    <div class="flex items-center gap-2.5 mb-1.5">
-                        <span class="text-2xl">🧭</span>
-                        <div>
-                            <span class="text-[10px] uppercase font-mono tracking-widest text-amber-400 font-bold">Interactive Campaign Hub · Wiki Portal</span>
-                            <h1 class="text-xl sm:text-2xl font-bold font-serif text-slate-100">The Margin Campaign Codex</h1>
-                        </div>
+            <div class="mb-8 border-b border-slate-800 pb-6 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold block mb-1">Campaign Canon &amp; Continuity</span>
+                        <h1 class="text-2xl sm:text-3xl font-bold font-serif text-slate-100">The Margin Campaign Codex</h1>
                     </div>
-                    <p class="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
-                        Official world encyclopedia and continuity ledger for <strong class="text-amber-300">The Margin: The Stolen Weave</strong>. Explore session chronicles, character dossiers, faction orders, active investigation mysteries, and critical editorial notes.
-                    </p>
+                    <a href="codex.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-medium text-xs transition-colors border border-amber-500/30">
+                        <span>Open Campaign Hub</span> <span>↗</span>
+                    </a>
                 </div>
-
-                <!-- 4 Flat Directory Sections -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <!-- Section 1: Sessions -->
-                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-xs font-bold font-serif text-slate-100 flex items-center gap-1.5"><span>📜</span> <span>Session Chronicles</span></span>
-                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">7 Sessions</span>
-                            </div>
-                            <p class="text-[11px] text-slate-400 leading-snug">Acts I–IV recaps, narrative cliffhangers, and scene breakdowns from Vegas to D.C.</p>
-                            <div class="mt-2.5 flex flex-wrap gap-1">
-                                <button type="button" onclick="selectCodexArticle('s1')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S1</button>
-                                <button type="button" onclick="selectCodexArticle('s2')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S2</button>
-                                <button type="button" onclick="selectCodexArticle('s3')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S3</button>
-                                <button type="button" onclick="selectCodexArticle('s4')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S4</button>
-                                <button type="button" onclick="selectCodexArticle('s5')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S5</button>
-                                <button type="button" onclick="selectCodexArticle('s6')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 text-slate-300 hover:text-amber-300 font-mono transition-colors">S6</button>
-                                <button type="button" onclick="selectCodexArticle('s7')" class="px-2 py-0.5 text-[11px] rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-bold hover:bg-amber-500/30 transition-colors">S7 (Latest)</button>
-                            </div>
-                        </div>
-                        <button type="button" onclick="filterCodexCategory('sessions')" class="mt-2.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
-                            <span>View All Chronicles</span> <span>→</span>
-                        </button>
-                    </div>
-
-                    <!-- Section 2: Characters -->
-                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-xs font-bold font-serif text-slate-100 flex items-center gap-1.5"><span>👤</span> <span>Dramatis Personae</span></span>
-                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 font-bold">13 Dossiers</span>
-                            </div>
-                            <p class="text-[11px] text-slate-400 leading-snug">Party backstories, Margin wardens, rescued allies, and celestial powers.</p>
-                            <div class="mt-2.5 flex flex-wrap gap-1">
-                                <button type="button" onclick="selectCodexArticle('pierre')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-blue-500/20 text-slate-300 hover:text-blue-300 transition-colors">Pierre</button>
-                                <button type="button" onclick="selectCodexArticle('alfie')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-colors">Alfie</button>
-                                <button type="button" onclick="selectCodexArticle('dravin')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-purple-500/20 text-slate-300 hover:text-purple-300 transition-colors">Dravin</button>
-                                <button type="button" onclick="selectCodexArticle('eusacles')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 transition-colors">Eusacles</button>
-                                <button type="button" onclick="selectCodexArticle('naomi')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Naomi</button>
-                                <button type="button" onclick="selectCodexArticle('thanatos')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Thanatos</button>
-                            </div>
-                        </div>
-                        <button type="button" onclick="filterCodexCategory('characters')" class="mt-2.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
-                            <span>View Full Cast</span> <span>→</span>
-                        </button>
-                    </div>
-
-                    <!-- Section 3: Factions -->
-                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-xs font-bold font-serif text-slate-100 flex items-center gap-1.5"><span>🏛️</span> <span>Factions &amp; Orders</span></span>
-                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">2 Factions</span>
-                            </div>
-                            <p class="text-[11px] text-slate-400 leading-snug">The Margin Wardens defending reality seams vs. The Redactors erasing history.</p>
-                            <div class="mt-2.5 flex flex-wrap gap-1">
-                                <button type="button" onclick="selectCodexArticle('margin-wardens')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 transition-colors">Margin Wardens</button>
-                                <button type="button" onclick="selectCodexArticle('redactors')" class="px-2 py-0.5 text-[11px] rounded bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 transition-colors">The Redactors</button>
-                            </div>
-                        </div>
-                        <button type="button" onclick="filterCodexCategory('factions')" class="mt-2.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
-                            <span>Inspect Factions</span> <span>→</span>
-                        </button>
-                    </div>
-
-                    <!-- Section 4: Mysteries & Quest Board -->
-                    <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-1.5">
-                                <span class="text-xs font-bold font-serif text-slate-100 flex items-center gap-1.5"><span>🔍</span> <span>Investigation Quest Board</span></span>
-                                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold">8 Threads</span>
-                            </div>
-                            <p class="text-[11px] text-slate-400 leading-snug">Video game quest log tracking the stolen weave, Alfie's origins, 1948 Big Pox trials, and Persephone's warning.</p>
-                            <div class="mt-2.5 flex flex-wrap gap-1">
-                                <button type="button" onclick="selectCodexArticle('open-threads')" class="px-2 py-0.5 text-[11px] rounded bg-purple-950/40 border border-purple-800/60 text-purple-300 hover:bg-purple-900/60 font-mono transition-colors">TH-01 to TH-08</button>
-                            </div>
-                        </div>
-                        <button type="button" onclick="selectCodexArticle('open-threads')" class="mt-2.5 text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 self-start">
-                            <span>Open Quest Board</span> <span>→</span>
-                        </button>
-                    </div>
+                <p class="text-sm text-slate-300 font-sans leading-relaxed">
+                    Official world encyclopedia and continuity ledger for <strong class="text-amber-300">The Margin: The Stolen Weave</strong>.
+                </p>
+                <div class="flex flex-wrap items-center gap-2 pt-2 text-xs font-mono">
+                    <a href="codex.html" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors">🏛️ Hub</a>
+                    <a href="threads.html" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors">🧶 Threads</a>
+                    <a href="characters.html" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors">👥 Personae</a>
+                    <a href="critics.html" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-rose-300 border border-slate-800 transition-colors">🎭 Critic Sub-App</a>
                 </div>
             </div>
             """
@@ -4473,6 +4395,43 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
         <div id="storyEndSentinel" class="h-8 w-full flex items-center justify-center text-xs text-slate-500 font-mono py-6">
             <span>✦ End of Session {session_num} ✦</span>
         </div>
+
+        <!-- Purpose-Driven Post-Session Redirect Deck -->
+        <section class="my-10 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-900 to-amber-950/20 border border-slate-800 shadow-xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                <div>
+                    <span class="text-xs font-mono uppercase text-amber-400 font-bold tracking-wider">Session {session_num} Complete · What's Next?</span>
+                    <h3 class="text-base sm:text-lg font-bold font-serif text-slate-100">Campaign Companions & Trackers</h3>
+                </div>
+                <span class="text-xl">🧭</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                <a href="threads.html" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all flex flex-col gap-1 group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl">🧶</span>
+                        <span class="text-xs font-mono text-amber-400 group-hover:translate-x-0.5 transition-transform">Inspect ↗</span>
+                    </div>
+                    <strong class="text-sm font-serif text-slate-200 group-hover:text-amber-300">Quest & Thread Tracker</strong>
+                    <p class="text-xs text-slate-400 leading-relaxed">Review updated mysteries & verified clues from this session.</p>
+                </a>
+                <a href="characters.html" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all flex flex-col gap-1 group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl">👥</span>
+                        <span class="text-xs font-mono text-emerald-400 group-hover:translate-x-0.5 transition-transform">Inspect ↗</span>
+                    </div>
+                    <strong class="text-sm font-serif text-slate-200 group-hover:text-emerald-300">Dramatis Personae</strong>
+                    <p class="text-xs text-slate-400 leading-relaxed">Check PC & NPC rosters, abilities, and relationship changes.</p>
+                </a>
+                <a href="critics.html" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-rose-500/50 hover:bg-slate-900 transition-all flex flex-col gap-1 group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl">🎭</span>
+                        <span class="text-xs font-mono text-rose-400 group-hover:translate-x-0.5 transition-transform">Inspect ↗</span>
+                    </div>
+                    <strong class="text-sm font-serif text-slate-200 group-hover:text-rose-300">The Critic's Corner</strong>
+                    <p class="text-xs text-slate-400 leading-relaxed">Read developmental scorecards & PC voice audits.</p>
+                </a>
+            </div>
+        </section>
 
         {end_session_critic_card_html}
 
