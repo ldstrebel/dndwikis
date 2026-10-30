@@ -75,13 +75,14 @@
                 <!-- Session Strip -->
                 <div id="codexSidebarList" class="codex-accordion-group flex flex-wrap items-center gap-1.5 text-xs font-mono">
                     <span class="text-slate-500 uppercase font-semibold mr-1">Session:</span>
-                    <a href="#session-1" class="codex-hub-item px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-colors">S1</a>
-                    <a href="#session-2" class="codex-hub-item px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-colors">S2</a>
-                    <a href="#session-3" class="codex-hub-item px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-colors">S3</a>
-                    <a href="#session-4" class="codex-hub-item px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-colors">S4</a>
-                    <a href="#session-5" class="codex-hub-item px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-colors">S5</a>
-                    <a href="#session-6" class="codex-hub-item px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-colors">S6</a>
-                    <a href="#session-7" class="codex-hub-item px-2.5 py-1 rounded bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition-colors font-bold">S7</a>
+                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="1" onclick="switchSession(1)">S1</button>
+                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="2" onclick="switchSession(2)">S2</button>
+                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="3" onclick="switchSession(3)">S3</button>
+                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="4" onclick="switchSession(4)">S4</button>
+                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="5" onclick="switchSession(5)">S5</button>
+                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="6" onclick="switchSession(6)">S6</button>
+                    <button type="button" class="codex-hub-item session-tab-btn active px-2.5 sm:px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold transition-colors" data-session="7" onclick="switchSession(7)">S7 (Latest)</button>
+                    <button type="button" class="session-tab-btn px-2 py-1.5 rounded text-slate-500 hover:text-slate-300 transition-colors ml-1" data-session="all" onclick="switchSession('all')" title="View continuous stream">Show All</button>
                 </div>
             </div>
         </header>
@@ -117,17 +118,17 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <span class="text-emerald-400 font-semibold">Alfie</span>
+                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-400 font-semibold">Pierre</span>
+                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-sky-400 font-semibold">Prof. Edward Dravin</span>
+                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-amber-400 font-semibold">Eusacles</span>
+                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-300">The Three Fates (Clotho, Lachesis, Atropos)</span>
+                        <a href="characters.html#fates" class="text-purple-300 hover:text-purple-200 hover:underline font-semibold transition-colors" title="Celestial: The Three Fates">The Three Fates (Clotho, Lachesis, Atropos)</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-rose-400">Correctors (Ink-Beasts)</span>
+                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Correctors (Ink-Beasts)</a>
                     </div>
                 </div>
 
@@ -135,7 +136,7 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Locale (In This Session)</h3>
                     <p class="text-sm text-slate-300 font-sans">
-                        Las Vegas Highway Basin (Mortal Plane) $\rightarrow$ The Celestial Colonnade &amp; Library of the Fates $\rightarrow$ The Appalachian Fog Threshold (The Margin).
+                        Las Vegas Highway Basin (Mortal Plane) &rarr; The Celestial Colonnade &amp; Library of the Fates &rarr; The Appalachian Fog Threshold (The Margin).
                     </p>
                 </div>
 
@@ -155,6 +156,12 @@
                     <a href="critics.html?s=1" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
                         <span>🎭</span> <span>View Session 1 Critic, PC Evolution &amp; DM Audit →</span>
                     </a>
+                </div>
+            
+                <!-- Single Session Navigation Controls -->
+                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
+                    <div></div>
+                    <button type="button" onclick="switchSession(2)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S2)</span> <span>&rarr;</span></button>
                 </div>
             </article>
 
@@ -184,28 +191,28 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <span class="text-emerald-400 font-semibold">Alfie</span>
+                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-400 font-semibold">Pierre</span>
+                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-sky-400 font-semibold">Prof. Edward Dravin</span>
+                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-amber-400 font-semibold">Eusacles</span>
+                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Teddy</span>
+                        <a href="characters.html#teddy" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Teddy">Teddy</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Rosa</span>
+                        <a href="characters.html#rosa" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Rosa">Rosa</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Naomi</span>
+                        <a href="characters.html#naomi" class="text-rose-400 hover:text-rose-300 hover:underline font-semibold transition-colors" title="Dossier: Naomi">Naomi</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-300">Hermes</span>
+                        <a href="characters.html#hermes" class="text-amber-300 hover:text-amber-200 hover:underline font-semibold transition-colors" title="Celestial: Hermes">Hermes</a>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Locale (In This Session)</h3>
                     <p class="text-sm text-slate-300 font-sans">
-                        The Margin (Cedar Porch, War Room) $\rightarrow$ Rural Pennsylvania Gas Station $\rightarrow$ The Lost Roads (Dimensional Mist).
+                        The Margin (Cedar Porch, War Room) &rarr; Rural Pennsylvania Gas Station &rarr; The Lost Roads (Dimensional Mist).
                     </p>
                 </div>
 
@@ -222,6 +229,12 @@
                     <a href="critics.html?s=2" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
                         <span>🎭</span> <span>View Session 2 Critic, PC Evolution &amp; DM Audit →</span>
                     </a>
+                </div>
+            
+                <!-- Single Session Navigation Controls -->
+                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
+                    <button type="button" onclick="switchSession(1)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S1)</span></button>
+                    <button type="button" onclick="switchSession(3)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S3)</span> <span>&rarr;</span></button>
                 </div>
             </article>
 
@@ -251,11 +264,11 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <span class="text-emerald-400 font-semibold">Alfie</span>
+                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-400 font-semibold">Pierre</span>
+                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Mike</span>
+                        <a href="characters.html#mike" class="text-sky-300 hover:text-sky-200 hover:underline transition-colors" title="Dossier: Mike">Mike</a>
                         <span class="text-slate-600">·</span>
                         <span class="text-slate-400">Museum Security Guards &amp; Curators</span>
                     </div>
@@ -264,7 +277,7 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Locale (In This Session)</h3>
                     <p class="text-sm text-slate-300 font-sans">
-                        The Lost Roads $\rightarrow$ Downtown Raleigh $\rightarrow$ NC Museum of Natural History (Lobby, Aegean Antiquity Gallery).
+                        The Lost Roads &rarr; Downtown Raleigh &rarr; NC Museum of Natural History (Lobby, Aegean Antiquity Gallery).
                     </p>
                 </div>
 
@@ -281,6 +294,12 @@
                     <a href="critics.html?s=3" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
                         <span>🎭</span> <span>View Session 3 Critic, PC Evolution &amp; DM Audit →</span>
                     </a>
+                </div>
+            
+                <!-- Single Session Navigation Controls -->
+                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
+                    <button type="button" onclick="switchSession(2)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S2)</span></button>
+                    <button type="button" onclick="switchSession(4)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S4)</span> <span>&rarr;</span></button>
                 </div>
             </article>
 
@@ -310,26 +329,26 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <span class="text-emerald-400 font-semibold">Alfie</span>
+                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-400 font-semibold">Pierre</span>
+                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-sky-400 font-semibold">Prof. Edward Dravin</span>
+                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-amber-400 font-semibold">Eusacles</span>
+                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Naomi</span>
+                        <a href="characters.html#naomi" class="text-rose-400 hover:text-rose-300 hover:underline font-semibold transition-colors" title="Dossier: Naomi">Naomi</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Mike</span>
+                        <a href="characters.html#mike" class="text-sky-300 hover:text-sky-200 hover:underline transition-colors" title="Dossier: Mike">Mike</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-rose-400">Gorgon Redactor Operatives</span>
+                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Gorgon Redactor Operatives</a>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Locale (In This Session)</h3>
                     <p class="text-sm text-slate-300 font-sans">
-                        NC Museum of Natural History (Antiquity Gallery, Mezzanine) $\rightarrow$ The Lost Roads $\rightarrow$ The Margin Sanctuary.
+                        NC Museum of Natural History (Antiquity Gallery, Mezzanine) &rarr; The Lost Roads &rarr; The Margin Sanctuary.
                     </p>
                 </div>
 
@@ -346,6 +365,12 @@
                     <a href="critics.html?s=4" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
                         <span>🎭</span> <span>View Session 4 Critic, PC Evolution &amp; DM Audit →</span>
                     </a>
+                </div>
+            
+                <!-- Single Session Navigation Controls -->
+                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
+                    <button type="button" onclick="switchSession(3)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S3)</span></button>
+                    <button type="button" onclick="switchSession(5)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S5)</span> <span>&rarr;</span></button>
                 </div>
             </article>
 
@@ -375,26 +400,26 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <span class="text-sky-400 font-semibold">Prof. Edward Dravin</span>
+                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-400 font-semibold">Alfie</span>
+                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-400 font-semibold">Pierre</span>
+                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-amber-400 font-semibold">Eusacles</span>
+                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Dr. Aris Thorne</span>
+                        <a href="characters.html#thorne" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Dr. Aris Thorne">Dr. Aris Thorne</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-300">Hermes</span>
+                        <a href="characters.html#hermes" class="text-amber-300 hover:text-amber-200 hover:underline font-semibold transition-colors" title="Celestial: Hermes">Hermes</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-rose-400">The Six-Fingered Operative</span>
+                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">The Six-Fingered Operative</a>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Locale (In This Session)</h3>
                     <p class="text-sm text-slate-300 font-sans">
-                        The Margin $\rightarrow$ The Lost Roads $\rightarrow$ University University Campus (Pennsylvania), Amphitheater &amp; Backstage Green Room.
+                        The Margin &rarr; The Lost Roads &rarr; University University Campus (Pennsylvania), Amphitheater &amp; Backstage Green Room.
                     </p>
                 </div>
 
@@ -411,6 +436,12 @@
                     <a href="critics.html?s=5" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
                         <span>🎭</span> <span>View Session 5 Critic, PC Evolution &amp; DM Audit →</span>
                     </a>
+                </div>
+            
+                <!-- Single Session Navigation Controls -->
+                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
+                    <button type="button" onclick="switchSession(4)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S4)</span></button>
+                    <button type="button" onclick="switchSession(6)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S6)</span> <span>&rarr;</span></button>
                 </div>
             </article>
 
@@ -440,19 +471,19 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <span class="text-sky-400 font-semibold">Prof. Edward Dravin</span>
+                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-400 font-semibold">Pierre</span>
+                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-amber-400 font-semibold">Eusacles</span>
+                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-400 font-semibold">Alfie</span>
+                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Dr. Aris Thorne</span>
+                        <a href="characters.html#thorne" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Dr. Aris Thorne">Dr. Aris Thorne</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-rose-400">Satyr Strike Units</span>
+                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Satyr Strike Units</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-rose-400">Gorgon Field Operative (Captive)</span>
+                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Gorgon Field Operative (Captive)</a>
                     </div>
                 </div>
 
@@ -476,6 +507,12 @@
                     <a href="critics.html?s=6" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
                         <span>🎭</span> <span>View Session 6 Critic, PC Evolution &amp; DM Audit →</span>
                     </a>
+                </div>
+            
+                <!-- Single Session Navigation Controls -->
+                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
+                    <button type="button" onclick="switchSession(5)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S5)</span></button>
+                    <button type="button" onclick="switchSession(7)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S7)</span> <span>&rarr;</span></button>
                 </div>
             </article>
 
@@ -505,30 +542,30 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <span class="text-emerald-400 font-semibold">Alfie</span>
+                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-400 font-semibold">Pierre</span>
+                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-amber-400 font-semibold">Eusacles</span>
+                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-sky-400 font-semibold">Prof. Edward Dravin</span>
+                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Susanna (Rescued)</span>
+                        <a href="characters.html#susanna" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Susanna">Susanna (Rescued)</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Teddy</span>
+                        <a href="characters.html#teddy" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Teddy">Teddy</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-emerald-300">Naomi</span>
+                        <a href="characters.html#naomi" class="text-rose-400 hover:text-rose-300 hover:underline font-semibold transition-colors" title="Dossier: Naomi">Naomi</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-purple-300">Thanatos</span>
+                        <a href="characters.html#thanatos" class="text-purple-300 hover:text-purple-200 hover:underline font-semibold transition-colors" title="Celestial: Thanatos">Thanatos</a>
                         <span class="text-slate-600">·</span>
-                        <span class="text-rose-400">Captured Redactor Operative</span>
+                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Captured Redactor Operative</a>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Locale (In This Session)</h3>
                     <p class="text-sm text-slate-300 font-sans">
-                        University Arcade (Pennsylvania) $\rightarrow$ The Lost Roads $\rightarrow$ The Margin Sanctuary (Kitchen &amp; Campfire Perimeter).
+                        University Arcade (Pennsylvania) &rarr; The Lost Roads &rarr; The Margin Sanctuary (Kitchen &amp; Campfire Perimeter).
                     </p>
                 </div>
 
@@ -548,6 +585,12 @@
                         <span>🎭</span> <span>View Session 7 Critic, PC Evolution &amp; DM Audit →</span>
                     </a>
                 </div>
+            
+                <!-- Single Session Navigation Controls -->
+                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
+                    <button type="button" onclick="switchSession(6)" class="px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S6)</span></button>
+                    <a href="threads.html#thread-TH-06" class="px-3 py-1.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 text-xs font-mono transition-colors flex items-center gap-1.5"><span>Next Mission: D.C. Incursion</span> <span>&rarr;</span></a>
+                </div>
             </article>
 
         </div>
@@ -559,14 +602,64 @@
         <p>THE MARGIN CAMPAIGN CODEX · Grounded in DEC-037 Verifiable Table Parity · Schema 2.0</p>
     </footer>
 
-    <!-- Codex Script Helpers -->
+        <!-- Codex Script Helpers -->
     <script>
+        function switchSession(sessNum) {
+            const articles = document.querySelectorAll('#codexArticleView article');
+            const searchInput = document.getElementById('codexSearchInput');
+            if (searchInput) searchInput.value = ''; // clear search when tab is selected
+
+            if (sessNum === 'all') {
+                articles.forEach(art => art.classList.remove('hidden'));
+                document.querySelectorAll('.session-tab-btn').forEach(btn => {
+                    if (btn.dataset.session === 'all') {
+                        btn.className = 'session-tab-btn active px-2.5 sm:px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold transition-colors';
+                    } else {
+                        btn.className = 'codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors';
+                    }
+                });
+                history.replaceState(null, null, '#all');
+                return;
+            }
+
+            articles.forEach(art => {
+                if (art.id === 'session-' + sessNum) {
+                    art.classList.remove('hidden');
+                } else {
+                    art.classList.add('hidden');
+                }
+            });
+
+            document.querySelectorAll('.session-tab-btn').forEach(btn => {
+                if (btn.dataset.session == sessNum) {
+                    btn.className = 'codex-hub-item session-tab-btn active px-2.5 sm:px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold transition-colors';
+                } else {
+                    btn.className = 'codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors';
+                }
+            });
+
+            history.replaceState(null, null, '#session-' + sessNum);
+            const targetArt = document.getElementById('session-' + sessNum);
+            if (targetArt) {
+                targetArt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
         function filterHubSessions() {
             const query = (document.getElementById('codexSearchInput').value || '').toLowerCase().trim();
             const articles = document.querySelectorAll('#codexArticleView article');
+            
+            if (!query) {
+                // If query cleared, restore active tab
+                const activeBtn = document.querySelector('.session-tab-btn.active');
+                const sess = activeBtn ? activeBtn.dataset.session : '7';
+                switchSession(sess);
+                return;
+            }
+
             articles.forEach(art => {
                 const text = art.textContent.toLowerCase();
-                if (!query || text.includes(query)) {
+                if (text.includes(query)) {
                     art.classList.remove('hidden');
                 } else {
                     art.classList.add('hidden');
@@ -574,7 +667,26 @@
             });
         }
 
-        // Compatibility handlers
+        // Initialize from URL query param ?s=N or hash or default to Session 7
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sParam = parseInt(urlParams.get('s'), 10);
+            let target = 7;
+
+            if (sParam && sParam >= 1 && sParam <= 7) {
+                target = sParam;
+            } else if (window.location.hash.startsWith('#session-')) {
+                const num = parseInt(window.location.hash.replace('#session-', ''), 10);
+                if (num >= 1 && num <= 7) target = num;
+            } else if (window.location.hash === '#all') {
+                switchSession('all');
+                return;
+            }
+
+            switchSession(target);
+        });
+
+        // Compatibility handlers for legacy reader integrations
         window.toggleCodexGroup = function(groupId) {};
         window.submitCodexFeedbackPr = function(slug, title, group) {
             window.location.href = 'critics.html';
