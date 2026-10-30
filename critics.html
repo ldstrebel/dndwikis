@@ -27,24 +27,24 @@
 </head>
 <body class="bg-[#030712] text-slate-100 min-h-screen flex flex-col antialiased">
 
-    <!-- Minimalist Sticky Header (No nested card borders) -->
-    <header class="sticky top-0 z-40 bg-[#030712]/95 backdrop-blur-md border-b border-slate-800/80">
-        <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4 px-4 sm:px-6 py-4">
-            <div class="flex items-center gap-3">
-                <a href="index.html" class="flex items-center gap-2 text-rose-400 hover:text-rose-300 transition-colors">
-                    <span class="text-xl">🎭</span>
-                    <span class="text-base sm:text-lg font-bold font-cinzel tracking-wider">The Critic's Desk</span>
+    <!-- Minimalist Sticky Header (Native Mobile Ergonomics) -->
+    <header class="sticky top-0 z-40 bg-[#030712]/95 backdrop-blur-md border-b border-slate-800/80 shadow-lg">
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 px-3.5 sm:px-6 py-2.5 sm:py-3.5">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                <a href="index.html" class="flex items-center gap-2 text-rose-400 hover:text-rose-300 transition-colors flex-shrink-0">
+                    <span class="text-lg sm:text-xl">🎭</span>
+                    <span class="text-sm sm:text-base lg:text-lg font-bold font-cinzel tracking-wider truncate">The Critic's Desk</span>
                 </a>
-                <span class="text-slate-700">/</span>
-                <span class="text-xs sm:text-sm font-mono text-slate-400 uppercase tracking-widest font-semibold">Developmental Sub-App</span>
+                <span class="text-slate-700 hidden sm:inline">/</span>
+                <span class="text-[11px] sm:text-xs font-mono text-slate-400 uppercase tracking-widest font-semibold hidden md:inline truncate">Developmental Sub-App</span>
             </div>
 
             <!-- Suite Navigation -->
-            <nav class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
-                <a href="index.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">📖 Reader</a>
-                <a href="codex.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">🏛️ Hub</a>
-                <a href="threads.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">🧶 Threads</a>
-                <a href="characters.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">👥 Personae</a>
+            <nav class="flex items-center gap-1 sm:gap-2 text-xs flex-shrink-0">
+                <a href="index.html" class="px-2 py-1 rounded text-slate-400 hover:text-amber-300 hover:bg-slate-900 transition-colors" title="Read story episodes">📖 <span class="hidden sm:inline">Reader</span></a>
+                <a href="codex.html" class="px-2 py-1 rounded text-slate-400 hover:text-amber-300 hover:bg-slate-900 transition-colors" title="Campaign Hub">🏛️ <span class="hidden sm:inline">Hub</span></a>
+                <a href="threads.html" class="px-2 py-1 rounded text-slate-400 hover:text-amber-300 hover:bg-slate-900 transition-colors" title="Canon quest lines">🧶 <span class="hidden sm:inline">Threads</span></a>
+                <a href="characters.html" class="px-2 py-1 rounded text-slate-400 hover:text-amber-300 hover:bg-slate-900 transition-colors" title="Dramatis Personae">👥 <span class="hidden sm:inline">Personae</span></a>
             </nav>
         </div>
     </header>
@@ -73,16 +73,16 @@
                 </button>
             </div>
 
-            <!-- Session Selector Bar (Shown in Audit Mode) -->
-            <div id="sessionSelectorBar" class="mt-6 pt-6 border-t border-slate-900 flex flex-wrap items-center gap-2">
-                <span class="text-xs font-mono text-slate-500 uppercase font-semibold mr-2">Audit Session:</span>
-                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(1, this)">S1</button>
-                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(2, this)">S2</button>
-                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(3, this)">S3</button>
-                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(4, this)">S4</button>
-                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(5, this)">S5</button>
-                <button type="button" class="sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white" onclick="loadSessionAudit(6, this)">S6</button>
-                <button type="button" class="sess-btn active px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(7, this)">S7 (Latest)</button>
+            <!-- Session Selector Bar (Shown in Audit Mode - Mobile Scroll Snap) -->
+            <div id="sessionSelectorBar" class="mt-6 pt-5 border-t border-slate-900 flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+                <span class="text-xs font-mono text-slate-500 uppercase font-semibold mr-2 flex-shrink-0">Audit Session:</span>
+                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(1, this)" style="scroll-snap-align: start;">S1</button>
+                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(2, this)" style="scroll-snap-align: start;">S2</button>
+                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(3, this)" style="scroll-snap-align: start;">S3</button>
+                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(4, this)" style="scroll-snap-align: start;">S4</button>
+                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(5, this)" style="scroll-snap-align: start;">S5</button>
+                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(6, this)" style="scroll-snap-align: start;">S6</button>
+                <button type="button" class="sess-btn active flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(7, this)" style="scroll-snap-align: start;">S7 (Latest)</button>
             </div>
         </header>
 

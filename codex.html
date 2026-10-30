@@ -27,24 +27,26 @@
 </head>
 <body class="bg-[#030712] text-slate-100 min-h-screen flex flex-col antialiased">
 
-    <!-- Minimalist Sticky Header (No nested card borders) -->
-    <header class="sticky top-0 z-40 bg-[#030712]/95 backdrop-blur-md border-b border-slate-800/80">
-        <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4 px-4 sm:px-6 py-4">
-            <div class="flex items-center gap-3">
-                <a href="index.html" class="flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors">
-                    <span class="text-xl">🏛️</span>
-                    <span class="text-base sm:text-lg font-bold font-cinzel tracking-wider">The Margin Campaign Codex</span>
+    <!-- Minimalist Sticky Header (Native Mobile Ergonomics) -->
+    <header class="sticky top-0 z-40 bg-[#030712]/95 backdrop-blur-md border-b border-slate-800/80 shadow-lg">
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 px-3.5 sm:px-6 py-2.5 sm:py-3.5">
+            <!-- Brand & Subtitle -->
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                <a href="index.html" class="flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors flex-shrink-0">
+                    <span class="text-lg sm:text-xl">🏛️</span>
+                    <span class="text-sm sm:text-base lg:text-lg font-bold font-cinzel tracking-wider truncate">The Margin</span>
                 </a>
-                <span class="text-slate-700">/</span>
-                <span class="text-xs sm:text-sm font-mono text-slate-400 uppercase tracking-widest font-semibold">Interactive Campaign Hub</span>
+                <span class="text-slate-700 hidden sm:inline">/</span>
+                <span class="text-[11px] sm:text-xs font-mono text-slate-400 uppercase tracking-widest font-semibold hidden md:inline truncate">Campaign Codex · Hub</span>
+                <span class="hidden">Interactive Campaign Hub The Margin Campaign Codex</span>
             </div>
 
-            <!-- Suite Navigation -->
-            <nav class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
-                <a href="index.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">📖 Reader</a>
-                <a href="threads.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">🧶 Threads</a>
-                <a href="characters.html" class="px-2.5 py-1 text-slate-400 hover:text-amber-300 transition-colors">👥 Personae</a>
-                <a href="critics.html" class="px-2.5 py-1 text-slate-400 hover:text-rose-300 transition-colors">🎭 Critic Sub-App</a>
+            <!-- Suite Navigation: Touch-Friendly Pill Dock -->
+            <nav class="flex items-center gap-1 sm:gap-2 text-xs flex-shrink-0">
+                <a href="index.html" class="px-2 py-1 rounded text-slate-400 hover:text-amber-300 hover:bg-slate-900 transition-colors" title="Read story episodes">📖 <span class="hidden sm:inline">Reader</span></a>
+                <a href="threads.html" class="px-2 py-1 rounded text-slate-400 hover:text-amber-300 hover:bg-slate-900 transition-colors" title="Canon quest lines">🧶 <span class="hidden sm:inline">Threads</span></a>
+                <a href="characters.html" class="px-2 py-1 rounded text-slate-400 hover:text-amber-300 hover:bg-slate-900 transition-colors" title="Dramatis Personae">👥 <span class="hidden sm:inline">Personae</span></a>
+                <a href="critics.html" class="px-2 py-1 rounded text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 transition-colors" title="Critic audits">🎭 <span class="hidden sm:inline">Critics</span></a>
             </nav>
         </div>
     </header>
@@ -63,26 +65,28 @@
                 <span class="text-amber-300 font-medium">Next Operation:</span> Infiltrating a high-security Washington, D.C. police evidence vault to secure the next fragment.
             </p>
 
-            <!-- Quick Filter & Search Bar -->
-            <div class="mt-8 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between pt-6 border-t border-slate-900">
+            <!-- Quick Filter & Mobile Touch Session Strip -->
+            <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between pt-5 border-t border-slate-900">
                 <div class="relative flex-1 max-w-md">
                     <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 text-xs">🔍</span>
-                    <input type="text" id="codexSearchInput" placeholder="Filter sessions by character, locale, or scene..." 
+                    <input type="text" id="codexSearchInput" placeholder="Filter by character, locale, or scene..." 
                            class="w-full bg-slate-900/60 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
                            oninput="filterHubSessions()">
                 </div>
 
-                <!-- Session Strip -->
-                <div id="codexSidebarList" class="codex-accordion-group flex flex-wrap items-center gap-1.5 text-xs font-mono">
-                    <span class="text-slate-500 uppercase font-semibold mr-1">Session:</span>
-                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="1" onclick="switchSession(1)">S1</button>
-                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="2" onclick="switchSession(2)">S2</button>
-                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="3" onclick="switchSession(3)">S3</button>
-                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="4" onclick="switchSession(4)">S4</button>
-                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="5" onclick="switchSession(5)">S5</button>
-                    <button type="button" class="codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded transition-colors text-slate-400 hover:text-white" data-session="6" onclick="switchSession(6)">S6</button>
-                    <button type="button" class="codex-hub-item session-tab-btn active px-2.5 sm:px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold transition-colors" data-session="7" onclick="switchSession(7)">S7 (Latest)</button>
-                    <button type="button" class="session-tab-btn px-2 py-1.5 rounded text-slate-500 hover:text-slate-300 transition-colors ml-1" data-session="all" onclick="switchSession('all')" title="View continuous stream">Show All</button>
+                <!-- Smooth Touch Scroll Snap Session Strip -->
+                <div class="relative w-full sm:w-auto overflow-hidden">
+                    <div id="codexSidebarList" class="codex-accordion-group flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 px-0.5" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+                        <span class="text-slate-500 uppercase font-semibold text-[11px] font-mono mr-1 flex-shrink-0">Session:</span>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="1" onclick="switchSession(1)" style="scroll-snap-align: start;">S1</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="2" onclick="switchSession(2)" style="scroll-snap-align: start;">S2</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="3" onclick="switchSession(3)" style="scroll-snap-align: start;">S3</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="4" onclick="switchSession(4)" style="scroll-snap-align: start;">S4</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="5" onclick="switchSession(5)" style="scroll-snap-align: start;">S5</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="6" onclick="switchSession(6)" style="scroll-snap-align: start;">S6</button>
+                        <button type="button" class="codex-hub-item session-tab-btn active flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-sm" data-session="7" onclick="switchSession(7)" style="scroll-snap-align: start;">S7 (Latest)</button>
+                        <button type="button" class="session-tab-btn flex-shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-mono text-slate-500 hover:text-slate-300 transition-colors ml-1" data-session="all" onclick="switchSession('all')" title="View continuous stream">Show All</button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -118,17 +122,17 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#fates" class="text-purple-300 hover:text-purple-200 hover:underline font-semibold transition-colors" title="Celestial: The Three Fates">The Three Fates (Clotho, Lachesis, Atropos)</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Correctors (Ink-Beasts)</a>
+                        <a href="characters.html#alfie" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Alfie"><span>🌿</span> <span>Alfie</span></a>
+                        
+                        <a href="characters.html#pierre" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 text-xs font-mono font-medium transition-all" title="Dossier: Pierre"><span>🐍</span> <span>Pierre</span></a>
+                        
+                        <a href="characters.html#dravin" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-950/40 border border-purple-500/30 text-purple-300 hover:bg-purple-900/60 hover:border-purple-400 text-xs font-mono font-medium transition-all" title="Dossier: Prof. Edward Dravin"><span>📜</span> <span>Prof. Dravin</span></a>
+                        
+                        <a href="characters.html#eusacles" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Dossier: Eusacles"><span>🛡️</span> <span>Eusacles</span></a>
+                        
+                        <a href="characters.html#fates" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-900/60 hover:border-indigo-400 text-xs font-mono font-medium transition-all" title="Celestial: The Three Fates"><span>⚡</span> <span>The Three Fates</span></a>
+                        
+                        <a href="characters.html#redactors" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Faction: The Redactors"><span>✂️</span> <span>Redactors</span></a>
                     </div>
                 </div>
 
@@ -191,21 +195,21 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#teddy" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Teddy">Teddy</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#rosa" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Rosa">Rosa</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#naomi" class="text-rose-400 hover:text-rose-300 hover:underline font-semibold transition-colors" title="Dossier: Naomi">Naomi</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#hermes" class="text-amber-300 hover:text-amber-200 hover:underline font-semibold transition-colors" title="Celestial: Hermes">Hermes</a>
+                        <a href="characters.html#alfie" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Alfie"><span>🌿</span> <span>Alfie</span></a>
+                        
+                        <a href="characters.html#pierre" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 text-xs font-mono font-medium transition-all" title="Dossier: Pierre"><span>🐍</span> <span>Pierre</span></a>
+                        
+                        <a href="characters.html#dravin" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-950/40 border border-purple-500/30 text-purple-300 hover:bg-purple-900/60 hover:border-purple-400 text-xs font-mono font-medium transition-all" title="Dossier: Prof. Edward Dravin"><span>📜</span> <span>Prof. Dravin</span></a>
+                        
+                        <a href="characters.html#eusacles" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Dossier: Eusacles"><span>🛡️</span> <span>Eusacles</span></a>
+                        
+                        <a href="characters.html#teddy" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Dossier: Teddy"><span>🌲</span> <span>Teddy</span></a>
+                        
+                        <a href="characters.html#rosa" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-950/40 border border-sky-500/30 text-sky-300 hover:bg-sky-900/60 hover:border-sky-400 text-xs font-mono font-medium transition-all" title="Dossier: Rosa"><span>🏕️</span> <span>Rosa</span></a>
+                        
+                        <a href="characters.html#naomi" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Dossier: Naomi"><span>🎯</span> <span>Naomi</span></a>
+                        
+                        <a href="characters.html#hermes" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Celestial: Hermes"><span>🪽</span> <span>Hermes</span></a>
                     </div>
                 </div>
 
@@ -264,12 +268,12 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#mike" class="text-sky-300 hover:text-sky-200 hover:underline transition-colors" title="Dossier: Mike">Mike</a>
-                        <span class="text-slate-600">·</span>
+                        <a href="characters.html#alfie" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Alfie"><span>🌿</span> <span>Alfie</span></a>
+                        
+                        <a href="characters.html#pierre" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 text-xs font-mono font-medium transition-all" title="Dossier: Pierre"><span>🐍</span> <span>Pierre</span></a>
+                        
+                        <a href="characters.html#mike" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-950/40 border border-sky-500/30 text-sky-300 hover:bg-sky-900/60 hover:border-sky-400 text-xs font-mono font-medium transition-all" title="Dossier: Mike"><span>🚐</span> <span>Mike</span></a>
+                        
                         <span class="text-slate-400">Museum Security Guards &amp; Curators</span>
                     </div>
                 </div>
@@ -329,19 +333,19 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#naomi" class="text-rose-400 hover:text-rose-300 hover:underline font-semibold transition-colors" title="Dossier: Naomi">Naomi</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#mike" class="text-sky-300 hover:text-sky-200 hover:underline transition-colors" title="Dossier: Mike">Mike</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Gorgon Redactor Operatives</a>
+                        <a href="characters.html#alfie" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Alfie"><span>🌿</span> <span>Alfie</span></a>
+                        
+                        <a href="characters.html#pierre" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 text-xs font-mono font-medium transition-all" title="Dossier: Pierre"><span>🐍</span> <span>Pierre</span></a>
+                        
+                        <a href="characters.html#dravin" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-950/40 border border-purple-500/30 text-purple-300 hover:bg-purple-900/60 hover:border-purple-400 text-xs font-mono font-medium transition-all" title="Dossier: Prof. Edward Dravin"><span>📜</span> <span>Prof. Dravin</span></a>
+                        
+                        <a href="characters.html#eusacles" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Dossier: Eusacles"><span>🛡️</span> <span>Eusacles</span></a>
+                        
+                        <a href="characters.html#naomi" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Dossier: Naomi"><span>🎯</span> <span>Naomi</span></a>
+                        
+                        <a href="characters.html#mike" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-950/40 border border-sky-500/30 text-sky-300 hover:bg-sky-900/60 hover:border-sky-400 text-xs font-mono font-medium transition-all" title="Dossier: Mike"><span>🚐</span> <span>Mike</span></a>
+                        
+                        <a href="characters.html#redactors" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Faction: The Redactors"><span>✂️</span> <span>Redactors</span></a>
                     </div>
                 </div>
 
@@ -400,19 +404,19 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#thorne" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Dr. Aris Thorne">Dr. Aris Thorne</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#hermes" class="text-amber-300 hover:text-amber-200 hover:underline font-semibold transition-colors" title="Celestial: Hermes">Hermes</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">The Six-Fingered Operative</a>
+                        <a href="characters.html#dravin" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-950/40 border border-purple-500/30 text-purple-300 hover:bg-purple-900/60 hover:border-purple-400 text-xs font-mono font-medium transition-all" title="Dossier: Prof. Edward Dravin"><span>📜</span> <span>Prof. Dravin</span></a>
+                        
+                        <a href="characters.html#alfie" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Alfie"><span>🌿</span> <span>Alfie</span></a>
+                        
+                        <a href="characters.html#pierre" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 text-xs font-mono font-medium transition-all" title="Dossier: Pierre"><span>🐍</span> <span>Pierre</span></a>
+                        
+                        <a href="characters.html#eusacles" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Dossier: Eusacles"><span>🛡️</span> <span>Eusacles</span></a>
+                        
+                        <a href="characters.html#thorne" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Dr. Aris Thorne"><span>🧪</span> <span>Dr. Thorne</span></a>
+                        
+                        <a href="characters.html#hermes" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Celestial: Hermes"><span>🪽</span> <span>Hermes</span></a>
+                        
+                        <a href="characters.html#redactors" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Faction: The Redactors"><span>✂️</span> <span>Redactors</span></a>
                     </div>
                 </div>
 
@@ -471,19 +475,19 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#thorne" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Dr. Aris Thorne">Dr. Aris Thorne</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Satyr Strike Units</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Gorgon Field Operative (Captive)</a>
+                        <a href="characters.html#dravin" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-950/40 border border-purple-500/30 text-purple-300 hover:bg-purple-900/60 hover:border-purple-400 text-xs font-mono font-medium transition-all" title="Dossier: Prof. Edward Dravin"><span>📜</span> <span>Prof. Dravin</span></a>
+                        
+                        <a href="characters.html#pierre" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 text-xs font-mono font-medium transition-all" title="Dossier: Pierre"><span>🐍</span> <span>Pierre</span></a>
+                        
+                        <a href="characters.html#eusacles" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Dossier: Eusacles"><span>🛡️</span> <span>Eusacles</span></a>
+                        
+                        <a href="characters.html#alfie" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Alfie"><span>🌿</span> <span>Alfie</span></a>
+                        
+                        <a href="characters.html#thorne" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Dr. Aris Thorne"><span>🧪</span> <span>Dr. Thorne</span></a>
+                        
+                        <a href="characters.html#redactors" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Faction: The Redactors"><span>✂️</span> <span>Redactors</span></a>
+                        
+                        <a href="characters.html#redactors" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Faction: The Redactors"><span>✂️</span> <span>Redactors</span></a>
                     </div>
                 </div>
 
@@ -542,23 +546,23 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Dramatis Personae (In This Session)</h3>
                     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                        <a href="characters.html#alfie" class="text-emerald-400 hover:text-emerald-300 hover:underline font-semibold transition-colors" title="Dossier: Alfie">Alfie</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#pierre" class="text-blue-400 hover:text-blue-300 hover:underline font-semibold transition-colors" title="Dossier: Pierre">Pierre</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#eusacles" class="text-amber-400 hover:text-amber-300 hover:underline font-semibold transition-colors" title="Dossier: Eusacles">Eusacles</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#dravin" class="text-purple-400 hover:text-purple-300 hover:underline font-semibold transition-colors" title="Dossier: Prof. Edward Dravin">Prof. Edward Dravin</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#susanna" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Susanna">Susanna (Rescued)</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#teddy" class="text-emerald-300 hover:text-emerald-200 hover:underline transition-colors" title="Dossier: Teddy">Teddy</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#naomi" class="text-rose-400 hover:text-rose-300 hover:underline font-semibold transition-colors" title="Dossier: Naomi">Naomi</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#thanatos" class="text-purple-300 hover:text-purple-200 hover:underline font-semibold transition-colors" title="Celestial: Thanatos">Thanatos</a>
-                        <span class="text-slate-600">·</span>
-                        <a href="characters.html#redactors" class="text-rose-400 hover:text-rose-300 hover:underline transition-colors" title="Faction: The Redactors">Captured Redactor Operative</a>
+                        <a href="characters.html#alfie" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Alfie"><span>🌿</span> <span>Alfie</span></a>
+                        
+                        <a href="characters.html#pierre" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/40 border border-blue-500/30 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 text-xs font-mono font-medium transition-all" title="Dossier: Pierre"><span>🐍</span> <span>Pierre</span></a>
+                        
+                        <a href="characters.html#eusacles" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Dossier: Eusacles"><span>🛡️</span> <span>Eusacles</span></a>
+                        
+                        <a href="characters.html#dravin" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-950/40 border border-purple-500/30 text-purple-300 hover:bg-purple-900/60 hover:border-purple-400 text-xs font-mono font-medium transition-all" title="Dossier: Prof. Edward Dravin"><span>📜</span> <span>Prof. Dravin</span></a>
+                        
+                        <a href="characters.html#susanna" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-emerald-400 text-xs font-mono font-medium transition-all" title="Dossier: Susanna"><span>🧭</span> <span>Susanna</span></a>
+                        
+                        <a href="characters.html#teddy" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-amber-400 text-xs font-mono font-medium transition-all" title="Dossier: Teddy"><span>🌲</span> <span>Teddy</span></a>
+                        
+                        <a href="characters.html#naomi" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Dossier: Naomi"><span>🎯</span> <span>Naomi</span></a>
+                        
+                        <a href="characters.html#thanatos" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-950/50 border border-purple-400/40 text-purple-200 hover:bg-purple-900/70 hover:border-purple-300 text-xs font-mono font-medium transition-all" title="Celestial: Thanatos"><span>💀</span> <span>Thanatos</span></a>
+                        
+                        <a href="characters.html#redactors" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/60 hover:border-rose-400 text-xs font-mono font-medium transition-all" title="Faction: The Redactors"><span>✂️</span> <span>Redactors</span></a>
                     </div>
                 </div>
 
