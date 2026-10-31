@@ -16,12 +16,22 @@ import json
 import re
 import base64
 from pathlib import Path
-from cryptography.hazmat.primitives import serialization
+try:
+    from cryptography.hazmat.primitives import serialization
+except ImportError:
+    serialization = None
 
-MANIFEST_DIR = Path("d:/Code/dnd-scribe/sessions/data/index")
-CLEAN_DIR = Path("d:/Code/dnd-scribe/sessions/data/clean")
-OUTPUT_DIR = Path("d:/Code/dndwikis-main/dndwikis-main")
-CODEX_DIR = Path("d:/Code/dnd-scribe/campaign/codex")
+LOCAL_SCRIBE = Path(__file__).resolve().parent.parent / "dnd-scribe-main"
+if LOCAL_SCRIBE.exists():
+    MANIFEST_DIR = LOCAL_SCRIBE / "sessions" / "data" / "index"
+    CLEAN_DIR = LOCAL_SCRIBE / "sessions" / "data" / "clean"
+    CODEX_DIR = LOCAL_SCRIBE / "campaign" / "codex"
+    OUTPUT_DIR = Path(__file__).resolve().parent
+else:
+    MANIFEST_DIR = Path("d:/Code/dnd-scribe/sessions/data/index")
+    CLEAN_DIR = Path("d:/Code/dnd-scribe/sessions/data/clean")
+    OUTPUT_DIR = Path("d:/Code/dndwikis-main/dndwikis-main")
+    CODEX_DIR = Path("d:/Code/dnd-scribe/campaign/codex")
 # Search possible secrets directory locations
 SECRETS_DIRS = [
     Path("d:/Code/dnd-scribe/.secrets"),
@@ -47,7 +57,7 @@ for s_dir in SECRETS_DIRS:
             except Exception as e:
                 print(f"[WARN] Could not load {app_cfg}:", e)
         
-        pem_files = list(s_dir.glob("*.pem"))
+        pem_files = list(s_dir.glob("*.pem")) if serialization else []
         for p_file in pem_files:
             try:
                 pk = serialization.load_pem_private_key(p_file.read_bytes(), password=None)
@@ -117,6 +127,29 @@ for p in sorted(MANIFEST_DIR.glob("s*-manifest-v2.json")):
             all_manifests[s_num] = json.loads(p.read_text(encoding="utf-8"))
         except Exception:
             pass
+
+HISTORICAL_SESSION_STATS = {
+    1: {"title": "Session 1: The Bus From Vegas & The Library of the Fates", "wordCount": 5467, "spokenWords": 808, "spokenPct": 14.8},
+    2: {"title": "Session 2: The Margin, The Fragments & The Lost Roads", "wordCount": 5227, "spokenWords": 2757, "spokenPct": 52.7},
+    3: {"title": "Session 3: The Museum Heist in North Carolina", "wordCount": 4100, "spokenWords": 1228, "spokenPct": 30.0},
+    4: {"title": "Session 4: The Medusa Protocol & The Raleigh Redactors", "wordCount": 7135, "spokenWords": 2403, "spokenPct": 33.7},
+    5: {"title": "Session 5: The Forgotten Trail & The Mad Doctor’s Lecture", "wordCount": 9497, "spokenWords": 3139, "spokenPct": 33.1},
+    6: {"title": "Session 6: The Auditorium Incursion & The Memory Seam", "wordCount": 7473, "spokenWords": 1408, "spokenPct": 18.8},
+    7: {"title": "Session 7: The Interrogation, The Redactor & The Dream of Thanatos", "wordCount": 9750, "spokenWords": 5138, "spokenPct": 52.7},
+}
+for h_num, h_data in HISTORICAL_SESSION_STATS.items():
+    if h_num not in all_manifests:
+        all_manifests[h_num] = {
+            "session": {"title": h_data["title"]},
+            "stats": {
+                "wordCount": h_data["wordCount"],
+                "dialogueRatio": {
+                    "spokenWords": h_data["spokenWords"],
+                    "spokenPct": h_data["spokenPct"]
+                },
+                "speakerDistribution": []
+            }
+        }
 
 def load_session_source_mapping(session_num: int) -> dict:
     """Parses raw-indexed transcript and clean story markdown, mapping each block ID to:
@@ -1212,6 +1245,94 @@ def _legacy_participant_scorecards(session_num: int) -> list:
                 "nextSessionDirectives": "Take full advantage of Alfie's miniature size and stealth capabilities during the precinct infiltration."
             }
         ]
+    if session_num == 8:
+        return [
+            {
+                "id": "gm",
+                "name": "Luke Foreman",
+                "character": "Game Master",
+                "role": "Game Master & World Architect",
+                "badge": "The Architect",
+                "color": "#94a3b8",
+                "icon": "👑",
+                "grade": "A+",
+                "score": 96,
+                "spotlightShare": "12% narrative pacing & clocks",
+                "consistencyScore": "96%",
+                "ruthlessVerdict": "Masterful pacing upgrade introducing Blades-in-the-Dark tracking clocks (Prize, Threat, Hunter) and establishing the impending dread of Majora alongside classic urban fantasy heist mechanics.",
+                "whatHelped": "The subterranean Lost Creek crossing with Charon's distant cousin and the D.C. precinct architectural anomaly clues.",
+                "whatHurt": "Early technical delays with Foundry hosting, though smoothly recovered once table play commenced.",
+                "nextSessionDirectives": "Keep the tension on the Hunter clock taut as the party attempts to exit the precinct with the temporal handcuffs."
+            },
+            {
+                "id": "pierre",
+                "name": "Luke S",
+                "character": "Pierre",
+                "role": "Reluctant Gorgon Scion & Skeptic",
+                "badge": "The Infiltrator",
+                "color": "#3b82f6",
+                "icon": "🐍",
+                "grade": "A-",
+                "score": 90,
+                "spotlightShare": "26% spoken dialogue",
+                "consistencyScore": "92%",
+                "ruthlessVerdict": "Stellar tactical adaptability during the Wonka javelin defense on Lost Creek, followed by a high-leverage flashback sequence posing as a Make-A-Wish representative to manipulate the precinct receptionist.",
+                "whatHelped": "Using javelin thrusts to repel the ink-blot swarm and deploying social bluffing to crack the precinct's public intake.",
+                "whatHurt": "Overextended during initial entry debate, briefly risking high-security scrutiny before committing to the brick plan.",
+                "nextSessionDirectives": "Leverage your noble mortal contacts and administrative charm when maneuvering through 20th-century bureaucracy."
+            },
+            {
+                "id": "dravin",
+                "name": "William Webb",
+                "character": "Prof. Edward Dravin",
+                "role": "Chrono-Academic & Heist Architect",
+                "badge": "The Scholar",
+                "color": "#8b5cf6",
+                "icon": "📜",
+                "grade": "A",
+                "score": 94,
+                "spotlightShare": "28% spoken dialogue",
+                "consistencyScore": "95%",
+                "ruthlessVerdict": "Heist architect of the session. Diagnosed structural architectural flaws in the downloaded D.C. blueprints, inscribed legal provenance onto Alfie's foot with a Sharpie, and executed an inspired Meld into Stone brick smuggling operation.",
+                "whatHelped": "Inventive use of Meld into Stone to bypass metal detectors and canine units by turning Alfie into an evidence brick.",
+                "whatHurt": "Lingering in the storm drain discussing architectural north deviations while the Hunter clock was actively ticking.",
+                "nextSessionDirectives": "Trust your operational execution once the plan is set; don't over-analyze blueprints during live entry."
+            },
+            {
+                "id": "eusacles",
+                "name": "John Hagey",
+                "character": "Eusacles",
+                "role": "Vegas Demigod & Frontline Anchor",
+                "badge": "The Guardian",
+                "color": "#f59e0b",
+                "icon": "🛡️",
+                "grade": "A-",
+                "score": 91,
+                "spotlightShare": "18% spoken dialogue",
+                "consistencyScore": "94%",
+                "ruthlessVerdict": "The emotional and mechanical turning point of the campaign. Discovered his Level 5 Paladin had been fighting completely unarmored, embraced Theodore's ancestral birthright boon, and anchored the precinct perimeter with newfound resilience.",
+                "whatHelped": "Auditing starting gear to finally give Eusacles the heavy armor and divine presence he deserves at the frontline.",
+                "whatHurt": "Allowed Dravin and Pierre to dominate the planning dialogue, staying quiet during the critical blueprint briefing.",
+                "nextSessionDirectives": "Step forward as the physical shield of the party now that your paladin armor and Theodore's boon are active."
+            },
+            {
+                "id": "alfie",
+                "name": "Sophie Foreman Noone",
+                "character": "Alfie",
+                "role": "Driftwood Doll & Living Vault Weapon",
+                "badge": "The Infiltrator",
+                "color": "#10b981",
+                "icon": "🌿",
+                "grade": "A+",
+                "score": 98,
+                "spotlightShare": "16% spoken dialogue",
+                "consistencyScore": "97%",
+                "ruthlessVerdict": "The living infiltration weapon and vault operative. Endured having Prof. Dravin's contact info Sharpied onto her wooden foot, rode inside a thrown evidence brick into precinct custody, and slipped through the 3-inch drain to reach the evidence vault.",
+                "whatHelped": "Flawless physical stealth and infiltration execution within the precinct's inner vault corridor.",
+                "whatHurt": "Relied on the team outside for extraction timing; communication receiver range was tested to its limit.",
+                "nextSessionDirectives": "Prepare contingency escape spells if isolated deep inside municipal facilities."
+            }
+        ]
     return []
 
 
@@ -1289,7 +1410,7 @@ def get_default_participant_scorecards(session_num: int, telemetry=None) -> list
             return f"{row['sharePctOfPlayerWords']}% of player words (measured airtime)"
         return ""
 
-    legacy = _legacy_participant_scorecards(session_num) if session_num in (5, 6, 7) else []
+    legacy = _legacy_participant_scorecards(session_num) if session_num in (5, 6, 7, 8) else []
     cards = []
     if legacy:
         for sc in legacy:
@@ -2764,7 +2885,6 @@ def build_entity_crosslinker(codex_articles: dict):
         "the-margin": ["The Margin", "The Margin Compound"],
         "hermes": ["Hermes Express", "The Hermes Express"],
         "thanatos": ["Thanatos"],
-        "persephone": ["Persephone"],
         "open-threads": ["Active Mysteries Board", "Investigation Case Board", "Campaign Mysteries Board", "Open Mysteries Board", "Open Threads Board", "Quest Board"],
         "lost-roads": ["Lost Roads", "The Lost Roads"],
         "university-university": ["University University"],
@@ -8892,12 +9012,15 @@ if __name__ == "__main__":
     codex_articles = load_all_codex_articles()
     print(f"[INFO] Loaded {len(codex_articles)} canonical codex articles.")
     
-    # Generate standalone codex.html
-    codex_html_content = build_standalone_codex_html(codex_articles)
-    codex_output_path = OUTPUT_DIR / "codex.html"
-    with open(codex_output_path, "w", encoding="utf-8") as f:
-        f.write(codex_html_content)
-    print(f"[OK] Generated {codex_output_path.name}")
+    # Generate standalone codex.html only if canonical codex articles exist upstream
+    if codex_articles:
+        codex_html_content = build_standalone_codex_html(codex_articles)
+        codex_output_path = OUTPUT_DIR / "codex.html"
+        with open(codex_output_path, "w", encoding="utf-8") as f:
+            f.write(codex_html_content)
+        print(f"[OK] Generated {codex_output_path.name}")
+    else:
+        print("[INFO] Skipping standalone codex.html generation (preserving verified downstream hub).")
 
     available = sorted(all_manifests.keys())
     print(f"[INFO] Discovered {len(available)} session manifests: {available}")

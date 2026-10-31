@@ -930,12 +930,12 @@
             renderSessionAudit(data);
         }
 
-        // Initialize from URL param ?s=N or ?mode=conspiracies or default to 7
+        // Initialize from URL param ?s=N or ?mode=conspiracies or default to 8
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const modeParam = urlParams.get('mode');
             const sParam = parseInt(urlParams.get('s'), 10);
-            const targetSession = (sParam && AUDIT_DATA[sParam]) ? sParam : 7;
+            const targetSession = (sParam && AUDIT_DATA[sParam]) ? sParam : 8;
 
             // Find matching button
             const buttons = document.querySelectorAll('.sess-btn');
