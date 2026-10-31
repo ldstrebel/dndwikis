@@ -82,6 +82,8 @@ PC_COLORS = {
     "doug": "#f59e0b",       # Amber
     "mara": "#06b6d4",       # Cyan
     "kael": "#10b981",       # Emerald
+    "officer": "#0284c7",    # Sky / Precinct Officer
+    "boatman": "#64748b",    # Slate / Aqueduct Pilot
     "narrator": "#94a3b8"    # Slate
 }
 CHARACTER_COLORS = {
@@ -103,6 +105,8 @@ CHARACTER_COLORS = {
     "doug": "#f59e0b",       # Amber
     "mara": "#06b6d4",       # Cyan
     "kael": "#10b981",       # Emerald
+    "officer": "#0284c7",    # Sky / Precinct Officer
+    "boatman": "#64748b",    # Slate / Aqueduct Pilot
     "narrator": "#94a3b8"    # Slate
 }
 NPC_COLOR = "#f87171"        # Low-intensity red fallback for unmapped NPCs
@@ -9012,15 +9016,15 @@ if __name__ == "__main__":
     codex_articles = load_all_codex_articles()
     print(f"[INFO] Loaded {len(codex_articles)} canonical codex articles.")
     
-    # Generate standalone codex.html only if canonical codex articles exist upstream
+    # Generate standalone codex-wiki.html while preserving the verified downstream hub (codex.html)
     if codex_articles:
         codex_html_content = build_standalone_codex_html(codex_articles)
-        codex_output_path = OUTPUT_DIR / "codex.html"
+        codex_output_path = OUTPUT_DIR / "codex-wiki.html"
         with open(codex_output_path, "w", encoding="utf-8") as f:
             f.write(codex_html_content)
         print(f"[OK] Generated {codex_output_path.name}")
     else:
-        print("[INFO] Skipping standalone codex.html generation (preserving verified downstream hub).")
+        print("[INFO] Skipping standalone codex-wiki.html generation.")
 
     available = sorted(all_manifests.keys())
     print(f"[INFO] Discovered {len(available)} session manifests: {available}")

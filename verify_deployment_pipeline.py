@@ -3,8 +3,12 @@
 Pre-Deployment Pipeline Verification Gate.
 
 Enforces:
-1. Upstream Schema 2.0 Web Manifest existence and structure for latest session.
-2. Canonical reader generation via build_ebooks.py without ad-hoc synthesis.
+1. Upstream Schema 2.0 Web Manifest existence, structure, and narrative density:
+   - Minimum block threshold (>= 50 blocks).
+   - Minimum word count threshold (>= 3,000 words).
+2. Reader integrity (uneraseable-s1.html to s8.html):
+   - Chapters modal overlay, cut switcher, diff inspector.
+   - Non-empty Codex Wiki modal (at least 30 embedded articles in codexArticlesData).
 3. Downstream Hub (index.html, codex.html, critics.html, threads.html) integrity.
 4. Complete automated test suite execution (unittest discover tests).
 """
@@ -17,6 +21,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 LOCAL_SCRIBE = ROOT.parent / "dnd-scribe-main"
+
+MIN_SESSION_BLOCKS = 50
+MIN_SESSION_WORDS = 3000
+MIN_CODEX_ARTICLES = 30
 
 def log_pass(msg):
     print(f"  [PASS] {msg}")
@@ -44,10 +52,14 @@ def verify_upstream_manifest(session_num=8):
 
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
     blocks = data.get("blocks", [])
-    if not blocks:
-        return log_fail("Manifest has 0 blocks")
+    word_count = data.get("stats", {}).get("wordCount", 0)
+
+    if len(blocks) < MIN_SESSION_BLOCKS:
+        return log_fail(f"Manifest blocks ({len(blocks)}) below minimum density requirement ({MIN_SESSION_BLOCKS})")
+    if word_count < MIN_SESSION_WORDS:
+        return log_fail(f"Manifest word count ({word_count:,}) below minimum required ({MIN_SESSION_WORDS:,})")
     
-    log_pass(f"Schema 2.0 Manifest verified ({len(blocks)} blocks, {data.get('stats', {}).get('wordCount', 0)} words)")
+    log_pass(f"Schema 2.0 Manifest verified: {len(blocks)} blocks, {word_count:,} words (passed narrative density gate)")
     return True
 
 def verify_downstream_readers():
@@ -63,7 +75,19 @@ def verify_downstream_readers():
             return log_fail(f"Cut switcher missing in {reader.name}")
         if "diffInspector" not in content and "openDiffInspector" not in content:
             return log_fail(f"Diff inspector missing in {reader.name}")
-        log_pass(f"{reader.name} ({len(content):,} bytes) verified with full Schema 2.0 reader controls")
+        
+        # Verify Codex Articles Data is populated
+        m = re.search(r'id="codexArticlesData"[^>]*>(.*?)</script>', content, re.DOTALL)
+        if not m:
+            return log_fail(f"codexArticlesData script tag missing in {reader.name}")
+        try:
+            articles = json.loads(m.group(1))
+            if len(articles) < MIN_CODEX_ARTICLES:
+                return log_fail(f"Codex modal in {reader.name} has only {len(articles)} articles (minimum {MIN_CODEX_ARTICLES} required; modal is blank/truncated)")
+        except Exception as e:
+            return log_fail(f"Failed to parse codexArticlesData in {reader.name}: {e}")
+
+        log_pass(f"{reader.name} ({len(content):,} bytes) verified with full reader controls & {len(articles)} codex articles")
     return True
 
 def verify_hub_integrations():
