@@ -82,7 +82,8 @@
                 <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(4, this)" style="scroll-snap-align: start;">S4</button>
                 <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(5, this)" style="scroll-snap-align: start;">S5</button>
                 <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(6, this)" style="scroll-snap-align: start;">S6</button>
-                <button type="button" class="sess-btn active flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(7, this)" style="scroll-snap-align: start;">S7 (Latest)</button>
+                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(7, this)" style="scroll-snap-align: start;">S7</button>
+                <button type="button" class="sess-btn active flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(8, this)" style="scroll-snap-align: start;">S8 (Latest)</button>
             </div>
         </header>
 
@@ -194,6 +195,81 @@
     <!-- Interactive Session Audit Controller -->
     <script>
         const AUDIT_DATA = {
+            8: {
+                sessionNum: 8,
+                title: "Infiltration, The Lost Roads & The DC Precinct Vault",
+                tomatometer: "96%",
+                popcornmeter: "95%",
+                grade: "9.5 / 10",
+                gradeLabel: "Certified Fresh",
+                summary: "Level 5 progression unlocks ancestral birthrights and clock-driven infiltration mechanics. Alfie's Sharpie-inscribed foot, Dravin's Meld into Stone brick trick, and Pierre's Make-A-Wish reception bluff deliver an unforgettable heist into modern mortal custody.",
+                pacingNotes: [
+                    "Tactical Clock Integration: The introduction of Blades-in-the-Dark tracking clocks (Prize, Threat, Hunter) injected immediate pacing urgency into the Lost Roads transit.",
+                    "Urban Fantasy Heist Dynamics: Blending 5e spellcraft (Meld into Stone) with mortal bureaucratic vulnerabilities (police receptionists, evidence intake procedures) created top-tier comedic and dramatic tension."
+                ],
+                participants: [
+                    {
+                        roleBadge: "Player Character · Reluctant Gorgon Scion",
+                        name: "Luke S",
+                        character: "Pierre",
+                        icon: "🐍",
+                        grade: "A-",
+                        spotlight: "26% dialogue",
+                        verdict: "Stellar tactical adaptability during the Wonka javelin defense on Lost Creek, followed by a high-leverage flashback sequence posing as a Make-A-Wish representative to manipulate the precinct receptionist.",
+                        helped: "Using javelin thrusts to repel the ink-blot swarm and deploying social bluffing to crack the precinct's public intake.",
+                        hurt: "Overextended during initial entry debate, briefly risking high-security scrutiny before committing to the brick plan.",
+                        directive: "Leverage your noble mortal contacts and administrative charm when maneuvering through 20th-century bureaucracy."
+                    },
+                    {
+                        roleBadge: "Player Character · Chrono-Academic",
+                        name: "William Webb",
+                        character: "Prof. Edward Dravin",
+                        icon: "📜",
+                        grade: "A",
+                        spotlight: "28% dialogue",
+                        verdict: "Heist architect of the year. Diagnosed structural architectural flaws in the downloaded D.C. blueprints, inscribed legal provenance onto Alfie's foot with a Sharpie, and executed an inspired Meld into Stone brick smuggling operation.",
+                        helped: "Inventive use of Meld into Stone to bypass metal detectors and canine units by turning Alfie into an evidence brick.",
+                        hurt: "Lingering in the storm drain discussing architectural north deviations while the Hunter clock was actively ticking.",
+                        directive: "Trust your operational execution once the plan is set; don't over-analyze blueprints during live entry."
+                    },
+                    {
+                        roleBadge: "Player Character · Vegas Demigod",
+                        name: "John Hagey",
+                        character: "Eusacles",
+                        icon: "🛡️",
+                        grade: "A-",
+                        spotlight: "18% dialogue",
+                        verdict: "The emotional and mechanical turning point of the campaign. Discovered his Level 5 Paladin had been fighting completely unarmored, embraced Theodore's ancestral birthright boon, and anchored the precinct perimeter with newfound resilience.",
+                        helped: "Auditing starting gear to finally give Eusacles the heavy armor and divine presence he deserves at the frontline.",
+                        hurt: "Allowed Dravin and Pierre to dominate the planning dialogue, staying quiet during the critical blueprint briefing.",
+                        directive: "Step forward as the physical shield of the party now that your paladin armor and Theodore's boon are active."
+                    },
+                    {
+                        roleBadge: "Player Character · Driftwood Infiltrator",
+                        name: "Sophie Foreman Noone",
+                        character: "Alfie",
+                        icon: "🌿",
+                        grade: "A+",
+                        spotlight: "16% dialogue",
+                        verdict: "The living infiltration weapon and vault operative. Endured having Prof. Dravin's contact info Sharpied onto her wooden foot, rode inside a thrown evidence brick into precinct custody, and slipped through the 3-inch drain to reach the evidence vault.",
+                        helped: "Flawless physical stealth and infiltration execution within the precinct's inner vault corridor.",
+                        hurt: "Relied on the team outside for extraction timing; communication receiver range was tested to its limit.",
+                        directive: "Prepare contingency escape spells if isolated deep inside municipal facilities."
+                    },
+                    {
+                        roleBadge: "Game Master & World Architect",
+                        name: "Luke Foreman",
+                        character: "Game Master (DM)",
+                        icon: "👑",
+                        grade: "A+",
+                        spotlight: "12% dialogue",
+                        verdict: "Masterful pacing upgrade introducing Blades-in-the-Dark clocks (Prize, Threat, Hunter) and establishing the impending dread of Majora alongside classic urban fantasy heist mechanics.",
+                        helped: "The subterranean Lost Creek crossing with Charon's distant cousin and the D.C. precinct architectural anomaly clues.",
+                        hurt: "Early technical delays with Foundry hosting, though smoothly recovered once table play commenced.",
+                        directive: "Keep the tension on the Hunter clock taut as the party attempts to exit the precinct with the temporal handcuffs."
+                    }
+                ]
+            },
             7: {
                 sessionNum: 7,
                 title: "The Interrogation, The Redactor & The Dream of Thanatos",
