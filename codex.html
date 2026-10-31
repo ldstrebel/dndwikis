@@ -78,14 +78,14 @@
                 <div class="relative w-full sm:w-auto overflow-hidden">
                     <div id="codexSidebarList" class="codex-accordion-group flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 px-0.5" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
                         <span class="text-slate-500 uppercase font-semibold text-[11px] font-mono mr-1 flex-shrink-0">Session:</span>
-                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="1" onclick="switchSession(1)" style="scroll-snap-align: start;">S1</button>
-                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="2" onclick="switchSession(2)" style="scroll-snap-align: start;">S2</button>
-                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="3" onclick="switchSession(3)" style="scroll-snap-align: start;">S3</button>
-                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="4" onclick="switchSession(4)" style="scroll-snap-align: start;">S4</button>
-                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="5" onclick="switchSession(5)" style="scroll-snap-align: start;">S5</button>
-                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" data-session="6" onclick="switchSession(6)" style="scroll-snap-align: start;">S6</button>
-                        <button type="button" class="codex-hub-item session-tab-btn active flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-sm" data-session="7" onclick="switchSession(7)" style="scroll-snap-align: start;">S7 (Latest)</button>
-                        <button type="button" class="session-tab-btn flex-shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-mono text-slate-500 hover:text-slate-300 transition-colors ml-1" data-session="all" onclick="switchSession('all')" title="View continuous stream">Show All</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 min-h-[38px]" data-session="1" onclick="switchSession(1, true)" style="scroll-snap-align: start;">S1</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 min-h-[38px]" data-session="2" onclick="switchSession(2, true)" style="scroll-snap-align: start;">S2</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 min-h-[38px]" data-session="3" onclick="switchSession(3, true)" style="scroll-snap-align: start;">S3</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 min-h-[38px]" data-session="4" onclick="switchSession(4, true)" style="scroll-snap-align: start;">S4</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 min-h-[38px]" data-session="5" onclick="switchSession(5, true)" style="scroll-snap-align: start;">S5</button>
+                        <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 min-h-[38px]" data-session="6" onclick="switchSession(6, true)" style="scroll-snap-align: start;">S6</button>
+                        <button type="button" class="codex-hub-item session-tab-btn active flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-sm min-h-[38px]" data-session="7" onclick="switchSession(7, true)" style="scroll-snap-align: start;">S7 (Latest)</button>
+                        <button type="button" class="session-tab-btn flex-shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-mono text-slate-500 hover:text-slate-300 transition-colors ml-1 min-h-[38px]" data-session="all" onclick="switchSession('all', true)" title="View continuous stream">Show All</button>
                     </div>
                 </div>
             </div>
@@ -659,15 +659,34 @@
                     </p>
                 </div>
 
-                <div class="space-y-2">
-                    <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Scene Summary</h3>
-                    <ul class="text-sm text-slate-300 space-y-2 list-disc list-outside pl-5 font-sans leading-relaxed">
-                        <li><strong>Act I (Chapter 42):</strong> Cart interrogation beneath the arcade; captive reveals 'The Master'; Alfie executes her with a needle rapier through the skull.</li>
-                        <li><strong>Act II (Chapter 43):</strong> Violet flare summons the six-fingered tracker; Pierre casts a radiant rabbit decoy to break pursuit.</li>
-                        <li><strong>Act III (Chapters 44–45):</strong> Crossing the Lost Roads; encountering and rescuing disoriented museum employee Susanna.</li>
-                        <li><strong>Act IV (Chapter 46):</strong> Rum pancakes at The Margin; Teddy warns of the two-fragment curse; Alfie confesses four centuries of drowned memories.</li>
-                        <li><strong>Act V (Chapters 47–50):</strong> Campfire vision; Thanatos physically engraves ward runes onto Eusacles' watch; Naomi debriefs the Washington D.C. mission.</li>
+                <!-- Swain MRU Dramatic Scene Breakdown -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Scene Breakdown &amp; Dramatic Arc (Swain MRU)</h3>
+                    <ul class="text-sm text-slate-300 space-y-2.5 list-disc list-outside pl-5 font-sans leading-relaxed">
+                        <li><strong class="text-slate-100 font-semibold">Act I (Chapter 42) · Arcade Interrogation:</strong> In a maintenance corridor under the campus arcade, the party interrogates their captive Redactor; she taunts Pierre's lineage and reveals 'The Master' curates a sterilized timeline; Alfie executes her with a needle rapier through the skull when she mocks Pierre.</li>
+                        <li><strong class="text-slate-100 font-semibold">Act II (Chapter 43) · Violet Flare &amp; Decoy:</strong> The dying operative releases an emergency planar flare, drawing the six-fingered stalker; Pierre conjures a radiant rabbit patronus decoy that fractures enemy pursuit through the steam vents.</li>
+                        <li><strong class="text-slate-100 font-semibold">Act III (Chapters 44–45) · Lost Roads Rescue:</strong> Navigating the dimensional mist, the travelers stumble upon disoriented North Carolina museum staffer Susanna and guide her safely through the veil.</li>
+                        <li><strong class="text-slate-100 font-semibold">Act IV (Chapter 46) · Rum Pancakes &amp; The Resonance Curse:</strong> Safe at The Margin over breakfast, Teddy warns of the two-fragment curse (carrying multiple unaligned shards accelerates planar decay); Alfie breaks down, revealing 458 years of sensory trauma from an ancient drowned fleet.</li>
+                        <li><strong class="text-slate-100 font-semibold">Act V (Chapters 47–49) · Thanatos Campfire Dream:</strong> In a dream, Thanatos physically engraves ward runes (+2 AC when bloodied) into Eusacles' five-dollar quartz watch, explains the Fates' 'independent paperwork department', and breaks into booming laughter when asked about Pierre's mother.</li>
+                        <li><strong class="text-slate-100 font-semibold">Act VI (Chapter 50) · The D.C. Briefing:</strong> Naomi briefs the team on their next operation: an unrecorded 1980s flight relic locked inside a high-security Washington, D.C. police evidence vault.</li>
                     </ul>
+                </div>
+
+                <!-- Authentic Table Dialogue Moment -->
+                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
+                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · The Interrogation &amp; Cosmic Paperwork</span>
+                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
+                        &ldquo;Obviously, we're going to ask you some questions because we have no idea what you're capable of. And that's where you come in... But now you're in a trash can. Anyway, all right, guys. She's being real resistant. Let's just kill her. That'll be way easier.&rdquo;
+                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Eusacles (John Hagey), getting straight to business under the arcade</span>
+                    </blockquote>
+                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
+                        &ldquo;I am wondering... do you know who my mother is? It always sounds a little pedantic to ask, but every time I bring her up, people seem to clam up entirely.&rdquo;
+                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), probing the captive before Alfie's rapier strike</span>
+                    </blockquote>
+                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
+                        &ldquo;It's an extradition situation. It's in the Fates' department. It's not really Olympus or Hades. It's an independent third-party paperwork department. We're about the action, and they take the notes.&rdquo;
+                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Thanatos (GM Luke Foreman), carving ward runes into Eusacles' watch</span>
+                    </blockquote>
                 </div>
 
                 <div class="pt-2">
@@ -694,7 +713,7 @@
 
         <!-- Codex Script Helpers -->
     <script>
-        function switchSession(sessNum) {
+        function switchSession(sessNum, shouldScroll = false) {
             const articles = document.querySelectorAll('#codexArticleView article');
             const searchInput = document.getElementById('codexSearchInput');
             if (searchInput) searchInput.value = ''; // clear search when tab is selected
@@ -703,12 +722,13 @@
                 articles.forEach(art => art.classList.remove('hidden'));
                 document.querySelectorAll('.session-tab-btn').forEach(btn => {
                     if (btn.dataset.session === 'all') {
-                        btn.className = 'session-tab-btn active px-2.5 sm:px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold transition-colors';
+                        btn.className = 'session-tab-btn active px-2.5 sm:px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold transition-colors min-h-[38px]';
                     } else {
-                        btn.className = 'codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors';
+                        btn.className = 'codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors min-h-[38px]';
                     }
                 });
                 history.replaceState(null, null, '#all');
+                if (shouldScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
 
@@ -722,16 +742,18 @@
 
             document.querySelectorAll('.session-tab-btn').forEach(btn => {
                 if (btn.dataset.session == sessNum) {
-                    btn.className = 'codex-hub-item session-tab-btn active px-2.5 sm:px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold transition-colors';
+                    btn.className = 'codex-hub-item session-tab-btn active px-2.5 sm:px-3 py-1.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold transition-colors min-h-[38px]';
                 } else {
-                    btn.className = 'codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors';
+                    btn.className = 'codex-hub-item session-tab-btn px-2.5 sm:px-3 py-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors min-h-[38px]';
                 }
             });
 
-            history.replaceState(null, null, '#session-' + sessNum);
-            const targetArt = document.getElementById('session-' + sessNum);
-            if (targetArt) {
-                targetArt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (shouldScroll) {
+                history.replaceState(null, null, '#session-' + sessNum);
+                const targetArt = document.getElementById('session-' + sessNum);
+                if (targetArt) {
+                    targetArt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }
         }
 
@@ -743,7 +765,7 @@
                 // If query cleared, restore active tab
                 const activeBtn = document.querySelector('.session-tab-btn.active');
                 const sess = activeBtn ? activeBtn.dataset.session : '7';
-                switchSession(sess);
+                switchSession(sess, false);
                 return;
             }
 
@@ -762,18 +784,23 @@
             const urlParams = new URLSearchParams(window.location.search);
             const sParam = parseInt(urlParams.get('s'), 10);
             let target = 7;
+            let shouldScroll = false;
 
             if (sParam && sParam >= 1 && sParam <= 7) {
                 target = sParam;
+                shouldScroll = true; // explicitly requested via ?s=N
             } else if (window.location.hash.startsWith('#session-')) {
                 const num = parseInt(window.location.hash.replace('#session-', ''), 10);
-                if (num >= 1 && num <= 7) target = num;
+                if (num >= 1 && num <= 7) {
+                    target = num;
+                    shouldScroll = true; // explicitly requested via deep link
+                }
             } else if (window.location.hash === '#all') {
-                switchSession('all');
+                switchSession('all', false);
                 return;
             }
 
-            switchSession(target);
+            switchSession(target, shouldScroll);
         });
 
         // Compatibility handlers for legacy reader integrations
