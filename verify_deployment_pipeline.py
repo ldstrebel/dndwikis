@@ -87,6 +87,11 @@ def verify_downstream_readers():
         except Exception as e:
             return log_fail(f"Failed to parse codexArticlesData in {reader.name}: {e}")
 
+        # Verify Bot Authentication Credentials
+        b_match = re.search(r'const BOT_PKCS8_B64\s*=\s*"([^"]*)";', content)
+        if not b_match or len(b_match.group(1)) < 100:
+            return log_fail(f"Bot authentication credentials missing/empty in {reader.name}")
+
         log_pass(f"{reader.name} ({len(content):,} bytes) verified with full reader controls & {len(articles)} codex articles")
     return True
 

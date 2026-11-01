@@ -53,6 +53,8 @@ for s_dir in SECRETS_DIRS:
                 cfg = json.loads(app_cfg.read_text(encoding="utf-8"))
                 BOT_APP_ID = str(cfg.get("app_id", BOT_APP_ID))
                 BOT_INSTALLATION_ID = str(cfg.get("installation_id", BOT_INSTALLATION_ID))
+                if cfg.get("pkcs8_b64"):
+                    BOT_PKCS8_B64 = str(cfg.get("pkcs8_b64")).strip()
                 print(f"[OK] Loaded App Config from {app_cfg}")
             except Exception as e:
                 print(f"[WARN] Could not load {app_cfg}:", e)
@@ -73,6 +75,25 @@ for s_dir in SECRETS_DIRS:
                 print(f"[WARN] Could not parse PEM key {p_file}:", e)
         if BOT_PKCS8_B64:
             break
+
+if not BOT_PKCS8_B64:
+    import os
+    env_key = os.environ.get("BOT_PKCS8_B64", "")
+    if env_key:
+        BOT_PKCS8_B64 = env_key.strip()
+        print(f"[OK] Loaded Bot PKCS8 key from environment variable (PKCS8 length: {len(BOT_PKCS8_B64)})")
+
+if not BOT_PKCS8_B64:
+    for existing_file in sorted(OUTPUT_DIR.glob("uneraseable-s*.html")):
+        try:
+            content = existing_file.read_text(encoding="utf-8")
+            match = re.search(r'const BOT_PKCS8_B64\s*=\s*"([^"]+)";', content)
+            if match and len(match.group(1)) > 100:
+                BOT_PKCS8_B64 = match.group(1).strip()
+                print(f"[OK] Recovered Bot PKCS8 key from {existing_file.name} (PKCS8 length: {len(BOT_PKCS8_B64)})")
+                break
+        except Exception:
+            pass
 
 PC_COLORS = {
     "pierre": "#3b82f6",     # Blue
