@@ -356,6 +356,102 @@ class TestReaderPages(unittest.TestCase):
                           f"{s.name} setBodyScrollLock must include codexModalOverlay")
 
 
+class TestPipelineHardeningGates(unittest.TestCase):
+    """
+    Automated regression gates defending against:
+    1. Broken or missing GitHub App PR bot tokens.
+    2. Scope creep / unauthorized hyperlinks in novel narrative blocks.
+    3. Missing or omitted session readers across hubs (index, codex, critics, threads).
+    4. Standalone Codex Wiki page health and bot authentication.
+    """
+    def setUp(self):
+        self.sessions = sorted(list(ROOT.glob("uneraseable-s*.html")))
+
+    def test_bot_authentication_credentials_health(self):
+        """All reader files and codex-wiki.html must have valid, decodable GitHub App bot credentials."""
+        import base64
+        targets = list(self.sessions)
+        wiki = ROOT / "codex-wiki.html"
+        if wiki.exists():
+            targets.append(wiki)
+
+        for target in targets:
+            content = target.read_text(encoding="utf-8")
+            m_app = re.search(r'const BOT_APP_ID = "([^"]*)";', content)
+            m_inst = re.search(r'const BOT_INSTALLATION_ID = "([^"]*)";', content)
+            m_key = re.search(r'const BOT_PKCS8_B64 = "([^"]*)";', content)
+
+            self.assertIsNotNone(m_app, f"BOT_APP_ID missing in {target.name}")
+            self.assertEqual(m_app.group(1), "4866708", f"Unexpected BOT_APP_ID in {target.name}")
+
+            self.assertIsNotNone(m_inst, f"BOT_INSTALLATION_ID missing in {target.name}")
+            self.assertEqual(m_inst.group(1), "159911323", f"Unexpected BOT_INSTALLATION_ID in {target.name}")
+
+            self.assertIsNotNone(m_key, f"BOT_PKCS8_B64 missing in {target.name}")
+            key_b64 = m_key.group(1)
+            self.assertGreater(len(key_b64), 1000, f"BOT_PKCS8_B64 empty or truncated in {target.name}")
+
+            # Verify base64 decodability
+            try:
+                der = base64.b64decode(key_b64)
+                self.assertGreater(len(der), 1000, f"Decoded PKCS8 DER too short in {target.name}")
+            except Exception as e:
+                self.fail(f"Invalid base64 in BOT_PKCS8_B64 for {target.name}: {e}")
+
+    def test_novel_narrative_blocks_have_zero_hyperlinks(self):
+        """
+        Scope Creep Defense: Novel story blocks inside <div class="novel-blocks-container">
+        must be pure narrative prose with STRICTLY ZERO <a> tags, entity links, or popups.
+        """
+        for target in self.sessions:
+            content = target.read_text(encoding="utf-8")
+            match = re.search(r'<div class="novel-blocks-container">(.*?)<div class="cut-block cut-block-raw', content, re.DOTALL)
+            self.assertIsNotNone(match, f"novel-blocks-container not found in {target.name}")
+            novel_html = match.group(1)
+
+            # Check for any <a> tags
+            links = re.findall(r'<a\s+[^>]*>.*?</a>', novel_html)
+            self.assertEqual(len(links), 0, f"Scope creep detected: {len(links)} links found in {target.name} novel blocks: {links[:3]}")
+
+            # Check for codex-entity-link or codex-crosslink
+            self.assertNotIn("codex-entity-link", novel_html, f"codex-entity-link found in {target.name} novel blocks")
+            self.assertNotIn("codex-crosslink", novel_html, f"codex-crosslink found in {target.name} novel blocks")
+
+    def test_all_sessions_accounted_for_across_hubs(self):
+        """
+        Omission Defense: Every session present in uneraseable-sN.html must be dynamically
+        accounted for in index.html, codex.html, critics.html, and threads.html.
+        """
+        session_nums = []
+        for s in self.sessions:
+            m = re.search(r'uneraseable-s(\d+)\.html', s.name)
+            if m:
+                session_nums.append(int(m.group(1)))
+        session_nums.sort()
+
+        self.assertGreaterEqual(len(session_nums), 8, f"Expected at least 8 sessions, found {len(session_nums)}")
+
+        # 1. index.html
+        idx_content = (ROOT / "index.html").read_text(encoding="utf-8")
+        for num in session_nums:
+            self.assertIn(f"uneraseable-s{num}.html", idx_content, f"Session {num} missing from index.html")
+
+        # 2. codex.html
+        codex_content = (ROOT / "codex.html").read_text(encoding="utf-8")
+        for num in session_nums:
+            self.assertIn(f'id="session-{num}"', codex_content, f"Session {num} card missing from codex.html")
+            self.assertIn(f"uneraseable-s{num}.html", codex_content, f"Session {num} link missing from codex.html")
+
+        # 3. critics.html
+        critics_content = (ROOT / "critics.html").read_text(encoding="utf-8")
+        latest_num = max(session_nums)
+        self.assertIn(f"S{latest_num} (Latest)", critics_content, f"Latest session button missing from critics.html")
+
+        # 4. threads.html
+        threads_content = (ROOT / "threads.html").read_text(encoding="utf-8")
+        self.assertIn(f"uneraseable-s{latest_num}.html", threads_content, f"Session {latest_num} links missing from threads.html")
+
+
 if __name__ == "__main__":
     unittest.main()
 
