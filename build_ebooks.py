@@ -3577,7 +3577,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             """
 
         ch_novel_blocks_html = ""
-        chapter_entity_counts = {}
         for b in ch["blocks"]:
             b_id = b.get("id", "block")
             b_idx = b.get("index", 1)
@@ -3630,9 +3629,6 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 rendered_text = "".join(seg_html_parts)
             else:
                 rendered_text = text
-
-            if "GLOBAL_ENTITY_AUTOLINKER" in globals() and GLOBAL_ENTITY_AUTOLINKER:
-                rendered_text, _ = GLOBAL_ENTITY_AUTOLINKER(rendered_text, current_slug=None, is_modal=True, counts=chapter_entity_counts, max_per_entity=2)
 
             is_narrator = (sp_info.get("type") == "narrator" or sp_id == "narrator")
 
