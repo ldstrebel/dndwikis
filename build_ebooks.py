@@ -1273,55 +1273,72 @@ def _legacy_participant_scorecards(session_num: int) -> list:
     if session_num == 8:
         return [
             {
-                "id": "gm",
-                "name": "Luke Foreman",
-                "character": "Game Master",
-                "role": "Game Master & World Architect",
-                "badge": "The Architect",
-                "color": "#94a3b8",
-                "icon": "👑",
-                "grade": "A+",
-                "score": 96,
-                "spotlightShare": "12% narrative pacing & clocks",
-                "consistencyScore": "96%",
-                "ruthlessVerdict": "Masterful pacing upgrade introducing Blades-in-the-Dark tracking clocks (Prize, Threat, Hunter) and establishing the impending dread of Majora alongside classic urban fantasy heist mechanics.",
-                "whatHelped": "The subterranean Lost Creek crossing with Charon's distant cousin and the D.C. precinct architectural anomaly clues.",
-                "whatHurt": "Early technical delays with Foundry hosting, though smoothly recovered once table play commenced.",
-                "nextSessionDirectives": "Keep the tension on the Hunter clock taut as the party attempts to exit the precinct with the temporal handcuffs."
+                "id": "dravin",
+                "name": "William Webb",
+                "character": "Prof. Edward Dravin",
+                "role": "Chrono-Academic & Heist Lead",
+                "badge": "Operational Lead",
+                "color": "#8b5cf6",
+                "icon": "📜",
+                "grade": "84/100",
+                "score": 84,
+                "spotlightShare": "28% spoken dialogue",
+                "consistencyScore": "95%",
+                "ruthlessVerdict": "Continues his trajectory from cautious academic to pragmatic criminal mastermind. Inscribing legal provenance onto Alfie's shoe was a brilliant convergence of pedantic scholarly logic and street cunning, and the PIG brick diversion provided vital physical momentum.",
+                "whatHelped": "Aggressive tactical initiative using Meld into Stone to bypass precinct defenses; anchored the team's operational strategy.",
+                "whatHurt": "Over-intellectualized blueprint discrepancies in the storm drain, burning critical operational time debating canted angles rather than acting.",
+                "nextSessionDirectives": "Balance academic planning with tactical decisiveness; trust the plan once deployed rather than second-guessing architecture under pressure."
+            },
+            {
+                "id": "alfie",
+                "name": "Sophie Foreman Noone",
+                "character": "Alfie",
+                "role": "Driftwood Doll & Infiltration Specialist",
+                "badge": "The Infiltrator",
+                "color": "#10b981",
+                "icon": "🌿",
+                "grade": "82/100",
+                "score": 82,
+                "spotlightShare": "16% spoken dialogue",
+                "consistencyScore": "94%",
+                "ruthlessVerdict": "Committed fully to the high-risk infiltration strategy, enduring physical labeling and being smuggled into evidence custody inside a stone brick. Her physical sacrifice demonstrated deep unstated loyalty to the crew.",
+                "whatHelped": "Flawless execution of micro-scale vault infiltration through the precinct drain.",
+                "whatHurt": "Narrative presence was restricted by the inanimate brick transport; her signature verbal wit and dialogue friction were absent during the middle act.",
+                "nextSessionDirectives": "Re-establish vocal dominance once inside the evidence locker; take charge of interrogating whatever temporal anomalies are uncovered."
             },
             {
                 "id": "pierre",
                 "name": "Luke S",
                 "character": "Pierre",
-                "role": "Reluctant Gorgon Scion & Skeptic",
-                "badge": "The Infiltrator",
+                "role": "Reluctant Gorgon Scion & Bluff Specialist",
+                "badge": "Social Infiltrator",
                 "color": "#3b82f6",
                 "icon": "🐍",
-                "grade": "A-",
-                "score": 90,
+                "grade": "79/100",
+                "score": 79,
                 "spotlightShare": "26% spoken dialogue",
                 "consistencyScore": "92%",
-                "ruthlessVerdict": "Stellar tactical adaptability during the Wonka javelin defense on Lost Creek, followed by a high-leverage flashback sequence posing as a Make-A-Wish representative to manipulate the precinct receptionist.",
-                "whatHelped": "Using javelin thrusts to repel the ink-blot swarm and deploying social bluffing to crack the precinct's public intake.",
-                "whatHurt": "Overextended during initial entry debate, briefly risking high-security scrutiny before committing to the brick plan.",
-                "nextSessionDirectives": "Leverage your noble mortal contacts and administrative charm when maneuvering through 20th-century bureaucracy."
+                "ruthlessVerdict": "Strong scene adaptation during the Wonka javelin defense, blending terror and theatrical arrogance in equal measure. Posing as a Make-A-Wish representative revealed a developing comfort with social manipulation.",
+                "whatHelped": "Creative physical combat improvisation on Lost Creek and quick-thinking deception at the precinct reception desk.",
+                "whatHurt": "Yielded strategic leadership entirely to Dravin; his aristocratic French aloofness occasionally detaches him from the emotional urgency of the mission.",
+                "nextSessionDirectives": "Assert Pierre's personal stake in the Loom fragments; avoid settling into a passive support role during high-stakes urban infiltrations."
             },
             {
-                "id": "dravin",
-                "name": "William Webb",
-                "character": "Prof. Edward Dravin",
-                "role": "Chrono-Academic & Heist Architect",
-                "badge": "The Scholar",
-                "color": "#8b5cf6",
-                "icon": "📜",
-                "grade": "A",
-                "score": 94,
-                "spotlightShare": "28% spoken dialogue",
-                "consistencyScore": "95%",
-                "ruthlessVerdict": "Heist architect of the session. Diagnosed structural architectural flaws in the downloaded D.C. blueprints, inscribed legal provenance onto Alfie's foot with a Sharpie, and executed an inspired Meld into Stone brick smuggling operation.",
-                "whatHelped": "Inventive use of Meld into Stone to bypass metal detectors and canine units by turning Alfie into an evidence brick.",
-                "whatHurt": "Lingering in the storm drain discussing architectural north deviations while the Hunter clock was actively ticking.",
-                "nextSessionDirectives": "Trust your operational execution once the plan is set; don't over-analyze blueprints during live entry."
+                "id": "gm",
+                "name": "Luke Foreman",
+                "character": "Game Master",
+                "role": "World Architect & Pacing Lead",
+                "badge": "The Architect",
+                "color": "#94a3b8",
+                "icon": "👑",
+                "grade": "76/100",
+                "score": 76,
+                "spotlightShare": "12% narrative pacing & clocks",
+                "consistencyScore": "93%",
+                "ruthlessVerdict": "Effectively ratcheted up tension by introducing ticking operational countdowns and the lingering threat of the historical relic hunter, shifting the campaign smoothly into urban fantasy noir.",
+                "whatHelped": "Tactile sensory grounding in the Lost Creek sluice gate and atmospheric precinct intake description.",
+                "whatHurt": "Blueprint ambiguities created circular table confusion early on, bogging down Act I in compass debates before play found its rhythm.",
+                "nextSessionDirectives": "Keep tactical briefings concise and unambiguous so player momentum carries smoothly from planning into execution."
             },
             {
                 "id": "eusacles",
@@ -1331,31 +1348,14 @@ def _legacy_participant_scorecards(session_num: int) -> list:
                 "badge": "The Guardian",
                 "color": "#f59e0b",
                 "icon": "🛡️",
-                "grade": "A-",
-                "score": 91,
+                "grade": "73/100",
+                "score": 73,
                 "spotlightShare": "18% spoken dialogue",
-                "consistencyScore": "94%",
-                "ruthlessVerdict": "The emotional and mechanical turning point of the campaign. Discovered his Level 5 Paladin had been fighting completely unarmored, embraced Theodore's ancestral birthright boon, and anchored the precinct perimeter with newfound resilience.",
-                "whatHelped": "Auditing starting gear to finally give Eusacles the heavy armor and divine presence he deserves at the frontline.",
-                "whatHurt": "Allowed Dravin and Pierre to dominate the planning dialogue, staying quiet during the critical blueprint briefing.",
-                "nextSessionDirectives": "Step forward as the physical shield of the party now that your paladin armor and Theodore's boon are active."
-            },
-            {
-                "id": "alfie",
-                "name": "Sophie Foreman Noone",
-                "character": "Alfie",
-                "role": "Driftwood Doll & Living Vault Weapon",
-                "badge": "The Infiltrator",
-                "color": "#10b981",
-                "icon": "🌿",
-                "grade": "A+",
-                "score": 98,
-                "spotlightShare": "16% spoken dialogue",
-                "consistencyScore": "97%",
-                "ruthlessVerdict": "The living infiltration weapon and vault operative. Endured having Prof. Dravin's contact info Sharpied onto her wooden foot, rode inside a thrown evidence brick into precinct custody, and slipped through the 3-inch drain to reach the evidence vault.",
-                "whatHelped": "Flawless physical stealth and infiltration execution within the precinct's inner vault corridor.",
-                "whatHurt": "Relied on the team outside for extraction timing; communication receiver range was tested to its limit.",
-                "nextSessionDirectives": "Prepare contingency escape spells if isolated deep inside municipal facilities."
+                "consistencyScore": "91%",
+                "ruthlessVerdict": "A transitional chapter for Eusacles. Auditing his Paladin gear and finally donning heavy armor with Theodore's boon addresses long-standing mechanical neglect, but his narrative contributions were muted.",
+                "whatHelped": "Provided solid physical defense during the subterranean river ambush.",
+                "whatHurt": "Passenger-seat syndrome: remained completely passive during the heist planning and municipal entry, offering little resistance or tactical input.",
+                "nextSessionDirectives": "Step into an active moral and physical leadership role; bring demigod friction to the table rather than quietly deferring to the mortals."
             }
         ]
     return []
@@ -1381,10 +1381,10 @@ def resolve_review_scores(bot_review: dict, table_debrief: dict) -> dict:
     return {
         "tomatometer": t,
         "popcornmeter": p,
-        "tomatometer_text": f"{t}%" if t is not None else "Unscored",
-        "popcorn_text": f"{p}%" if p is not None else "Unscored",
+        "tomatometer_text": f"{t}/100" if t is not None else "Unscored",
+        "popcorn_text": f"{p}/100" if p is not None else "Unscored",
         "grade": (bot_review or {}).get("grade") or "UNSCORED",
-        "tomatometer_icon": "\U0001F345" if (t is not None and t >= 75) else ("\U0001F7E2" if t is not None else "\u2796"),
+        "tomatometer_icon": "🍅" if (t is not None and t >= 75) else ("🟢" if t is not None else "➖"),
         "tomatometer_status": ("Rotten" if t < 75 else "Certified Fresh") if t is not None else "Unscored",
         "tomato_badge_classes": (
             ("bg-rose-950/80 text-rose-300 border-rose-800/80" if t >= 75 else "bg-emerald-950/80 text-emerald-300 border-emerald-800/80")
@@ -1661,35 +1661,39 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
             mvp_pills += f'<span class="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-300"><strong class="text-amber-400">{p_name}</strong>: {m_title}</span>'
         mvp_pills += '</div>'
 
-    # Participant Report Cards Mini Strip
+    # Participant Report Cards Mini Strip (Pure Numerical Rubric)
     participant_scorecards = table_debrief.get("participantScorecards") or get_default_participant_scorecards(session_num)
     participant_strip_html = ""
     if participant_scorecards:
         strip_pills = ""
         for sc in participant_scorecards:
             p_icon = sc.get("icon") or get_participant_icon(sc.get("id"), sc.get("name"), sc.get("character"))
-            g = sc.get("grade", "B")
-            g_style = get_grade_badge_styles(g)
+            score_num = sc.get("score")
+            if score_num is None:
+                try:
+                    score_num = int(re.sub(r'[^0-9]', '', str(sc.get("grade", "80"))))
+                except Exception:
+                    score_num = 80
+
+            s_style = "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" if score_num >= 80 else ("text-amber-400 bg-amber-500/10 border-amber-500/30" if score_num >= 70 else "text-rose-400 bg-rose-500/10 border-rose-500/30")
             c_name = sc.get("character") or sc.get("name", "")
             short_name = c_name.replace("Prof. Edward ", "").replace("Game Master", "GM")
             strip_pills += f"""
-            <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg bg-slate-950/80 border border-slate-800 text-[11px] font-mono hover:border-slate-700 transition-colors">
-                <div class="flex items-center gap-1 min-w-0">
+            <div class="flex items-center justify-between gap-1 px-2.5 py-1.5 rounded-lg bg-slate-950/70 border border-slate-800 text-[11px] font-mono">
+                <div class="flex items-center gap-1.5 min-w-0">
                     <span class="text-xs flex-shrink-0">{p_icon}</span>
                     <span class="truncate text-slate-300 font-medium text-[10px]">{short_name}</span>
                 </div>
-                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold flex-shrink-0 {g_style['bg']} {g_style['text']} border {g_style['border']}">
-                    {g}
+                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold font-mono flex-shrink-0 {s_style} border">
+                    {score_num}
                 </span>
             </div>
             """
         participant_strip_html = f"""
-        <div class="pt-2 border-t border-slate-800/60 space-y-1.5">
-            <div class="flex items-center justify-between text-[10px] font-mono">
-                <span class="flex items-center gap-1 font-bold text-slate-400 uppercase tracking-wider">
-                    <span>🎭</span> <span>Table Performance Report Cards:</span>
-                </span>
-                <span class="text-rose-400 font-medium">Acquisitions Editor Audit</span>
+        <div class="py-3 border-b border-slate-800/60">
+            <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-2">
+                <span class="uppercase font-bold tracking-wider">Character Performance (Campaign Growth & Agency):</span>
+                <span class="text-slate-500">Scale: 0–100</span>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
                 {strip_pills}
@@ -1699,77 +1703,55 @@ def build_end_session_critic_card_html(editorial_forum: dict, session_num: int, 
 
     return f"""
     <!-- ========================================================= -->
-    <!-- END-OF-SESSION ROTTEN TOMATOES CRITIC & TABLE DEBRIEF CARD -->
+    <!-- END-OF-SESSION EDITORIAL AUDIT & CHARACTER PERFORMANCE CARD -->
     <!-- ========================================================= -->
-    <section class="mt-12 mb-8">
-        <div id="endSessionCriticCard" class="bg-gradient-to-br from-slate-900/95 via-slate-900/98 to-slate-950 border border-slate-700/80 hover:border-amber-500/60 rounded-2xl p-4 sm:p-6 shadow-2xl transition-all cursor-pointer group hover:shadow-amber-500/10 active:scale-[0.99]" title="Tap to view player critique, critical shortcomings & directives">
+    <section class="mt-10 mb-8 max-w-3xl mx-auto">
+        <div id="endSessionCriticCard" class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-4 sm:p-5 shadow-xl transition-all cursor-pointer group active:scale-[0.995]">
             
-            <!-- Card Header: Title & Dual Rotten Tomatoes Badges -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform shadow-inner">
-                        🍅
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold font-mono uppercase tracking-widest text-rose-400">Rotten Tomatoes Post-Mortem</span>
-                            <span class="px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-800 font-mono font-bold text-xs shadow-sm">Story Review</span>
-                        </div>
-                        <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-amber-300 transition-colors">
-                            Session {session_num} Story Review & Player Critique
-                        </h3>
-                    </div>
+            <!-- Header Row: Clean Eyebrow, Title & Flat Numerical Scores -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-800/80">
+                <div>
+                    <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">Editorial Audit · Session {session_num}</span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-100 font-serif mt-0.5 group-hover:text-amber-300 transition-colors">
+                        Session Review & Character Performance
+                    </h3>
                 </div>
 
-                <!-- Dual Rotten Tomatoes Score Meters -->
-                <div class="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
-                    <!-- Tomatometer (Critic Score) -->
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
-                        <span class="text-2xl flex-shrink-0">{tomatometer_icon}</span>
-                        <div>
-                            <div class="flex items-baseline gap-1.5">
-                                <span class="text-sm sm:text-base font-bold font-mono text-emerald-400">{tomatometer_text}</span>
-                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded {tomato_badge_classes}">{tomatometer_status}</span>
-                            </div>
-                            <span class="text-[9px] text-slate-400 font-mono block">Tomatometer</span>
+                <!-- Dual Flat Score Badges -->
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <!-- Critic Score -->
+                    <div class="px-2.5 py-1.5 rounded-xl bg-slate-950/90 border border-slate-800 flex items-center gap-1.5">
+                        <span class="text-sm">🍅</span>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold font-mono text-emerald-400 leading-none">{tomatometer_text}</span>
+                            <span class="text-[8px] font-mono text-slate-400 uppercase leading-none mt-0.5">Critic</span>
                         </div>
                     </div>
 
-                    <!-- Popcornmeter (Audience Score) -->
-                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
-                        <span class="text-2xl flex-shrink-0">🍿</span>
-                        <div>
-                            <div class="flex items-baseline gap-1.5">
-                                <span class="text-sm sm:text-base font-bold font-mono text-amber-300">{popcorn_text}</span>
-                                <span class="text-[9px] uppercase font-mono font-bold px-1.5 py-0.2 rounded bg-amber-950/80 text-amber-300 border border-amber-800/80">{popcorn_status}</span>
-                            </div>
-                            <span class="text-[9px] text-slate-400 font-mono block">Popcornmeter</span>
+                    <!-- Audience Score -->
+                    <div class="px-2.5 py-1.5 rounded-xl bg-slate-950/90 border border-slate-800 flex items-center gap-1.5">
+                        <span class="text-sm">🍿</span>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold font-mono text-amber-300 leading-none">{popcorn_text}</span>
+                            <span class="text-[8px] font-mono text-slate-400 uppercase leading-none mt-0.5">Audience</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Participant Report Card Strip -->
+            <!-- Participant Strip -->
             {participant_strip_html}
 
-            <!-- High-Level Editorial Summary -->
-            <div class="mt-4 p-4 rounded-xl bg-slate-950/70 border border-slate-800/90 space-y-2">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-bold font-mono uppercase tracking-wider text-rose-400">Editorial Summary:</span>
-                </div>
-                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-serif italic">
-                    "{analysis}"
-                </p>
-            </div>
+            <!-- Editorial Summary Quote Block -->
+            <blockquote class="my-3 pl-3.5 border-l-2 border-rose-500/80 text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
+                "{analysis}"
+            </blockquote>
 
-            <!-- Action Prompt -->
-            <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
-                <div class="flex items-center gap-2 text-xs text-slate-400">
-                    <span class="text-amber-400">🎭</span>
-                    <span>Tap to view tabbed player critiques, audit shortcomings & directives</span>
-                </div>
-                <span class="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-900/80 to-amber-900/80 hover:from-rose-800 hover:to-amber-800 border border-rose-700/60 text-slate-100 font-bold text-xs flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all">
-                    <span>Read Player Breakdown</span> <span>→</span>
+            <!-- Footer Action Link -->
+            <div class="pt-2.5 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
+                <span class="text-[10px] font-mono text-slate-500 hidden sm:inline">Graded against campaign continuity, character consistency, and narrative velocity</span>
+                <span class="text-xs font-bold text-amber-400 group-hover:text-amber-300 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform ml-auto sm:ml-0">
+                    Read Full Character Breakdown & Rubric →
                 </span>
             </div>
         </div>
@@ -1806,10 +1788,13 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
         short_char = c_name.replace("Prof. Edward ", "").replace("Game Master", "GM")
         p_icon = sc.get("icon") or get_participant_icon(sc.get("id"), sc.get("name"), sc.get("character"))
         p_color = sc.get("color", "#94a3b8")
-        g = sc.get("grade", "B")
-        score = sc.get("score")
-        score_html = f"({score}%)" if score is not None else ""
-        g_style = get_grade_badge_styles(g)
+        score_num = sc.get("score")
+        if score_num is None:
+            try:
+                score_num = int(re.sub(r'[^0-9]', '', str(sc.get("grade", "80"))))
+            except Exception:
+                score_num = 80
+        s_badge = "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" if score_num >= 80 else ("text-amber-400 bg-amber-500/10 border-amber-500/30" if score_num >= 70 else "text-rose-400 bg-rose-500/10 border-rose-500/30")
         is_first = (idx == 0)
         active_btn_class = "border-amber-500 bg-slate-800 text-amber-300 shadow-md" if is_first else "border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700"
         hidden_class = "" if is_first else "hidden"
@@ -1819,7 +1804,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                 data-player-id="{pid}" onclick="switchPlayerCritiqueTab('{pid}')">
             <span>{p_icon}</span>
             <span>{short_char}</span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold {g_style['bg']} {g_style['text']} border {g_style['border']}">{g}</span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] font-bold font-mono {s_badge} border">{score_num}</span>
         </button>
         """
 
@@ -1863,9 +1848,9 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                         <span class="text-[9px] text-slate-500 uppercase font-mono block">Voice Match</span>
                         <span class="text-xs text-emerald-400 font-mono font-semibold">{consistency}</span>
                     </div>
-                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl {g_style['bg']} border {g_style['border']}">
-                        <span class="text-lg font-bold font-mono {g_style['text']}">{g}</span>
-                        <span class="text-xs font-mono {g_style['subtext']}">{score_html}</span>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700">
+                        <span class="text-lg font-bold font-mono {s_badge.split(' ')[0]}">{score_num}</span>
+                        <span class="text-xs font-mono text-slate-400">/ 100</span>
                     </div>
                 </div>
             </div>
@@ -1878,7 +1863,7 @@ def build_critic_forum_html(editorial_forum: dict, session_num: int, total_words
                 </p>
             </div>
 
-            <!-- Critical Narrative Shortcomings & Frictional Beats -->
+            <!-- Critical Narrative Shortcomings (Audit Finding) -->
             <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-900/50 space-y-1.5">
                 <div class="flex items-center justify-between border-b border-rose-900/40 pb-1.5">
                     <span class="text-xs font-bold uppercase tracking-wider text-rose-300 font-mono">
