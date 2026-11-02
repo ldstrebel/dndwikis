@@ -76,14 +76,14 @@
             <!-- Session Selector Bar (Shown in Audit Mode - Mobile Scroll Snap) -->
             <div id="sessionSelectorBar" class="mt-6 pt-5 border-t border-slate-900 flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
                 <span class="text-xs font-mono text-slate-500 uppercase font-semibold mr-2 flex-shrink-0">Audit Session:</span>
-                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(1, this)" style="scroll-snap-align: start;">S1</button>
-                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(2, this)" style="scroll-snap-align: start;">S2</button>
-                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(3, this)" style="scroll-snap-align: start;">S3</button>
-                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(4, this)" style="scroll-snap-align: start;">S4</button>
-                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(5, this)" style="scroll-snap-align: start;">S5</button>
-                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(6, this)" style="scroll-snap-align: start;">S6</button>
-                <button type="button" class="sess-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(7, this)" style="scroll-snap-align: start;">S7</button>
-                <button type="button" class="sess-btn active flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(8, this)" style="scroll-snap-align: start;">S8 (Latest)</button>
+                <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(1, this)" style="scroll-snap-align: start;">S1</button>
+                <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(2, this)" style="scroll-snap-align: start;">S2</button>
+                <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(3, this)" style="scroll-snap-align: start;">S3</button>
+                <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(4, this)" style="scroll-snap-align: start;">S4</button>
+                <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(5, this)" style="scroll-snap-align: start;">S5</button>
+                <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(6, this)" style="scroll-snap-align: start;">S6</button>
+                <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(7, this)" style="scroll-snap-align: start;">S7</button>
+                <button type="button" class="sess-btn active flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(8, this)" style="scroll-snap-align: start;">S8 (Latest)</button>
             </div>
         </header>
 
@@ -920,10 +920,10 @@
 
         function loadSessionAudit(num, btn) {
             document.querySelectorAll('.sess-btn').forEach(b => {
-                b.className = 'sess-btn px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white';
+                b.className = 'sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800';
             });
             if (btn) {
-                btn.className = 'sess-btn active px-3 py-1.5 rounded text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40';
+                btn.className = 'sess-btn active flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40';
             }
 
             const data = AUDIT_DATA[num] || AUDIT_DATA[7];
