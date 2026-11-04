@@ -1302,7 +1302,7 @@ def _legacy_participant_scorecards(session_num: int) -> list:
                 "spotlightShare": "16% spoken dialogue",
                 "consistencyScore": "94%",
                 "ruthlessVerdict": "Committed fully to the high-risk infiltration strategy, enduring physical labeling and being smuggled into evidence custody inside a stone brick. Her physical sacrifice demonstrated deep unstated loyalty to the crew.",
-                "whatHelped": "Flawless execution of micro-scale vault infiltration through the precinct drain.",
+                "whatHelped": "High-risk infiltration commitment, enduring physical labeling and maintaining stone form inside the evidence brick on the suspect processing room table.",
                 "whatHurt": "Narrative presence was restricted by the inanimate brick transport; her signature verbal wit and dialogue friction were absent during the middle act.",
                 "nextSessionDirectives": "Re-establish vocal dominance once inside the evidence locker; take charge of interrogating whatever temporal anomalies are uncovered."
             },
@@ -1318,8 +1318,8 @@ def _legacy_participant_scorecards(session_num: int) -> list:
                 "score": 79,
                 "spotlightShare": "26% spoken dialogue",
                 "consistencyScore": "92%",
-                "ruthlessVerdict": "Strong scene adaptation during the Wonka javelin defense, blending terror and theatrical arrogance in equal measure. Posing as a Make-A-Wish representative revealed a developing comfort with social manipulation.",
-                "whatHelped": "Creative physical combat improvisation on Lost Creek and quick-thinking deception at the precinct reception desk.",
+                "ruthlessVerdict": "Strong scene adaptation during the Wonka javelin defense, blending terror and theatrical arrogance in equal measure. Coordinating the stone gargoyle diversion demonstrated tactical decisiveness under pressure.",
+                "whatHelped": "Creative physical combat improvisation on Lost Creek and directing the living stone sentinel to shatter the precinct portico.",
                 "whatHurt": "Yielded strategic leadership entirely to Dravin; his aristocratic French aloofness occasionally detaches him from the emotional urgency of the mission.",
                 "nextSessionDirectives": "Assert Pierre's personal stake in the Loom fragments; avoid settling into a passive support role during high-stakes urban infiltrations."
             },

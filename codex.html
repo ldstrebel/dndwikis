@@ -65,22 +65,15 @@
                 <span class="text-amber-300 font-medium">Next Operation:</span> Infiltrating a high-security Washington, D.C. police evidence vault to secure the next fragment.
             </p>
 
-            <!-- Quick Filter & Mobile Touch Session Strip -->
-            <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between pt-5 border-t border-slate-900">
-                <div class="flex items-center gap-2 flex-1 max-w-lg">
-                    <div class="relative flex-1">
-                        <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 text-xs">🔍</span>
-                        <input type="text" id="codexSearchInput" placeholder="Filter by character, locale, or scene..." 
-                               class="w-full bg-slate-900/60 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
-                               oninput="filterHubSessions()">
-                    </div>
-                    <a href="codex-wiki.html" class="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-medium transition-all shadow-sm" title="Open full 33-article standalone wiki">
-                        <span>📖</span> <span class="hidden sm:inline">Wiki Codex</span> <span class="text-amber-400">↗</span>
-                    </a>
-                </div>
+            <!-- Clean Session Navigation Strip (Search Bar Removed Per UX Audit) -->
+            <input type="hidden" id="codexSearchInput" value="">
+            <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-between gap-3 pt-5 border-t border-slate-900">
+                <a href="codex-wiki.html" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-semibold transition-all shadow-sm" title="Open full 33-article standalone wiki">
+                    <span>📖</span> <span>Standalone Codex Wiki (33 Articles)</span> <span class="text-amber-400">↗</span>
+                </a>
 
                 <!-- Smooth Touch Scroll Snap Session Strip -->
-                <div class="relative w-full sm:w-auto overflow-hidden">
+                <div class="relative overflow-hidden">
                     <div id="codexSidebarList" class="codex-accordion-group flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 px-0.5" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
                         <span class="text-slate-500 uppercase font-semibold text-[11px] font-mono mr-1 flex-shrink-0">Session:</span>
                         <button type="button" class="codex-hub-item session-tab-btn flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-mono transition-all text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 min-h-[38px]" data-session="1" onclick="switchSession(1, true)" style="scroll-snap-align: start;">S1</button>
@@ -166,30 +159,124 @@
                     </ul>
                 </div>
 
-                <!-- Authentic Table Dialogue Moment -->
-                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · The Initial Crossing</span>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
-                        &ldquo;So, is... um, is this normal for buses in America to do this type of thing?&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), confronting the Three Fates as the Nevada desert dissolves</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;Ah, you're early... Oh no, you're late. Come closer... Come closer. This is interesting.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; The Three Fates (GM Luke Foreman)</span>
-                    </blockquote>
+                                <!-- Top 3 Session Highlights (Interactive Stepper 3, 2, 1) -->
+                <div class="session-highlights-widget rounded-xl border border-amber-500/30 bg-slate-900/50 p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 text-base">🎬</span>
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">Top 3 Session Highlights</h4>
+                                <p class="text-[11px] font-mono text-slate-400">Step down from #3 to reveal the top moment</p>
+                            </div>
+                        </div>
+                        <!-- Stepper: 3, 2, 1 -->
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800 self-start sm:self-auto" role="group" aria-label="Highlight rank selector">
+                            <span class="text-[10px] font-mono text-slate-500 px-1 uppercase tracking-wider">Step:</span>
+                            <button type="button" onclick="setHighlightStep(1, 3)" id="hl-btn-1-3" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40">#3</button>
+                            <button type="button" onclick="setHighlightStep(1, 2)" id="hl-btn-1-2" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent">#2</button>
+                            <button type="button" onclick="setHighlightStep(1, 1)" id="hl-btn-1-1" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-amber-300 transition-all border border-transparent flex items-center gap-1"><span>#1 Top</span><span>⭐</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Highlight #3 -->
+                    <div id="hl-card-1-3" class="hl-card space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #3 · The Threshold Verdict</span>
+                            <button type="button" onclick="setHighlightStep(1, 2)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #2</span> <span>→</span></button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;The Margin is not a place for the living, nor is it a place for the dead. You are in the unprinted margins of the text.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; The Three Fates (GM Luke Foreman)</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #2 -->
+                    <div id="hl-card-1-2" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #2 · The Fates' Welcome</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="setHighlightStep(1, 3)" class="text-slate-500 hover:text-slate-300">← #3</button>
+                                <button type="button" onclick="setHighlightStep(1, 1)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #1 Top Highlight</span> <span>→</span></button>
+                            </div>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;Ah, you're early... Oh no, you're late. Come closer... Come closer. This is interesting.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; The Three Fates (GM Luke Foreman)</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #1 (Top) -->
+                    <div id="hl-card-1-1" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-300 uppercase font-bold flex items-center gap-1"><span>⭐ #1 Top Highlight · The American Greyhound Conundrum</span></span>
+                            <button type="button" onclick="setHighlightStep(1, 3)" class="text-slate-500 hover:text-slate-300">Restart (3) ↺</button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-r-lg">
+                            &ldquo;So, is... um, is this normal for buses in America to do this type of thing?&rdquo;
+                            <span class="text-amber-400/90 font-sans font-normal not-italic block text-xs mt-1.5 font-medium">&mdash; Pierre (Luke S), confronting the Three Fates as the Nevada desert dissolves</span>
+                        </blockquote>
+                    </div>
                 </div>
 
-                <!-- Critic Link -->
-                <div class="pt-2">
-                    <a href="critics.html?s=1" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
-                        <span>🎭</span> <span>View Session 1 Critic, PC Evolution &amp; DM Audit →</span>
-                    </a>
-                </div>
-            
-                <!-- Single Session Navigation Controls -->
-                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
-                    <div></div>
-                    <button type="button" onclick="switchSession(2)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S2)</span> <span>&rarr;</span></button>
+                <!-- Session & Campaign Bottom Navigation Pane -->
+                <div class="border-t border-slate-900 pt-6 mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Section 1: Session 1 -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session 1</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="critics.html?s=1" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="uneraseable-s1.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 2: Campaign -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="codex.html#all" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>📜</span> <span>Summaries</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Single Session Navigation Controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <div></div>
+                        <button type="button" onclick="switchSession(2, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S2)</span> <span>&rarr;</span></button>
+                    </div>
                 </div>
             </article>
 
@@ -260,29 +347,124 @@
                     </ul>
                 </div>
 
-                <!-- Authentic Table Dialogue Moment -->
-                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · Arrival at Sanctuary</span>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
-                        &ldquo;I am thinking that we let them talk to the scary guy by the fire... the one who thinks we are dead.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), eyeing Teddy across the Margin porch</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;We love fresh ink around here. We're happy to have you. It's totally normal to be surprised when you hear us ask what edit killed you... You're not actually dead, but it kind of depends on who you ask.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Mike (GM Luke Foreman)</span>
-                    </blockquote>
+                                <!-- Top 3 Session Highlights (Interactive Stepper 3, 2, 1) -->
+                <div class="session-highlights-widget rounded-xl border border-amber-500/30 bg-slate-900/50 p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 text-base">🎬</span>
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">Top 3 Session Highlights</h4>
+                                <p class="text-[11px] font-mono text-slate-400">Step down from #3 to reveal the top moment</p>
+                            </div>
+                        </div>
+                        <!-- Stepper: 3, 2, 1 -->
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800 self-start sm:self-auto" role="group" aria-label="Highlight rank selector">
+                            <span class="text-[10px] font-mono text-slate-500 px-1 uppercase tracking-wider">Step:</span>
+                            <button type="button" onclick="setHighlightStep(2, 3)" id="hl-btn-2-3" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40">#3</button>
+                            <button type="button" onclick="setHighlightStep(2, 2)" id="hl-btn-2-2" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent">#2</button>
+                            <button type="button" onclick="setHighlightStep(2, 1)" id="hl-btn-2-1" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-amber-300 transition-all border border-transparent flex items-center gap-1"><span>#1 Top</span><span>⭐</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Highlight #3 -->
+                    <div id="hl-card-2-3" class="hl-card space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #3 · The Fog Line Warning</span>
+                            <button type="button" onclick="setHighlightStep(2, 2)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #2</span> <span>→</span></button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;Keep your lantern trimmed. The Loom doesn't sleep, and neither do the redactors.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Theodore (Teddy) Vance, surveying the fog line</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #2 -->
+                    <div id="hl-card-2-2" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #2 · The Unprinted Welcome</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="setHighlightStep(2, 3)" class="text-slate-500 hover:text-slate-300">← #3</button>
+                                <button type="button" onclick="setHighlightStep(2, 1)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #1 Top Highlight</span> <span>→</span></button>
+                            </div>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;We love fresh ink around here. We're happy to have you. It's totally normal to be surprised when you hear us ask what edit killed you... You're not actually dead, but it kind of depends on who you ask.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Mike (GM Luke Foreman)</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #1 (Top) -->
+                    <div id="hl-card-2-1" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-300 uppercase font-bold flex items-center gap-1"><span>⭐ #1 Top Highlight · The Porch Assessment</span></span>
+                            <button type="button" onclick="setHighlightStep(2, 3)" class="text-slate-500 hover:text-slate-300">Restart (3) ↺</button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-r-lg">
+                            &ldquo;I am thinking that we let them talk to the scary guy by the fire... the one who thinks we are dead.&rdquo;
+                            <span class="text-amber-400/90 font-sans font-normal not-italic block text-xs mt-1.5 font-medium">&mdash; Pierre (Luke S), eyeing Teddy across the Margin porch</span>
+                        </blockquote>
+                    </div>
                 </div>
 
-                <div class="pt-2">
-                    <a href="critics.html?s=2" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
-                        <span>🎭</span> <span>View Session 2 Critic, PC Evolution &amp; DM Audit →</span>
-                    </a>
-                </div>
-            
-                <!-- Single Session Navigation Controls -->
-                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
-                    <button type="button" onclick="switchSession(1)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S1)</span></button>
-                    <button type="button" onclick="switchSession(3)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S3)</span> <span>&rarr;</span></button>
+                <!-- Session & Campaign Bottom Navigation Pane -->
+                <div class="border-t border-slate-900 pt-6 mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Section 1: Session 2 -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session 2</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="critics.html?s=2" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="uneraseable-s2.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 2: Campaign -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="codex.html#all" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>📜</span> <span>Summaries</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Single Session Navigation Controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="button" onclick="switchSession(1, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S1)</span></button>
+                        <button type="button" onclick="switchSession(3, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S3)</span> <span>&rarr;</span></button>
+                    </div>
                 </div>
             </article>
 
@@ -344,29 +526,124 @@
                     </ul>
                 </div>
 
-                <!-- Authentic Table Dialogue Moment -->
-                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · The Fringe of Reality</span>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
-                        &ldquo;We stand at the beginning of our journey to the Lost Roads. Keep your wits about you.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Alfie (Sophie Foreman Noone), surveying the shifting dimensional mist</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;The Margin... It is a sanctuary for those cast upon the fringes of reality—untouched by Olympian decrees, and untouched by the restless dead.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Ally (GM Luke Foreman), encountering the travelers</span>
-                    </blockquote>
+                                <!-- Top 3 Session Highlights (Interactive Stepper 3, 2, 1) -->
+                <div class="session-highlights-widget rounded-xl border border-amber-500/30 bg-slate-900/50 p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 text-base">🎬</span>
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">Top 3 Session Highlights</h4>
+                                <p class="text-[11px] font-mono text-slate-400">Step down from #3 to reveal the top moment</p>
+                            </div>
+                        </div>
+                        <!-- Stepper: 3, 2, 1 -->
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800 self-start sm:self-auto" role="group" aria-label="Highlight rank selector">
+                            <span class="text-[10px] font-mono text-slate-500 px-1 uppercase tracking-wider">Step:</span>
+                            <button type="button" onclick="setHighlightStep(3, 3)" id="hl-btn-3-3" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40">#3</button>
+                            <button type="button" onclick="setHighlightStep(3, 2)" id="hl-btn-3-2" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent">#2</button>
+                            <button type="button" onclick="setHighlightStep(3, 1)" id="hl-btn-3-1" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-amber-300 transition-all border border-transparent flex items-center gap-1"><span>#1 Top</span><span>⭐</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Highlight #3 -->
+                    <div id="hl-card-3-3" class="hl-card space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #3 · The Diplomatic Posture</span>
+                            <button type="button" onclick="setHighlightStep(3, 2)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #2</span> <span>→</span></button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;If something jumps out of this mist, I hit it. That's my default diplomatic posture.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Eusacles (John Hagey), advancing through the Lost Roads</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #2 -->
+                    <div id="hl-card-3-2" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #2 · Sanctuary of the Displaced</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="setHighlightStep(3, 3)" class="text-slate-500 hover:text-slate-300">← #3</button>
+                                <button type="button" onclick="setHighlightStep(3, 1)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #1 Top Highlight</span> <span>→</span></button>
+                            </div>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;The Margin... It is a sanctuary for those cast upon the fringes of reality—untouched by Olympian decrees, and untouched by the restless dead.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Ally (GM Luke Foreman), encountering the travelers</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #1 (Top) -->
+                    <div id="hl-card-3-1" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-300 uppercase font-bold flex items-center gap-1"><span>⭐ #1 Top Highlight · Into the Lost Roads</span></span>
+                            <button type="button" onclick="setHighlightStep(3, 3)" class="text-slate-500 hover:text-slate-300">Restart (3) ↺</button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-r-lg">
+                            &ldquo;We stand at the beginning of our journey to the Lost Roads. Keep your wits about you.&rdquo;
+                            <span class="text-amber-400/90 font-sans font-normal not-italic block text-xs mt-1.5 font-medium">&mdash; Alfie (Sophie Foreman Noone), surveying the shifting dimensional mist</span>
+                        </blockquote>
+                    </div>
                 </div>
 
-                <div class="pt-2">
-                    <a href="critics.html?s=3" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
-                        <span>🎭</span> <span>View Session 3 Critic, PC Evolution &amp; DM Audit →</span>
-                    </a>
-                </div>
-            
-                <!-- Single Session Navigation Controls -->
-                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
-                    <button type="button" onclick="switchSession(2)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S2)</span></button>
-                    <button type="button" onclick="switchSession(4)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S4)</span> <span>&rarr;</span></button>
+                <!-- Session & Campaign Bottom Navigation Pane -->
+                <div class="border-t border-slate-900 pt-6 mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Section 1: Session 3 -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session 3</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="critics.html?s=3" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="uneraseable-s3.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 2: Campaign -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="codex.html#all" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>📜</span> <span>Summaries</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Single Session Navigation Controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="button" onclick="switchSession(2, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S2)</span></button>
+                        <button type="button" onclick="switchSession(4, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S4)</span> <span>&rarr;</span></button>
+                    </div>
                 </div>
             </article>
 
@@ -435,29 +712,124 @@
                     </ul>
                 </div>
 
-                <!-- Authentic Table Dialogue Moment -->
-                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · The Identical Operatives</span>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
-                        &ldquo;Your name is very close to mine. Well, kind of. And you all have the exact same name. Is this your actual name?&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), attempting an impromptu bluff against the Redactor vanguard</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;This is our actual name, Gordon. We are sent to resolve the subjects at hand. Get the evidence first. Bring back the subjects alive.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Gordon Operative (GM Luke Foreman)</span>
-                    </blockquote>
+                                <!-- Top 3 Session Highlights (Interactive Stepper 3, 2, 1) -->
+                <div class="session-highlights-widget rounded-xl border border-amber-500/30 bg-slate-900/50 p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 text-base">🎬</span>
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">Top 3 Session Highlights</h4>
+                                <p class="text-[11px] font-mono text-slate-400">Step down from #3 to reveal the top moment</p>
+                            </div>
+                        </div>
+                        <!-- Stepper: 3, 2, 1 -->
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800 self-start sm:self-auto" role="group" aria-label="Highlight rank selector">
+                            <span class="text-[10px] font-mono text-slate-500 px-1 uppercase tracking-wider">Step:</span>
+                            <button type="button" onclick="setHighlightStep(4, 3)" id="hl-btn-4-3" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40">#3</button>
+                            <button type="button" onclick="setHighlightStep(4, 2)" id="hl-btn-4-2" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent">#2</button>
+                            <button type="button" onclick="setHighlightStep(4, 1)" id="hl-btn-4-1" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-amber-300 transition-all border border-transparent flex items-center gap-1"><span>#1 Top</span><span>⭐</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Highlight #3 -->
+                    <div id="hl-card-4-3" class="hl-card space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #3 · Trench Coat Protocol</span>
+                            <button type="button" onclick="setHighlightStep(4, 2)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #2</span> <span>→</span></button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;Two identical guys in black trench coats? Yeah, that's not suspicious at all in an alleyway.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Eusacles (John Hagey), prepping for the confrontation</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #2 -->
+                    <div id="hl-card-4-2" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #2 · Editorial Replication</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="setHighlightStep(4, 3)" class="text-slate-500 hover:text-slate-300">← #3</button>
+                                <button type="button" onclick="setHighlightStep(4, 1)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #1 Top Highlight</span> <span>→</span></button>
+                            </div>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;They aren't simply wearing uniforms; their facial structures and vocal cadences are carbon copies. This is an editorial replication.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Prof. Edward Dravin (William Webb), diagnosing the Redactors</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #1 (Top) -->
+                    <div id="hl-card-4-1" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-300 uppercase font-bold flex items-center gap-1"><span>⭐ #1 Top Highlight · The Impromptu Name Bluff</span></span>
+                            <button type="button" onclick="setHighlightStep(4, 3)" class="text-slate-500 hover:text-slate-300">Restart (3) ↺</button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-r-lg">
+                            &ldquo;Your name is very close to mine. Well, kind of. And you all have the exact same name. Is this your actual name?&rdquo;
+                            <span class="text-amber-400/90 font-sans font-normal not-italic block text-xs mt-1.5 font-medium">&mdash; Pierre (Luke S), attempting an impromptu bluff against the Redactor vanguard</span>
+                        </blockquote>
+                    </div>
                 </div>
 
-                <div class="pt-2">
-                    <a href="critics.html?s=4" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
-                        <span>🎭</span> <span>View Session 4 Critic, PC Evolution &amp; DM Audit →</span>
-                    </a>
-                </div>
-            
-                <!-- Single Session Navigation Controls -->
-                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
-                    <button type="button" onclick="switchSession(3)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S3)</span></button>
-                    <button type="button" onclick="switchSession(5)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S5)</span> <span>&rarr;</span></button>
+                <!-- Session & Campaign Bottom Navigation Pane -->
+                <div class="border-t border-slate-900 pt-6 mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Section 1: Session 4 -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session 4</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="critics.html?s=4" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="uneraseable-s4.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 2: Campaign -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="codex.html#all" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>📜</span> <span>Summaries</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Single Session Navigation Controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="button" onclick="switchSession(3, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S3)</span></button>
+                        <button type="button" onclick="switchSession(5, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S5)</span> <span>&rarr;</span></button>
+                    </div>
                 </div>
             </article>
 
@@ -526,29 +898,124 @@
                     </ul>
                 </div>
 
-                <!-- Authentic Table Dialogue Moment -->
-                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · Wordcraft &amp; French Discipline</span>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
-                        &ldquo;In Paris, Monsieur Mike, breakfast is the final bulwark of civilized humanity... Out back, I sought to construct a stone blind. Three whole weeks without a single carved archway or lintel! Only soggy loam. If one does not practice stonecraft, the fingers soften into bourgeois uselessness.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), holding court before the Pennsylvania campus mission</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;If one alters the phonetic harmonic from 'spare' to 'spore', the necrotic life-tether reverses. Any hostile closing within range of a dying target would find the breath caught in their throat by drifting fungal rot.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Prof. Edward Dravin (William Webb), theorycrafting with Alfie</span>
-                    </blockquote>
+                                <!-- Top 3 Session Highlights (Interactive Stepper 3, 2, 1) -->
+                <div class="session-highlights-widget rounded-xl border border-amber-500/30 bg-slate-900/50 p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 text-base">🎬</span>
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">Top 3 Session Highlights</h4>
+                                <p class="text-[11px] font-mono text-slate-400">Step down from #3 to reveal the top moment</p>
+                            </div>
+                        </div>
+                        <!-- Stepper: 3, 2, 1 -->
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800 self-start sm:self-auto" role="group" aria-label="Highlight rank selector">
+                            <span class="text-[10px] font-mono text-slate-500 px-1 uppercase tracking-wider">Step:</span>
+                            <button type="button" onclick="setHighlightStep(5, 3)" id="hl-btn-5-3" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40">#3</button>
+                            <button type="button" onclick="setHighlightStep(5, 2)" id="hl-btn-5-2" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent">#2</button>
+                            <button type="button" onclick="setHighlightStep(5, 1)" id="hl-btn-5-1" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-amber-300 transition-all border border-transparent flex items-center gap-1"><span>#1 Top</span><span>⭐</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Highlight #3 -->
+                    <div id="hl-card-5-3" class="hl-card space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #3 · Polite Diversions</span>
+                            <button type="button" onclick="setHighlightStep(5, 2)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #2</span> <span>→</span></button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;I will distract them with polite French conversation while you prepare your deadly vocabulary.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), covering the flank</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #2 -->
+                    <div id="hl-card-5-2" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #2 · Inverse Square Spore Dynamics</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="setHighlightStep(5, 3)" class="text-slate-500 hover:text-slate-300">← #3</button>
+                                <button type="button" onclick="setHighlightStep(5, 1)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #1 Top Highlight</span> <span>→</span></button>
+                            </div>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;Spore diffusion operates on an inverse square trajectory. If you sever the mycelial tether, any hostile closing within range finds the breath caught in their throat by drifting fungal rot.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Prof. Edward Dravin (William Webb), theorycrafting with Alfie</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #1 (Top) -->
+                    <div id="hl-card-5-1" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-300 uppercase font-bold flex items-center gap-1"><span>⭐ #1 Top Highlight · Thirty-Two Woven Words</span></span>
+                            <button type="button" onclick="setHighlightStep(5, 3)" class="text-slate-500 hover:text-slate-300">Restart (3) ↺</button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-r-lg">
+                            &ldquo;I've woven thirty-two words into this blade's edge. When I strike, the wordcraft unravels their anchoring.&rdquo;
+                            <span class="text-amber-400/90 font-sans font-normal not-italic block text-xs mt-1.5 font-medium">&mdash; Alfie (Sophie Foreman Noone), preparing for the garden incursion</span>
+                        </blockquote>
+                    </div>
                 </div>
 
-                <div class="pt-2">
-                    <a href="critics.html?s=5" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
-                        <span>🎭</span> <span>View Session 5 Critic, PC Evolution &amp; DM Audit →</span>
-                    </a>
-                </div>
-            
-                <!-- Single Session Navigation Controls -->
-                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
-                    <button type="button" onclick="switchSession(4)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S4)</span></button>
-                    <button type="button" onclick="switchSession(6)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S6)</span> <span>&rarr;</span></button>
+                <!-- Session & Campaign Bottom Navigation Pane -->
+                <div class="border-t border-slate-900 pt-6 mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Section 1: Session 5 -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session 5</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="critics.html?s=5" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="uneraseable-s5.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 2: Campaign -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="codex.html#all" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>📜</span> <span>Summaries</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Single Session Navigation Controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="button" onclick="switchSession(4, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S4)</span></button>
+                        <button type="button" onclick="switchSession(6, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S6)</span> <span>&rarr;</span></button>
+                    </div>
                 </div>
             </article>
 
@@ -616,29 +1083,124 @@
                     </ul>
                 </div>
 
-                <!-- Authentic Table Dialogue Moment -->
-                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · The Stage Interfrontation</span>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
-                        &ldquo;Excuse me. Excuse me, madame. We could have had a pleasant conversation, you know. We saw your satyr companions with the Fates... We could be friends.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), confronting the Gorgon rift infiltrator</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;I think I will just take the information from your brain. How does that sound?&rdquo; &mdash; Gorgon Operative (GM Luke Foreman)
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&ldquo;No. I do not like that at all, actually. Three satyrs at the doors, and now another rift behind us... Professor, do you have a plan for this?&rdquo; &mdash; Pierre (Luke S)</span>
-                    </blockquote>
+                                <!-- Top 3 Session Highlights (Interactive Stepper 3, 2, 1) -->
+                <div class="session-highlights-widget rounded-xl border border-amber-500/30 bg-slate-900/50 p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 text-base">🎬</span>
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">Top 3 Session Highlights</h4>
+                                <p class="text-[11px] font-mono text-slate-400">Step down from #3 to reveal the top moment</p>
+                            </div>
+                        </div>
+                        <!-- Stepper: 3, 2, 1 -->
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800 self-start sm:self-auto" role="group" aria-label="Highlight rank selector">
+                            <span class="text-[10px] font-mono text-slate-500 px-1 uppercase tracking-wider">Step:</span>
+                            <button type="button" onclick="setHighlightStep(6, 3)" id="hl-btn-6-3" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40">#3</button>
+                            <button type="button" onclick="setHighlightStep(6, 2)" id="hl-btn-6-2" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent">#2</button>
+                            <button type="button" onclick="setHighlightStep(6, 1)" id="hl-btn-6-1" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-amber-300 transition-all border border-transparent flex items-center gap-1"><span>#1 Top</span><span>⭐</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Highlight #3 -->
+                    <div id="hl-card-6-3" class="hl-card space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #3 · Tactical Dilemma</span>
+                            <button type="button" onclick="setHighlightStep(6, 2)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #2</span> <span>→</span></button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;Three satyrs at the doors, and now another rift behind us... Professor, do you have a plan for this?&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), assessing tactical options on stage</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #2 -->
+                    <div id="hl-card-6-2" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #2 · The Neural Extraction Offer</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="setHighlightStep(6, 3)" class="text-slate-500 hover:text-slate-300">← #3</button>
+                                <button type="button" onclick="setHighlightStep(6, 1)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #1 Top Highlight</span> <span>→</span></button>
+                            </div>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;I think I will just take the information from your brain. How does that sound?&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Gorgon Operative (GM Luke Foreman)</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #1 (Top) -->
+                    <div id="hl-card-6-1" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-300 uppercase font-bold flex items-center gap-1"><span>⭐ #1 Top Highlight · Diplomatic Pleasantries</span></span>
+                            <button type="button" onclick="setHighlightStep(6, 3)" class="text-slate-500 hover:text-slate-300">Restart (3) ↺</button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-r-lg">
+                            &ldquo;Excuse me. Excuse me, madame. We could have had a pleasant conversation, you know. We saw your satyr companions with the Fates... We could be friends.&rdquo;
+                            <span class="text-amber-400/90 font-sans font-normal not-italic block text-xs mt-1.5 font-medium">&mdash; Pierre (Luke S), confronting the Gorgon rift infiltrator</span>
+                        </blockquote>
+                    </div>
                 </div>
 
-                <div class="pt-2">
-                    <a href="critics.html?s=6" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
-                        <span>🎭</span> <span>View Session 6 Critic, PC Evolution &amp; DM Audit →</span>
-                    </a>
-                </div>
-            
-                <!-- Single Session Navigation Controls -->
-                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
-                    <button type="button" onclick="switchSession(5)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S5)</span></button>
-                    <button type="button" onclick="switchSession(7)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S7)</span> <span>&rarr;</span></button>
+                <!-- Session & Campaign Bottom Navigation Pane -->
+                <div class="border-t border-slate-900 pt-6 mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Section 1: Session 6 -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session 6</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="critics.html?s=6" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="uneraseable-s6.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 2: Campaign -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="codex.html#all" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>📜</span> <span>Summaries</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Single Session Navigation Controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="button" onclick="switchSession(5, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S5)</span></button>
+                        <button type="button" onclick="switchSession(7, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S7)</span> <span>&rarr;</span></button>
+                    </div>
                 </div>
             </article>
 
@@ -713,33 +1275,124 @@
                     </ul>
                 </div>
 
-                <!-- Authentic Table Dialogue Moment -->
-                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · The Interrogation &amp; Cosmic Paperwork</span>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
-                        &ldquo;Obviously, we're going to ask you some questions because we have no idea what you're capable of. And that's where you come in... But now you're in a trash can. Anyway, all right, guys. She's being real resistant. Let's just kill her. That'll be way easier.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Eusacles (John Hagey), getting straight to business under the arcade</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;I am wondering... do you know who my mother is? It always sounds a little pedantic to ask, but every time I bring her up, people seem to clam up entirely.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), probing the captive before Alfie's rapier strike</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;It's an extradition situation. It's in the Fates' department. It's not really Olympus or Hades. It's an independent third-party paperwork department. We're about the action, and they take the notes.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Thanatos (GM Luke Foreman), carving ward runes into Eusacles' watch</span>
-                    </blockquote>
+                                <!-- Top 3 Session Highlights (Interactive Stepper 3, 2, 1) -->
+                <div class="session-highlights-widget rounded-xl border border-amber-500/30 bg-slate-900/50 p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 text-base">🎬</span>
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">Top 3 Session Highlights</h4>
+                                <p class="text-[11px] font-mono text-slate-400">Step down from #3 to reveal the top moment</p>
+                            </div>
+                        </div>
+                        <!-- Stepper: 3, 2, 1 -->
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800 self-start sm:self-auto" role="group" aria-label="Highlight rank selector">
+                            <span class="text-[10px] font-mono text-slate-500 px-1 uppercase tracking-wider">Step:</span>
+                            <button type="button" onclick="setHighlightStep(7, 3)" id="hl-btn-7-3" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40">#3</button>
+                            <button type="button" onclick="setHighlightStep(7, 2)" id="hl-btn-7-2" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent">#2</button>
+                            <button type="button" onclick="setHighlightStep(7, 1)" id="hl-btn-7-1" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-amber-300 transition-all border border-transparent flex items-center gap-1"><span>#1 Top</span><span>⭐</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Highlight #3 -->
+                    <div id="hl-card-7-3" class="hl-card space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #3 · The Trash Can Venue</span>
+                            <button type="button" onclick="setHighlightStep(7, 2)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #2</span> <span>→</span></button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;A trash can interrogation. Elegant. Very high fantasy.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Alfie (Sophie Foreman Noone), watching Eusacles secure the perimeter</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #2 -->
+                    <div id="hl-card-7-2" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #2 · Pedagogical Lineage</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="setHighlightStep(7, 3)" class="text-slate-500 hover:text-slate-300">← #3</button>
+                                <button type="button" onclick="setHighlightStep(7, 1)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #1 Top Highlight</span> <span>→</span></button>
+                            </div>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;I am wondering... do you know who my mother is? It always sounds a little pedantic to ask, but every time I bring her up, people seem to clam up entirely.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Pierre (Luke S), probing the captive before Alfie's rapier strike</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #1 (Top) -->
+                    <div id="hl-card-7-1" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-300 uppercase font-bold flex items-center gap-1"><span>⭐ #1 Top Highlight · Direct Action Demigod</span></span>
+                            <button type="button" onclick="setHighlightStep(7, 3)" class="text-slate-500 hover:text-slate-300">Restart (3) ↺</button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-r-lg">
+                            &ldquo;Obviously, we're going to ask you some questions because we have no idea what you're capable of. And that's where you come in... But now you're in a trash can. Anyway, all right, guys. She's being real resistant. Let's just kill her. That'll be way easier.&rdquo;
+                            <span class="text-amber-400/90 font-sans font-normal not-italic block text-xs mt-1.5 font-medium">&mdash; Eusacles (John Hagey), getting straight to business under the arcade</span>
+                        </blockquote>
+                    </div>
                 </div>
 
-                <div class="pt-2">
-                    <a href="critics.html?s=7" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
-                        <span>🎭</span> <span>View Session 7 Critic, PC Evolution &amp; DM Audit →</span>
-                    </a>
-                </div>
-            
-                <!-- Single Session Navigation Controls -->
-                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
-                    <button type="button" onclick="switchSession(6, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S6)</span></button>
-                    <button type="button" onclick="switchSession(8, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 text-xs font-mono transition-colors flex items-center gap-1.5 font-bold"><span>Next Session (S8)</span> <span>&rarr;</span></button>
+                <!-- Session & Campaign Bottom Navigation Pane -->
+                <div class="border-t border-slate-900 pt-6 mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Section 1: Session 7 -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session 7</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="critics.html?s=7" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="uneraseable-s7.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 2: Campaign -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="codex.html#all" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>📜</span> <span>Summaries</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Single Session Navigation Controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="button" onclick="switchSession(6, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S6)</span></button>
+                        <button type="button" onclick="switchSession(8, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>Next Session (S8)</span> <span>&rarr;</span></button>
+                    </div>
                 </div>
             </article>
 
@@ -768,7 +1421,7 @@
                 <div class="space-y-2">
                     <h3 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Quick Session Summary</h3>
                     <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-sans">
-                        Advancing to 5th level at The Margin, the party receives critical birthrights—including Theodore's ancestral boon to Eusacles and Prof. Dravin's 3-seed pomegranate signet pin—before embarking toward Washington, D.C. Guided along Lost Creek's subterranean aqueducts by a reticent boatman, they repel swarming ink-blot stalkers as tracking clocks begin ticking toward the manifestation of Majora, a terrifying faceless entity hunting historical relic collectors. Reaching a storm drain opposite the D.C. metropolitan police precinct, Dravin detects misaligned architectural anomalies on municipal blueprints, Sharpie-inscribes Alfie's foot with his faculty contact info, and hurls a brick through a patrol cruiser window before casting <em>Meld into Stone</em> to smuggle the wooden automaton directly into evidence custody. With Pierre staging a high-leverage diversion at the front desk, Alfie slips into the precinct vault to secure the target relic: a pair of temporal handcuffs cataloged from an unrecorded 1980s commercial flight disappearance.
+                        Advancing to 5th level at The Margin, the party receives critical birthrights—including Theodore's ancestral boon to Eusacles and Prof. Dravin's 3-seed pomegranate signet pin—before embarking toward Washington, D.C. Guided along Lost Creek's subterranean aqueducts by a reticent boatman, they repel swarming ink-blot stalkers as tracking clocks begin ticking toward the manifestation of Majora, a terrifying faceless entity hunting historical relic collectors. Reaching a storm drain opposite the D.C. metropolitan police precinct, Dravin detects misaligned architectural anomalies on municipal blueprints, Sharpie-inscribes Alfie's foot with his faculty contact info, and hurls a brick through a patrol cruiser window before casting <em>Meld into Stone</em> to smuggle the wooden automaton directly into evidence custody. With a living stone statue sent by Pierre's mother battering the front portico to create mass panic, Prof. Dravin is swept into the suspect processing room where Alfie rests inside a tagged evidence brick, while Pierre races for the rear entrance as the cliffhanger incursion begins.
                     </p>
                 </div>
 
@@ -810,37 +1463,128 @@
                         <li><strong class="text-slate-100 font-semibold">Act II · Lost Creek &amp; The Wonka Crossing:</strong> A cloaked boatman (a distant aqueduct cousin of Naomi and Teddy) steers the party along Lost Creek through morphing subterranean vistas. Ink-blot minions ambush the vessel; Pierre repels the swarm with javelin thrusts while reciting Willy Wonka lyrics, though stray ink contact fills the first segment of the Hunter Clock.</li>
                         <li><strong class="text-slate-100 font-semibold">Act III · The Storm Drain &amp; The Sharpie Inscription:</strong> Emerging from a manhole directly opposite the D.C. police precinct, the travelers survey the target. Dravin analyzes downloaded gray-web blueprints, uncovering architectural anomalies and shifted upper floors. To ensure Alfie is not treated as stolen contraband upon discovery, Dravin uses a Sharpie to write <em>"Property of Prof. Edward Dravin"</em> and a contact number across the wooden automaton's foot.</li>
                         <li><strong class="text-slate-100 font-semibold">Act IV · The Brick Diversion &amp; Meld into Stone:</strong> Staging an intake crime, Dravin hurls a brick marked with a pig through a police cruiser window, then casts <em>Meld into Stone</em> to slip Alfie inside the brick itself. Officers collect the brick as evidence, unwittingly escorting Alfie directly through security checkpoints and into the evidence locker.</li>
-                        <li><strong class="text-slate-100 font-semibold">Act V · Flashback Infiltration &amp; Vault Breach:</strong> Pierre initiates a flashback scene posing as a Make-A-Wish foundation representative to misdirect precinct reception, while an external gargoyle manifestation shatters the building awning with falling masonry. Inside the vault, Alfie slips from stone form, locates the unrecorded 1980s flight evidence box, and secures the pair of temporal handcuffs.</li>
+                        <li><strong class="text-slate-100 font-semibold">Act V · The Living Statue Diversion &amp; Suspect Processing:</strong> Across the street in the park, a living stone statue sent by Pierre's mother arrives to assist. Pierre directs the statue toward the precinct, where it scales the front portico and batters loose bricks off the masonry awning until decorative limestone crashes into the main entrance, triggering building-wide klaxons. As officers draw weapons and sprint into the lobby, the receptionist panics and ushers Prof. Dravin into the secure suspect processing room—where the red brick carrying Alfie in stone form rests on an examination table alongside three other tagged &ldquo;PIG&rdquo; bricks under active police scrutiny. Pierre breaks into a sprint toward the rear fire exit as the session concludes on a knife-edge cliffhanger.</li>
                     </ul>
                 </div>
 
-                <!-- Authentic Table Dialogue Moment -->
-                <div class="border-l-2 border-amber-500/50 pl-4 py-1.5 space-y-1.5 bg-amber-500/5 rounded-r-lg">
-                    <span class="text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold block">Verbatim Table Dialogue · The Sharpie, The Paladin &amp; The Aqueduct Cousin</span>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed">
-                        &ldquo;I write with a Sharpie on the bottom of Alfie's foot: Property of Professor Edward Dravin, and a phone number. If you find him, call this number. It establishes legal provenance.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Prof. Edward Dravin (William Webb), preparing Alfie for evidence intake</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;Wait... I've been playing a Level 5 Paladin completely naked this entire time without any of my starting armor or shield toggled on in the sheet?&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Eusacles (John Hagey), auditing equipment before Theodore's boon</span>
-                    </blockquote>
-                    <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pt-1">
-                        &ldquo;The boatman is a distant cousin. We don't really talk at Thanksgiving, but he knows the aqueducts. Keep your hands inside the boat—if the ink touches you, the Hunter clock ticks.&rdquo;
-                        <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; GM Luke Foreman, setting the crossing stakes on Lost Creek</span>
-                    </blockquote>
+                                <!-- Top 3 Session Highlights (Interactive Stepper 3, 2, 1) -->
+                <div class="session-highlights-widget rounded-xl border border-amber-500/30 bg-slate-900/50 p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400 text-base">🎬</span>
+                            <div>
+                                <h4 class="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">Top 3 Session Highlights</h4>
+                                <p class="text-[11px] font-mono text-slate-400">Step down from #3 to reveal the top moment</p>
+                            </div>
+                        </div>
+                        <!-- Stepper: 3, 2, 1 -->
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950/80 p-1 rounded-lg border border-slate-800 self-start sm:self-auto" role="group" aria-label="Highlight rank selector">
+                            <span class="text-[10px] font-mono text-slate-500 px-1 uppercase tracking-wider">Step:</span>
+                            <button type="button" onclick="setHighlightStep(8, 3)" id="hl-btn-8-3" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40">#3</button>
+                            <button type="button" onclick="setHighlightStep(8, 2)" id="hl-btn-8-2" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent">#2</button>
+                            <button type="button" onclick="setHighlightStep(8, 1)" id="hl-btn-8-1" class="hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-amber-300 transition-all border border-transparent flex items-center gap-1"><span>#1 Top</span><span>⭐</span></button>
+                        </div>
+                    </div>
+
+                    <!-- Highlight #3 -->
+                    <div id="hl-card-8-3" class="hl-card space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #3 · The Inky Aqueduct Cousin</span>
+                            <button type="button" onclick="setHighlightStep(8, 2)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #2</span> <span>→</span></button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;The boatman is a distant cousin. We don't really talk at Thanksgiving, but he knows the aqueducts. Keep your hands inside the boat—if the ink touches you, the Hunter clock ticks.&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; GM Luke Foreman, setting the crossing stakes on Lost Creek</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #2 -->
+                    <div id="hl-card-8-2" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-400/80 uppercase font-semibold">Highlight #2 · The Unarmored Paladin Audit</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="setHighlightStep(8, 3)" class="text-slate-500 hover:text-slate-300">← #3</button>
+                                <button type="button" onclick="setHighlightStep(8, 1)" class="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"><span>Next: #1 Top Highlight</span> <span>→</span></button>
+                            </div>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-300 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-500/40">
+                            &ldquo;Wait... I've been playing a Level 5 Paladin completely naked this entire time without any of my starting armor or shield toggled on in the sheet?&rdquo;
+                            <span class="text-slate-400 font-sans font-normal not-italic block text-xs mt-1">&mdash; Eusacles (John Hagey), auditing equipment before Theodore's boon</span>
+                        </blockquote>
+                    </div>
+
+                    <!-- Highlight #1 (Top) -->
+                    <div id="hl-card-8-1" class="hl-card hidden space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-amber-300 uppercase font-bold flex items-center gap-1"><span>⭐ #1 Top Highlight · Legal Provenance on Alfie's Sole</span></span>
+                            <button type="button" onclick="setHighlightStep(8, 3)" class="text-slate-500 hover:text-slate-300">Restart (3) ↺</button>
+                        </div>
+                        <blockquote class="text-xs sm:text-sm text-slate-200 italic font-serif leading-relaxed pl-3 border-l-2 border-amber-400 bg-amber-500/10 p-2.5 rounded-r-lg">
+                            &ldquo;I write with a Sharpie on the bottom of Alfie's foot: Property of Professor Edward Dravin, and a phone number. If you find him, call this number. It establishes legal provenance.&rdquo;
+                            <span class="text-amber-400/90 font-sans font-normal not-italic block text-xs mt-1.5 font-medium">&mdash; Prof. Edward Dravin (William Webb), preparing Alfie for evidence intake</span>
+                        </blockquote>
+                    </div>
                 </div>
 
-                <div class="pt-2">
-                    <a href="critics.html?s=8" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-400 hover:text-rose-300 transition-colors">
-                        <span>🎭</span> <span>View Session 8 Critic, PC Evolution &amp; DM Audit →</span>
-                    </a>
-                </div>
+                <!-- Session & Campaign Bottom Navigation Pane -->
+                <div class="border-t border-slate-900 pt-6 mt-8 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Section 1: Session 8 -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session 8</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="critics.html?s=8" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="uneraseable-s8.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
 
-                <!-- Single Session Navigation Controls -->
-                <div class="flex items-center justify-between border-t border-slate-900 pt-6 mt-8">
-                    <button type="button" onclick="switchSession(7, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S7)</span></button>
-                    <a href="uneraseable-s8.html" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-colors flex items-center gap-1.5 font-bold"><span>Read Story Chapter (S8)</span> <span>&rarr;</span></a>
+                        <!-- Section 2: Campaign -->
+                        <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                                <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                            </div>
+                            <ul class="space-y-2 text-xs font-mono">
+                                <li>
+                                    <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="codex.html#all" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                        <span class="flex items-center gap-2"><span>📜</span> <span>Summaries</span></span>
+                                        <span class="text-slate-500 font-bold">→</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Single Session Navigation Controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="button" onclick="switchSession(7, true)" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5"><span>&larr;</span> <span>Previous Session (S7)</span></button>
+                        <a href="uneraseable-s8.html" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-colors flex items-center gap-1.5 font-bold"><span>Read Story Chapter (S8)</span> <span>&rarr;</span></a>
+                    </div>
                 </div>
             </article>
 
@@ -855,6 +1599,28 @@
 
         <!-- Codex Script Helpers -->
     <script>
+        
+        function setHighlightStep(sessNum, step) {
+            [1, 2, 3].forEach(s => {
+                const card = document.getElementById('hl-card-' + sessNum + '-' + s);
+                const btn = document.getElementById('hl-btn-' + sessNum + '-' + s);
+                if (card) {
+                    if (s === step) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                }
+                if (btn) {
+                    if (s === step) {
+                        btn.className = 'hl-step-btn px-2.5 py-1 rounded text-xs font-mono font-bold transition-all bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm';
+                    } else {
+                        btn.className = 'hl-step-btn px-2.5 py-1 rounded text-xs font-mono text-slate-400 hover:text-slate-200 transition-all border border-transparent';
+                    }
+                }
+            });
+        }
+
         function switchSession(sessNum, shouldScroll = false) {
             const articles = document.querySelectorAll('#codexArticleView article');
             const searchInput = document.getElementById('codexSearchInput');

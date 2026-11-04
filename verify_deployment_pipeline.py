@@ -45,6 +45,14 @@ FORBIDDEN_META_TERMS = [
     r"\bcharacter sheet\b",
 ]
 
+# Ungrounded forward-projected hallucinations strictly forbidden in published canon
+FORBIDDEN_HALLUCINATION_TERMS = [
+    r"\bMake-A-Wish\b",
+    r"\btemporal handcuffs\b",
+    r"\b1982-FLIGHT\b",
+    r"\bMaster Timothy\b",
+]
+
 def log_pass(msg):
     print(f"  [PASS] {msg}")
 
@@ -96,21 +104,39 @@ def verify_upstream_manifests(sessions):
         if word_count < MIN_SESSION_WORDS:
             return log_fail(f"Manifest s{s_num} word count ({word_count:,}) below minimum required ({MIN_SESSION_WORDS:,})")
 
-        # Anti-Meta Leak Scan across blocks
+        # Anti-Meta & Anti-Hallucination Leak Scan across blocks
         for b in blocks:
             b_text = b.get("text", "")
             for term in FORBIDDEN_META_TERMS:
                 if re.search(term, b_text, re.IGNORECASE):
                     return log_fail(f"Out-of-character meta table leak '{term}' found in s{s_num} block {b.get('id')}")
+            for term in FORBIDDEN_HALLUCINATION_TERMS:
+                if re.search(term, b_text, re.IGNORECASE):
+                    return log_fail(f"Ungrounded narrative hallucination '{term}' found in s{s_num} block {b.get('id')}")
 
-        # Anti-Meta Leak Scan across clean story markdown
+        # Anti-Meta & Anti-Hallucination Scan across clean story markdown
         if clean_path.exists():
             c_text = clean_path.read_text(encoding="utf-8")
             for term in FORBIDDEN_META_TERMS:
                 if re.search(term, c_text, re.IGNORECASE):
                     return log_fail(f"Out-of-character meta table leak '{term}' found in {clean_path.name}")
+            for term in FORBIDDEN_HALLUCINATION_TERMS:
+                if re.search(term, c_text, re.IGNORECASE):
+                    return log_fail(f"Ungrounded narrative hallucination '{term}' found in {clean_path.name}")
 
-        log_pass(f"Session {s_num}: Verified manifest ({len(blocks)} blocks, {word_count:,} words) with zero meta bleed")
+            # Grounding Boundary Verification against raw indexed transcript
+            indexed_path = manifest_dir / f"s{s_num}-raw-indexed.md"
+            if indexed_path.exists():
+                raw_text = indexed_path.read_text(encoding="utf-8")
+                line_markers = [int(m) for m in re.findall(r"<!-- L(\d+):", c_text)]
+                raw_lines = [int(m) for m in re.findall(r"^L(\d+):", raw_text, re.MULTILINE)]
+                if line_markers and raw_lines:
+                    max_clean_line = max(line_markers)
+                    max_raw_line = max(raw_lines)
+                    if max_clean_line > max_raw_line:
+                        return log_fail(f"Clean story for s{s_num} references phantom line L{max_clean_line} exceeding transcript max L{max_raw_line}!")
+
+        log_pass(f"Session {s_num}: Verified manifest ({len(blocks)} blocks, {word_count:,} words) with zero meta bleed & full grounding")
         verified_count += 1
 
     if verified_count == 0:
