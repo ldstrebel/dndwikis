@@ -67,11 +67,16 @@
 
             <!-- Quick Filter & Mobile Touch Session Strip -->
             <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between pt-5 border-t border-slate-900">
-                <div class="relative flex-1 max-w-md">
-                    <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 text-xs">🔍</span>
-                    <input type="text" id="codexSearchInput" placeholder="Filter by character, locale, or scene..." 
-                           class="w-full bg-slate-900/60 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
-                           oninput="filterHubSessions()">
+                <div class="flex items-center gap-2 flex-1 max-w-lg">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 text-xs">🔍</span>
+                        <input type="text" id="codexSearchInput" placeholder="Filter by character, locale, or scene..." 
+                               class="w-full bg-slate-900/60 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
+                               oninput="filterHubSessions()">
+                    </div>
+                    <a href="codex-wiki.html" class="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-medium transition-all shadow-sm" title="Open full 33-article standalone wiki">
+                        <span>📖</span> <span class="hidden sm:inline">Wiki Codex</span> <span class="text-amber-400">↗</span>
+                    </a>
                 </div>
 
                 <!-- Smooth Touch Scroll Snap Session Strip -->
@@ -106,9 +111,14 @@
                             Session 1: The Bus from Vegas &amp; The Library of the Fates
                         </h2>
                     </div>
-                    <a href="uneraseable-s1.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-                        Read Story Chapter →
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copySessionDirectLink(1)" id="copySessionBtn_1" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct shareable link to Session 1">
+                            <span>🔗</span> <span class="session-copy-text">Copy Link</span>
+                        </button>
+                        <a href="uneraseable-s1.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
+                            Read Story Chapter →
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Quick session summary -->
@@ -194,9 +204,14 @@
                             Session 2: The Margin, The Fragments &amp; The Lost Roads
                         </h2>
                     </div>
-                    <a href="uneraseable-s2.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-                        Read Story Chapter →
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copySessionDirectLink(2)" id="copySessionBtn_2" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct shareable link to Session 2">
+                            <span>🔗</span> <span class="session-copy-text">Copy Link</span>
+                        </button>
+                        <a href="uneraseable-s2.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
+                            Read Story Chapter →
+                        </a>
+                    </div>
                 </div>
 
                 <div class="space-y-2">
@@ -282,9 +297,14 @@
                             Session 3: The Museum Heist in North Carolina
                         </h2>
                     </div>
-                    <a href="uneraseable-s3.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-                        Read Story Chapter →
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copySessionDirectLink(3)" id="copySessionBtn_3" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct shareable link to Session 3">
+                            <span>🔗</span> <span class="session-copy-text">Copy Link</span>
+                        </button>
+                        <a href="uneraseable-s3.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
+                            Read Story Chapter →
+                        </a>
+                    </div>
                 </div>
 
                 <div class="space-y-2">
@@ -361,9 +381,14 @@
                             Session 4: The Raleigh Museum Gorgon Ambush &amp; Debrief
                         </h2>
                     </div>
-                    <a href="uneraseable-s4.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-                        Read Story Chapter →
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copySessionDirectLink(4)" id="copySessionBtn_4" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct shareable link to Session 4">
+                            <span>🔗</span> <span class="session-copy-text">Copy Link</span>
+                        </button>
+                        <a href="uneraseable-s4.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
+                            Read Story Chapter →
+                        </a>
+                    </div>
                 </div>
 
                 <div class="space-y-2">
@@ -447,9 +472,14 @@
                             Session 5: The Forgotten Trail &amp; The Mad Doctor's Lecture
                         </h2>
                     </div>
-                    <a href="uneraseable-s5.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-                        Read Story Chapter →
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copySessionDirectLink(5)" id="copySessionBtn_5" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct shareable link to Session 5">
+                            <span>🔗</span> <span class="session-copy-text">Copy Link</span>
+                        </button>
+                        <a href="uneraseable-s5.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
+                            Read Story Chapter →
+                        </a>
+                    </div>
                 </div>
 
                 <div class="space-y-2">
@@ -533,9 +563,14 @@
                             Session 6: The Auditorium Incursion &amp; The Memory Seam
                         </h2>
                     </div>
-                    <a href="uneraseable-s6.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-                        Read Story Chapter →
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copySessionDirectLink(6)" id="copySessionBtn_6" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct shareable link to Session 6">
+                            <span>🔗</span> <span class="session-copy-text">Copy Link</span>
+                        </button>
+                        <a href="uneraseable-s6.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
+                            Read Story Chapter →
+                        </a>
+                    </div>
                 </div>
 
                 <div class="space-y-2">
@@ -618,9 +653,14 @@
                             Session 7: The Interrogation, The Redactor &amp; The Dream of Thanatos
                         </h2>
                     </div>
-                    <a href="uneraseable-s7.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-                        Read Story Chapter →
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copySessionDirectLink(7)" id="copySessionBtn_7" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct shareable link to Session 7">
+                            <span>🔗</span> <span class="session-copy-text">Copy Link</span>
+                        </button>
+                        <a href="uneraseable-s7.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
+                            Read Story Chapter →
+                        </a>
+                    </div>
                 </div>
 
                 <div class="space-y-2">
@@ -714,9 +754,14 @@
                             Session 8: Infiltration, The Lost Roads &amp; The DC Precinct Vault
                         </h2>
                     </div>
-                    <a href="uneraseable-s8.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
-                        Read Story Chapter →
-                    </a>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="copySessionDirectLink(8)" id="copySessionBtn_8" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct shareable link to Session 8">
+                            <span>🔗</span> <span class="session-copy-text">Copy Link</span>
+                        </button>
+                        <a href="uneraseable-s8.html" class="text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1">
+                            Read Story Chapter →
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Quick session summary -->
@@ -887,28 +932,114 @@
             });
         }
 
-        // Initialize from URL query param ?s=N or hash or default to Session 7
+        function copySessionDirectLink(sessNum) {
+            const url = window.location.origin + window.location.pathname + '#session-' + sessNum;
+            function showSuccess() {
+                const btn = document.getElementById('copySessionBtn_' + sessNum);
+                if (btn) {
+                    const textSpan = btn.querySelector('.session-copy-text');
+                    if (textSpan) textSpan.textContent = 'Link Copied!';
+                    btn.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-600');
+                    setTimeout(() => {
+                        if (textSpan) textSpan.textContent = 'Copy Link';
+                        btn.classList.remove('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-600');
+                    }, 2000);
+                }
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(showSuccess).catch(showSuccess);
+            } else {
+                showSuccess();
+            }
+            try {
+                history.replaceState(null, null, '#session-' + sessNum);
+            } catch(e) {}
+        }
+
+        const WIKI_ARTICLES = [
+            'overview', 'alfie', 'dravin', 'eusacles', 'pierre', 'fates', 'hermes', 'mike', 'naomi', 'rosa',
+            'susanna', 'teddy', 'thanatos', 'thorne', 'margin-wardens', 'redactors', 'open-threads',
+            's1-review', 's2-review', 's3-review', 's4-review', 's5-review', 's6-review', 's7-review', 's8-review'
+        ];
+        const WIKI_ALIASES = {
+            'prof-dravin': 'dravin', 'professor-dravin': 'dravin', 'edward-dravin': 'dravin', 'theodore': 'teddy',
+            'three-fates': 'fates', 'wardens': 'margin-wardens', 'redactor': 'redactors',
+            'threads': 'open-threads', 'mysteries': 'open-threads', 'margin': 'overview', 'characters': 'pierre'
+        };
+
+        function parseSessionOrRedirect(raw) {
+            if (!raw) return null;
+            const clean = String(raw).toLowerCase().trim().replace(/^#/, '');
+            if (clean === 'all') return 'all';
+            
+            // Match session patterns (s1..s8, session-1..session-8, session1..session8, 1..8)
+            const sessMatch = clean.match(/^(?:session[-_]?|s)?([1-8])$/i);
+            if (sessMatch) {
+                return parseInt(sessMatch[1], 10);
+            }
+            
+            // Check if user is navigating to a standalone codex article
+            const resolvedWiki = WIKI_ALIASES[clean] || (WIKI_ARTICLES.includes(clean) ? clean : null);
+            if (resolvedWiki || clean.startsWith('th-')) {
+                window.location.replace('codex-wiki.html#' + (resolvedWiki || clean));
+                return 'redirected';
+            }
+            return null;
+        }
+
+        // Initialize from URL query param ?s=N or hash or default to Session 8
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const sParam = parseInt(urlParams.get('s'), 10);
+            const sParam = urlParams.get('s');
+            const pageParam = urlParams.get('page') || urlParams.get('article');
+            
+            if (pageParam) {
+                const res = parseSessionOrRedirect(pageParam);
+                if (res === 'redirected') return;
+            }
+
             let target = 8;
             let shouldScroll = false;
 
-            if (sParam && sParam >= 1 && sParam <= 8) {
-                target = sParam;
-                shouldScroll = true; // explicitly requested via ?s=N
-            } else if (window.location.hash.startsWith('#session-')) {
-                const num = parseInt(window.location.hash.replace('#session-', ''), 10);
-                if (num >= 1 && num <= 8) {
-                    target = num;
-                    shouldScroll = true; // explicitly requested via deep link
+            if (sParam) {
+                const parsed = parseSessionOrRedirect(sParam);
+                if (typeof parsed === 'number') {
+                    target = parsed;
+                    shouldScroll = true;
                 }
-            } else if (window.location.hash === '#all') {
-                switchSession('all', false);
-                return;
+            } else if (window.location.hash) {
+                const parsed = parseSessionOrRedirect(window.location.hash);
+                if (parsed === 'redirected') return;
+                if (parsed === 'all') {
+                    switchSession('all', false);
+                    return;
+                } else if (typeof parsed === 'number') {
+                    target = parsed;
+                    shouldScroll = true;
+                }
             }
 
             switchSession(target, shouldScroll);
+        });
+
+        window.addEventListener('hashchange', () => {
+            const parsed = parseSessionOrRedirect(window.location.hash);
+            if (parsed === 'redirected') return;
+            if (parsed === 'all') {
+                switchSession('all', false);
+            } else if (typeof parsed === 'number') {
+                switchSession(parsed, true);
+            }
+        });
+
+        window.addEventListener('popstate', (e) => {
+            const parsed = parseSessionOrRedirect(window.location.hash);
+            if (parsed === 'redirected') return;
+            if (parsed === 'all') {
+                switchSession('all', false);
+            } else if (typeof parsed === 'number') {
+                switchSession(parsed, true);
+            }
         });
 
         // Compatibility handlers for legacy reader integrations

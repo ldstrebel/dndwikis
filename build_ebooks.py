@@ -3224,6 +3224,28 @@ def load_all_codex_articles():
             """
             html_body = profile_card + html_body
 
+        # Prepend Direct Link Toolbar to every codex article
+        reader_link = ""
+        if sess_num and sess_num > 0:
+            reader_link = f'<a href="uneraseable-s{sess_num}.html" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-medium transition-all" title="Read Session {sess_num} story chapter"><span>📖</span> <span>Read S{sess_num}</span></a>'
+
+        top_toolbar = f"""
+        <div class="codex-article-header mb-4 pb-3 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold">{category}</span>
+                <span class="text-slate-600">/</span>
+                <span class="text-xs font-mono text-slate-400">{group.title()}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="window.copyCodexDirectLink('{slug}')" id="copyLinkBtn_{slug}" class="codex-copy-link-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-mono font-medium transition-all shadow-sm active:scale-95" title="Copy direct link to this codex page">
+                    <span>🔗</span> <span class="copy-btn-text">Copy Direct Link</span>
+                </button>
+                {reader_link}
+            </div>
+        </div>
+        """
+        html_body = top_toolbar + html_body
+
         # Append Codex Entry Feedback card at the bottom of every article
         html_body += build_codex_feedback_card_html(slug, title, group)
 
@@ -3287,7 +3309,7 @@ def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> st
                 
                 <!-- Right Controls: Standalone Link & Exit Modal Button -->
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <a href="codex.html" target="_blank" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all" title="Open Standalone Wiki in new tab">
+                    <a id="codexStandaloneLinkBtn" href="codex-wiki.html" target="_blank" class="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all" title="Open this article in Standalone Wiki in new tab">
                         <span>↗</span> <span>Standalone Wiki</span>
                     </a>
                     <button id="closeCodexModalBtn" type="button" class="w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-100 flex items-center justify-center text-xl font-bold transition-all active:scale-95" title="Exit Codex (Esc)" aria-label="Close Codex">&times;</button>
@@ -5881,23 +5903,115 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             // =========================================================
             // CAMPAIGN CODEX MODAL CONTROLLER & CLIENT SEARCH ENGINE
             // =========================================================
+            const CODEX_ALIASES = {{
+                'session-1': 's1', 'session1': 's1', 's01': 's1', 'session-01': 's1',
+                'session-2': 's2', 'session2': 's2', 's02': 's2', 'session-02': 's2',
+                'session-3': 's3', 'session3': 's3', 's03': 's3', 'session-03': 's3',
+                'session-4': 's4', 'session4': 's4', 's04': 's4', 'session-04': 's4',
+                'session-5': 's5', 'session5': 's5', 's05': 's5', 'session-05': 's5',
+                'session-6': 's6', 'session6': 's6', 's06': 's6', 'session-06': 's6',
+                'session-7': 's7', 'session7': 's7', 's07': 's7', 'session-07': 's7',
+                'session-8': 's8', 'session8': 's8', 's08': 's8', 'session-08': 's8',
+                'session-1-review': 's1-review', 's1review': 's1-review', 'review-s1': 's1-review',
+                'session-2-review': 's2-review', 's2review': 's2-review', 'review-s2': 's2-review',
+                'session-3-review': 's3-review', 's3review': 's3-review', 'review-s3': 's3-review',
+                'session-4-review': 's4-review', 's4review': 's4-review', 'review-s4': 's4-review',
+                'session-5-review': 's5-review', 's5review': 's5-review', 'review-s5': 's5-review',
+                'session-6-review': 's6-review', 's6review': 's6-review', 'review-s6': 's6-review',
+                'session-7-review': 's7-review', 's7review': 's7-review', 'review-s7': 's7-review',
+                'session-8-review': 's8-review', 's8review': 's8-review', 'review-s8': 's8-review',
+                'prof-dravin': 'dravin', 'professor-dravin': 'dravin', 'edward-dravin': 'dravin', 'edward': 'dravin',
+                'theodore': 'teddy', 'theodore-the-surveyor': 'teddy',
+                'three-fates': 'fates', 'the-three-fates': 'fates', 'loom': 'fates',
+                'god-of-death': 'thanatos', 'death': 'thanatos',
+                'wardens': 'margin-wardens', 'the-margin-wardens': 'margin-wardens',
+                'redactor': 'redactors', 'the-redactors': 'redactors',
+                'threads': 'open-threads', 'mysteries': 'open-threads', 'quests': 'open-threads', 'quest-log': 'open-threads',
+                'the-margin': 'overview', 'margin': 'overview', 'home': 'overview', 'hub': 'overview',
+                'characters': 'pierre', 'dramatis-personae': 'pierre', 'factions': 'margin-wardens', 'reviews': 's8-review'
+            }};
+
+            window.resolveCodexSlug = function(raw) {{
+                if (!raw) return 'overview';
+                let s = String(raw).toLowerCase().trim()
+                    .replace(/^#/, '')
+                    .replace(/^\?article=/, '')
+                    .replace(/^\?page=/, '')
+                    .replace(/^\?s=/, 's')
+                    .replace(/^codex-/, '')
+                    .replace(/^codex\//, '');
+                if (codexArticlesMap[s]) return s;
+                if (CODEX_ALIASES[s]) return CODEX_ALIASES[s];
+                const noHyphen = s.replace(/-/g, '');
+                if (CODEX_ALIASES[noHyphen]) return CODEX_ALIASES[noHyphen];
+                return s;
+            }};
+
+            window.copyCodexDirectLink = function(slug) {{
+                const cleanSlug = (typeof window.resolveCodexSlug === 'function' ? window.resolveCodexSlug(slug) : slug) || slug;
+                let baseUrl = window.location.href.split('#')[0].split('?')[0];
+                if (baseUrl.includes('uneraseable-s')) {{
+                    baseUrl = baseUrl.replace(/uneraseable-s\d+\.html.*/, 'codex-wiki.html');
+                }}
+                const fullUrl = baseUrl + '#' + cleanSlug;
+
+                function showSuccess() {{
+                    const btns = document.querySelectorAll('#copyLinkBtn_' + cleanSlug + ', .codex-copy-link-btn');
+                    btns.forEach(btn => {{
+                        const textSpan = btn.querySelector('.copy-btn-text');
+                        if (textSpan) textSpan.textContent = 'Link Copied!';
+                        btn.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-600');
+                        setTimeout(() => {{
+                            if (textSpan) textSpan.textContent = 'Copy Direct Link';
+                            btn.classList.remove('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-600');
+                        }}, 2000);
+                    }});
+                }}
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {{
+                    navigator.clipboard.writeText(fullUrl).then(showSuccess).catch(() => {{
+                        const ta = document.createElement('textarea');
+                        ta.value = fullUrl;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                        showSuccess();
+                    }});
+                }} else {{
+                    const ta = document.createElement('textarea');
+                    ta.value = fullUrl;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    showSuccess();
+                }}
+            }};
+
             window.openCodexModal = function(targetSlug, fromPopState = false) {{
                 if (!codexModalOverlay) return;
                 codexModalOverlay.classList.remove('opacity-0', 'pointer-events-none');
                 codexModalOverlay.classList.add('visible');
                 setBodyScrollLock(true);
                 
-                const slugToOpen = (targetSlug && codexArticlesMap[targetSlug]) ? targetSlug : 'overview';
+                let slugToOpen = 'overview';
+                if (targetSlug) {{
+                    const resolved = (typeof window.resolveCodexSlug === 'function') ? window.resolveCodexSlug(targetSlug) : targetSlug;
+                    if (resolved && codexArticlesMap[resolved]) {{
+                        slugToOpen = resolved;
+                    }}
+                }}
                 if (!fromPopState) {{
                     try {{
                         history.pushState({{ inCodexModal: true, slug: slugToOpen }}, '', '#' + slugToOpen);
                     }} catch(e) {{}}
                 }}
                 
-                if (targetSlug && targetSlug.toLowerCase().startsWith('th-')) {{
+                if (targetSlug && String(targetSlug).toLowerCase().startsWith('th-')) {{
                     window.selectCodexArticle('open-threads', true);
                     setTimeout(() => {{
-                        const el = document.getElementById(targetSlug.toLowerCase());
+                        const el = document.getElementById(String(targetSlug).toLowerCase());
                         if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
                     }}, 200);
                     return;
@@ -5983,7 +6097,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
 
             window.selectCodexArticle = function(slug, fromPopState = false) {{
                 if (!slug) return;
-                const cleanSlug = slug.toLowerCase().trim();
+                const cleanSlug = (typeof window.resolveCodexSlug === 'function' ? window.resolveCodexSlug(slug) : slug.toLowerCase().trim()) || slug.toLowerCase().trim();
                 const art = codexArticlesMap[cleanSlug];
                 if (!art) return;
 
@@ -5991,6 +6105,12 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     try {{
                         history.pushState({{ inCodexModal: true, slug: cleanSlug }}, '', '#' + cleanSlug);
                     }} catch(e) {{}}
+                }}
+
+                const standaloneBtn = document.getElementById('codexStandaloneLinkBtn');
+                if (standaloneBtn) {{
+                    standaloneBtn.href = 'codex-wiki.html#' + cleanSlug;
+                    standaloneBtn.title = 'Open ' + (art.title || cleanSlug) + ' in Standalone Wiki';
                 }}
 
                 if (codexArticleView) {{
@@ -8203,9 +8323,22 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
 
             // Open Codex Modal if initial URL hash targets an article or thread
             const initCodexHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
-            if (initCodexHash && (codexArticlesMap[initCodexHash] || initCodexHash.startsWith('th-'))) {{
-                window.openCodexModal(initCodexHash, true);
+            if (initCodexHash) {{
+                const resolved = (typeof window.resolveCodexSlug === 'function') ? window.resolveCodexSlug(initCodexHash) : initCodexHash;
+                if (resolved && (codexArticlesMap[resolved] || initCodexHash.startsWith('th-'))) {{
+                    window.openCodexModal(resolved, true);
+                }}
             }}
+
+            window.addEventListener('hashchange', function() {{
+                const currentHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
+                if (currentHash) {{
+                    const resolved = (typeof window.resolveCodexSlug === 'function') ? window.resolveCodexSlug(currentHash) : currentHash;
+                    if (resolved && codexArticlesMap[resolved]) {{
+                        window.openCodexModal(resolved, true);
+                    }}
+                }}
+            }});
         }})();
     </script>
     <!-- Lightweight Visitor & Navigation Tracker -->
@@ -8545,9 +8678,91 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 window.searchCodex('');
             }};
 
+            const CODEX_ALIASES = {{
+                'session-1': 's1', 'session1': 's1', 's01': 's1', 'session-01': 's1',
+                'session-2': 's2', 'session2': 's2', 's02': 's2', 'session-02': 's2',
+                'session-3': 's3', 'session3': 's3', 's03': 's3', 'session-03': 's3',
+                'session-4': 's4', 'session4': 's4', 's04': 's4', 'session-04': 's4',
+                'session-5': 's5', 'session5': 's5', 's05': 's5', 'session-05': 's5',
+                'session-6': 's6', 'session6': 's6', 's06': 's6', 'session-06': 's6',
+                'session-7': 's7', 'session7': 's7', 's07': 's7', 'session-07': 's7',
+                'session-8': 's8', 'session8': 's8', 's08': 's8', 'session-08': 's8',
+                'session-1-review': 's1-review', 's1review': 's1-review', 'review-s1': 's1-review',
+                'session-2-review': 's2-review', 's2review': 's2-review', 'review-s2': 's2-review',
+                'session-3-review': 's3-review', 's3review': 's3-review', 'review-s3': 's3-review',
+                'session-4-review': 's4-review', 's4review': 's4-review', 'review-s4': 's4-review',
+                'session-5-review': 's5-review', 's5review': 's5-review', 'review-s5': 's5-review',
+                'session-6-review': 's6-review', 's6review': 's6-review', 'review-s6': 's6-review',
+                'session-7-review': 's7-review', 's7review': 's7-review', 'review-s7': 's7-review',
+                'session-8-review': 's8-review', 's8review': 's8-review', 'review-s8': 's8-review',
+                'prof-dravin': 'dravin', 'professor-dravin': 'dravin', 'edward-dravin': 'dravin', 'edward': 'dravin',
+                'theodore': 'teddy', 'theodore-the-surveyor': 'teddy',
+                'three-fates': 'fates', 'the-three-fates': 'fates', 'loom': 'fates',
+                'god-of-death': 'thanatos', 'death': 'thanatos',
+                'wardens': 'margin-wardens', 'the-margin-wardens': 'margin-wardens',
+                'redactor': 'redactors', 'the-redactors': 'redactors',
+                'threads': 'open-threads', 'mysteries': 'open-threads', 'quests': 'open-threads', 'quest-log': 'open-threads',
+                'the-margin': 'overview', 'margin': 'overview', 'home': 'overview', 'hub': 'overview',
+                'characters': 'pierre', 'dramatis-personae': 'pierre', 'factions': 'margin-wardens', 'reviews': 's8-review'
+            }};
+
+            window.resolveCodexSlug = function(raw) {{
+                if (!raw) return 'overview';
+                let s = String(raw).toLowerCase().trim()
+                    .replace(/^#/, '')
+                    .replace(/^\?article=/, '')
+                    .replace(/^\?page=/, '')
+                    .replace(/^\?s=/, 's')
+                    .replace(/^codex-/, '')
+                    .replace(/^codex\//, '');
+                if (codexArticlesMap[s]) return s;
+                if (CODEX_ALIASES[s]) return CODEX_ALIASES[s];
+                const noHyphen = s.replace(/-/g, '');
+                if (CODEX_ALIASES[noHyphen]) return CODEX_ALIASES[noHyphen];
+                return s;
+            }};
+
+            window.copyCodexDirectLink = function(slug) {{
+                const cleanSlug = (typeof window.resolveCodexSlug === 'function' ? window.resolveCodexSlug(slug) : slug) || slug;
+                const fullUrl = window.location.href.split('#')[0].split('?')[0] + '#' + cleanSlug;
+
+                function showSuccess() {{
+                    const btns = document.querySelectorAll('#copyLinkBtn_' + cleanSlug + ', .codex-copy-link-btn');
+                    btns.forEach(btn => {{
+                        const textSpan = btn.querySelector('.copy-btn-text');
+                        if (textSpan) textSpan.textContent = 'Link Copied!';
+                        btn.classList.add('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-600');
+                        setTimeout(() => {{
+                            if (textSpan) textSpan.textContent = 'Copy Direct Link';
+                            btn.classList.remove('bg-emerald-950/80', 'text-emerald-300', 'border-emerald-600');
+                        }}, 2000);
+                    }});
+                }}
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {{
+                    navigator.clipboard.writeText(fullUrl).then(showSuccess).catch(() => {{
+                        const ta = document.createElement('textarea');
+                        ta.value = fullUrl;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                        showSuccess();
+                    }});
+                }} else {{
+                    const ta = document.createElement('textarea');
+                    ta.value = fullUrl;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    showSuccess();
+                }}
+            }};
+
             window.selectCodexArticle = function(slug, fromPopState = false) {{
                 if (!slug) return;
-                const cleanSlug = slug.toLowerCase().trim();
+                const cleanSlug = (typeof window.resolveCodexSlug === 'function' ? window.resolveCodexSlug(slug) : slug.toLowerCase().trim()) || slug.toLowerCase().trim();
                 const art = codexArticlesMap[cleanSlug];
                 if (!art) return;
 
@@ -8557,7 +8772,11 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     }} catch(e) {{
                         try {{ history.replaceState(null, null, '#' + cleanSlug); }} catch(err) {{}}
                     }}
+                }} else {{
+                    try {{ history.replaceState(null, null, '#' + cleanSlug); }} catch(err) {{}}
                 }}
+
+                document.title = (art.title ? (art.title + ' · ') : '') + 'The Margin Campaign Codex';
 
                 if (codexArticleView) {{
                     codexArticleView.innerHTML = art.html || '<p class="text-slate-400">Article content unavailable.</p>';
@@ -8967,15 +9186,23 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 }}
             }};
 
-            // Handle URL Hash and initial state on load
-            const hash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
+            // Handle URL Query Params and Hash on load
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramTarget = urlParams.get('page') || urlParams.get('article') || urlParams.get('slug') || urlParams.get('s');
+            let initialRaw = paramTarget ? (urlParams.get('s') ? ('s' + urlParams.get('s')) : paramTarget) : '';
+            if (!initialRaw && window.location.hash) {{
+                initialRaw = window.location.hash.substring(1).toLowerCase().trim();
+            }}
+
             const isMobile = window.innerWidth < 768;
-            if (hash && codexArticlesMap[hash]) {{
-                window.selectCodexArticle(hash, true);
-            }} else if (hash && hash.startsWith('th-')) {{
+            const resolvedInitial = window.resolveCodexSlug(initialRaw);
+
+            if (resolvedInitial && codexArticlesMap[resolvedInitial]) {{
+                window.selectCodexArticle(resolvedInitial, true);
+            }} else if (initialRaw && initialRaw.startsWith('th-')) {{
                 window.selectCodexArticle('open-threads', true);
                 setTimeout(() => {{
-                    const el = document.getElementById(hash);
+                    const el = document.getElementById(initialRaw);
                     if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
                 }}, 200);
             }} else if (isMobile) {{
@@ -8983,6 +9210,23 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
             }} else {{
                 window.selectCodexArticle('overview', true);
             }}
+
+            // Hashchange listener for instant anchor navigation without reload
+            window.addEventListener('hashchange', function() {{
+                const newHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
+                if (newHash) {{
+                    const resolved = window.resolveCodexSlug(newHash);
+                    if (resolved && codexArticlesMap[resolved]) {{
+                        window.selectCodexArticle(resolved, true);
+                    }} else if (newHash.startsWith('th-')) {{
+                        window.selectCodexArticle('open-threads', true);
+                        setTimeout(() => {{
+                            const el = document.getElementById(newHash);
+                            if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                        }}, 200);
+                    }}
+                }}
+            }});
 
             // Hardware and Browser Back Button Support for Standalone Wiki
             window.addEventListener('popstate', function(e) {{
@@ -8992,8 +9236,9 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     window.codexShowDirectoryOnMobile();
                 }} else {{
                     const newHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
-                    if (newHash && codexArticlesMap[newHash]) {{
-                        window.selectCodexArticle(newHash, true);
+                    const resolved = window.resolveCodexSlug(newHash);
+                    if (resolved && codexArticlesMap[resolved]) {{
+                        window.selectCodexArticle(resolved, true);
                     }} else if (newHash && newHash.startsWith('th-')) {{
                         window.selectCodexArticle('open-threads', true);
                         setTimeout(() => {{

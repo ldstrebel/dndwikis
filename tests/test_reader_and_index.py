@@ -311,6 +311,16 @@ class TestReaderPages(unittest.TestCase):
         self.assertIn('window.toggleCodexGroup', codex_content)
         self.assertIn('window.submitCodexFeedbackPr', codex_content)
         self.assertIn('window.copyCodexFeedbackToClipboard', codex_content)
+        self.assertIn('copySessionDirectLink', codex_content)
+        self.assertIn('codex-wiki.html', codex_content)
+
+        # 1b. Standalone codex-wiki.html exists with direct linking support
+        wiki_page = ROOT / "codex-wiki.html"
+        self.assertTrue(wiki_page.exists(), "Standalone codex-wiki.html must exist")
+        wiki_content = wiki_page.read_text(encoding="utf-8")
+        self.assertIn("window.copyCodexDirectLink", wiki_content)
+        self.assertIn("window.resolveCodexSlug", wiki_content)
+        self.assertIn("hashchange", wiki_content)
 
         # 2. Check each session ebook
         for s in self.sessions:
