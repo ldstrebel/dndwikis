@@ -3535,14 +3535,14 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
 
     max_session_num = max(all_manifests.keys()) if all_manifests else 8
     prev_narrative_html = (
-        f'<a href="uneraseable-s{session_num - 1}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5 shadow-sm"><span>&larr;</span> <span>Previous Narrative (S{session_num - 1})</span></a>'
+        f'<a href="uneraseable-s{session_num - 1}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-white border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>&larr;</span> <span>Previous Narrative (S{session_num - 1})</span></a>'
         if session_num > 1
         else '<div class="w-24 sm:w-36 hidden sm:block"></div>'
     )
     next_narrative_html = (
-        f'<a href="uneraseable-s{session_num + 1}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5 shadow-sm"><span>Next Narrative (S{session_num + 1})</span> <span>&rarr;</span></a>'
+        f'<a href="uneraseable-s{session_num + 1}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-white border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>Next Narrative (S{session_num + 1})</span> <span>&rarr;</span></a>'
         if session_num < max_session_num
-        else f'<a href="codex.html#session-{session_num}" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-colors flex items-center gap-1.5 font-bold shadow-sm"><span>View Session Codex (S{session_num})</span> <span>&rarr;</span></a>'
+        else f'<a href="codex.html#session-{session_num}" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold shadow-sm active:scale-95"><span>View Session Codex (S{session_num})</span> <span>&rarr;</span></a>'
     )
 
     # Generate Story Blocks & Chapter Dividers
@@ -4616,7 +4616,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             <!-- Single Narrative Navigation Controls -->
             <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-800/80">
                 {prev_narrative_html}
-                <a href="index.html" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm"><span>🏠</span> <span>Return to Hub</span></a>
+                <a href="index.html" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>🏠</span> <span>Return to Hub</span></a>
                 {next_narrative_html}
             </div>
         </section>

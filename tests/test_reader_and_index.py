@@ -231,13 +231,15 @@ class TestReaderPages(unittest.TestCase):
                           f"{s.name} campaign whole must rank sessions by dialogue percentage")
             
             # Verify recent-to-earliest order in campaign whole
-            idx_s7 = content.find('href="uneraseable-s7.html"')
-            idx_s6 = content.find('href="uneraseable-s6.html"')
-            idx_s5 = content.find('href="uneraseable-s5.html"')
-            idx_s4 = content.find('href="uneraseable-s4.html"')
-            idx_s3 = content.find('href="uneraseable-s3.html"')
-            idx_s2 = content.find('href="uneraseable-s2.html"')
-            idx_s1 = content.find('href="uneraseable-s1.html"')
+            chart_campaign_idx = content.find('id="chartViewCampaign"')
+            campaign_content = content[chart_campaign_idx:] if chart_campaign_idx != -1 else content
+            idx_s7 = campaign_content.find('href="uneraseable-s7.html"')
+            idx_s6 = campaign_content.find('href="uneraseable-s6.html"')
+            idx_s5 = campaign_content.find('href="uneraseable-s5.html"')
+            idx_s4 = campaign_content.find('href="uneraseable-s4.html"')
+            idx_s3 = campaign_content.find('href="uneraseable-s3.html"')
+            idx_s2 = campaign_content.find('href="uneraseable-s2.html"')
+            idx_s1 = campaign_content.find('href="uneraseable-s1.html"')
             self.assertTrue(idx_s7 < idx_s6 < idx_s5 < idx_s4 < idx_s3 < idx_s2 < idx_s1,
                             f"{s.name} campaign whole session cards must be ordered S7 down to S1")
 
