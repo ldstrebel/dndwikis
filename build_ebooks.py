@@ -3533,6 +3533,18 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
         codex_articles = load_all_codex_articles()
     codex_modal_html = build_codex_modal_html(session_num, codex_articles)
 
+    max_session_num = max(all_manifests.keys()) if all_manifests else 8
+    prev_narrative_html = (
+        f'<a href="uneraseable-s{session_num - 1}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5 shadow-sm"><span>&larr;</span> <span>Previous Narrative (S{session_num - 1})</span></a>'
+        if session_num > 1
+        else '<div class="w-24 sm:w-36 hidden sm:block"></div>'
+    )
+    next_narrative_html = (
+        f'<a href="uneraseable-s{session_num + 1}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1.5 shadow-sm"><span>Next Narrative (S{session_num + 1})</span> <span>&rarr;</span></a>'
+        if session_num < max_session_num
+        else f'<a href="codex.html#session-{session_num}" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-colors flex items-center gap-1.5 font-bold shadow-sm"><span>View Session Codex (S{session_num})</span> <span>&rarr;</span></a>'
+    )
+
     # Generate Story Blocks & Chapter Dividers
     blocks_html = ""
     chapter_index = 0
@@ -4544,40 +4556,68 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             <span>✦ End of Session {session_num} ✦</span>
         </div>
 
-        <!-- Purpose-Driven Post-Session Redirect Deck -->
+        <!-- Session vs Campaign Breakdown Navigation Deck -->
         <section class="my-10 p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-900 to-amber-950/20 border border-slate-800 shadow-xl space-y-4">
             <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
                 <div>
                     <span class="text-xs font-mono uppercase text-amber-400 font-bold tracking-wider">Session {session_num} Complete · What's Next?</span>
-                    <h3 class="text-base sm:text-lg font-bold font-serif text-slate-100">Campaign Companions & Trackers</h3>
+                    <h3 class="text-base sm:text-lg font-bold font-serif text-slate-100">Session &amp; Campaign Portals</h3>
                 </div>
                 <span class="text-xl">🧭</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                <a href="threads.html" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all flex flex-col gap-1 group">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xl">🧶</span>
-                        <span class="text-xs font-mono text-amber-400 group-hover:translate-x-0.5 transition-transform">Inspect ↗</span>
+
+            <!-- Double-Column Breakdown Pane: Session vs Campaign -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <!-- Section 1: Session {session_num} -->
+                <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                        <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session {session_num}</span></span>
+                        <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
                     </div>
-                    <strong class="text-sm font-serif text-slate-200 group-hover:text-amber-300">Quest & Thread Tracker</strong>
-                    <p class="text-xs text-slate-400 leading-relaxed">Review updated mysteries & verified clues from this session.</p>
-                </a>
-                <a href="characters.html" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all flex flex-col gap-1 group">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xl">👥</span>
-                        <span class="text-xs font-mono text-emerald-400 group-hover:translate-x-0.5 transition-transform">Inspect ↗</span>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li>
+                            <a href="critics.html?s={session_num}" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40">
+                                <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Review</span></span>
+                                <span class="text-slate-500 font-bold">→</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="codex.html#session-{session_num}" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                <span class="flex items-center gap-2"><span>📖</span> <span>Session Codex &amp; Recap</span></span>
+                                <span class="text-slate-500 font-bold">→</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Section 2: Campaign -->
+                <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                        <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                        <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
                     </div>
-                    <strong class="text-sm font-serif text-slate-200 group-hover:text-emerald-300">Dramatis Personae</strong>
-                    <p class="text-xs text-slate-400 leading-relaxed">Check PC & NPC rosters, abilities, and relationship changes.</p>
-                </a>
-                <a href="critics.html" class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-rose-500/50 hover:bg-slate-900 transition-all flex flex-col gap-1 group">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xl">🎭</span>
-                        <span class="text-xs font-mono text-rose-400 group-hover:translate-x-0.5 transition-transform">Inspect ↗</span>
-                    </div>
-                    <strong class="text-sm font-serif text-slate-200 group-hover:text-rose-300">The Critic's Corner</strong>
-                    <p class="text-xs text-slate-400 leading-relaxed">Read developmental scorecards & PC voice audits.</p>
-                </a>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li>
+                            <a href="threads.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                <span class="flex items-center gap-2"><span>🧵</span> <span>Open Threads</span></span>
+                                <span class="text-slate-500 font-bold">→</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="characters.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40">
+                                <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                <span class="text-slate-500 font-bold">→</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Single Narrative Navigation Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-800/80">
+                {prev_narrative_html}
+                <a href="index.html" class="min-h-[44px] px-3.5 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm"><span>🏠</span> <span>Return to Hub</span></a>
+                {next_narrative_html}
             </div>
         </section>
 
