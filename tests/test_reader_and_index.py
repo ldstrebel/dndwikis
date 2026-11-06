@@ -455,6 +455,60 @@ class TestPipelineHardeningGates(unittest.TestCase):
         threads_content = (ROOT / "threads.html").read_text(encoding="utf-8")
         self.assertIn(f"uneraseable-s{latest_num}.html", threads_content, f"Session {latest_num} links missing from threads.html")
 
+    def test_codex_sidebar_collapsible_defaults_and_order(self):
+        """
+        Codex UX Gate:
+        1. Non-session groups (characters, factions, threads, critic) must default to COLLAPSED (hidden class).
+        2. Sessions group must be expanded by default (no hidden class).
+        3. Sessions must be ordered latest to oldest (e.g. S9 down to S1).
+        """
+        targets = list(self.sessions)
+        wiki = ROOT / "codex-wiki.html"
+        if wiki.exists():
+            targets.append(wiki)
+
+        for target in targets:
+            content = target.read_text(encoding="utf-8")
+            
+            # 1. Non-session groups collapsed
+            for grp in ["characters", "factions", "threads", "critic"]:
+                grp_match = re.search(r'id="codexGroup-' + grp + r'"[^>]*class="([^"]*)"', content)
+                if grp_match:
+                    self.assertIn("hidden", grp_match.group(1), f"{target.name} group '{grp}' must default to collapsed (hidden)")
+
+            # 2. Sessions group expanded
+            sess_grp_match = re.search(r'id="codexGroup-sessions"[^>]*class="([^"]*)"', content)
+            if sess_grp_match:
+                self.assertNotIn("hidden", sess_grp_match.group(1), f"{target.name} sessions group must be expanded by default")
+
+            # 3. Sessions sorted latest to oldest
+            sess_slugs = [int(x) for x in re.findall(r'data-slug="s(\d+)"', content)]
+            session_nums = [int(m.group(1)) for s in self.sessions for m in [re.search(r'uneraseable-s(\d+)\.html', s.name)] if m]
+            expected_order = sorted(session_nums, reverse=True)
+            self.assertEqual(sess_slugs[:len(expected_order)], expected_order,
+                             f"{target.name} sessions in codex sidebar must be ordered latest to oldest")
+
+    def test_codex_articles_contain_all_sessions(self):
+        """Every reader and wiki must include codex article keys for all active sessions, with up-to-date session counts."""
+        session_nums = [int(m.group(1)) for s in self.sessions for m in [re.search(r'uneraseable-s(\d+)\.html', s.name)] if m]
+        targets = list(self.sessions)
+        wiki = ROOT / "codex-wiki.html"
+        if wiki.exists():
+            targets.append(wiki)
+
+        for target in targets:
+            content = target.read_text(encoding="utf-8")
+            m = re.search(r'id="codexArticlesData"[^>]*>(.*?)</script>', content, re.DOTALL)
+            self.assertIsNotNone(m, f"{target.name} must embed codexArticlesData")
+            articles = json.loads(m.group(1))
+
+            for num in session_nums:
+                self.assertIn(f"s{num}", articles, f"{target.name} codexArticlesData missing session s{num}")
+
+            overview_html = articles.get("overview", {}).get("html", "")
+            self.assertIn(f"{len(session_nums)} Sessions", overview_html,
+                          f"{target.name} codex overview article must reflect {len(session_nums)} Sessions")
+
 
 if __name__ == "__main__":
     unittest.main()

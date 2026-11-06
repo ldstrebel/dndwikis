@@ -139,6 +139,29 @@ def verify_upstream_manifests(sessions):
         log_pass(f"Session {s_num}: Verified manifest ({len(blocks)} blocks, {word_count:,} words) with zero meta bleed & full grounding")
         verified_count += 1
 
+    # Verify Upstream Codex completeness
+    codex_dir = LOCAL_SCRIBE / "campaign" / "codex"
+    if codex_dir.exists():
+        for s_num in sessions:
+            codex_sess_path = codex_dir / "sessions" / f"s{s_num}.md"
+            if not codex_sess_path.exists():
+                return log_fail(f"Upstream codex article missing for Session {s_num}: {codex_sess_path.name} not found in {codex_sess_path.parent}")
+        
+        # Verify README.md in codex
+        readme_path = codex_dir / "README.md"
+        if readme_path.exists():
+            rm_text = readme_path.read_text(encoding="utf-8")
+            expected_sess_count = f"{len(sessions)} Sessions"
+            if expected_sess_count not in rm_text:
+                return log_fail(f"Codex README.md does not reflect current session count '{expected_sess_count}' (found outdated session count)")
+            for s_num in sessions:
+                if f"selectCodexArticle('s{s_num}')" not in rm_text:
+                    return log_fail(f"Codex README.md missing navigation button for s{s_num}")
+            latest_s = max(sessions)
+            if f"S{latest_s} (Latest)" not in rm_text:
+                return log_fail(f"Codex README.md missing 'S{latest_s} (Latest)' badge")
+        log_pass(f"Upstream codex verified: all {len(sessions)} session articles and README overview in sync")
+
     if verified_count == 0:
         return log_fail("No upstream Schema 2.0 manifests found to verify!")
     return True
@@ -166,8 +189,36 @@ def verify_downstream_readers(sessions):
             articles = json.loads(m.group(1))
             if len(articles) < MIN_CODEX_ARTICLES:
                 return log_fail(f"Codex modal in {reader.name} has only {len(articles)} articles (minimum {MIN_CODEX_ARTICLES} required)")
+            
+            # Strict Session Completeness Gate: every active session must have an article in codexArticlesData
+            for s_num in sessions:
+                if f"s{s_num}" not in articles:
+                    return log_fail(f"Codex modal in {reader.name} is missing article for session s{s_num}!")
+            
+            # Verify overview article reflects active session count
+            overview_html = articles.get("overview", {}).get("html", "")
+            expected_count_str = f"{len(sessions)} Sessions"
+            if expected_count_str not in overview_html:
+                return log_fail(f"Codex overview article in {reader.name} does not reflect active session count '{expected_count_str}'")
+
         except Exception as e:
             return log_fail(f"Failed to parse codexArticlesData in {reader.name}: {e}")
+
+        # Verify Sidebar UX: sessions group must rank sessions latest-to-oldest, and non-session groups must default to collapsed
+        sidebar_m = re.search(r'id="codexSidebarList"[^>]*>(.*?)</div>\s*<!-- Main Article Viewer', content, re.DOTALL)
+        if sidebar_m:
+            sidebar_html = sidebar_m.group(1)
+            # Find order of session slugs in sidebar
+            sess_slugs = [int(x) for x in re.findall(r'data-slug="s(\d+)"', sidebar_html)]
+            expected_order = sorted(sessions, reverse=True)
+            if sess_slugs[:len(sessions)] != expected_order:
+                return log_fail(f"Codex sidebar in {reader.name} is not sorted latest-to-oldest! Found {sess_slugs[:len(sessions)]}, expected {expected_order}")
+
+            # Verify non-session groups have 'hidden' class
+            for grp in ["characters", "factions", "threads", "critic"]:
+                grp_m = re.search(r'id="codexGroup-' + grp + r'"[^>]*class="([^"]*)"', sidebar_html)
+                if grp_m and "hidden" not in grp_m.group(1):
+                    return log_fail(f"Codex sidebar in {reader.name} group '{grp}' is not collapsed by default (missing 'hidden' class)")
 
         # Zero-Hyperlink Invariant: Novel blocks container must contain STRICTLY ZERO <a> tags
         match = re.search(r'<div class="novel-blocks-container">(.*?)<div class="cut-block cut-block-raw', content, re.DOTALL)
@@ -254,7 +305,20 @@ def verify_hub_integrations(sessions):
     wiki_content = wiki.read_text(encoding="utf-8")
     if "The Margin Campaign Codex" not in wiki_content:
         return log_fail("Standalone codex-wiki.html title missing")
-    log_pass("Standalone codex-wiki.html verified and active")
+    m_wiki = re.search(r'id="codexArticlesData"[^>]*>(.*?)</script>', wiki_content, re.DOTALL)
+    if not m_wiki:
+        return log_fail("codexArticlesData script tag missing in codex-wiki.html")
+    try:
+        wiki_articles = json.loads(m_wiki.group(1))
+        for s in sessions:
+            if f"s{s}" not in wiki_articles:
+                return log_fail(f"codex-wiki.html missing article for session s{s}")
+        wiki_sess_slugs = [int(x) for x in re.findall(r'data-slug="s(\d+)"', wiki_content)]
+        if wiki_sess_slugs[:len(sessions)] != sorted(sessions, reverse=True):
+            return log_fail(f"codex-wiki.html sidebar sessions not ranked latest-to-oldest! Found {wiki_sess_slugs[:len(sessions)]}")
+    except Exception as e:
+        return log_fail(f"Failed to parse codexArticlesData in codex-wiki.html: {e}")
+    log_pass(f"Standalone codex-wiki.html verified with all {len(sessions)} session articles ranked latest-to-oldest")
     return True
 
 def run_test_suite():

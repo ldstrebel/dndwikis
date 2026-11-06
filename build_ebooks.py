@@ -2822,12 +2822,12 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
             continue
             
         if g_key == "sessions":
-            g_articles.sort(key=lambda a: a.get("sessionNum") or 999)
+            g_articles.sort(key=lambda a: a.get("sessionNum") or 0, reverse=True)
         elif g_key == "critic":
             def critic_sort(a):
                 m = re.search(r's(\d+)', a["slug"])
-                return int(m.group(1)) if m else 999
-            g_articles.sort(key=critic_sort)
+                return int(m.group(1)) if m else 0
+            g_articles.sort(key=critic_sort, reverse=True)
         else:
             g_articles.sort(key=lambda a: a.get("title", ""))
             
@@ -2851,6 +2851,10 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
             """)
             
         joined_items = "\n".join(group_items_html)
+        is_sessions_group = (g_key == "sessions")
+        items_hidden_class = "" if is_sessions_group else "hidden"
+        chevron_style = 'style="transform: rotate(0deg);"' if is_sessions_group else 'style="transform: rotate(-90deg);"'
+
         html_parts.append(f"""
         <div class="codex-accordion-group border-b border-slate-800/60" data-group="{g_key}">
             <button type="button" class="codex-group-header w-full flex items-center justify-between px-3 py-2 bg-slate-900/40 hover:bg-slate-850 text-slate-400 hover:text-slate-200 transition-colors text-[11px] font-mono uppercase tracking-wider font-bold select-none" onclick="toggleCodexGroup('{g_key}')">
@@ -2859,9 +2863,9 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
                     <span>{g_title}</span>
                     <span class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-400 font-bold ml-1">{len(g_articles)}</span>
                 </div>
-                <span class="codex-group-chevron text-[9px] text-slate-500 transition-transform duration-200">▼</span>
+                <span class="codex-group-chevron text-[9px] text-slate-500 transition-transform duration-200" {chevron_style}>▼</span>
             </button>
-            <div class="codex-group-items divide-y divide-slate-800/40 bg-slate-950/30" id="codexGroup-{g_key}">
+            <div class="codex-group-items {items_hidden_class} divide-y divide-slate-800/40 bg-slate-950/30" id="codexGroup-{g_key}">
                 {joined_items}
             </div>
         </div>
