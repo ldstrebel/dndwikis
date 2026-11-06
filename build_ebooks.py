@@ -2683,7 +2683,32 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
             html_lines.append(f'<h1 class="text-xl sm:text-2xl font-bold font-serif text-amber-400 tracking-wide mt-2 mb-3 pb-2 border-b border-slate-800 flex items-center gap-2"><span>📜</span> <span>{format_inline(t_txt)}</span></h1>')
         elif line.startswith('## '):
             h_txt = line[3:].strip()
-            html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-5 mb-2 flex items-center gap-2 text-amber-300/90">{format_inline(h_txt)}</h2>')
+            h_lower = h_txt.lower()
+            if any(k in h_lower for k in ["session summary", "session overview", "quick session summary"]):
+                clean_h = h_txt.replace("📋", "").strip()
+                html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-6 mb-3 flex items-center gap-2 text-amber-300"><span>📋</span> <span>{clean_h}</span></h2>')
+                summary_paras = []
+                i += 1
+                while i < len(lines):
+                    s_l = lines[i].strip()
+                    if s_l.startswith('#') or s_l.startswith('---') or s_l.startswith('- ') or s_l.startswith('* ') or s_l.startswith('|'):
+                        break
+                    if s_l:
+                        summary_paras.append(s_l)
+                    i += 1
+                if summary_paras:
+                    paras_html = "\n".join([
+                        f'<p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans">{format_inline(p)}</p>'
+                        for p in summary_paras
+                    ])
+                    html_lines.append(f"""
+                    <div class="session-summary-card p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/80 border border-slate-800/90 border-l-4 border-l-amber-500/70 shadow-lg space-y-3.5 my-3.5">
+                        {paras_html}
+                    </div>
+                    """)
+                continue
+            else:
+                html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-5 mb-2 flex items-center gap-2 text-amber-300/90">{format_inline(h_txt)}</h2>')
         elif line.startswith('### '):
             h_txt = line[4:].strip()
             html_lines.append(f'<h3 class="text-sm font-bold text-slate-200 mt-3.5 mb-1.5 flex items-center gap-1.5">{format_inline(h_txt)}</h3>')
