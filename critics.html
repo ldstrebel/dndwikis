@@ -83,7 +83,8 @@
                 <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(5, this)" style="scroll-snap-align: start;">S5</button>
                 <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(6, this)" style="scroll-snap-align: start;">S6</button>
                 <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(7, this)" style="scroll-snap-align: start;">S7</button>
-                <button type="button" class="sess-btn active flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(8, this)" style="scroll-snap-align: start;">S8 (Latest)</button>
+                <button type="button" class="sess-btn flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800" onclick="loadSessionAudit(8, this)" style="scroll-snap-align: start;">S8</button>
+                <button type="button" class="sess-btn active flex-shrink-0 min-h-[44px] px-3.5 py-2 rounded-lg text-xs sm:text-sm font-mono transition-colors bg-rose-500/20 text-rose-300 font-bold border border-rose-500/40" onclick="loadSessionAudit(9, this)" style="scroll-snap-align: start;">S9 (Latest)</button>
             </div>
         </header>
 
@@ -195,6 +196,81 @@
     <!-- Interactive Session Audit Controller -->
     <script>
         const AUDIT_DATA = {
+            9: {
+                sessionNum: 9,
+                title: "The DC Precinct Heist & The Flight 840 Vision",
+                tomatometer: "88 / 100",
+                popcornmeter: "92 / 100",
+                grade: "88 / 100",
+                gradeLabel: "Flawless Execution / High-Tension Climactic Heist",
+                summary: "A masterclass in cooperative multi-vector infiltration. The coterie executed synchronized tactical plays: Eusacles' concussive vault diversion, Dravin's administrative misdirection and Calm Emotions pacification, Alfie's psychological Vicious Mockery lockout, and Pierre's ductwork navigation. The Flight 840 chronal revelation recontextualized the entire campaign timeline.",
+                pacingNotes: [
+                    "Synchronized Infiltration Vectors: The narrative alternated cleanly between basement diversion, ductwork surveillance, and upper executive office extraction without losing momentum.",
+                    "Chronal Relic Payoff: The Flight 840 psychic vision elevated the municipal heist into the overarching cosmological mystery, linking the Redactors directly to modern mortal aviation disasters."
+                ],
+                participants: [
+                    {
+                        roleBadge: "Player Character · Classical Historian",
+                        name: "William Webb",
+                        character: "Prof. Edward Dravin",
+                        icon: "📜",
+                        grade: "92 / 100",
+                        spotlight: "24% dialogue",
+                        verdict: "Masterful field management. Used administrative double-talk to baffle the evidence clerk, deployed clairvoyance with surgical precision, cast Level 2 Calm Emotions to halt precinct panic, and endured the sensory trauma of the Flight 840 psychic shear.",
+                        helped: "Kept the team anchored; neutralized panic in the administrative wing before general lockdown tripped.",
+                        hurt: "Physical vulnerability during the psychic backwash required immediate extraction support.",
+                        directive: "Investigate the historical transponder codes (DOA to DCA) in Theodore's archival records."
+                    },
+                    {
+                        roleBadge: "Player Character · Driftwood Infiltrator",
+                        name: "Sophie Foreman Noone",
+                        character: "Alfie",
+                        icon: "🌿",
+                        grade: "90 / 100",
+                        spotlight: "22% dialogue",
+                        verdict: "Peak vocal and physical performance. Smuggled inside cardboard evidence boxes, hacked the dispatch camera array, unleashed a devastating bureaucratic Vicious Mockery that locked out responding officers, and offered profound campfire advice from her 450 sea-souls.",
+                        helped: "Brilliant combination of stealth mobility and psychological spellcraft to isolate the target office.",
+                        hurt: "Overconfidence during the initial locker check when the relic had already been moved.",
+                        directive: "Explore the connection between the 450 souls woven into her timber and the passengers of severed timeline flights."
+                    },
+                    {
+                        roleBadge: "Player Character · Reluctant Gorgon Scion",
+                        name: "Luke S",
+                        character: "Pierre",
+                        icon: "🐍",
+                        grade: "86 / 100",
+                        spotlight: "26% dialogue",
+                        verdict: "Exceptional athletic infiltration and technical support. Scaled the rain-slicked fire escape with spear-hook climbing, navigated the air ducts, picked up Dravin after the psychic shock, and shared touching bunkhouse banter crafting Alfie's whoopee-cushion bed.",
+                        helped: "Flawless physical infiltration and extraction coordination through the storm culverts.",
+                        hurt: "Remains deeply ambivalent about his maternal Gorgon lineage despite the obvious tactical boons.",
+                        directive: "Embrace his lineage directly; the party will need every Gorgon ward when the hunters catch up."
+                    },
+                    {
+                        roleBadge: "Player Character · Vegas Demigod",
+                        name: "John Hagey",
+                        character: "Eusacles",
+                        icon: "🛡️",
+                        grade: "85 / 100",
+                        spotlight: "18% dialogue",
+                        verdict: "The immovable anvil. Staged the definitive tactical diversion by hammering the intake vault bulkhead with his morningstar, drawing Captain Bob and the tactical squad away from the executive suite.",
+                        helped: "Fearless willingness to take maximum heat to create space for the infiltrators.",
+                        hurt: "Left himself exposed in the lower corridor while the alarm sounded.",
+                        directive: "Coordinate timing with Dravin's spells to ensure clear retreat corridors."
+                    },
+                    {
+                        roleBadge: "Game Master & World Architect",
+                        name: "Luke Foreman",
+                        character: "Game Master (DM)",
+                        icon: "🎲",
+                        grade: "91 / 100",
+                        spotlight: "38% dialogue",
+                        verdict: "Superb pacing and atmospheric worldbuilding. Balanced the ticking clock mechanics with organic municipal obstacles, gave each player character a moment of individual brilliance, and delivered a haunting, cinematic reveal in the Flight 840 vision.",
+                        helped: "Seamless transition from tension-filled heist to evocative chronal flashback.",
+                        hurt: "Brief rule clarification pauses during the air duct traversal.",
+                        directive: "Drive the impending Redactor hunter confrontation now that the Flight 840 anchor is active in the sanctuary."
+                    }
+                ]
+            },
             8: {
                 sessionNum: 8,
                 title: "Infiltration, The Lost Roads & The DC Precinct Vault",
@@ -935,7 +1011,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const modeParam = urlParams.get('mode');
             const sParam = parseInt(urlParams.get('s'), 10);
-            const targetSession = (sParam && AUDIT_DATA[sParam]) ? sParam : 8;
+            const targetSession = (sParam && AUDIT_DATA[sParam]) ? sParam : 9;
 
             // Find matching button
             const buttons = document.querySelectorAll('.sess-btn');
