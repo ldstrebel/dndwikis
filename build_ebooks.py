@@ -2834,7 +2834,7 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
         group_items_html = []
         for art in g_articles:
             s_slug = art["slug"]
-            subtitle_snip = f'<div class="text-[10px] text-slate-500 truncate">{art["subtitle"]}</div>' if art.get("subtitle") else ""
+            subtitle_snip = f'<div class="text-[10px] text-slate-500 truncate">{art["subtitle"]}</div>' if (art.get("subtitle") and g_key != "sessions") else ""
             sess_badge = f'<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">S{art["sessionNum"]}</span>' if art.get("sessionNum") else ""
             
             group_items_html.append(f"""
