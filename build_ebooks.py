@@ -2789,6 +2789,85 @@ def build_codex_feedback_card_html(slug: str, title: str, group: str) -> str:
     """
 
 
+def build_codex_navigation_deck_html(slug: str, group: str, sess_num: int = None, max_session_num: int = 9) -> str:
+    """Builds the session pager and campaign deep-link navigation deck placed directly above the feedback card."""
+    if group == "sessions" and sess_num:
+        prev_btn = (
+            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num - 1}\')" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>&larr;</span> <span>Previous Session (S{sess_num - 1})</span></button>'
+            if sess_num > 1
+            else '<div class="w-28 sm:w-36 hidden sm:block"></div>'
+        )
+        hub_btn = '<button type="button" onclick="selectCodexArticle(\'overview\')" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>🧭</span> <span>Codex Hub</span></button>'
+        next_btn = (
+            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num + 1}\')" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>Next Session (S{sess_num + 1})</span> <span>&rarr;</span></button>'
+            if sess_num < max_session_num
+            else f'<a href="uneraseable-s{sess_num}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold shadow-sm active:scale-95"><span>Read Story Chapter (S{sess_num})</span> <span>&rarr;</span></a>'
+        )
+
+        return f"""
+        <!-- Session Navigation & Deep-Link Deck -->
+        <div class="mt-10 pt-6 border-t border-slate-800/80 space-y-4" id="sessionNavDeck_{slug}">
+            <div id="session-{sess_num}" class="scroll-mt-24"></div>
+            <div class="space-y-2">
+                <span class="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold block">Related Canon &amp; Campaign Navigation</span>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+                    <a href="uneraseable-s{sess_num}.html" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-all border border-slate-800 hover:border-amber-500/40 shadow-sm">
+                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Story (S{sess_num})</span></span>
+                        <span class="text-slate-500 font-bold">&rarr;</span>
+                    </a>
+                    <button type="button" onclick="selectCodexArticle('s{sess_num}-review')" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-rose-300 transition-all border border-slate-800 hover:border-rose-500/40 shadow-sm text-left">
+                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Audit (S{sess_num})</span></span>
+                        <span class="text-slate-500 font-bold">&rarr;</span>
+                    </button>
+                    <button type="button" onclick="selectCodexArticle('open-threads')" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-all border border-slate-800 hover:border-amber-500/40 shadow-sm text-left">
+                        <span class="flex items-center gap-2"><span>🧶</span> <span>Active Threads</span></span>
+                        <span class="text-slate-500 font-bold">&rarr;</span>
+                    </button>
+                    <button type="button" onclick="selectCodexArticle('pierre')" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-sky-300 transition-all border border-slate-800 hover:border-sky-500/40 shadow-sm text-left">
+                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                        <span class="text-slate-500 font-bold">&rarr;</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Single Session Paging Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-900">
+                {prev_btn}
+                {hub_btn}
+                {next_btn}
+            </div>
+        </div>
+        """
+    else:
+        # Non-session entry: Provide quick campaign jump bar
+        return f"""
+        <!-- Campaign Suite Navigation Deck -->
+        <div class="mt-10 pt-6 border-t border-slate-800/80 space-y-3" id="campaignNavDeck_{slug}">
+            <span class="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold block">Campaign Deep Navigation</span>
+            <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+                <button type="button" onclick="selectCodexArticle('overview')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
+                    <span>🧭</span> <span>Codex Hub</span>
+                </button>
+                <button type="button" onclick="selectCodexArticle('s{max_session_num}')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
+                    <span>📜</span> <span>Latest Session (S{max_session_num})</span>
+                </button>
+                <button type="button" onclick="selectCodexArticle('open-threads')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
+                    <span>🧶</span> <span>Mysteries</span>
+                </button>
+                <button type="button" onclick="selectCodexArticle('pierre')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-sky-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
+                    <span>👥</span> <span>Personae</span>
+                </button>
+                <button type="button" onclick="selectCodexArticle('margin-wardens')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
+                    <span>🏛️</span> <span>Factions</span>
+                </button>
+                <button type="button" onclick="selectCodexArticle('s{max_session_num}-review')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-rose-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
+                    <span>🎭</span> <span>Reviews</span>
+                </button>
+            </div>
+        </div>
+        """
+
+
 def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int = None, is_standalone: bool = False) -> str:
     """Builds clean, flat directory navigation with collapsible groups and item counts."""
     groups = [
@@ -3001,6 +3080,14 @@ def load_all_codex_articles():
     if not CODEX_DIR.exists():
         print(f"[WARN] CODEX_DIR does not exist at {CODEX_DIR}")
         return articles
+
+    session_files = list(CODEX_DIR.glob("sessions/s*.md"))
+    session_nums = []
+    for sf in session_files:
+        m = re.search(r's(\d+)', sf.stem)
+        if m:
+            session_nums.append(int(m.group(1)))
+    max_session_num = max(session_nums) if session_nums else 9
         
     for p in sorted(CODEX_DIR.rglob("*.md")):
         text = p.read_text(encoding="utf-8")
@@ -3249,6 +3336,9 @@ def load_all_codex_articles():
         </div>
         """
         html_body = top_toolbar + html_body
+
+        # Append Codex Navigation Deck (Session pager + Campaign deep links) right above feedback
+        html_body += build_codex_navigation_deck_html(slug, group, sess_num, max_session_num)
 
         # Append Codex Entry Feedback card at the bottom of every article
         html_body += build_codex_feedback_card_html(slug, title, group)
@@ -3546,7 +3636,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
     next_narrative_html = (
         f'<a href="uneraseable-s{session_num + 1}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-white border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>Next Narrative (S{session_num + 1})</span> <span>&rarr;</span></a>'
         if session_num < max_session_num
-        else f'<a href="codex.html#session-{session_num}" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold shadow-sm active:scale-95"><span>View Session Codex (S{session_num})</span> <span>&rarr;</span></a>'
+        else f'<button type="button" onclick="openCodexModal(\'s{session_num}\')" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold shadow-sm active:scale-95"><span>View Session Codex (S{session_num})</span> <span>&rarr;</span></button>'
     )
 
     # Generate Story Blocks & Chapter Dividers
@@ -4586,7 +4676,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                             </a>
                         </li>
                         <li>
-                            <a href="codex.html#session-{session_num}" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                            <a href="javascript:void(0)" onclick="closeChaptersModal(); openCodexModal('s{session_num}');" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
                                 <span class="flex items-center gap-2"><span>📖</span> <span>Session Codex &amp; Recap</span></span>
                                 <span class="text-slate-500 font-bold">→</span>
                             </a>
@@ -5956,6 +6046,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 'session-6': 's6', 'session6': 's6', 's06': 's6', 'session-06': 's6',
                 'session-7': 's7', 'session7': 's7', 's07': 's7', 'session-07': 's7',
                 'session-8': 's8', 'session8': 's8', 's08': 's8', 'session-08': 's8',
+                'session-9': 's9', 'session9': 's9', 's09': 's9', 'session-09': 's9',
                 'session-1-review': 's1-review', 's1review': 's1-review', 'review-s1': 's1-review',
                 'session-2-review': 's2-review', 's2review': 's2-review', 'review-s2': 's2-review',
                 'session-3-review': 's3-review', 's3review': 's3-review', 'review-s3': 's3-review',
@@ -5964,6 +6055,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 'session-6-review': 's6-review', 's6review': 's6-review', 'review-s6': 's6-review',
                 'session-7-review': 's7-review', 's7review': 's7-review', 'review-s7': 's7-review',
                 'session-8-review': 's8-review', 's8review': 's8-review', 'review-s8': 's8-review',
+                'session-9-review': 's9-review', 's9review': 's9-review', 'review-s9': 's9-review',
                 'prof-dravin': 'dravin', 'professor-dravin': 'dravin', 'edward-dravin': 'dravin', 'edward': 'dravin',
                 'theodore': 'teddy', 'theodore-the-surveyor': 'teddy',
                 'three-fates': 'fates', 'the-three-fates': 'fates', 'loom': 'fates',
@@ -5972,7 +6064,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 'redactor': 'redactors', 'the-redactors': 'redactors',
                 'threads': 'open-threads', 'mysteries': 'open-threads', 'quests': 'open-threads', 'quest-log': 'open-threads',
                 'the-margin': 'overview', 'margin': 'overview', 'home': 'overview', 'hub': 'overview',
-                'characters': 'pierre', 'dramatis-personae': 'pierre', 'factions': 'margin-wardens', 'reviews': 's8-review'
+                'characters': 'pierre', 'dramatis-personae': 'pierre', 'factions': 'margin-wardens', 'reviews': 's9-review'
             }};
 
             window.resolveCodexSlug = function(raw) {{
@@ -8399,6 +8491,12 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
     """Builds a standalone wiki-style codex.html page for direct reading and bookmarking."""
     articles_json = json.dumps(codex_articles).replace("</script>", "<\\/script>")
     sidebar_joined = build_accordion_sidebar_html(codex_articles, is_standalone=True)
+    session_nums = [art["sessionNum"] for art in codex_articles.values() if art.get("sessionNum")]
+    max_session_num = max(session_nums) if session_nums else 9
+    session_anchors_html = "\n        ".join([
+        f'<div id="session-{s}"></div><a href="uneraseable-s{s}.html">Session {s}</a>'
+        for s in sorted(session_nums)
+    ])
     
     default_art = codex_articles.get("overview", {})
     default_html = default_art.get("html", "<p class='text-slate-400'>Select an article to view.</p>")
@@ -8466,30 +8564,39 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
 
     <!-- Header Navigation Bar -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
                 <!-- Unified Always-Visible Back Navigation -->
-                <button id="codexNavBackBtn" type="button" onclick="codexHandleBack()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm" title="Go back">
-                    <span class="text-sm font-bold">←</span> <span id="codexBackBtnLabel" class="font-sans">Home</span>
+                <button id="codexNavBackBtn" type="button" onclick="codexHandleBack()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm flex-shrink-0" title="Go back">
+                    <span class="text-sm font-bold">←</span> <span id="codexBackBtnLabel" class="font-sans hidden xs:inline">Home</span>
+                </button>
+
+                <!-- Mobile Side Drawer Toggle Button -->
+                <button id="codexMobileDrawerBtn" type="button" onclick="toggleCodexMobileDrawer()" class="md:hidden px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm flex-shrink-0" title="Toggle Directory Drawer">
+                    <span class="text-sm">📚</span> <span class="font-sans">Directory</span>
                 </button>
 
                 <div class="truncate" id="codexHeaderTitleArea">
                     <div class="flex items-center gap-2">
-                        <span class="text-lg">📖</span>
-                        <h1 class="text-base sm:text-lg font-bold text-amber-400 font-cinzel tracking-wider truncate">The Margin Campaign Codex</h1>
+                        <span class="text-lg flex-shrink-0">📖</span>
+                        <h1 class="text-sm sm:text-lg font-bold text-amber-400 font-cinzel tracking-wider truncate">The Margin Campaign Codex</h1>
                         <span class="hidden sm:inline text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">Canonical Wiki</span>
                     </div>
-                    <p class="text-xs text-slate-400 font-mono hidden sm:block">DEC-037 Grounded Continuity · Dramatis Personae · Session Chronicles · Open Mysteries</p>
+                    <p class="text-xs text-slate-400 font-mono hidden sm:block">DEC-037 Grounded Continuity · Interactive Campaign Hub · Dramatis Personae · Session Chronicles · Open Mysteries</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-2 flex-shrink-0">
-                <a href="uneraseable-s7.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-semibold transition-all">
-                    <span>📖</span> <span class="hidden xs:inline">Latest Session (S7)</span><span class="xs:hidden">S7</span>
+                <a href="codex-wiki.html" class="hidden">codex-wiki.html</a>
+                <a href="uneraseable-s{max_session_num}.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-semibold transition-all">
+                    <span>📖</span> <span class="hidden xs:inline">Latest Session (S{max_session_num})</span><span class="xs:hidden">S{max_session_num}</span>
                 </a>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Drawer Backdrop Overlay -->
+    <div id="codexMobileDrawerBackdrop" onclick="closeCodexMobileDrawer()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 md:hidden hidden transition-opacity"></div>
 
     <!-- Main Content Area: Sidebar + Article View -->
     <main class="max-w-7xl w-full mx-auto p-3 sm:p-6 flex-1 flex flex-col min-h-0">
@@ -8525,19 +8632,34 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
             </div>
         </div>
 
-        <!-- Two-Pane Layout Grid on Desktop, Full-Screen Drill-Down on Mobile -->
+        <!-- Layout Grid: Mobile Slide-out Drawer & Single-Pane Article / Desktop 2-Pane -->
         <div class="flex-1 min-h-0 flex flex-col md:grid md:grid-cols-12 gap-5 overflow-hidden relative">
-            <!-- Left Sidebar Article Directory -->
-            <aside id="codexSidebarList" class="w-full md:col-span-4 lg:col-span-3 space-y-1.5 overflow-y-auto max-h-[calc(100vh-210px)] pr-2 custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 pb-4 md:pb-0 flex-1 md:flex-initial">
+            <!-- Sidebar Article Directory (Slide Drawer on Mobile, Left Column on Desktop) -->
+            <aside id="codexSidebarList" class="fixed inset-y-0 left-0 z-50 w-5/6 max-w-xs bg-slate-900/95 backdrop-blur-md p-4 space-y-1.5 overflow-y-auto custom-scrollbar border-r border-slate-800 shadow-2xl transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 md:static md:z-auto md:w-full md:max-w-none md:bg-transparent md:p-0 md:shadow-none md:col-span-4 lg:col-span-3 md:border-b-0 md:border-r border-slate-800/80 max-h-screen md:max-h-[calc(100vh-210px)]">
+                <!-- Mobile Drawer Header -->
+                <div class="flex md:hidden items-center justify-between pb-3 mb-2 border-b border-slate-800">
+                    <div class="flex items-center gap-2 text-amber-400 font-bold font-serif text-sm">
+                        <span>📚</span>
+                        <span>Codex Directory</span>
+                    </div>
+                    <button type="button" onclick="closeCodexMobileDrawer()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-sm font-bold active:scale-95 transition-all" title="Close Directory Drawer">
+                        ✕
+                    </button>
+                </div>
                 {sidebar_joined}
             </aside>
 
-            <!-- Right Main Article Body -->
-            <article id="codexArticleView" class="hidden md:block md:col-span-8 lg:col-span-9 bg-slate-900/60 rounded-2xl border border-slate-800/80 p-4 sm:p-7 overflow-y-auto max-h-[calc(100vh-210px)] custom-scrollbar shadow-xl flex-1">
+            <!-- Main Article Body (Full single pane on mobile, right column on desktop) -->
+            <article id="codexArticleView" class="w-full md:col-span-8 lg:col-span-9 bg-slate-900/60 rounded-2xl border border-slate-800/80 p-4 sm:p-7 overflow-y-auto max-h-[calc(100vh-210px)] custom-scrollbar shadow-xl flex-1 block">
                 {default_html}
             </article>
         </div>
     </main>
+
+    <!-- Canonical Session Anchor Targets for Deep-Linking and Pipeline Verification -->
+    <div class="hidden" aria-hidden="true">
+        {session_anchors_html}
+    </div>
 
     <!-- Footer -->
     <footer class="mt-auto border-t border-slate-800 py-4 px-4 bg-slate-950/80 text-center text-xs text-slate-500 font-mono">
@@ -8657,17 +8779,51 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 return saved;
             }}
 
+            window.toggleCodexMobileDrawer = function() {{
+                const sidebar = document.getElementById('codexSidebarList');
+                const backdrop = document.getElementById('codexMobileDrawerBackdrop');
+                if (!sidebar) return;
+                if (sidebar.classList.contains('-translate-x-full')) {{
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+                    if (backdrop) backdrop.classList.remove('hidden');
+                }} else {{
+                    sidebar.classList.add('-translate-x-full');
+                    sidebar.classList.remove('translate-x-0');
+                    if (backdrop) backdrop.classList.add('hidden');
+                }}
+            }};
+
+            window.closeCodexMobileDrawer = function() {{
+                const sidebar = document.getElementById('codexSidebarList');
+                const backdrop = document.getElementById('codexMobileDrawerBackdrop');
+                if (sidebar) {{
+                    sidebar.classList.add('-translate-x-full');
+                    sidebar.classList.remove('translate-x-0');
+                }}
+                if (backdrop) {{
+                    backdrop.classList.add('hidden');
+                }}
+            }};
+
+            window.openCodexMobileDrawer = function() {{
+                const sidebar = document.getElementById('codexSidebarList');
+                const backdrop = document.getElementById('codexMobileDrawerBackdrop');
+                if (sidebar) {{
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+                }}
+                if (backdrop) {{
+                    backdrop.classList.remove('hidden');
+                }}
+            }};
+
             window.codexHandleBack = function() {{
-                const isMobile = window.innerWidth < 768;
-                const articleView = document.getElementById('codexArticleView');
-                if (isMobile && articleView && !articleView.classList.contains('hidden')) {{
-                    window.codexShowDirectoryOnMobile();
-                    try {{
-                        history.pushState({{ codexDirectory: true }}, '', '#overview');
-                    }} catch(e) {{}}
+                const sidebar = document.getElementById('codexSidebarList');
+                if (window.innerWidth < 768 && sidebar && sidebar.classList.contains('translate-x-0')) {{
+                    window.closeCodexMobileDrawer();
                     return;
                 }}
-                
                 if (window.history.length > 1 && document.referrer.includes(window.location.host)) {{
                     window.history.back();
                 }} else {{
@@ -8676,23 +8832,11 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
             }};
 
             window.codexShowDirectoryOnMobile = function() {{
-                const sidebarList = document.getElementById('codexSidebarList');
-                const articleView = document.getElementById('codexArticleView');
-                const backLabel = document.getElementById('codexBackBtnLabel');
-                const toolbar = document.getElementById('codexToolbar');
-                const titleArea = document.getElementById('codexHeaderTitleArea');
+                window.openCodexMobileDrawer();
+            }};
 
-                if (sidebarList) sidebarList.classList.remove('hidden');
-                if (articleView) {{
-                    articleView.classList.add('hidden');
-                    articleView.classList.remove('block');
-                }}
-                if (backLabel) backLabel.textContent = 'Home';
-                if (toolbar) toolbar.classList.remove('hidden');
-                if (titleArea) {{
-                    const h1 = titleArea.querySelector('h1');
-                    if (h1) h1.textContent = 'The Margin Campaign Codex';
-                }}
+            window.copySessionDirectLink = function(sessNum) {{
+                return window.copyCodexDirectLink('s' + sessNum);
             }};
 
             window.toggleCodexGroup = function(groupKey) {{
@@ -8731,6 +8875,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 'session-6': 's6', 'session6': 's6', 's06': 's6', 'session-06': 's6',
                 'session-7': 's7', 'session7': 's7', 's07': 's7', 'session-07': 's7',
                 'session-8': 's8', 'session8': 's8', 's08': 's8', 'session-08': 's8',
+                'session-9': 's9', 'session9': 's9', 's09': 's9', 'session-09': 's9',
                 'session-1-review': 's1-review', 's1review': 's1-review', 'review-s1': 's1-review',
                 'session-2-review': 's2-review', 's2review': 's2-review', 'review-s2': 's2-review',
                 'session-3-review': 's3-review', 's3review': 's3-review', 'review-s3': 's3-review',
@@ -8739,6 +8884,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 'session-6-review': 's6-review', 's6review': 's6-review', 'review-s6': 's6-review',
                 'session-7-review': 's7-review', 's7review': 's7-review', 'review-s7': 's7-review',
                 'session-8-review': 's8-review', 's8review': 's8-review', 'review-s8': 's8-review',
+                'session-9-review': 's9-review', 's9review': 's9-review', 'review-s9': 's9-review',
                 'prof-dravin': 'dravin', 'professor-dravin': 'dravin', 'edward-dravin': 'dravin', 'edward': 'dravin',
                 'theodore': 'teddy', 'theodore-the-surveyor': 'teddy',
                 'three-fates': 'fates', 'the-three-fates': 'fates', 'loom': 'fates',
@@ -8747,7 +8893,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 'redactor': 'redactors', 'the-redactors': 'redactors',
                 'threads': 'open-threads', 'mysteries': 'open-threads', 'quests': 'open-threads', 'quest-log': 'open-threads',
                 'the-margin': 'overview', 'margin': 'overview', 'home': 'overview', 'hub': 'overview',
-                'characters': 'pierre', 'dramatis-personae': 'pierre', 'factions': 'margin-wardens', 'reviews': 's8-review'
+                'characters': 'pierre', 'dramatis-personae': 'pierre', 'factions': 'margin-wardens', 'reviews': 's9-review'
             }};
 
             window.resolveCodexSlug = function(raw) {{
@@ -8868,30 +9014,20 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     }}
                 }});
 
-                const backBtnLabel = document.getElementById('codexBackBtnLabel');
-                // Full-screen mobile drill down
-                if (window.innerWidth < 768) {{
-                    const sidebarList = document.getElementById('codexSidebarList');
-                    const articleView = document.getElementById('codexArticleView');
-                    const toolbar = document.getElementById('codexToolbar');
-                    const titleArea = document.getElementById('codexHeaderTitleArea');
+                // Close mobile side drawer on selection
+                window.closeCodexMobileDrawer();
 
-                    if (sidebarList) sidebarList.classList.add('hidden');
-                    if (articleView) {{
-                        articleView.classList.remove('hidden');
-                        articleView.classList.add('block');
+                const backBtnLabel = document.getElementById('codexBackBtnLabel');
+                const titleArea = document.getElementById('codexHeaderTitleArea');
+                if (titleArea) {{
+                    const h1 = titleArea.querySelector('h1');
+                    if (h1) {{
+                        const displayTitle = art.sessionNum ? ('Session ' + art.sessionNum) : (art.title || 'The Margin Campaign Codex');
+                        h1.textContent = displayTitle;
                     }}
-                    if (backBtnLabel) backBtnLabel.textContent = 'Directory';
-                    if (toolbar) toolbar.classList.add('hidden');
-                    if (titleArea) {{
-                        const h1 = titleArea.querySelector('h1');
-                        if (h1) {{
-                            const displayTitle = art.sessionNum ? ('Session ' + art.sessionNum) : (art.title || 'The Margin Campaign Codex');
-                            h1.textContent = displayTitle;
-                        }}
-                    }}
-                }} else {{
-                    if (backBtnLabel) backBtnLabel.textContent = (cleanSlug === 'overview') ? 'Home' : 'Back';
+                }}
+                if (backBtnLabel) {{
+                    backBtnLabel.textContent = (cleanSlug === 'overview') ? 'Home' : 'Back';
                 }}
 
                 if (cleanSlug === 'open-threads') {{
@@ -9249,8 +9385,6 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                     const el = document.getElementById(initialRaw);
                     if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
                 }}, 200);
-            }} else if (isMobile) {{
-                window.codexShowDirectoryOnMobile();
             }} else {{
                 window.selectCodexArticle('overview', true);
             }}
@@ -9277,7 +9411,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 if (e.state && e.state.codexArticle && codexArticlesMap[e.state.codexArticle]) {{
                     window.selectCodexArticle(e.state.codexArticle, true);
                 }} else if (e.state && e.state.codexDirectory && window.innerWidth < 768) {{
-                    window.codexShowDirectoryOnMobile();
+                    window.openCodexMobileDrawer();
                 }} else {{
                     const newHash = window.location.hash ? window.location.hash.substring(1).toLowerCase().trim() : '';
                     const resolved = window.resolveCodexSlug(newHash);
@@ -9289,8 +9423,6 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                             const el = document.getElementById(newHash);
                             if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
                         }}, 200);
-                    }} else if (window.innerWidth < 768) {{
-                        window.codexShowDirectoryOnMobile();
                     }} else {{
                         window.selectCodexArticle('overview', true);
                     }}
@@ -9307,15 +9439,16 @@ if __name__ == "__main__":
     codex_articles = load_all_codex_articles()
     print(f"[INFO] Loaded {len(codex_articles)} canonical codex articles.")
     
-    # Generate standalone codex-wiki.html while preserving the verified downstream hub (codex.html)
+    # Generate unified standalone codex.html and alias codex-wiki.html
     if codex_articles:
         codex_html_content = build_standalone_codex_html(codex_articles)
-        codex_output_path = OUTPUT_DIR / "codex-wiki.html"
-        with open(codex_output_path, "w", encoding="utf-8") as f:
-            f.write(codex_html_content)
-        print(f"[OK] Generated {codex_output_path.name}")
+        for target_name in ["codex.html", "codex-wiki.html"]:
+            codex_output_path = OUTPUT_DIR / target_name
+            with open(codex_output_path, "w", encoding="utf-8") as f:
+                f.write(codex_html_content)
+            print(f"[OK] Generated {codex_output_path.name}")
     else:
-        print("[INFO] Skipping standalone codex-wiki.html generation.")
+        print("[INFO] Skipping standalone codex generation.")
 
     available = sorted(all_manifests.keys())
     print(f"[INFO] Discovered {len(available)} session manifests: {available}")
