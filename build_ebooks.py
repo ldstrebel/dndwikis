@@ -3502,8 +3502,8 @@ def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> st
     <!-- ========================================================= -->
     <!-- CAMPAIGN CODEX & WIKI FULL-SCREEN APP MODAL OVERLAY -->
     <!-- ========================================================= -->
-    <div id="codexModalOverlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[80] flex flex-col opacity-0 pointer-events-none p-0 overflow-hidden">
-        <div id="codexModalCard" class="w-full h-full flex flex-col bg-slate-950 border-0 md:border md:border-slate-800 md:rounded-2xl md:max-w-6xl md:h-[90vh] md:my-auto md:mx-auto shadow-2xl overflow-hidden">
+    <div id="codexModalOverlay" class="fixed inset-0 bg-slate-950 z-[80] flex flex-col opacity-0 pointer-events-none p-0 m-0 overflow-hidden w-full h-full">
+        <div id="codexModalCard" class="w-full h-full flex flex-col bg-slate-950 border-0 rounded-none shadow-none overflow-hidden max-w-none max-h-none">
             
             <!-- Mobile & Desktop Sticky Header -->
             <header class="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3.5 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md flex-shrink-0 gap-2">
@@ -3566,13 +3566,13 @@ def build_codex_modal_html(current_session_num: int, codex_articles: dict) -> st
 
             <!-- Content Area: Responsive Mobile Stack / Desktop 2-Pane -->
             <div class="flex-1 min-h-0 flex flex-col md:grid md:grid-cols-12 overflow-hidden relative">
-                <!-- Directory Sidebar (Full screen on mobile when viewing directory, left 4 cols on desktop) -->
-                <div id="codexSidebarList" class="w-full md:col-span-4 lg:col-span-4 overflow-y-auto p-3 sm:p-4 space-y-1.5 custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 flex-1 md:flex-initial">
+                <!-- Directory Sidebar (Full screen on mobile when viewing directory, left 3-4 cols on desktop) -->
+                <div id="codexSidebarList" class="w-full md:col-span-4 lg:col-span-3 overflow-y-auto p-3 sm:p-4 space-y-1.5 custom-scrollbar border-b md:border-b-0 md:border-r border-slate-800/80 flex-1 md:flex-initial">
                     {sidebar_joined}
                 </div>
 
-                <!-- Main Article Viewer (Full screen on mobile when reading, right 8 cols on desktop) -->
-                <div id="codexArticleView" class="hidden md:block md:col-span-8 lg:col-span-8 overflow-y-auto p-4 sm:p-7 bg-slate-950/80 custom-scrollbar flex-1">
+                <!-- Main Article Viewer (Full screen on mobile when reading, right 8-9 cols on desktop) -->
+                <div id="codexArticleView" class="hidden md:block md:col-span-8 lg:col-span-9 overflow-y-auto p-4 sm:p-7 lg:p-10 bg-slate-950 custom-scrollbar flex-1">
                     {default_html}
                 </div>
             </div>
@@ -4456,7 +4456,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
         }}
 
         /* Overlay Transitions & Viewport Sizing */
-        #chaptersModalOverlay, #codexModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay, #diffInspectorOverlay {{
+        #chaptersModalOverlay, #critiqueModalOverlay, #ghModalOverlay, #onboardingModalOverlay, #criticForumModalOverlay, #settingsModalOverlay, #diffInspectorOverlay {{
             transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
             height: 100vh;
             height: 100dvh;
@@ -4466,16 +4466,16 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             overflow-x: hidden !important;
             overscroll-behavior: contain !important;
         }}
-        #chaptersModalCard, #codexModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard, #diffInspectorCard {{
+        #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard, #diffInspectorCard {{
             overscroll-behavior: contain !important;
         }}
-        #chaptersModalOverlay.visible, #codexModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible, #diffInspectorOverlay.visible, #ghModalOverlay.visible {{
+        #chaptersModalOverlay.visible, #critiqueModalOverlay.visible, #criticForumModalOverlay.visible, #settingsModalOverlay.visible, #diffInspectorOverlay.visible, #ghModalOverlay.visible {{
             opacity: 1 !important;
             pointer-events: auto !important;
             visibility: visible !important;
         }}
 
-        #chaptersModalCard, #codexModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
+        #chaptersModalCard, #critiqueBottomSheet, #criticForumModalCard, #settingsModalCard, #onboardingModalCard {{
             transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, max-height 0.2s ease;
             transform: scale(0.96) translateY(-10px);
             opacity: 0;
@@ -4485,13 +4485,50 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
             margin-right: auto !important;
         }}
         #chaptersModalOverlay.visible #chaptersModalCard,
-        #codexModalOverlay.visible #codexModalCard,
         #critiqueModalOverlay.visible #critiqueBottomSheet,
         #criticForumModalOverlay.visible #criticForumModalCard,
         #settingsModalOverlay.visible #settingsModalCard,
         #onboardingModalOverlay.visible #onboardingModalCard {{
             transform: scale(1) translateY(0);
             opacity: 1;
+        }}
+
+        /* Full Screen Edge-to-Edge Desktop & Mobile Campaign Codex (Zero Containeritis) */
+        #codexModalOverlay {{
+            transition: opacity 0.2s ease;
+            height: 100vh !important;
+            height: 100dvh !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+            border-radius: 0 !important;
+            box-sizing: border-box !important;
+        }}
+        #codexModalOverlay.visible {{
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            visibility: visible !important;
+        }}
+        #codexModalCard {{
+            width: 100vw !important;
+            max-width: 100vw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            max-height: 100vh !important;
+            max-height: 100dvh !important;
+            border-radius: 0 !important;
+            border: none !important;
+            margin: 0 !important;
+            transform: none !important;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            overscroll-behavior: contain !important;
+        }}
+        #codexModalOverlay.visible #codexModalCard {{
+            transform: none !important;
+            opacity: 1 !important;
         }}
 
         /* Codex Badges */
@@ -6267,11 +6304,8 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 }}
                 
                 if (targetSlug && String(targetSlug).toLowerCase().startsWith('th-')) {{
-                    window.selectCodexArticle('open-threads', true);
-                    setTimeout(() => {{
-                        const el = document.getElementById(String(targetSlug).toLowerCase());
-                        if (el) el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
-                    }}, 200);
+                    const resolved = (typeof window.resolveCodexSlug === 'function') ? window.resolveCodexSlug(targetSlug) : targetSlug;
+                    window.selectCodexArticle(resolved, true);
                     return;
                 }}
                 
@@ -6477,13 +6511,13 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 }});
 
                 const backLabel = document.getElementById('codexModalBackLabel');
+                const sidebarList = document.getElementById('codexSidebarList');
+                const articleView = document.getElementById('codexArticleView');
+                const toolbar = document.getElementById('codexToolbar');
+                const titleArea = document.getElementById('codexHeaderTitleArea');
+
                 // On mobile (< 768px), drill down into full-screen article view with back button
                 if (window.innerWidth < 768) {{
-                    const sidebarList = document.getElementById('codexSidebarList');
-                    const articleView = document.getElementById('codexArticleView');
-                    const toolbar = document.getElementById('codexToolbar');
-                    const titleArea = document.getElementById('codexHeaderTitleArea');
-
                     if (sidebarList) sidebarList.classList.add('hidden');
                     if (articleView) {{
                         articleView.classList.remove('hidden');
@@ -6499,7 +6533,24 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                         }}
                     }}
                 }} else {{
+                    // On desktop (>= 768px), show 2-pane view utilizing 100% screen real estate
+                    if (sidebarList) {{
+                        sidebarList.classList.remove('hidden');
+                        sidebarList.classList.add('block');
+                    }}
+                    if (articleView) {{
+                        articleView.classList.remove('hidden');
+                        articleView.classList.add('block');
+                    }}
+                    if (toolbar) {{
+                        toolbar.classList.remove('hidden');
+                        toolbar.classList.add('flex');
+                    }}
                     if (backLabel) backLabel.textContent = 'Close';
+                    if (titleArea) {{
+                        const h3 = titleArea.querySelector('h3');
+                        if (h3) h3.textContent = 'The Margin Codex';
+                    }}
                 }}
 
                 if (cleanSlug === 'open-threads') {{
@@ -8744,7 +8795,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
 
     <!-- Header Navigation Bar -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3">
+        <div class="w-full max-w-[1700px] mx-auto flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6 py-2.5 sm:py-3">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
                 <!-- Mobile Side Drawer Toggle Button (1st - Leftmost) -->
                 <button id="codexMobileDrawerBtn" type="button" onclick="toggleCodexMobileDrawer()" class="md:hidden px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm flex-shrink-0" title="Toggle Directory Drawer">
@@ -8779,7 +8830,7 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
     <div id="codexMobileDrawerBackdrop" onclick="closeCodexMobileDrawer()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 md:hidden hidden transition-opacity"></div>
 
     <!-- Main Content Area: Sidebar + Article View -->
-    <main class="max-w-7xl w-full mx-auto p-3 sm:p-6 flex-1 flex flex-col min-h-0">
+    <main class="w-full max-w-[1700px] mx-auto p-3 sm:p-6 flex-1 flex flex-col min-h-0">
         <!-- Controls: Category Filter Tabs & Search Bar (Desktop Only - Mobile Nav Uses Directory Drawer & Hub Search) -->
         <div id="codexToolbar" class="hidden md:flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-slate-800 flex-shrink-0">
             <!-- Category Tabs -->
