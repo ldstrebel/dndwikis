@@ -2680,13 +2680,13 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
             
         if line.startswith('# '):
             t_txt = line[2:].strip()
-            html_lines.append(f'<h1 class="text-xl sm:text-2xl font-bold font-serif text-amber-400 tracking-wide mt-2 mb-3 pb-2 border-b border-slate-800 flex items-center gap-2"><span>📜</span> <span>{format_inline(t_txt)}</span></h1>')
+            html_lines.append(f'<h1 class="text-2xl sm:text-3xl font-bold font-serif text-amber-400 tracking-wide mt-2 mb-4 pb-2 border-b border-slate-800 flex items-center gap-2"><span>📜</span> <span>{format_inline(t_txt)}</span></h1>')
         elif line.startswith('## '):
             h_txt = line[3:].strip()
             h_lower = h_txt.lower()
             if any(k in h_lower for k in ["session summary", "session overview", "quick session summary"]):
                 clean_h = h_txt.replace("📋", "").strip()
-                html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-6 mb-3 flex items-center gap-2 text-amber-300"><span>📋</span> <span>{clean_h}</span></h2>')
+                html_lines.append(f'<h2 class="text-lg sm:text-xl font-bold font-serif text-amber-300 tracking-wide mt-6 mb-3 flex items-center gap-2"><span>📋</span> <span>{clean_h}</span></h2>')
                 summary_paras = []
                 i += 1
                 while i < len(lines):
@@ -2697,21 +2697,14 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
                         summary_paras.append(s_l)
                     i += 1
                 if summary_paras:
-                    paras_html = "\n".join([
-                        f'<p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-sans">{format_inline(p)}</p>'
-                        for p in summary_paras
-                    ])
-                    html_lines.append(f"""
-                    <div class="session-summary-card p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/80 border border-slate-800/90 border-l-4 border-l-amber-500/70 shadow-lg space-y-3.5 my-3.5">
-                        {paras_html}
-                    </div>
-                    """)
+                    for p in summary_paras:
+                        html_lines.append(f'<p class="text-base text-slate-200 leading-relaxed font-sans mb-4">{format_inline(p)}</p>')
                 continue
             else:
-                html_lines.append(f'<h2 class="text-base sm:text-lg font-bold font-serif text-slate-100 tracking-wide mt-5 mb-2 flex items-center gap-2 text-amber-300/90">{format_inline(h_txt)}</h2>')
+                html_lines.append(f'<h2 class="text-lg sm:text-xl font-bold font-serif text-amber-300/90 tracking-wide mt-6 mb-3 flex items-center gap-2">{format_inline(h_txt)}</h2>')
         elif line.startswith('### '):
             h_txt = line[4:].strip()
-            html_lines.append(f'<h3 class="text-sm font-bold text-slate-200 mt-3.5 mb-1.5 flex items-center gap-1.5">{format_inline(h_txt)}</h3>')
+            html_lines.append(f'<h3 class="text-base sm:text-lg font-bold text-slate-100 mt-4 mb-2 flex items-center gap-1.5">{format_inline(h_txt)}</h3>')
         elif line.startswith('---'):
             html_lines.append('<hr class="my-4 border-slate-800/80">')
         elif line.startswith('- ') or line.startswith('* '):
@@ -2719,25 +2712,25 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
             while i < len(lines) and (lines[i].strip().startswith('- ') or lines[i].strip().startswith('* ')):
                 item_txt = lines[i].strip()[2:].strip()
                 # Clean out [NO DATA - ABSENT] tags into clean note
-                item_txt = item_txt.replace('[NO DATA - ABSENT]', '<span class="text-slate-500 font-mono text-[10px]">(Absent)</span>')
-                items.append(f'<li class="leading-relaxed">{format_inline(item_txt)}</li>')
+                item_txt = item_txt.replace('[NO DATA - ABSENT]', '<span class="text-slate-500 font-mono text-xs">(Absent)</span>')
+                items.append(f'<li class="leading-relaxed text-base text-slate-200">{format_inline(item_txt)}</li>')
                 i += 1
-            html_lines.append('<ul class="list-disc list-inside space-y-1 my-2 text-xs sm:text-sm text-slate-300 pl-1">\n' + '\n'.join(items) + '\n</ul>')
+            html_lines.append('<ul class="list-disc list-inside space-y-2 my-3 text-base text-slate-200 pl-1">\n' + '\n'.join(items) + '\n</ul>')
             continue
         elif re.match(r'^\d+\.\s+', line):
             items = []
             while i < len(lines) and re.match(r'^\d+\.\s+', lines[i].strip()):
                 m = re.match(r'^\d+\.\s+(.*)$', lines[i].strip())
-                items.append(f'<li class="leading-relaxed">{format_inline(m.group(1))}</li>')
+                items.append(f'<li class="leading-relaxed text-base text-slate-200">{format_inline(m.group(1))}</li>')
                 i += 1
-            html_lines.append('<ol class="list-decimal list-inside space-y-1.5 my-2 text-xs sm:text-sm text-slate-300 pl-1">\n' + '\n'.join(items) + '\n</ol>')
+            html_lines.append('<ol class="list-decimal list-inside space-y-2 my-3 text-base text-slate-200 pl-1">\n' + '\n'.join(items) + '\n</ol>')
             continue
         elif line.startswith('<'):
             html_lines.append(line)
             i += 1
             continue
         else:
-            html_lines.append(f'<p class="text-xs sm:text-sm text-slate-300 leading-relaxed my-2">{format_inline(line)}</p>')
+            html_lines.append(f'<p class="text-base text-slate-200 leading-relaxed my-3 font-sans">{format_inline(line)}</p>')
             
         i += 1
         
@@ -2822,15 +2815,15 @@ def build_codex_navigation_deck_html(slug: str, group: str, sess_num: int = None
     """Builds the 2-card session pager and campaign deep-link navigation deck placed directly above the feedback card."""
     if group == "sessions" and sess_num:
         prev_btn = (
-            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num - 1}\')" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>&larr;</span> <span>Previous Session (S{sess_num - 1})</span></button>'
+            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num - 1}\')" class="min-h-[44px] px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>&larr;</span> <span class="hidden sm:inline">Previous Session (S{sess_num - 1})</span><span class="sm:hidden">S{sess_num - 1}</span></button>'
             if sess_num > 1
-            else '<div class="w-24 sm:w-36 hidden sm:block"></div>'
+            else '<div class="w-12 sm:w-28 hidden xs:block"></div>'
         )
-        hub_btn = '<button type="button" onclick="selectCodexArticle(\'overview\')" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>🧭</span> <span>Codex Hub</span></button>'
+        hub_btn = '<button type="button" onclick="selectCodexArticle(\'overview\')" class="min-h-[44px] px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>🧭</span> <span class="hidden sm:inline">Codex Hub</span><span class="sm:hidden">Hub</span></button>'
         next_btn = (
-            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num + 1}\')" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>Next Session (S{sess_num + 1})</span> <span>&rarr;</span></button>'
+            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num + 1}\')" class="min-h-[44px] px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span class="hidden sm:inline">Next Session (S{sess_num + 1})</span><span class="sm:hidden">S{sess_num + 1}</span> <span>&rarr;</span></button>'
             if sess_num < max_session_num
-            else f'<a href="uneraseable-s{sess_num}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold shadow-sm active:scale-95"><span>Read Story Chapter (S{sess_num})</span> <span>&rarr;</span></a>'
+            else f'<a href="uneraseable-s{sess_num}.html" class="min-h-[44px] px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold shadow-sm active:scale-95"><span class="hidden sm:inline">Read Story Chapter (S{sess_num})</span><span class="sm:hidden">Story S{sess_num}</span> <span>&rarr;</span></a>'
         )
 
         return f"""
@@ -2955,6 +2948,7 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
     groups = [
         {"key": "sessions", "title": "Session Chronicles", "icon": "📜"},
         {"key": "characters", "title": "Dramatis Personae", "icon": "👤"},
+        {"key": "locales", "title": "Key Locales & Havens", "icon": "📍"},
         {"key": "factions", "title": "Factions & Orders", "icon": "🏛️"},
         {"key": "threads", "title": "Active Mysteries Board", "icon": "🔍"},
         {"key": "critic", "title": "Critic Editorial Reviews", "icon": "🎭"},
@@ -2989,6 +2983,14 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
                 m = re.search(r's(\d+)', a["slug"])
                 return int(m.group(1)) if m else 0
             g_articles.sort(key=critic_sort, reverse=True)
+        elif g_key == "threads":
+            def thread_sort(a):
+                slug = a["slug"]
+                if slug == "open-threads":
+                    return -1
+                m = re.search(r'th-(\d+)', slug)
+                return int(m.group(1)) if m else 99
+            g_articles.sort(key=thread_sort)
         else:
             g_articles.sort(key=lambda a: a.get("title", ""))
             
@@ -3067,20 +3069,58 @@ def build_entity_crosslinker(codex_articles: dict):
         "eusacles": ["Eusacles"],
         "dravin": ["Prof. Edward Dravin", "Professor Dravin", "Prof. Dravin", "Edward Dravin", "Dravin"],
         "susanna": ["Susanna Drake", "Susanna"],
-        "teddy": ["Theodore", "Teddy"],
+        "teddy": ["Theodore the Surveyor", "Theodore", "Teddy"],
         "naomi": ["Naomi"],
-        "mike": ["Mike"],
+        "mike": ["Mike the Mechanic", "Mike"],
+        "rosa": ["Rosa"],
         "thorne": ["Dr. Aris Thorne", "Dr. Thorne", "Aris Thorne", "Dr. Robert Thorne", "Robert Thorne", "Thorne"],
         "redactors": ["The Redactors", "Redactor Operatives", "Redactor Operative", "Redactors", "Redactor"],
         "margin-wardens": ["Margin Wardens", "The Margin Wardens", "Wardens of the Margin"],
-        "the-margin": ["The Margin", "The Margin Compound"],
-        "hermes": ["Hermes Express", "The Hermes Express"],
+        "the-margin": ["The Margin Sanctuary", "The Margin Compound", "The Margin"],
+        "hermes": ["Hermes Express", "The Hermes Express", "Hermes"],
         "thanatos": ["Thanatos"],
+        "fates": ["The Three Fates", "Three Fates", "The Fates", "Moirai"],
         "open-threads": ["Active Mysteries Board", "Investigation Case Board", "Campaign Mysteries Board", "Open Mysteries Board", "Open Threads Board", "Quest Board"],
-        "lost-roads": ["Lost Roads", "The Lost Roads"],
+        "lost-roads": ["The Lost Roads", "Lost Roads"],
         "university-university": ["University University"],
-        "raleigh": ["Raleigh Museum"],
+        "raleigh": ["Raleigh Museum of Natural History", "Raleigh Museum"],
+        "dc-precinct": ["MPD Third Precinct", "Third Precinct", "D.C. Precinct"],
+        "th-01": ["TH-01", "Alfie's Origin"],
+        "th-02": ["TH-02", "Raleigh Aegean Stele", "Aegean Stele"],
+        "th-03": ["TH-03", "Dr. Thorne's Notebook", "Thorne's Notebook"],
+        "th-04": ["TH-04", "Teddy's Warning"],
+        "th-05": ["TH-05", "The Six-Fingered Man", "Six-Fingered Man"],
+        "th-06": ["TH-06", "Washington D.C. Police Evidence Locker", "D.C. Evidence Locker"],
+        "th-07": ["TH-07", "Physical Anchors"],
+        "th-08": ["TH-08", "Thanatos by the Campfire"],
+        "th-09": ["TH-09", "The Hunter Clock & Majora", "Hunter Clock"],
     }
+
+    ENTITY_COLOR_MAP = {
+        "pierre": "text-amber-400 hover:text-amber-300 decoration-amber-500/40",
+        "alfie": "text-emerald-400 hover:text-emerald-300 decoration-emerald-500/40",
+        "dravin": "text-indigo-400 hover:text-indigo-300 decoration-indigo-500/40",
+        "eusacles": "text-sky-400 hover:text-sky-300 decoration-sky-500/40",
+        "teddy": "text-orange-400 hover:text-orange-300 decoration-orange-500/40",
+        "naomi": "text-rose-400 hover:text-rose-300 decoration-rose-500/40",
+        "susanna": "text-teal-400 hover:text-teal-300 decoration-teal-500/40",
+        "mike": "text-slate-300 hover:text-white decoration-slate-400/40",
+        "rosa": "text-pink-400 hover:text-pink-300 decoration-pink-500/40",
+        "thorne": "text-yellow-400 hover:text-yellow-300 decoration-yellow-500/40",
+        "thanatos": "text-purple-400 hover:text-purple-300 decoration-purple-500/40",
+        "fates": "text-violet-400 hover:text-violet-300 decoration-violet-500/40",
+        "hermes": "text-amber-300 hover:text-amber-200 decoration-amber-400/40",
+        "redactors": "text-red-400 hover:text-red-300 decoration-red-500/40",
+        "margin-wardens": "text-emerald-400 hover:text-emerald-300 decoration-emerald-500/40",
+        "the-margin": "text-teal-300 hover:text-teal-200 decoration-teal-400/40",
+        "lost-roads": "text-cyan-300 hover:text-cyan-200 decoration-cyan-400/40",
+        "university-university": "text-sky-300 hover:text-sky-200 decoration-sky-400/40",
+        "raleigh": "text-amber-300 hover:text-amber-200 decoration-amber-400/40",
+        "dc-precinct": "text-slate-200 hover:text-white decoration-slate-400/40",
+        "open-threads": "text-cyan-400 hover:text-cyan-300 decoration-cyan-500/40",
+    }
+    for i in range(1, 10):
+        ENTITY_COLOR_MAP[f"th-{i:02d}"] = "text-cyan-400 hover:text-cyan-300 decoration-cyan-500/40"
     
     for slug, art in codex_articles.items():
         title = art.get("title", slug.title())
@@ -3157,10 +3197,11 @@ def build_entity_crosslinker(codex_articles: dict):
                                 if c < max_per_entity:  # Max links per entity per page/chapter
                                     counts[slug] = c + 1
                                     links_added += 1
+                                    color_cls = ENTITY_COLOR_MAP.get(slug, "text-amber-300 hover:text-amber-200 decoration-amber-500/30")
                                     if is_modal:
-                                        return f'<a href="javascript:void(0)" onclick="openCodexModal(\'{slug}\')" class="codex-entity-link text-amber-300 hover:text-amber-200 underline decoration-amber-500/30 hover:decoration-amber-300 font-medium transition-colors cursor-pointer" title="Codex: {ent_title}">{matched_text}</a>'
+                                        return f'<a href="javascript:void(0)" onclick="openCodexModal(\'{slug}\')" class="codex-entity-link {color_cls} underline font-medium transition-colors cursor-pointer" title="Codex: {ent_title}">{matched_text}</a>'
                                     else:
-                                        return f'<a href="javascript:void(0)" onclick="selectCodexArticle(\'{slug}\')" class="codex-entity-link text-amber-300 hover:text-amber-200 underline decoration-amber-500/30 hover:decoration-amber-300 font-medium transition-colors" title="Codex: {ent_title}">{matched_text}</a>'
+                                        return f'<a href="javascript:void(0)" onclick="selectCodexArticle(\'{slug}\')" class="codex-entity-link {color_cls} underline font-medium transition-colors" title="Codex: {ent_title}">{matched_text}</a>'
                                 return matched_text
                         return matched_text
                         
@@ -3229,6 +3270,10 @@ def load_all_codex_articles():
         elif "characters/" in rel:
             group = "characters"
             icon = "👤"
+            sess_num = None
+        elif "locales/" in rel:
+            group = "locales"
+            icon = "📍"
             sess_num = None
         elif "factions/" in rel:
             group = "factions"
@@ -8650,6 +8695,8 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
             font-family: 'Inter', sans-serif;
             background-color: #020617;
             color: #f8fafc;
+            font-size: 16px;
+            line-height: 1.75;
         }}
         h1, h2, h3, .font-serif {{
             font-family: 'Lora', serif;
@@ -8745,6 +8792,9 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 </button>
                 <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="characters" onclick="filterCodexCategory('characters')">
                     👤 Cast &amp; NPCs
+                </button>
+                <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="locales" onclick="filterCodexCategory('locales')">
+                    📍 Locales
                 </button>
                 <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all" data-category="factions" onclick="filterCodexCategory('factions')">
                     🏛️ Factions
@@ -8951,13 +9001,17 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 }}
             }};
 
+            let currentCodexSlug = 'overview';
+
             window.codexHandleBack = function() {{
                 const sidebar = document.getElementById('codexSidebarList');
                 if (window.innerWidth < 768 && sidebar && sidebar.classList.contains('translate-x-0')) {{
                     window.closeCodexMobileDrawer();
                     return;
                 }}
-                if (window.history.length > 1 && document.referrer.includes(window.location.host)) {{
+                if (currentCodexSlug && currentCodexSlug !== 'overview') {{
+                    window.selectCodexArticle('overview');
+                }} else if (window.history.length > 1 && document.referrer.includes(window.location.host)) {{
                     window.history.back();
                 }} else {{
                     window.location.href = 'index.html';
@@ -9156,6 +9210,11 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 }}
 
                 document.title = (art.title ? (art.title + ' · ') : '') + 'The Margin Campaign Codex';
+                currentCodexSlug = cleanSlug;
+                const backLabel = document.getElementById('codexBackBtnLabel');
+                if (backLabel) {{
+                    backLabel.textContent = (cleanSlug === 'overview') ? 'Portal' : 'Hub';
+                }}
 
                 if (codexArticleView) {{
                     codexArticleView.innerHTML = art.html || '<p class="text-slate-400">Article content unavailable.</p>';
