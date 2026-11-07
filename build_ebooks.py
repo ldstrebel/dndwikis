@@ -2732,6 +2732,10 @@ def parse_codex_markdown(md_text: str, slug: str = "") -> str:
                 i += 1
             html_lines.append('<ol class="list-decimal list-inside space-y-1.5 my-2 text-xs sm:text-sm text-slate-300 pl-1">\n' + '\n'.join(items) + '\n</ol>')
             continue
+        elif line.startswith('<'):
+            html_lines.append(line)
+            i += 1
+            continue
         else:
             html_lines.append(f'<p class="text-xs sm:text-sm text-slate-300 leading-relaxed my-2">{format_inline(line)}</p>')
             
@@ -2815,48 +2819,72 @@ def build_codex_feedback_card_html(slug: str, title: str, group: str) -> str:
 
 
 def build_codex_navigation_deck_html(slug: str, group: str, sess_num: int = None, max_session_num: int = 9) -> str:
-    """Builds the session pager and campaign deep-link navigation deck placed directly above the feedback card."""
+    """Builds the 2-card session pager and campaign deep-link navigation deck placed directly above the feedback card."""
     if group == "sessions" and sess_num:
         prev_btn = (
-            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num - 1}\')" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>&larr;</span> <span>Previous Session (S{sess_num - 1})</span></button>'
+            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num - 1}\')" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>&larr;</span> <span>Previous Session (S{sess_num - 1})</span></button>'
             if sess_num > 1
-            else '<div class="w-28 sm:w-36 hidden sm:block"></div>'
+            else '<div class="w-24 sm:w-36 hidden sm:block"></div>'
         )
-        hub_btn = '<button type="button" onclick="selectCodexArticle(\'overview\')" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>🧭</span> <span>Codex Hub</span></button>'
+        hub_btn = '<button type="button" onclick="selectCodexArticle(\'overview\')" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>🧭</span> <span>Codex Hub</span></button>'
         next_btn = (
-            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num + 1}\')" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>Next Session (S{sess_num + 1})</span> <span>&rarr;</span></button>'
+            f'<button type="button" onclick="selectCodexArticle(\'s{sess_num + 1}\')" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>Next Session (S{sess_num + 1})</span> <span>&rarr;</span></button>'
             if sess_num < max_session_num
             else f'<a href="uneraseable-s{sess_num}.html" class="min-h-[44px] px-3.5 py-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono transition-all flex items-center gap-1.5 font-bold shadow-sm active:scale-95"><span>Read Story Chapter (S{sess_num})</span> <span>&rarr;</span></a>'
         )
 
         return f"""
-        <!-- Session Navigation & Deep-Link Deck -->
-        <div class="mt-10 pt-6 border-t border-slate-800/80 space-y-4" id="sessionNavDeck_{slug}">
+        <!-- Session & Campaign Bottom Navigation Deck -->
+        <div class="border-t border-slate-900 pt-6 mt-8 space-y-4" id="sessionNavDeck_{slug}">
             <div id="session-{sess_num}" class="scroll-mt-24"></div>
-            <div class="space-y-2">
-                <span class="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold block">Related Canon &amp; Campaign Navigation</span>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
-                    <a href="uneraseable-s{sess_num}.html" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-all border border-slate-800 hover:border-amber-500/40 shadow-sm">
-                        <span class="flex items-center gap-2"><span>📖</span> <span>Full Story (S{sess_num})</span></span>
-                        <span class="text-slate-500 font-bold">&rarr;</span>
-                    </a>
-                    <button type="button" onclick="selectCodexArticle('s{sess_num}-review')" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-rose-300 transition-all border border-slate-800 hover:border-rose-500/40 shadow-sm text-left">
-                        <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Audit (S{sess_num})</span></span>
-                        <span class="text-slate-500 font-bold">&rarr;</span>
-                    </button>
-                    <button type="button" onclick="selectCodexArticle('open-threads')" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-amber-300 transition-all border border-slate-800 hover:border-amber-500/40 shadow-sm text-left">
-                        <span class="flex items-center gap-2"><span>🧶</span> <span>Active Threads</span></span>
-                        <span class="text-slate-500 font-bold">&rarr;</span>
-                    </button>
-                    <button type="button" onclick="selectCodexArticle('pierre')" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-sky-300 transition-all border border-slate-800 hover:border-sky-500/40 shadow-sm text-left">
-                        <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
-                        <span class="text-slate-500 font-bold">&rarr;</span>
-                    </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Section 1: Session {sess_num} Artifacts -->
+                <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                        <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Session {sess_num}</span></span>
+                        <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                    </div>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li>
+                            <a href="uneraseable-s{sess_num}.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                <span class="text-slate-500 font-bold">&rarr;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <button type="button" onclick="selectCodexArticle('s{sess_num}-review')" class="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40 text-left">
+                                <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Audit &amp; Review</span></span>
+                                <span class="text-slate-500 font-bold">&rarr;</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Section 2: Campaign Knowledge Base -->
+                <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                        <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                        <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                    </div>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li>
+                            <button type="button" onclick="selectCodexArticle('open-threads')" class="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40 text-left">
+                                <span class="flex items-center gap-2"><span>🧵</span> <span>Active Threads</span></span>
+                                <span class="text-slate-500 font-bold">&rarr;</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" onclick="selectCodexArticle('pierre')" class="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40 text-left">
+                                <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                <span class="text-slate-500 font-bold">&rarr;</span>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Single Session Paging Controls -->
-            <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-900">
+            <!-- Single Session Navigation Controls with Codex Hub Centered -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-900/80">
                 {prev_btn}
                 {hub_btn}
                 {next_btn}
@@ -2864,30 +2892,59 @@ def build_codex_navigation_deck_html(slug: str, group: str, sess_num: int = None
         </div>
         """
     else:
-        # Non-session entry: Provide quick campaign jump bar
+        # Non-session entry: Provide 2-card campaign navigation
         return f"""
         <!-- Campaign Suite Navigation Deck -->
-        <div class="mt-10 pt-6 border-t border-slate-800/80 space-y-3" id="campaignNavDeck_{slug}">
-            <span class="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold block">Campaign Deep Navigation</span>
-            <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
-                <button type="button" onclick="selectCodexArticle('overview')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
-                    <span>🧭</span> <span>Codex Hub</span>
-                </button>
-                <button type="button" onclick="selectCodexArticle('s{max_session_num}')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
-                    <span>📜</span> <span>Latest Session (S{max_session_num})</span>
-                </button>
-                <button type="button" onclick="selectCodexArticle('open-threads')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
-                    <span>🧶</span> <span>Mysteries</span>
-                </button>
-                <button type="button" onclick="selectCodexArticle('pierre')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-sky-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
-                    <span>👥</span> <span>Personae</span>
-                </button>
-                <button type="button" onclick="selectCodexArticle('margin-wardens')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
-                    <span>🏛️</span> <span>Factions</span>
-                </button>
-                <button type="button" onclick="selectCodexArticle('s{max_session_num}-review')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-rose-300 border border-slate-800 transition-colors flex items-center gap-1.5 shadow-sm">
-                    <span>🎭</span> <span>Reviews</span>
-                </button>
+        <div class="border-t border-slate-900 pt-6 mt-8 space-y-4" id="campaignNavDeck_{slug}">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Section 1: Latest Session -->
+                <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                        <span class="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🏛️</span> <span>Latest Session (S{max_session_num})</span></span>
+                        <span class="text-[10px] font-mono text-slate-500 uppercase">Artifacts</span>
+                    </div>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li>
+                            <a href="uneraseable-s{max_session_num}.html" class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-amber-300 transition-all border border-slate-800/50 hover:border-amber-500/40">
+                                <span class="flex items-center gap-2"><span>📖</span> <span>Full Narrative</span></span>
+                                <span class="text-slate-500 font-bold">&rarr;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <button type="button" onclick="selectCodexArticle('s{max_session_num}-review')" class="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-rose-300 transition-all border border-slate-800/50 hover:border-rose-500/40 text-left">
+                                <span class="flex items-center gap-2"><span>🎭</span> <span>Critic Audit &amp; Review</span></span>
+                                <span class="text-slate-500 font-bold">&rarr;</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Section 2: Campaign Knowledge Base -->
+                <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
+                        <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5"><span>🧭</span> <span>Campaign</span></span>
+                        <span class="text-[10px] font-mono text-slate-500 uppercase">Knowledge Base</span>
+                    </div>
+                    <ul class="space-y-2 text-xs font-mono">
+                        <li>
+                            <button type="button" onclick="selectCodexArticle('open-threads')" class="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40 text-left">
+                                <span class="flex items-center gap-2"><span>🧵</span> <span>Active Threads</span></span>
+                                <span class="text-slate-500 font-bold">&rarr;</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" onclick="selectCodexArticle('pierre')" class="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-sky-300 transition-all border border-slate-800/50 hover:border-sky-500/40 text-left">
+                                <span class="flex items-center gap-2"><span>👥</span> <span>Personae</span></span>
+                                <span class="text-slate-500 font-bold">&rarr;</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Hub Pager Control -->
+            <div class="flex items-center justify-center pt-4 border-t border-slate-900/80">
+                <button type="button" onclick="selectCodexArticle('overview')" class="min-h-[44px] px-4 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-xs font-mono text-slate-200 hover:text-amber-300 border border-slate-700/80 transition-all flex items-center gap-1.5 shadow-sm active:scale-95"><span>🧭</span> <span>Codex Hub</span></button>
             </div>
         </div>
         """
@@ -2938,6 +2995,22 @@ def build_accordion_sidebar_html(codex_articles: dict, current_session_num: int 
         group_items_html = []
         for art in g_articles:
             s_slug = art["slug"]
+            if g_key == "critic":
+                sess_m = re.search(r's(\d+)', s_slug)
+                sess_n = sess_m.group(1) if sess_m else ""
+                score = art.get("score") or ""
+                score_badge = f'<span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold flex-shrink-0">{score}</span>' if score else ""
+                group_items_html.append(f"""
+                <button type="button" class="codex-sidebar-item w-full text-left px-3 py-2 transition-colors flex items-center justify-between gap-1.5 hover:bg-slate-800/50 text-slate-300 active:bg-rose-500/10 border-l-2 border-l-transparent" data-slug="{s_slug}" data-group="critic" data-title="session {sess_n} editorial critic review" onclick="selectCodexArticle('{s_slug}')">
+                    <span class="text-xs font-medium truncate flex items-center gap-1.5">
+                        <span>🎭</span>
+                        <span class="truncate">Session {sess_n} Review</span>
+                    </span>
+                    {score_badge}
+                </button>
+                """)
+                continue
+
             subtitle_snip = f'<div class="text-[10px] text-slate-500 truncate">{art["subtitle"]}</div>' if (art.get("subtitle") and g_key != "sessions") else ""
             sess_badge = f'<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">S{art["sessionNum"]}</span>' if art.get("sessionNum") else ""
             
@@ -3168,11 +3241,15 @@ def load_all_codex_articles():
         elif "critic/" in rel:
             group = "critic"
             icon = "🎭"
-            sess_num = None
+            sess_m = re.search(r's(\d+)', slug)
+            sess_num = int(sess_m.group(1)) if sess_m else None
+            score_m = re.search(r'(?:Critical Grade:\*{0,2}\s*|\*{0,2}Role:\*{0,2}\s*)([0-9.]+\s*/\s*10)', text)
+            score = score_m.group(1).replace(' ', '') if score_m else ""
         else:
             group = "overview"
             icon = "🧭"
             sess_num = None
+            score = ""
 
         # Rich narrative lore profiles to replace empty appearance tables in character stubs
         LORE_PROFILES = {
@@ -3287,32 +3364,6 @@ def load_all_codex_articles():
         }
 
         html_body = parse_codex_markdown(text, slug=slug)
-        
-        # Inject rich landing hub at top of overview
-        if slug == "overview":
-            overview_portal_hub = """
-            <div class="mb-8 border-b border-slate-800 pb-6 space-y-4">
-                <div class="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                        <span class="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold block mb-1">Campaign Canon &amp; Continuity</span>
-                        <h1 class="text-2xl sm:text-3xl font-bold font-serif text-slate-100">The Margin Campaign Codex</h1>
-                    </div>
-                    <a href="codex.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-medium text-xs transition-colors border border-amber-500/30">
-                        <span>Open Campaign Hub</span> <span>↗</span>
-                    </a>
-                </div>
-                <p class="text-sm text-slate-300 font-sans leading-relaxed">
-                    Official world encyclopedia and continuity ledger for <strong class="text-amber-300">The Margin: The Stolen Weave</strong>.
-                </p>
-                <div class="flex flex-wrap items-center gap-2 pt-2 text-xs font-mono">
-                    <a href="codex.html" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors">🏛️ Hub</a>
-                    <a href="threads.html" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors">🧶 Threads</a>
-                    <a href="characters.html" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border border-slate-800 transition-colors">👥 Personae</a>
-                    <a href="critics.html" class="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-rose-300 border border-slate-800 transition-colors">🎭 Critic Sub-App</a>
-                </div>
-            </div>
-            """
-            html_body = overview_portal_hub + html_body
 
         # Inject rich profile card at top if available
         if slug in LORE_PROFILES:
@@ -3376,6 +3427,7 @@ def load_all_codex_articles():
             "subtitle": subtitle,
             "icon": icon,
             "sessionNum": sess_num,
+            "score": score,
             "html": html_body
         }
 
@@ -4642,7 +4694,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     <span class="text-amber-400">📑</span>
                     <span>Browse Chapters & Scenes</span>
                 </button>
-                <button type="button" onclick="openCodexModal()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border border-slate-700/80 text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95" title="Browse Campaign Codex & Wiki">
+                <button type="button" onclick="openCodexModal('s{session_num}')" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border border-slate-700/80 text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95" title="Browse Campaign Codex & Wiki">
                     <span>📖</span>
                     <span>Codex Wiki</span>
                 </button>
@@ -4787,7 +4839,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                     </div>
                 </div>
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <button type="button" onclick="closeChaptersModal(); openCodexModal();" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 hover:text-amber-200 text-xs font-semibold transition-all" title="Switch to Campaign Codex & Wiki">
+                    <button type="button" onclick="closeChaptersModal(); openCodexModal('s{session_num}');" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 hover:text-amber-200 text-xs font-semibold transition-all" title="Switch to Campaign Codex & Wiki">
                         <span>📖</span> <span class="hidden xs:inline">Codex</span>
                     </button>
                     <button id="closeChaptersModalBtn" type="button" class="text-slate-400 hover:text-slate-100 text-2xl font-bold p-1 leading-none transition-colors ml-1" title="Close (Esc)">&times;</button>
@@ -6156,7 +6208,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 codexModalOverlay.classList.add('visible');
                 setBodyScrollLock(true);
                 
-                let slugToOpen = 'overview';
+                let slugToOpen = 's{session_num}';
                 if (targetSlug) {{
                     const resolved = (typeof window.resolveCodexSlug === 'function') ? window.resolveCodexSlug(targetSlug) : targetSlug;
                     if (resolved && codexArticlesMap[resolved]) {{
@@ -6254,6 +6306,62 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 if (clearBtn) clearBtn.classList.add('hidden');
                 if (searchIcon) searchIcon.classList.remove('hidden');
                 window.searchCodex('');
+            }};
+
+            window.hubPerformSearch = function(query) {{
+                const q = (query || '').toLowerCase().trim();
+                const resultsEl = document.getElementById('hubSearchResults');
+                const clearBtn = document.getElementById('hubSearchClearBtn');
+                if (clearBtn) clearBtn.classList.toggle('hidden', !q);
+                
+                const cards = document.querySelectorAll('.session-showcase-card');
+                cards.forEach(card => {{
+                    const text = (card.getAttribute('data-title') || '') + ' ' + card.textContent.toLowerCase();
+                    if (!q || text.includes(q)) {{
+                        card.classList.remove('hidden');
+                    }} else {{
+                        card.classList.add('hidden');
+                    }}
+                }});
+
+                if (!resultsEl) return;
+                if (!q) {{
+                    resultsEl.classList.add('hidden');
+                    resultsEl.innerHTML = '';
+                    return;
+                }}
+
+                const matches = [];
+                for (const [slug, art] of Object.entries(codexArticlesMap)) {{
+                    if (slug === 'overview') continue;
+                    const hay = (art.title + ' ' + (art.subtitle || '') + ' ' + (art.group || '') + ' ' + (art.category || '')).toLowerCase();
+                    if (hay.includes(q)) {{
+                        matches.push(art);
+                    }}
+                }}
+
+                if (matches.length === 0) {{
+                    resultsEl.innerHTML = '<div class="text-xs text-slate-400 p-2">No matching codex entries found for "' + q + '".</div>';
+                    resultsEl.classList.remove('hidden');
+                }} else {{
+                    const items = matches.slice(0, 8).map(art => {{
+                        const grp = art.group ? art.group.toUpperCase() : 'CODEX';
+                        return '<div onclick="selectCodexArticle(\\'' + art.slug + '\\')" class="p-2 rounded-lg bg-slate-950/70 hover:bg-slate-800 text-slate-200 cursor-pointer flex items-center justify-between text-xs transition-colors">' +
+                            '<span class="flex items-center gap-2"><span>' + (art.icon || '📜') + '</span><span class="font-semibold">' + art.title + '</span></span>' +
+                            '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 uppercase">' + grp + '</span>' +
+                        '</div>';
+                    }}).join('');
+                    resultsEl.innerHTML = '<div class="text-[11px] font-mono uppercase text-slate-400 px-1 font-bold">Matching Articles (' + matches.length + '):</div>' + items;
+                    resultsEl.classList.remove('hidden');
+                }}
+            }};
+
+            window.clearHubSearch = function() {{
+                const input = document.getElementById('hubDirectSearchInput');
+                if (input) {{
+                    input.value = '';
+                    window.hubPerformSearch('');
+                }}
             }};
 
             window.selectCodexArticle = function(slug, fromPopState = false) {{
@@ -6704,7 +6812,7 @@ def generate_html_for_session(manifest_path: Path, output_path: Path, codex_arti
                 }}
             }};
 
-            if (toggleCodexBtn) toggleCodexBtn.onclick = function() {{ window.openCodexModal(); }};
+            if (toggleCodexBtn) toggleCodexBtn.onclick = function() {{ window.openCodexModal('s{session_num}'); }};
             if (closeCodexModalBtn) closeCodexModalBtn.onclick = window.closeCodexModal;
             if (codexModalOverlay) {{
                 codexModalOverlay.onclick = function(e) {{
@@ -8591,14 +8699,14 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                <!-- Unified Always-Visible Back Navigation -->
-                <button id="codexNavBackBtn" type="button" onclick="codexHandleBack()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm flex-shrink-0" title="Go back">
-                    <span class="text-sm font-bold">←</span> <span id="codexBackBtnLabel" class="font-sans hidden xs:inline">Home</span>
+                <!-- Mobile Side Drawer Toggle Button (1st - Leftmost) -->
+                <button id="codexMobileDrawerBtn" type="button" onclick="toggleCodexMobileDrawer()" class="md:hidden px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm flex-shrink-0" title="Toggle Directory Drawer">
+                    <span class="text-base font-bold leading-none">☰</span> <span class="font-sans">Directory</span>
                 </button>
 
-                <!-- Mobile Side Drawer Toggle Button -->
-                <button id="codexMobileDrawerBtn" type="button" onclick="toggleCodexMobileDrawer()" class="md:hidden px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm flex-shrink-0" title="Toggle Directory Drawer">
-                    <span class="text-sm">📚</span> <span class="font-sans">Directory</span>
+                <!-- Unified Always-Visible Back Navigation (2nd) -->
+                <button id="codexNavBackBtn" type="button" onclick="codexHandleBack()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-amber-300 border border-slate-700/80 text-xs font-semibold active:scale-95 flex items-center gap-1.5 transition-all shadow-sm flex-shrink-0" title="Go back">
+                    <span class="text-sm font-bold">←</span> <span id="codexBackBtnLabel" class="font-sans hidden xs:inline">Back</span>
                 </button>
 
                 <div class="truncate" id="codexHeaderTitleArea">
@@ -8625,8 +8733,8 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
 
     <!-- Main Content Area: Sidebar + Article View -->
     <main class="max-w-7xl w-full mx-auto p-3 sm:p-6 flex-1 flex flex-col min-h-0">
-        <!-- Controls: Category Filter Tabs & Search Bar -->
-        <div id="codexToolbar" class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-slate-800 flex-shrink-0">
+        <!-- Controls: Category Filter Tabs & Search Bar (Desktop Only - Mobile Nav Uses Directory Drawer & Hub Search) -->
+        <div id="codexToolbar" class="hidden md:flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-slate-800 flex-shrink-0">
             <!-- Category Tabs -->
             <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 custom-scrollbar text-xs font-medium">
                 <button type="button" class="codex-cat-btn px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-bold transition-all shadow-sm" data-category="all" onclick="filterCodexCategory('all')">
@@ -8889,6 +8997,62 @@ def build_standalone_codex_html(codex_articles: dict) -> str:
                 if (clearBtn) clearBtn.classList.add('hidden');
                 if (searchIcon) searchIcon.classList.remove('hidden');
                 window.searchCodex('');
+            }};
+
+            window.hubPerformSearch = function(query) {{
+                const q = (query || '').toLowerCase().trim();
+                const resultsEl = document.getElementById('hubSearchResults');
+                const clearBtn = document.getElementById('hubSearchClearBtn');
+                if (clearBtn) clearBtn.classList.toggle('hidden', !q);
+                
+                const cards = document.querySelectorAll('.session-showcase-card');
+                cards.forEach(card => {{
+                    const text = (card.getAttribute('data-title') || '') + ' ' + card.textContent.toLowerCase();
+                    if (!q || text.includes(q)) {{
+                        card.classList.remove('hidden');
+                    }} else {{
+                        card.classList.add('hidden');
+                    }}
+                }});
+
+                if (!resultsEl) return;
+                if (!q) {{
+                    resultsEl.classList.add('hidden');
+                    resultsEl.innerHTML = '';
+                    return;
+                }}
+
+                const matches = [];
+                for (const [slug, art] of Object.entries(codexArticlesMap)) {{
+                    if (slug === 'overview') continue;
+                    const hay = (art.title + ' ' + (art.subtitle || '') + ' ' + (art.group || '') + ' ' + (art.category || '')).toLowerCase();
+                    if (hay.includes(q)) {{
+                        matches.push(art);
+                    }}
+                }}
+
+                if (matches.length === 0) {{
+                    resultsEl.innerHTML = '<div class="text-xs text-slate-400 p-2">No matching codex entries found for "' + q + '".</div>';
+                    resultsEl.classList.remove('hidden');
+                }} else {{
+                    const items = matches.slice(0, 8).map(art => {{
+                        const grp = art.group ? art.group.toUpperCase() : 'CODEX';
+                        return '<div onclick="selectCodexArticle(\\'' + art.slug + '\\')" class="p-2 rounded-lg bg-slate-950/70 hover:bg-slate-800 text-slate-200 cursor-pointer flex items-center justify-between text-xs transition-colors">' +
+                            '<span class="flex items-center gap-2"><span>' + (art.icon || '📜') + '</span><span class="font-semibold">' + art.title + '</span></span>' +
+                            '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 uppercase">' + grp + '</span>' +
+                        '</div>';
+                    }}).join('');
+                    resultsEl.innerHTML = '<div class="text-[11px] font-mono uppercase text-slate-400 px-1 font-bold">Matching Articles (' + matches.length + '):</div>' + items;
+                    resultsEl.classList.remove('hidden');
+                }}
+            }};
+
+            window.clearHubSearch = function() {{
+                const input = document.getElementById('hubDirectSearchInput');
+                if (input) {{
+                    input.value = '';
+                    window.hubPerformSearch('');
+                }}
             }};
 
             const CODEX_ALIASES = {{
